@@ -1,0 +1,44 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/records/records",
+    "pages/profile/profile",
+    "pages/work-hour/work-hour"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "研发费管理系统",
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1890ff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "打卡",
+        "iconPath": "images/icon_checkin.png",
+        "selectedIconPath": "images/icon_checkin_active.png"
+      },
+      {
+        "pagePath": "pages/records/records",
+        "text": "统计",
+        "iconPath": "images/icon_stats.png",
+        "selectedIconPath": "images/icon_stats_active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "设置",
+        "iconPath": "images/icon_setting.png",
+        "selectedIconPath": "images/icon_setting_active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工时日志管理 - 研发费管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        accent: '#6366f1',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        info: '#3b82f6',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .workflow-step { position: relative; }
+        .workflow-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: #d1d5db;
+        }
+        .workflow-step.completed:not(:last-child)::after { background-color: #10b981; }
+        .task-row:hover { background-color: #f9fafb; }
+        .tab-btn { transition: all 0.3s ease; }
+        .tab-btn:hover { transform: translateY(-1px); }
+        .tab-btn:active { transform: translateY(0); }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .grid-cols-1.lg\:grid-cols-3 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        /* 导航菜单样式 */
+        .nav-item-active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .nav-item-hover:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        .sub-menu {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .sub-menu.collapsed {
+            max-height: 0;
+        }
+        .menu-arrow {
+            transition: transform 0.3s ease;
+        }
+        .menu-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航菜单 -->
+        <aside id="sidebar" class="w-64 bg-white shadow-md flex-shrink-0 hidden lg:block">
+            <!-- 系统标题 -->
+            <div class="p-4 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-primary flex items-center">
+                    <i class="fa fa-cogs mr-2"></i>
+                    <span>研发费管理系统</span>
+                </h1>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="mt-4">
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="project-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目要素</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>阶段审核</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('progress-tracking.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>进度跟踪</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-personnel.html')">
+                                    <i class="fa fa-users w-6"></i>
+                                    <span>项目人员</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-output.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>研发产出</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-equipment.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>研发设备</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-analysis.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>项目分析统计</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资源管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('report.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>多口径报表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-allocation.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>费用分配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('reference-materials.html')">
+                                    <i class="fa fa-folder-o w-6"></i>
+                                    <span>备查资料</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-users w-6"></i>
+                                <span>人事管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>人员库管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('department.html')">
+                                    <i class="fa fa-sitemap w-6"></i>
+                                    <span>部门管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>岗位管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资产管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
+                                    <i class="fa fa-cog w-6"></i>
+                                    <span>资产信息管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-depreciation.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>资产折旧管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-money w-6"></i>
+                                <span>薪酬管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="salary-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-management.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>薪酬结构管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item active nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-log.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>工时日志填报</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-allocation.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时分配管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-allocation.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>薪酬分摊计算</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="policy.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('policy.html')">
+                            <i class="fa fa-book w-6"></i>
+                            <span>政策查询</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-money w-6"></i>
+                                <span>研发费管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('rd-fee.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>费用管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-analysis.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>费用分析</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('budget-management.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>预算管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('intangible.html')">
+                            <i class="fa fa-lightbulb-o w-6"></i>
+                            <span>无形资产管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('profile.html')">
+                            <i class="fa fa-user-o w-6"></i>
+                            <span>个人中心</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- 右侧主内容区域 -->
+        <div class="flex-1 flex flex-col">
+            <!-- 顶部信息栏 -->
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+                <div class="flex items-center">
+                    <h2 id="page-title" class="text-lg font-medium text-gray-800">工时日志管理</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-bell"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
+                        <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- 主内容 -->
+            <main class="flex-1 overflow-auto p-6">
+                <!-- 页面标题和操作按钮 -->
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">工时日志管理</h1>
+                        <div class="flex items-center mt-2">
+                            <nav class="flex" aria-label="Breadcrumb">
+                                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                                    <li class="inline-flex items-center">
+                                        <a href="dashboard.html" class="text-sm font-medium text-gray-700 hover:text-primary">首页</a>
+                                    </li>
+                                    <li>
+                                        <div class="flex items-center">
+                                            <i class="fa fa-chevron-right text-gray-400 mx-2"></i>
+                                            <a href="#" class="text-sm font-medium text-gray-700 hover:text-primary">薪酬管理</a>
+                                        </div>
+                                    </li>
+                                    <li aria-current="page">
+                                        <div class="flex items-center">
+                                            <i class="fa fa-chevron-right text-gray-400 mx-2"></i>
+                                            <span class="text-sm font-medium text-primary">工时日志填报</span>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button onclick="loadPage('work-hour-entry.html')" class="bg-primary text-white px-4 py-2 rounded-md text-sm hover:bg-blue-600 flex items-center">
+                            <i class="fa fa-plus mr-2"></i>工时填报
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 标签页切换 -->
+                <div class="flex space-x-4">
+                    <button onclick="switchTab('all')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium bg-primary text-white" id="tabAll">
+                        <i class="fa fa-list mr-2"></i>工时填报列表
+                    </button>
+                    <button onclick="switchTab('pending')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200" id="tabPending">
+                        <i class="fa fa-clock-o mr-2"></i>待审核工时
+                        <span id="pendingCount" class="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
+                    </button>
+                </div>
+                
+                <!-- 搜索和筛选 -->
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
+                            <input type="text" id="searchInput" placeholder="搜索员工姓名、项目名称..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <select id="statusFilter" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="">全部状态</option>
+                            <option value="pending">待审核</option>
+                            <option value="pm_approved">项目经理已审</option>
+                            <option value="approved">已审核</option>
+                            <option value="rejected">已驳回</option>
+                        </select>
+                        <select id="dateFilter" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="today">今天</option>
+                            <option value="week">本周</option>
+                            <option value="month" selected>本月</option>
+                            <option value="all">全部</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 工时记录列表 -->
+                <div class="overflow-x-auto" id="allRecordsView">
+                    <table class="min-w-full bg-white">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">员工姓名</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工时(小时)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="workHourTable">
+                            <!-- 数据将通过JavaScript动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 待审核工时列表 -->
+                <div class="overflow-x-auto hidden" id="pendingRecordsView">
+                    <table class="min-w-full bg-white">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">员工姓名</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工时(小时)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">提交时间</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="pendingWorkHourTable">
+                            <!-- 数据将通过JavaScript动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="flex items-center justify-between mt-6">
+                    <div class="text-sm text-gray-600">
+                        显示 1-10 条，共 100 条
+                    </div>
+                    <div class="flex space-x-1">
+                        <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">上一页</button>
+                        <button class="px-3 py-1 border border-primary bg-primary text-white rounded-md">1</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">2</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">3</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">下一页</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        function loadPage(pageUrl) {
+            window.location.href = pageUrl;
+        }
+        
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+        }
+        
+        // 切换标签页
+        function switchTab(tabName) {
+            // 隐藏所有视图
+            document.getElementById('allRecordsView').classList.add('hidden');
+            document.getElementById('pendingRecordsView').classList.add('hidden');
+            
+            // 重置所有标签按钮样式
+            document.getElementById('tabAll').classList.remove('bg-primary', 'text-white');
+            document.getElementById('tabAll').classList.add('bg-gray-100', 'text-gray-700');
+            document.getElementById('tabPending').classList.remove('bg-primary', 'text-white');
+            document.getElementById('tabPending').classList.add('bg-gray-100', 'text-gray-700');
+            
+            // 显示选中的视图并设置标签按钮样式
+            if (tabName === 'all') {
+                document.getElementById('allRecordsView').classList.remove('hidden');
+                document.getElementById('tabAll').classList.remove('bg-gray-100', 'text-gray-700');
+                document.getElementById('tabAll').classList.add('bg-primary', 'text-white');
+                loadAllRecords();
+            } else if (tabName === 'pending') {
+                document.getElementById('pendingRecordsView').classList.remove('hidden');
+                document.getElementById('tabPending').classList.remove('bg-gray-100', 'text-gray-700');
+                document.getElementById('tabPending').classList.add('bg-primary', 'text-white');
+                loadPendingRecords();
+            }
+        }
+        
+        // 加载所有工时记录
+        function loadAllRecords() {
+            const tableBody = document.getElementById('workHourTable');
+            tableBody.innerHTML = '';
+            
+            // 模拟数据
+            const records = [
+                { id: 1, employee: '张三', project: '智能客服系统', date: '2026-04-20', hours: 8, status: 'approved' },
+                { id: 2, employee: '李四', project: 'AI算法研发', date: '2026-04-20', hours: 7.5, status: 'pm_approved' },
+                { id: 3, employee: '王五', project: '产品设计优化', date: '2026-04-20', hours: 8, status: 'pending' },
+                { id: 4, employee: '赵六', project: '智能客服系统', date: '2026-04-19', hours: 8, status: 'approved' },
+                { id: 5, employee: '张三', project: 'AI算法研发', date: '2026-04-19', hours: 8, status: 'approved' }
+            ];
+            
+            records.forEach(record => {
+                const row = document.createElement('tr');
+                row.className = 'task-row';
+                
+                let statusText = '';
+                let statusClass = '';
+                
+                switch(record.status) {
+                    case 'pending':
+                        statusText = '待审核';
+                        statusClass = 'bg-yellow-100 text-yellow-800';
+                        break;
+                    case 'pm_approved':
+                        statusText = '项目经理已审';
+                        statusClass = 'bg-blue-100 text-blue-800';
+                        break;
+                    case 'approved':
+                        statusText = '已审核';
+                        statusClass = 'bg-green-100 text-green-800';
+                        break;
+                    case 'rejected':
+                        statusText = '已驳回';
+                        statusClass = 'bg-red-100 text-red-800';
+                        break;
+                }
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.employee}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.project}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.hours}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="viewDetails(${record.id})" class="text-primary hover:text-blue-600 mr-3">查看</button>
+                        ${record.status === 'pending' ? `<button onclick="approveRecord(${record.id})" class="text-green-600 hover:text-green-800 mr-3">审核</button>` : ''}
+                        <button onclick="editRecord(${record.id})" class="text-gray-600 hover:text-gray-800">编辑</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // 加载待审核工时记录
+        function loadPendingRecords() {
+            const tableBody = document.getElementById('pendingWorkHourTable');
+            tableBody.innerHTML = '';
+            
+            // 模拟数据
+            const records = [
+                { id: 3, employee: '王五', project: '产品设计优化', date: '2026-04-20', hours: 8, submitTime: '2026-04-20 10:30' },
+                { id: 6, employee: '赵六', project: '产品设计优化', date: '2026-04-20', hours: 7, submitTime: '2026-04-20 09:15' },
+                { id: 7, employee: '张三', project: '智能客服系统', date: '2026-04-20', hours: 8, submitTime: '2026-04-20 08:45' }
+            ];
+            
+            records.forEach(record => {
+                const row = document.createElement('tr');
+                row.className = 'task-row';
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.employee}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.project}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.hours}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.submitTime}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="viewDetails(${record.id})" class="text-primary hover:text-blue-600 mr-3">查看</button>
+                        <button onclick="approveRecord(${record.id})" class="text-green-600 hover:text-green-800 mr-3">通过</button>
+                        <button onclick="rejectRecord(${record.id})" class="text-red-600 hover:text-red-800">驳回</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // 查看详情
+        function viewDetails(id) {
+            alert(`查看ID为${id}的工时记录详情`);
+        }
+        
+        // 审核通过
+        function approveRecord(id) {
+            alert(`审核通过ID为${id}的工时记录`);
+            updatePendingCount();
+        }
+        
+        // 驳回
+        function rejectRecord(id) {
+            alert(`驳回ID为${id}的工时记录`);
+            updatePendingCount();
+        }
+        
+        // 编辑记录
+        function editRecord(id) {
+            alert(`编辑ID为${id}的工时记录`);
+        }
+        
+        // 更新待审核数量
+        function updatePendingCount() {
+            // 模拟更新待审核数量
+            const pendingCount = Math.floor(Math.random() * 5);
+            document.getElementById('pendingCount').textContent = pendingCount;
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePendingCount();
+            loadAllRecords();
+            const projectSubmenu = document.getElementById('project-submenu');
+            if (projectSubmenu) {
+                projectSubmenu.classList.remove('collapsed');
+            }
+            const salarySubmenu = document.getElementById('salary-submenu');
+            if (salarySubmenu) {
+                salarySubmenu.classList.remove('collapsed');
+            }
+        });
+    </script>
+</body>
+</html>

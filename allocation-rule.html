@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分配规则管理 - 研发费管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        .main-content {
+            margin-left: 250px;
+            transition: all 0.3s ease;
+        }
+        .main-content.expanded {
+            margin-left: 80px;
+        }
+        .sub-menu {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .sub-menu.collapsed {
+            max-height: 0;
+        }
+        .menu-arrow {
+            transition: transform 0.3s ease;
+        }
+        .menu-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        .table-row-hover:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+        .tab-active {
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+        }
+        @apply
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航栏 -->
+        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto" style="max-height: 100vh;">
+            <!-- 系统标题 -->
+            <div class="p-4 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-primary flex items-center">
+                    <i class="fa fa-cogs mr-2"></i>
+                    <span>研发费管理系统</span>
+                </h1>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="mt-4">
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="project-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目要素</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>阶段审核</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('progress-tracking.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>进度跟踪</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-personnel.html')">
+                                    <i class="fa fa-users w-6"></i>
+                                    <span>项目人员</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-output.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>研发产出</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-equipment.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>研发设备</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-analysis.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>项目分析统计</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资源管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('report.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>多口径报表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-allocation.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>费用分配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('reference-materials.html')">
+                                    <i class="fa fa-folder-o w-6"></i>
+                                    <span>备查资料</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-users w-6"></i>
+                                <span>人事管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>人员库管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('department.html')">
+                                    <i class="fa fa-sitemap w-6"></i>
+                                    <span>部门管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>岗位管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资产管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
+                                    <i class="fa fa-cog w-6"></i>
+                                    <span>资产信息管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-depreciation.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>资产折旧管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-money w-6"></i>
+                                <span>薪酬管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="salary-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-management.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>薪酬结构管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-log.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>工时日志填报</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-allocation.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时分配管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-allocation.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>薪酬分摊计算</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="policy.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('policy.html')">
+                            <i class="fa fa-book w-6"></i>
+                            <span>政策查询</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-money w-6"></i>
+                                <span>研发费管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('rd-fee.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>费用管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-analysis.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>费用分析</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('budget-management.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>预算管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('intangible.html')">
+                            <i class="fa fa-lightbulb-o w-6"></i>
+                            <span>无形资产管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-building w-6"></i>
+                                <span>企业档案</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('department.html')">
+                                    <i class="fa fa-sitemap w-6"></i>
+                                    <span>部门管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>岗位管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('user.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>用户管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('role.html')">
+                                    <i class="fa fa-shield w-6"></i>
+                                    <span>角色管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-database w-6"></i>
+                                <span>系统设置（核心字典）</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-type.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>费用类型字典</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item active nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('allocation-rule.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>分摊规则配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('deduction-policy.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>加计扣除政策配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('finance-policy.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>财务核算口径配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('hi-tech-policy.html')">
+                                    <i class="fa fa-star w-6"></i>
+                                    <span>高新认定口径配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-policy.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>项目管理口径配置</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('settings.html')">
+                            <i class="fa fa-cog w-6"></i>
+                            <span>设置</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('profile.html')">
+                            <i class="fa fa-user w-6"></i>
+                            <span>个人资料</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 右侧主内容区域 -->
+        <div class="flex-1 flex flex-col">
+            <!-- 顶部信息栏 -->
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+                <div class="flex items-center">
+                    <h2 id="page-title" class="text-lg font-medium text-gray-800">分配规则管理</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center" id="addRuleBtn">
+                        <i class="fa fa-plus mr-2"></i> 添加规则
+                    </button>
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-bell"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
+                        <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- 主内容 -->
+            <main class="flex-1 overflow-auto p-6">
+                <!-- 统计卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">规则总数</p>
+                                <h3 class="text-2xl font-bold text-gray-800">24</h3>
+                                <p class="text-sm text-green-600 flex items-center mt-1">
+                                    <i class="fa fa-arrow-up mr-1"></i>
+                                    <span>3 个新增</span>
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fa fa-list-alt text-primary text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">启用规则</p>
+                                <h3 class="text-2xl font-bold text-gray-800">18</h3>
+                                <p class="text-sm text-green-600 flex items-center mt-1">
+                                    <i class="fa fa-arrow-up mr-1"></i>
+                                    <span>2 个新增</span>
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fa fa-check-circle text-green-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">停用规则</p>
+                                <h3 class="text-2xl font-bold text-gray-800">6</h3>
+                                <p class="text-sm text-red-600 flex items-center mt-1">
+                                    <i class="fa fa-arrow-down mr-1"></i>
+                                    <span>1 个新增</span>
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                <i class="fa fa-times-circle text-red-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 搜索和筛选 -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">规则名称</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入规则名称">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">费用类型</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option>全部</option>
+                                <option>人员费用</option>
+                                <option>直接投入</option>
+                                <option>折旧费用</option>
+                                <option>摊销费用</option>
+                                <option>设计费用</option>
+                                <option>委托研发</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option>全部</option>
+                                <option>启用</option>
+                                <option>停用</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button class="w-full px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors">
+                                <i class="fa fa-search mr-2"></i> 搜索
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 规则列表 -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        规则编码
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        规则名称
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        费用类型
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        分配基准
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        分配对象
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        扣除率
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        状态
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RULE-2026-001</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">人员费用分配规则</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">人员费用</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">工时</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">项目</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">启用</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showRuleDetail('RULE-2026-001')">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
+                                        <a href="#" class="text-danger hover:text-red-600">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RULE-2026-002</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直接投入分配规则</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直接投入</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">项目使用量</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">项目</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">启用</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showRuleDetail('RULE-2026-002')">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
+                                        <a href="#" class="text-danger hover:text-red-600">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RULE-2026-003</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">折旧费用分配规则</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">折旧费用</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">使用时间</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">项目</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">启用</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showRuleDetail('RULE-2026-003')">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
+                                        <a href="#" class="text-danger hover:text-red-600">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RULE-2026-004</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">摊销费用分配规则</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">摊销费用</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">使用时间</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">项目</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">启用</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showRuleDetail('RULE-2026-004')">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
+                                        <a href="#" class="text-danger hover:text-red-600">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RULE-2026-005</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">设计费用分配规则</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">设计费用</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">项目</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">项目</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">启用</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showRuleDetail('RULE-2026-005')">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
+                                        <a href="#" class="text-danger hover:text-red-600">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RULE-2026-006</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">委托研发分配规则</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">委托研发</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">项目</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">项目</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">80%</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">启用</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showRuleDetail('RULE-2026-006')">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
+                                        <a href="#" class="text-danger hover:text-red-600">删除</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                        <div class="text-sm text-gray-700">
+                            共 24 条记录，3 页
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50" disabled>
+                                <i class="fa fa-chevron-left"></i>
+                            </button>
+                            <button class="px-3 py-1 border border-primary bg-primary text-white rounded-md">1</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">2</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">3</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 规则详情模态框 -->
+    <div id="ruleDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl mx-4">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800">规则详情</h3>
+                <button onclick="closeDetailModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500 mb-3">基本信息</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">规则编码</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="RULE-2026-001" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">规则名称</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="人员费用分配规则" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">所属行业</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="科技行业" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">主费用类型</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="人员费用" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">子费用类型</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="工资薪金" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500 mb-3">分配规则</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">扣除率</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="100%" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">是否形成无形资产</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="否" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">分配基准</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="工时" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">分配对象</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="项目" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">分配方法</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="按实际工时比例" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <h4 class="text-sm font-medium text-gray-500 mb-3">特殊规则</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">分配周期</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="月度" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">委托类型</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="无" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">是否检查负面清单</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="是" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">辅助核算格式</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="项目-部门-人员" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">申报时间要求</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="次月15日前" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
+                                <textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" disabled>按照实际工时比例分配人员费用，适用于所有研发项目。</textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">是否启用</label>
+                                <div class="flex items-center">
+                                    <input type="checkbox" checked disabled class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                    <span class="ml-2 text-sm text-gray-700">启用</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-2">
+                    <button onclick="closeDetailModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加分配规则模态框 -->
+    <div id="addRuleModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl mx-4 transform transition-all">
+                <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-800">添加分配规则</h3>
+                    <button onclick="closeAddModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <!-- 配置流程说明 -->
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-info-circle text-blue-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-blue-700">
+                                配置流程：1.填写基本信息 → 2.选择费用类型 → 3.设置分配规则 → 4.设置特殊规则 → 5.保存
+                            </p>
+                            <p class="text-sm text-blue-700 mt-1">
+                                政策依据：2026年加计扣除政策，未形成无形资产按100%加计扣除，形成无形资产按200%摊销
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 max-h-[70vh] overflow-y-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">基本信息</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">规则编码</label>
+                                    <input type="text" id="ruleCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="自动生成">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">规则名称 <span class="text-red-500">*</span></label>
+                                    <input type="text" id="ruleName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入规则名称">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">所属行业</label>
+                                    <select id="industryType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="tech">科技行业</option>
+                                        <option value="manufacturing">制造业</option>
+                                        <option value="service">服务业</option>
+                                        <option value="other">其他行业</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">费用类型</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">主费用类型 <span class="text-red-500">*</span></label>
+                                    <select id="mainExpenseType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择主费用类型</option>
+                                        <option value="personnel">人员费用</option>
+                                        <option value="directInput">直接投入</option>
+                                        <option value="depreciation">折旧费用</option>
+                                        <option value="amortization">摊销费用</option>
+                                        <option value="design">设计费用</option>
+                                        <option value="outsourcing">委托研发</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">子费用类型</label>
+                                    <select id="subExpenseType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请先选择主费用类型</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">分配规则</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">扣除率</label>
+                                    <input type="number" id="deductionRate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="100" min="0" max="200">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">是否形成无形资产</label>
+                                    <select id="isIntangible" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="false">否</option>
+                                        <option value="true">是</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">分配基准 <span class="text-red-500">*</span></label>
+                                    <select id="allocationBase" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择分配基准</option>
+                                        <option value="work_hours">工时</option>
+                                        <option value="usage">使用量</option>
+                                        <option value="time">使用时间</option>
+                                        <option value="project">项目</option>
+                                        <option value="department">部门</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">分配对象 <span class="text-red-500">*</span></label>
+                                    <select id="allocationTarget" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择分配对象</option>
+                                        <option value="project">项目</option>
+                                        <option value="department">部门</option>
+                                        <option value="task">任务</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">分配方法</label>
+                                    <select id="allocationMethod" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="ratio">按比例</option>
+                                        <option value="actual">按实际</option>
+                                        <option value="fixed">固定金额</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">分配周期</label>
+                                    <select id="allocationPeriod" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="monthly">月度</option>
+                                        <option value="quarterly">季度</option>
+                                        <option value="yearly">年度</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">特殊规则</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">委托类型</label>
+                                    <select id="outsourcingType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="none">无</option>
+                                        <option value="domestic">境内委托</option>
+                                        <option value="overseas">境外委托</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">是否检查负面清单</label>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="checkNegativeList" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                        <span class="ml-2 text-sm text-gray-700">是</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">辅助核算格式</label>
+                                    <input type="text" id="auxiliaryAccountFormat" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="项目-部门-人员">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">申报时间要求</label>
+                                    <input type="text" id="declarationTime" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="次月15日前">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
+                                    <textarea id="ruleRemark" rows="3" placeholder="请输入备注信息，如政策依据、特殊处理说明等" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">是否启用</label>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="isEnabled" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                        <span class="ml-2 text-sm text-gray-700">是</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end space-x-2">
+                        <button onclick="closeAddModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                            取消
+                        </button>
+                        <button onclick="saveRule()" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors">
+                            保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadPage(pageUrl) {
+            // 直接跳转到新页面
+            window.location.href = pageUrl;
+        }
+        
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+            
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+        }
+        
+        function showRuleDetail(ruleId) {
+            document.getElementById('ruleDetailModal').classList.remove('hidden');
+        }
+        
+        function closeDetailModal() {
+            document.getElementById('ruleDetailModal').classList.add('hidden');
+        }
+        
+        function closeAddModal() {
+            document.getElementById('addRuleModal').classList.add('hidden');
+        }
+        
+        function updateSubExpenseTypes() {
+            const mainType = document.getElementById('mainExpenseType').value;
+            const subTypeSelect = document.getElementById('subExpenseType');
+            
+            // 清空现有选项
+            subTypeSelect.innerHTML = '';
+            
+            // 根据主费用类型添加子费用类型
+            const subTypes = {
+                'personnel': [
+                    { value: 'salary', text: '工资薪金' },
+                    { value: 'bonuses', text: '奖金' },
+                    { value: 'allowances', text: '津贴补贴' },
+                    { value: 'social_security', text: '社会保障费' },
+                    { value: 'housing_fund', text: '住房公积金' },
+                    { value: 'outsourced', text: '外包研发人员费用' }
+                ],
+                'directInput': [
+                    { value: 'materials', text: '原材料' },
+                    { value: 'fuel', text: '燃料' },
+                    { value: 'power', text: '动力费用' },
+                    { value: 'test_fee', text: '检验检测费' },
+                    { value: 'sample', text: '样品样机' }
+                ],
+                'depreciation': [
+                    { value: 'equipment', text: '研发设备折旧' },
+                    { value: 'building', text: '研发用房折旧' }
+                ],
+                'amortization': [
+                    { value: 'software', text: '软件摊销' },
+                    { value: 'patent', text: '专利摊销' },
+                    { value: 'non_patent', text: '非专利技术摊销' }
+                ],
+                'design': [
+                    { value: 'new_product', text: '新产品设计费' },
+                    { value: 'new_process', text: '新工艺规程制定费' },
+                    { value: 'clinical', text: '临床试验费' },
+                    { value: 'field_test', text: '现场试验费' }
+                ],
+                'outsourcing': [
+                    { value: 'domestic', text: '委托境内研发' },
+                    { value: 'overseas', text: '委托境外研发' }
+                ]
+            };
+            
+            if (mainType && subTypes[mainType]) {
+                subTypes[mainType].forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.value;
+                    option.textContent = type.text;
+                    subTypeSelect.appendChild(option);
+                });
+            } else {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = '请先选择主费用类型';
+                subTypeSelect.appendChild(option);
+            }
+        }
+        
+        function saveRule() {
+            const ruleCode = document.getElementById('ruleCode').value;
+            const ruleName = document.getElementById('ruleName').value;
+            const industryType = document.getElementById('industryType').value;
+            const mainExpenseType = document.getElementById('mainExpenseType').value;
+            const subExpenseType = document.getElementById('subExpenseType').value;
+            const deductionRate = document.getElementById('deductionRate').value;
+            const isIntangible = document.getElementById('isIntangible').value;
+            const allocationBase = document.getElementById('allocationBase').value;
+            const allocationTarget = document.getElementById('allocationTarget').value;
+            const allocationMethod = document.getElementById('allocationMethod').value;
+            const allocationPeriod = document.getElementById('allocationPeriod').value;
+            const outsourcingType = document.getElementById('outsourcingType').value;
+            const checkNegativeList = document.getElementById('checkNegativeList').checked;
+            const auxiliaryAccountFormat = document.getElementById('auxiliaryAccountFormat').value;
+            const declarationTime = document.getElementById('declarationTime').value;
+            const ruleRemark = document.getElementById('ruleRemark').value;
+            const isEnabled = document.getElementById('isEnabled').checked;
+            
+            // 表单验证
+            if (!ruleName) {
+                alert('请输入规则名称');
+                return;
+            }
+            if (!mainExpenseType) {
+                alert('请选择主费用类型');
+                return;
+            }
+            if (!allocationBase) {
+                alert('请选择分配基准');
+                return;
+            }
+            if (!allocationTarget) {
+                alert('请选择分配对象');
+                return;
+            }
+            
+            // 构建规则对象
+            const ruleData = {
+                code: ruleCode,
+                name: ruleName,
+                industry: industryType,
+                mainExpenseType: mainExpenseType,
+                subExpenseType: subExpenseType,
+                deductionRate: deductionRate,
+                isIntangible: isIntangible,
+                allocationBase: allocationBase,
+                allocationTarget: allocationTarget,
+                allocationMethod: allocationMethod,
+                allocationPeriod: allocationPeriod,
+                outsourcingType: outsourcingType,
+                checkNegativeList: checkNegativeList,
+                auxiliaryAccountFormat: auxiliaryAccountFormat,
+                declarationTime: declarationTime,
+                remark: ruleRemark,
+                enabled: isEnabled
+            };
+            
+            console.log('保存的规则数据', ruleData);
+            alert('分配规则保存成功！');
+            closeAddModal();
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定添加规则按钮点击事件
+            const addRuleBtn = document.getElementById('addRuleBtn');
+            if (addRuleBtn) {
+                addRuleBtn.addEventListener('click', function() {
+                    document.getElementById('addRuleModal').classList.remove('hidden');
+                });
+            }
+            
+            // 绑定主费用类型变化事件
+            const mainExpenseTypeSelect = document.getElementById('mainExpenseType');
+            if (mainExpenseTypeSelect) {
+                mainExpenseTypeSelect.addEventListener('change', updateSubExpenseTypes);
+            }
+        });
+    </script>
+
+    <script>
+        function loadPage(pageUrl) {
+            window.location.href = pageUrl;
+        }
+
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectSubmenu = document.getElementById('project-submenu');
+            if (projectSubmenu) {
+                projectSubmenu.classList.remove('collapsed');
+            }
+            const salarySubmenu = document.getElementById('salary-submenu');
+            if (salarySubmenu) {
+                salarySubmenu.classList.remove('collapsed');
+            }
+        });
+    </script>
+</body>
+</html>

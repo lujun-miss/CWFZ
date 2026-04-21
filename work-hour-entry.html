@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工时填报 - 研发费管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        accent: '#6366f1',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        info: '#3b82f6',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .workflow-step { position: relative; }
+        .workflow-step:not(:last-child)::after {
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            right: -50%; 
+            width: 100%; 
+            height: 2px; 
+            background-color: #d1d5db;
+        }
+        .workflow-step.completed:not(:last-child)::after { background-color: #10b981; }
+        .task-row:hover { background-color: #f9fafb; }
+        .tab-btn { transition: all 0.3s ease; }
+        .tab-btn:hover { transform: translateY(-1px); }
+        .tab-btn:active { transform: translateY(0); }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .grid-cols-1.lg\:grid-cols-3 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航栏 -->
+        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto" style="max-height: 100vh;">
+            <!-- 系统标题 -->
+            <div class="p-4 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-primary flex items-center">
+                    <i class="fa fa-cogs mr-2"></i>
+                    <span>研发费管理系统</span>
+                </h1>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="mt-4">
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="nav-item flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu collapsed">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目要素</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>阶段审核</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-money w-6"></i>
+                                <span>薪酬管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="salary-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-management.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>薪酬结构管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item active nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-log.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>工时日志填报</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-allocation.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时分配管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- 右侧主内容区域 -->
+        <div class="flex-1 flex flex-col">
+            <!-- 顶部信息栏 -->
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+                <div class="flex items-center">
+                    <h2 id="page-title" class="text-lg font-medium text-gray-800">工时填报</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-bell"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
+                        <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- 主内容 -->
+            <main class="flex-1 overflow-auto p-6">
+                <!-- 页面标题和操作按钮 -->
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">工时填报</h1>
+                        <div class="flex items-center mt-2">
+                            <nav class="flex" aria-label="Breadcrumb">
+                                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                                    <li class="inline-flex items-center">
+                                        <a href="dashboard.html" class="text-sm font-medium text-gray-700 hover:text-primary">首页</a>
+                                    </li>
+                                    <li>
+                                        <div class="flex items-center">
+                                            <i class="fa fa-chevron-right text-gray-400 mx-2"></i>
+                                            <a href="#" class="text-sm font-medium text-gray-700 hover:text-primary">薪酬管理</a>
+                                        </div>
+                                    </li>
+                                    <li aria-current="page">
+                                        <div class="flex items-center">
+                                            <i class="fa fa-chevron-right text-gray-400 mx-2"></i>
+                                            <span class="text-sm font-medium text-primary">工时填报</span>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button onclick="loadPage('work-hour-log.html')" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-300 flex items-center">
+                            <i class="fa fa-arrow-left mr-2"></i>返回列表
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 工时统计卡片 -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">考勤应到工时</p>
+                                <h3 class="text-2xl font-bold text-gray-900">40小时</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                <i class="fa fa-calendar text-primary text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">已填报工时</p>
+                                <h3 class="text-2xl font-bold text-gray-900">32小时</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                <i class="fa fa-check-circle text-secondary text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">剩余未分配</p>
+                                <h3 class="text-2xl font-bold text-gray-900">8小时</h3>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                                <i class="fa fa-clock-o text-warning text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 工时填报表单 -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <form id="workHourForm" onsubmit="return submitForm()">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label for="entryDate" class="block text-sm font-medium text-gray-700 mb-1">填报日期 *</label>
+                                <input type="date" id="entryDate" name="entryDate" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            <div>
+                                <label for="project" class="block text-sm font-medium text-gray-700 mb-1">项目名称 *</label>
+                                <select id="project" name="project" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                    <option value="">请选择</option>
+                                    <option value="project1">智能客服系统</option>
+                                    <option value="project2">AI算法研发</option>
+                                    <option value="project3">产品设计优化</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="hours" class="block text-sm font-medium text-gray-700 mb-1">工作时长(小时) *</label>
+                                <input type="number" id="hours" name="hours" step="0.5" min="0" max="12" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            <div>
+                                <label for="workType" class="block text-sm font-medium text-gray-700 mb-1">工作类型 *</label>
+                                <select id="workType" name="workType" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                    <option value="">请选择</option>
+                                    <option value="development">开发</option>
+                                    <option value="design">设计</option>
+                                    <option value="testing">测试</option>
+                                    <option value="meeting">会议</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="workContent" class="block text-sm font-medium text-gray-700 mb-1">工作内容 *</label>
+                            <textarea id="workContent" name="workContent" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50" onclick="loadPage('work-hour-log.html')">取消</button>
+                            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600">提交填报</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- 近期填报记录 -->
+                <div class="mt-6">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">近期填报记录</h2>
+                    <div class="bg-white shadow-md rounded-lg p-6">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工时(小时)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工作类型</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04-19</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">智能客服系统</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">8</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">开发</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            已审核
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04-18</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AI算法研发</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">8</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">开发</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            已审核
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04-17</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">产品设计优化</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">8</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">设计</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            项目经理已审
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        function loadPage(pageUrl) {
+            window.location.href = pageUrl;
+        }
+        
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+        }
+        
+        // 提交表单
+        function submitForm() {
+            const entryDate = document.getElementById('entryDate').value;
+            const project = document.getElementById('project').value;
+            const hours = document.getElementById('hours').value;
+            const workType = document.getElementById('workType').value;
+            const workContent = document.getElementById('workContent').value;
+            
+            if (!entryDate || !project || !hours || !workType || !workContent) {
+                alert('请填写所有必填字段');
+                return false;
+            }
+            
+            // 提交成功
+            alert('工时填报提交成功！');
+            loadPage('work-hour-log.html');
+            return false;
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            const salarySubmenu = document.getElementById('salary-submenu');
+            if (salarySubmenu) {
+                salarySubmenu.classList.remove('collapsed');
+            }
+        });
+    </script>
+</body>
+</html>

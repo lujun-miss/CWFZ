@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人员库管理 - 研发费管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        accent: '#6366f1',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        info: '#3b82f6',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .nav-item-active {
+                @apply bg-primary text-white;
+            }
+            .nav-item-hover {
+                @apply hover:bg-blue-100 transition-colors duration-200;
+            }
+        }
+    </style>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover {
+            transform: translateX(4px);
+        }
+        .nav-item.active {
+            border-left: 4px solid #3b82f6;
+        }
+        .menu-toggle {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-toggle:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        .sub-menu {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .sub-menu.collapsed {
+            max-height: 0;
+        }
+        .menu-arrow {
+            transition: transform 0.3s ease;
+        }
+        .menu-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        .table-row-hover:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航菜单 -->
+        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto" style="max-height: 100vh;">
+            <!-- 系统标题 -->
+            <div class="p-4 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-primary flex items-center">
+                    <i class="fa fa-cogs mr-2"></i>
+                    <span>研发费管理系统</span>
+                </h1>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="mt-4">
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="project-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目需求</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>阶段审核</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('progress-tracking.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>进度跟踪</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-personnel.html')">
+                                    <i class="fa fa-users w-6"></i>
+                                    <span>项目人员</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-output.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>研发产出</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-equipment.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>研发设备</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-analysis.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>项目分析统计</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资源管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="work-hour-allocation.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-allocation.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('report.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>多口径报表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="expense-allocation.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-allocation.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>费用分配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="reference-materials.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('reference-materials.html')">
+                                    <i class="fa fa-folder-o w-6"></i>
+                                    <span>参考资料</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-users w-6"></i>
+                                <span>人事管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item active nav-item-active flex items-center px-4 py-2" onclick="loadPage('personnel-library.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>人员库管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('department.html')">
+                                    <i class="fa fa-sitemap w-6"></i>
+                                    <span>部门管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>职位管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资产管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
+                                    <i class="fa fa-cog w-6"></i>
+                                    <span>资产信息管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-depreciation.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>资产折旧管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-money w-6"></i>
+                                <span>薪资管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-management.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>薪资结构管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-allocation.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时分配管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-allocation.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>薪资分摊核算</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-log.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>工时日志填报管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="policy.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('policy.html')">
+                            <i class="fa fa-book w-6"></i>
+                            <span>政策查询</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-money w-6"></i>
+                                <span>研发费用管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="rd-fee.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('rd-fee.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>费用管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="expense-analysis.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-analysis.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>费用分析</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="budget-management.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('budget-management.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>预算管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="intangible.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('intangible.html')">
+                            <i class="fa fa-lightbulb-o w-6"></i>
+                            <span>无形资产管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-building w-6"></i>
+                                <span>企业档案</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="department.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('department.html')">
+                                    <i class="fa fa-sitemap w-6"></i>
+                                    <span>部门管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="position.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>职位管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="user.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('user.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>用户管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="role.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('role.html')">
+                                    <i class="fa fa-shield w-6"></i>
+                                    <span>角色管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-database w-6"></i>
+                                <span>系统设置（核心字典）</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="expense-type.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-type.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>费用类型字典</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="allocation-rule.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('allocation-rule.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>分摊规则配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="deduction-policy.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('deduction-policy.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>加计扣除政策配置</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="settings.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('settings.html')">
+                            <i class="fa fa-cog w-6"></i>
+                            <span>设置</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('profile.html')">
+                            <i class="fa fa-user w-6"></i>
+                            <span>个人资料</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- 右侧主内容区域 -->
+        <div class="flex-1 flex flex-col">
+            <!-- 顶部信息栏 -->
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+                <div class="flex items-center">
+                    <h2 id="page-title" class="text-lg font-medium text-gray-800">人员库管理</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-bell"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
+                        <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- 主内容 -->
+            <main class="flex-1 overflow-auto p-6">
+                <!-- 页面标题 -->
+                <div class="mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">人员库管理</h1>
+                    <div class="flex space-x-4 mt-2">
+                        <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-md text-sm font-medium">首页</button>
+                        <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-md text-sm font-medium">项目管理</button>
+                        <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-md text-sm font-medium">项目人员</button>
+                        <button class="px-3 py-1 bg-blue-100 text-primary rounded-md text-sm font-medium">人员库管理</button>
+                    </div>
+                </div>
+                
+                <!-- 搜索和新增 -->
+                <div class="bg-white rounded-lg shadow p-4 mb-4">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 mr-2">人员姓名</label>
+                            <input type="text" class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="请输入人员姓名">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 mr-2">部门</label>
+                            <select class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+                                <option>请选择部门</option>
+                                <option>研发部</option>
+                                <option>市场部</option>
+                                <option>财务部</option>
+                                <option>行政部</option>
+                            </select>
+                        </div>
+                        <button class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center">
+                            <i class="fa fa-search mr-1"></i>
+                            搜索
+                        </button>
+                        <button id="addPersonBtn" class="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600 transition-colors flex items-center">
+                            <i class="fa fa-plus mr-1"></i>
+                            新增人员
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 人员列表 -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    </th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">序号</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">姓名</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">部门</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">职位</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">基本薪资</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">绩效薪资</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">社保公积金</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">月均合计</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时薪</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="table-row-hover">
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">1</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">张三</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">项目经理</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">15000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">8000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">3000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-green-600">26000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-blue-600">149.43</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(1)">编辑</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(1)">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">李四</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发工程师</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">12000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">6000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2500</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-green-600">20500</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-blue-600">117.82</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(2)">编辑</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(2)">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">3</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">王五</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">测试工程师</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">10000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">5000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-green-600">17000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-blue-600">97.70</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(3)">编辑</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(3)">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">4</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">赵六</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">前端工程师</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">11000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">5500</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-green-600">18500</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-blue-600">106.32</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(4)">编辑</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(4)">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">5</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">钱七</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">后端工程师</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">12000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">6000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2500</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-green-600">20500</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-blue-600">117.82</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(5)">编辑</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(5)">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">6</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">孙八</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">市场部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">产品经理</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">13000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">7000</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2800</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-green-600">22800</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-blue-600">131.03</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(6)">编辑</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(6)">删除</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 分页 -->
+                    <div class="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
+                        <div class="text-sm text-gray-700">
+                            共100条记录，20条/页
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50" disabled>
+                                <i class="fa fa-chevron-left"></i>
+                            </button>
+                            <button class="px-3 py-1 border border-primary bg-primary text-white rounded-md">1</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">2</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">3</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">4</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">5</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 新增/编辑人员模态框 -->
+    <div id="personModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 id="modalTitle" class="text-lg font-medium text-gray-900">新增人员</h3>
+                <button class="text-gray-400 hover:text-gray-500" onclick="closeModal()">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <form id="personForm">
+                <input type="hidden" id="personId">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">姓名</label>
+                        <input type="text" id="personName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">部门</label>
+                        <select id="personDepartment" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                            <option value="">请选择部门</option>
+                            <option value="研发部">研发部</option>
+                            <option value="市场部">市场部</option>
+                            <option value="财务部">财务部</option>
+                            <option value="行政部">行政部</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">职位</label>
+                        <select id="personPosition" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                            <option value="">请选择职位</option>
+                            <option value="项目经理">项目经理</option>
+                            <option value="研发工程师">研发工程师</option>
+                            <option value="测试工程师">测试工程师</option>
+                            <option value="前端工程师">前端工程师</option>
+                            <option value="后端工程师">后端工程师</option>
+                            <option value="产品经理">产品经理</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">基本薪资</label>
+                        <input type="number" id="personBaseSalary" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">绩效薪资</label>
+                        <input type="number" id="personPerformanceSalary" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">社保公积金</label>
+                        <input type="number" id="personSocialSecurity" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50" onclick="closeModal()">取消</button>
+                    <button type="button" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600" onclick="savePerson()">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 菜单折叠/展开
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+            
+            if (subMenu.classList.contains('collapsed')) {
+                subMenu.classList.remove('collapsed');
+                arrow.classList.remove('collapsed');
+            } else {
+                subMenu.classList.add('collapsed');
+                arrow.classList.add('collapsed');
+            }
+        }
+
+        // 加载页面
+        function loadPage(page) {
+            window.location.href = page;
+        }
+
+        // 打开新增人员模态框
+        document.getElementById('addPersonBtn').addEventListener('click', function() {
+            document.getElementById('modalTitle').textContent = '新增人员';
+            document.getElementById('personId').value = '';
+            document.getElementById('personName').value = '';
+            document.getElementById('personDepartment').value = '';
+            document.getElementById('personPosition').value = '';
+            document.getElementById('personBaseSalary').value = '';
+            document.getElementById('personPerformanceSalary').value = '';
+            document.getElementById('personSocialSecurity').value = '';
+            document.getElementById('personModal').classList.remove('hidden');
+        });
+
+        // 编辑人员
+        function editPerson(id) {
+            // 这里可以根据ID获取人员信息并填充到表单
+            document.getElementById('modalTitle').textContent = '编辑人员';
+            document.getElementById('personId').value = id;
+            // 模拟填充数据
+            document.getElementById('personName').value = '测试人员';
+            document.getElementById('personDepartment').value = '研发部';
+            document.getElementById('personPosition').value = '研发工程师';
+            document.getElementById('personBaseSalary').value = '10000';
+            document.getElementById('personPerformanceSalary').value = '5000';
+            document.getElementById('personSocialSecurity').value = '2000';
+            document.getElementById('personModal').classList.remove('hidden');
+        }
+
+        // 删除人员
+        function deletePerson(id) {
+            if (confirm('确定要删除该人员吗？')) {
+                // 这里可以添加删除逻辑
+                console.log('删除人员ID:', id);
+                alert('删除成功！');
+            }
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('personModal').classList.add('hidden');
+        }
+
+        // 保存人员
+        function savePerson() {
+            const id = document.getElementById('personId').value;
+            const name = document.getElementById('personName').value;
+            const department = document.getElementById('personDepartment').value;
+            const position = document.getElementById('personPosition').value;
+            const baseSalary = document.getElementById('personBaseSalary').value;
+            const performanceSalary = document.getElementById('personPerformanceSalary').value;
+            const socialSecurity = document.getElementById('personSocialSecurity').value;
+
+            if (!name || !department || !position || !baseSalary || !performanceSalary || !socialSecurity) {
+                alert('请填写所有必填字段');
+                return;
+            }
+
+            // 这里可以添加保存逻辑
+            console.log('保存人员:', { id, name, department, position, baseSalary, performanceSalary, socialSecurity });
+            alert('保存成功！');
+            closeModal();
+        }
+    </script>
+</body>
+</html>

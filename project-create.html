@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增项目 - 研发费管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        accent: '#6366f1',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        info: '#3b82f6',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .nav-item-active {
+                @apply bg-primary text-white;
+            }
+            .nav-item-hover {
+                @apply hover:bg-blue-100 transition-colors duration-200;
+            }
+        }
+    </style>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover {
+            transform: translateX(4px);
+        }
+        .nav-item.active {
+            border-left: 4px solid #3b82f6;
+        }
+        .menu-toggle {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-toggle:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        .sub-menu {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .sub-menu.collapsed {
+            max-height: 0;
+        }
+        .menu-arrow {
+            transition: transform 0.3s ease;
+        }
+        .menu-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 14px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .form-select {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 14px;
+            background-color: white;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .form-textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .form-note {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+        }
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .step-number.completed {
+            background-color: #10b981;
+        }
+        .step-number.pending {
+            background-color: #d1d5db;
+        }
+        .step-label {
+            margin-left: 0.75rem;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+        .step-label.completed {
+            color: #10b981;
+        }
+        .step-label.pending {
+            color: #6b7280;
+        }
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background-color: #d1d5db;
+            margin: 0 1rem;
+        }
+        .step-line.completed {
+            background-color: #10b981;
+        }
+        .table-row-hover:hover {
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航菜单 -->
+        <aside id="sidebar" class="w-64 bg-white shadow-md flex-shrink-0 hidden lg:block">
+            <!-- 系统标题 -->
+            <div class="p-4 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-primary flex items-center">
+                    <i class="fa fa-cogs mr-2"></i>
+                    <span>研发费管理系统</span>
+                </h1>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="mt-4">
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="project-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目要素</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>阶段审核</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('progress-tracking.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>进度跟踪</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-personnel.html')">
+                                    <i class="fa fa-users w-6"></i>
+                                    <span>项目人员</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-output.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>研发产出</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-equipment.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>研发设备</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-analysis.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>项目分析统计</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资源管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('report.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>多口径报表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-allocation.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>费用分配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('reference-materials.html')">
+                                    <i class="fa fa-folder-o w-6"></i>
+                                    <span>备查资料</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-users w-6"></i>
+                                <span>人事管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>人员库管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('department.html')">
+                                    <i class="fa fa-sitemap w-6"></i>
+                                    <span>部门管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>岗位管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资产管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
+                                    <i class="fa fa-cog w-6"></i>
+                                    <span>资产信息管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-depreciation.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>资产折旧管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-money w-6"></i>
+                                <span>薪酬管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="salary-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-management.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>薪酬结构管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-log.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>工时日志填报</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-allocation.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时分配管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-allocation.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>薪酬分摊计算</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="policy.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('policy.html')">
+                            <i class="fa fa-book w-6"></i>
+                            <span>政策查询</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-money w-6"></i>
+                                <span>研发费管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('rd-fee.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>费用管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-analysis.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>费用分析</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('budget-management.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>预算管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('intangible.html')">
+                            <i class="fa fa-lightbulb-o w-6"></i>
+                            <span>无形资产管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('profile.html')">
+                            <i class="fa fa-user-o w-6"></i>
+                            <span>个人中心</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- 右侧主内容区域 -->
+        <div class="flex-1 flex flex-col">
+            <!-- 顶部信息栏 -->
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+                <div class="flex items-center">
+                    <h2 id="page-title" class="text-lg font-medium text-gray-800">新增项目</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-bell"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
+                        <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- 主内容 -->
+            <main class="flex-1 overflow-auto p-6">
+                <!-- 页面标题和操作按钮 -->
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">项目创建</h1>
+                        <div class="flex items-center mt-2">
+                            <nav class="flex" aria-label="Breadcrumb">
+                                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                                    <li class="inline-flex items-center">
+                                        <a href="dashboard.html" class="text-sm font-medium text-gray-700 hover:text-primary">首页</a>
+                                    </li>
+                                    <li>
+                                        <div class="flex items-center">
+                                            <i class="fa fa-chevron-right text-gray-400 mx-2"></i>
+                                            <a href="project-management.html" class="text-sm font-medium text-gray-700 hover:text-primary">项目管理</a>
+                                        </div>
+                                    </li>
+                                    <li aria-current="page">
+                                        <div class="flex items-center">
+                                            <i class="fa fa-chevron-right text-gray-400 mx-2"></i>
+                                            <span class="text-sm font-medium text-primary">新增项目</span>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 步骤指示器 -->
+                <div class="step-indicator">
+                    <div class="step">
+                        <div class="step-number active">1</div>
+                        <div class="step-label">项目基本信息</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                        <div class="step-number pending">2</div>
+                        <div class="step-label pending">研发团队配置</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                        <div class="step-number pending">3</div>
+                        <div class="step-label pending">项目预算管理</div>
+                    </div>
+                </div>
+                
+                <!-- 表单容器 -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <!-- 项目基本信息 -->
+                    <div id="step1" class="step-content">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">项目基本信息</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- 项目名称 -->
+                            <div>
+                                <label class="form-label">项目名称</label>
+                                <input type="text" class="form-input" placeholder="请输入项目名称">
+                            </div>
+                            
+                            <!-- 项目编号 -->
+                            <div>
+                                <label class="form-label">项目编号</label>
+                                <input type="text" class="form-input" placeholder="系统自动生成" disabled>
+                            </div>
+                            
+                            <!-- 项目类型 -->
+                            <div>
+                                <label class="form-label">项目类型 <span class="text-red-500">*</span></label>
+                                <select class="form-select">
+                                    <option value="">请选择</option>
+                                    <option value="internal">内部管理项目</option>
+                                    <option value="external">外部合作项目</option>
+                                    <option value="government">政府资助项目</option>
+                                </select>
+                                <div class="form-note">注：内部管理项目</div>
+                            </div>
+                            
+                            <!-- 项目总预算 -->
+                            <div>
+                                <label class="form-label">项目总预算（元） <span class="text-red-500">*</span></label>
+                                <div class="flex items-center">
+                                    <input type="number" class="form-input flex-1" placeholder="请输入预算金额">
+                                    <button class="ml-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200">
+                                        制定/管理预算明细
+                                    </button>
+                                </div>
+                                <div class="form-note">注：内部管理项目</div>
+                            </div>
+                            
+                            <!-- 研发形式 -->
+                            <div>
+                                <label class="form-label">研发形式 <span class="text-red-500">*</span></label>
+                                <select class="form-select">
+                                    <option value="">请选择</option>
+                                    <option value="independent">自主研发</option>
+                                    <option value="cooperation">合作研发</option>
+                                    <option value="委托研发">委托研发</option>
+                                </select>
+                                <div class="form-note">注：根据扣除比例执行；变更选项，影响委托研发费用加计扣除政策要求</div>
+                            </div>
+                            
+                            <!-- 委托方类型 -->
+                            <div>
+                                <label class="form-label">委托方类型</label>
+                                <div class="flex items-center space-x-4">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="delegateType" value="domestic" class="mr-2">
+                                        <span>境内</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="delegateType" value="foreign" class="mr-2">
+                                        <span>境外</span>
+                                    </label>
+                                </div>
+                                <div class="form-note">注：当研发形式选择"委托研发"时，此选项为委托方类型（境内/境外）必选项，用于系统自动计算加计扣除路数。</div>
+                            </div>
+                            
+                            <!-- 核算阶段 -->
+                            <div>
+                                <label class="form-label">核算阶段 <span class="text-red-500">*</span></label>
+                                <select class="form-select">
+                                    <option value="">请选择</option>
+                                    <option value="planning">规划阶段</option>
+                                    <option value="execution">执行阶段</option>
+                                    <option value="completion">完成阶段</option>
+                                </select>
+                                <div class="form-note">注：直接决定研发支出的费用化归集还是满足满条件的资本化</div>
+                            </div>
+                            
+                            <!-- 技术领域 -->
+                            <div>
+                                <label class="form-label">技术领域 <span class="text-red-500">*</span></label>
+                                <select class="form-select">
+                                    <option value="">请选择</option>
+                                    <option value="information">信息技术</option>
+                                    <option value="biotechnology">生物技术</option>
+                                    <option value="newMaterials">新材料</option>
+                                    <option value="advancedManufacturing">先进制造</option>
+                                    <option value="energy">能源与环保</option>
+                                </select>
+                                <div class="form-note">注：财务加计扣除口径，用于判断项目是否属于【负面清单】</div>
+                            </div>
+                            
+                            <!-- 高新领域 -->
+                            <div>
+                                <label class="form-label">高新领域 <span class="text-red-500">*</span></label>
+                                <select class="form-select">
+                                    <option value="">请选择</option>
+                                    <option value="electronicInformation">电子信息</option>
+                                    <option value="biotechnology">生物与新医药</option>
+                                    <option value="newMaterials">新材料</option>
+                                    <option value="highTechnologyServices">高技术服务</option>
+                                    <option value="advancedManufacturing">先进制造与自动化</option>
+                                    <option value="energySaving">节能与新能源</option>
+                                    <option value="environmentalProtection">资源与环境</option>
+                                </select>
+                                <div class="form-note">注：高新领域；必须选择匹配的领域，这是高企评审的门槛起始，建议支持选择到三级领域</div>
+                            </div>
+                            
+                            <!-- 知识产权类型 -->
+                            <div>
+                                <label class="form-label">知识产权类型</label>
+                                <select class="form-select">
+                                    <option value="">请选择</option>
+                                    <option value="patent">发明专利</option>
+                                    <option value="utilityModel">实用新型专利</option>
+                                    <option value="design">外观设计专利</option>
+                                    <option value="softwareCopyright">软件著作权</option>
+                                    <option value="integratedCircuit">集成电路布图设计</option>
+                                </select>
+                                <div class="form-note">注：高新领域；用于关联项目计划产生或生产的知识产权，是体现项目创新性与成果产出的核心证据。</div>
+                            </div>
+                            
+                            <!-- 开始时间 -->
+                            <div>
+                                <label class="form-label">开始时间 <span class="text-red-500">*</span></label>
+                                <input type="date" class="form-input">
+                            </div>
+                            
+                            <!-- 结束时间 -->
+                            <div>
+                                <label class="form-label">结束时间 <span class="text-red-500">*</span></label>
+                                <input type="date" class="form-input">
+                            </div>
+                            
+                            <!-- 项目状态 -->
+                            <div>
+                                <label class="form-label">项目状态 <span class="text-red-500">*</span></label>
+                                <select class="form-select">
+                                    <option value="">请选择</option>
+                                    <option value="planning">规划中</option>
+                                    <option value="inProgress">进行中</option>
+                                    <option value="completed">已完成</option>
+                                    <option value="suspended">已暂停</option>
+                                </select>
+                                <div class="form-note">注："进行中"的项目才能归集费用，"已结束"项目应关闭费用录入</div>
+                            </div>
+                            
+                            <!-- 项目负责人 -->
+                            <div>
+                                <label class="form-label">项目负责人 <span class="text-red-500">*</span></label>
+                                <select class="form-select">
+                                    <option value="">请选择</option>
+                                    <option value="user1">张三</option>
+                                    <option value="user2">李四</option>
+                                    <option value="user3">王五</option>
+                                </select>
+                                <div class="form-note">注：高新技术企业一般由一个或多个部门负责人负责，此项目由个项目负责人负责</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 项目描述 -->
+                        <div class="mt-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">项目描述</h3>
+                            
+                            <!-- 项目目标 -->
+                            <div class="mb-4">
+                                <label class="form-label">项目目标</label>
+                                <textarea class="form-textarea" rows="4" placeholder="请描述项目的主要目标和预期成果"></textarea>
+                            </div>
+                            
+                            <!-- 项目内容 -->
+                            <div class="mb-4">
+                                <label class="form-label">项目内容</label>
+                                <textarea class="form-textarea" rows="4" placeholder="请描述项目的具体内容和实施计划"></textarea>
+                            </div>
+                            
+                            <!-- 项目产出预期 -->
+                            <div>
+                                <h4 class="text-md font-medium text-gray-700 mb-2">项目产出预期</h4>
+                                <div class="mb-4">
+                                    <label class="form-label">预期成果</label>
+                                    <textarea class="form-textarea" rows="4" placeholder="请描述项目预期的技术成果、专利、论文等"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 操作按钮 -->
+                        <div class="mt-8 flex justify-end">
+                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors mr-4" onclick="loadPage('project-management.html')">
+                                取消
+                            </button>
+                            <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors" onclick="nextStep(1)">
+                                下一步，为项目分配团队与设备
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 研发团队配置 -->
+                    <div id="step2" class="step-content hidden">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">研发团队配置</h2>
+                        
+                        <!-- 研发人员表格 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-gray-800">研发人员</h3>
+                                <button class="px-3 py-1 bg-primary text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center" onclick="addResearcher()">
+                                    <i class="fa fa-plus mr-1"></i> 添加研发人员
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white border border-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">姓名工号</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">部门</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">项目角色</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">费用归属角色</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">参与开始日期</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">结束日期</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">预计工时占比</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="researcherTable" class="divide-y divide-gray-200">
+                                        <!-- 初始行 -->
+                                        <tr class="table-row-hover">
+                                            <td class="px-4 py-3 border-b">
+                                                <select class="form-select">
+                                                    <option value="">请选择</option>
+                                                    <option value="user1">张三 (EMP001)</option>
+                                                    <option value="user2">李四 (EMP002)</option>
+                                                    <option value="user3">王五 (EMP003)</option>
+                                                </select>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <select class="form-select">
+                                                    <option value="">请选择</option>
+                                                    <option value="rd">研发部</option>
+                                                    <option value="it">IT部</option>
+                                                    <option value="qa">质量部</option>
+                                                </select>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <select class="form-select">
+                                                    <option value="projectManager">项目负责人</option>
+                                                    <option value="rdEngineer">研发工程师</option>
+                                                    <option value="qaEngineer">测试工程师</option>
+                                                </select>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <select class="form-select">
+                                                    <option value="rdPersonnel">研发人员</option>
+                                                    <option value="techPersonnel">科技人员</option>
+                                                </select>
+                                                <div class="form-note">系统自动带出不可修改，研发人员或科技人员</div>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="date" class="form-input">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="date" class="form-input">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="number" class="form-input" placeholder="0-100" min="0" max="100">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
+                                                    <i class="fa fa-trash"></i> 删除
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- 占用仪器与设备 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-gray-800">占用仪器与设备</h3>
+                                <button class="px-3 py-1 bg-primary text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center" onclick="addEquipment()">
+                                    <i class="fa fa-plus mr-1"></i> 添加设备
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white border border-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">设备名称/编号</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">设备型号</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">占用方式</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">占用开始日期</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">占用结束日期</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">预计使用时间占比</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="equipmentTable" class="divide-y divide-gray-200">
+                                        <!-- 初始行 -->
+                                        <tr class="table-row-hover">
+                                            <td class="px-4 py-3 border-b">
+                                                <select class="form-select">
+                                                    <option value="">从资产管理同步</option>
+                                                    <option value="eq001">研发设备001</option>
+                                                    <option value="eq002">研发设备002</option>
+                                                    <option value="eq003">研发设备003</option>
+                                                </select>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="text" class="form-input" placeholder="设备型号">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <div class="flex items-center space-x-4">
+                                                    <label class="flex items-center">
+                                                        <input type="radio" name="useType_0" value="exclusive" class="mr-2">
+                                                        <span>专用</span>
+                                                    </label>
+                                                    <label class="flex items-center">
+                                                        <input type="radio" name="useType_0" value="shared" class="mr-2">
+                                                        <span>共享</span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-note">注：占用方式是关键字段："专用"设备的折旧100%计入本项目；"共享"需按工时等方法分摊</div>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="date" class="form-input">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="date" class="form-input">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="number" class="form-input" placeholder="0-100" min="0" max="100">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
+                                                    <i class="fa fa-trash"></i> 删除
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- 操作按钮 -->
+                        <div class="mt-8 flex justify-between">
+                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="prevStep(2)">
+                                上一步，项目基础信息维护
+                            </button>
+                            <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors" onclick="nextStep(2)">
+                                下一步，项目预算管理
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 项目预算管理 -->
+                    <div id="step3" class="step-content hidden">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">项目预算管理</h2>
+                        
+                        <!-- 预算明细 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-gray-800">预算明细</h3>
+                                <button class="px-3 py-1 bg-primary text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center" onclick="addBudgetItem()">
+                                    <i class="fa fa-plus mr-1"></i> 添加预算项
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white border border-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">预算类别</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">预算金额（元）</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">备注</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="budgetTable" class="divide-y divide-gray-200">
+                                        <!-- 初始行 -->
+                                        <tr class="table-row-hover">
+                                            <td class="px-4 py-3 border-b">
+                                                <select class="form-select">
+                                                    <option value="">请选择</option>
+                                                    <option value="personnel">人员费用</option>
+                                                    <option value="equipment">设备费用</option>
+                                                    <option value="materials">材料费用</option>
+                                                    <option value="outsourcing">外包费用</option>
+                                                    <option value="other">其他费用</option>
+                                                </select>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="number" class="form-input" placeholder="0.00">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="text" class="form-input" placeholder="备注">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
+                                                    <i class="fa fa-trash"></i> 删除
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot class="bg-gray-50">
+                                        <tr>
+                                            <td class="px-4 py-3 text-right font-medium border-t">总计</td>
+                                            <td class="px-4 py-3 border-t">
+                                                <input type="number" class="form-input" placeholder="0.00" disabled>
+                                            </td>
+                                            <td class="px-4 py-3 border-t"></td>
+                                            <td class="px-4 py-3 border-t"></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- 操作按钮 -->
+                        <div class="mt-8 flex justify-between">
+                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="prevStep(3)">
+                                上一步，研发团队配置
+                            </button>
+                            <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors" onclick="submitProject()">
+                                保存
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        function loadPage(pageUrl) {
+            window.location.href = pageUrl;
+        }
+        
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+            
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectSubmenu = document.getElementById('project-submenu');
+            if (projectSubmenu) {
+                projectSubmenu.classList.remove('collapsed');
+            }
+            const salarySubmenu = document.getElementById('salary-submenu');
+            if (salarySubmenu) {
+                salarySubmenu.classList.remove('collapsed');
+            }
+        });
+        
+        // 步骤导航
+        function nextStep(currentStep) {
+            // 隐藏当前步骤
+            document.getElementById('step' + currentStep).classList.add('hidden');
+            // 显示下一步骤
+            const nextStep = currentStep + 1;
+            document.getElementById('step' + nextStep).classList.remove('hidden');
+            // 更新步骤指示器
+            updateStepIndicator(nextStep);
+        }
+        
+        function prevStep(currentStep) {
+            // 隐藏当前步骤
+            document.getElementById('step' + currentStep).classList.add('hidden');
+            // 显示上一步骤
+            const prevStep = currentStep - 1;
+            document.getElementById('step' + prevStep).classList.remove('hidden');
+            // 更新步骤指示器
+            updateStepIndicator(prevStep);
+        }
+        
+        function updateStepIndicator(activeStep) {
+            const steps = document.querySelectorAll('.step-number');
+            const stepLabels = document.querySelectorAll('.step-label');
+            const stepLines = document.querySelectorAll('.step-line');
+            
+            steps.forEach((step, index) => {
+                const stepNum = index + 1;
+                if (stepNum < activeStep) {
+                    step.classList.remove('active', 'pending');
+                    step.classList.add('completed');
+                    stepLabels[index].classList.remove('pending');
+                    stepLabels[index].classList.add('completed');
+                    if (stepLines[index]) {
+                        stepLines[index].classList.add('completed');
+                    }
+                } else if (stepNum === activeStep) {
+                    step.classList.remove('completed', 'pending');
+                    step.classList.add('active');
+                    stepLabels[index].classList.remove('completed', 'pending');
+                } else {
+                    step.classList.remove('completed', 'active');
+                    step.classList.add('pending');
+                    stepLabels[index].classList.remove('completed');
+                    stepLabels[index].classList.add('pending');
+                }
+            });
+        }
+        
+        // 添加研发人员
+        function addResearcher() {
+            const table = document.getElementById('researcherTable');
+            const newRow = document.createElement('tr');
+            newRow.className = 'table-row-hover';
+            newRow.innerHTML = `
+                <td class="px-4 py-3 border-b">
+                    <select class="form-select">
+                        <option value="">请选择</option>
+                        <option value="user1">张三 (EMP001)</option>
+                        <option value="user2">李四 (EMP002)</option>
+                        <option value="user3">王五 (EMP003)</option>
+                    </select>
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <select class="form-select">
+                        <option value="">请选择</option>
+                        <option value="rd">研发部</option>
+                        <option value="it">IT部</option>
+                        <option value="qa">质量部</option>
+                    </select>
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <select class="form-select">
+                        <option value="projectManager">项目负责人</option>
+                        <option value="rdEngineer">研发工程师</option>
+                        <option value="qaEngineer">测试工程师</option>
+                    </select>
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <select class="form-select">
+                        <option value="rdPersonnel">研发人员</option>
+                        <option value="techPersonnel">科技人员</option>
+                    </select>
+                    <div class="form-note">系统自动带出不可修改，研发人员或科技人员</div>
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="date" class="form-input">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="date" class="form-input">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="number" class="form-input" placeholder="0-100" min="0" max="100">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
+                        <i class="fa fa-trash"></i> 删除
+                    </button>
+                </td>
+            `;
+            table.appendChild(newRow);
+        }
+        
+        // 添加设备
+        function addEquipment() {
+            const table = document.getElementById('equipmentTable');
+            const newRow = document.createElement('tr');
+            newRow.className = 'table-row-hover';
+            const rowIndex = table.children.length;
+            newRow.innerHTML = `
+                <td class="px-4 py-3 border-b">
+                    <select class="form-select">
+                        <option value="">从资产管理同步</option>
+                        <option value="eq001">研发设备001</option>
+                        <option value="eq002">研发设备002</option>
+                        <option value="eq003">研发设备003</option>
+                    </select>
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="text" class="form-input" placeholder="设备型号">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="useType_${rowIndex}" value="exclusive" class="mr-2">
+                            <span>专用</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="useType_${rowIndex}" value="shared" class="mr-2">
+                            <span>共享</span>
+                        </label>
+                    </div>
+                    <div class="form-note">注：占用方式是关键字段："专用"设备的折旧100%计入本项目；"共享"需按工时等方法分摊</div>
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="date" class="form-input">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="date" class="form-input">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="number" class="form-input" placeholder="0-100" min="0" max="100">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
+                        <i class="fa fa-trash"></i> 删除
+                    </button>
+                </td>
+            `;
+            table.appendChild(newRow);
+        }
+        
+        // 添加预算项
+        function addBudgetItem() {
+            const table = document.getElementById('budgetTable');
+            const newRow = document.createElement('tr');
+            newRow.className = 'table-row-hover';
+            newRow.innerHTML = `
+                <td class="px-4 py-3 border-b">
+                    <select class="form-select">
+                        <option value="">请选择</option>
+                        <option value="personnel">人员费用</option>
+                        <option value="equipment">设备费用</option>
+                        <option value="materials">材料费用</option>
+                        <option value="outsourcing">外包费用</option>
+                        <option value="other">其他费用</option>
+                    </select>
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="number" class="form-input" placeholder="0.00">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="text" class="form-input" placeholder="备注">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
+                        <i class="fa fa-trash"></i> 删除
+                    </button>
+                </td>
+            `;
+            table.appendChild(newRow);
+        }
+        
+        // 删除行
+        function removeRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+        
+        // 提交项目
+        function submitProject() {
+            // 模拟提交
+            alert('项目创建成功！');
+            loadPage('project-management.html');
+        }
+    </script>
+</body>
+</html>

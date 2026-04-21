@@ -1,0 +1,282 @@
+/**pages/records/records.wxss**/
+.container {
+  padding: 16px;
+  padding-bottom: 100px;
+}
+
+/* 页面标题 */
+.page-header {
+  margin-bottom: 16px;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 统计卡片 */
+.stats-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.stats-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.stats-period {
+  font-size: 14px;
+  color: #999;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stats-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1890ff;
+  margin-bottom: 4px;
+}
+
+.stats-label {
+  font-size: 13px;
+  color: #666;
+}
+
+/* 区块卡片 */
+.section-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.view-more {
+  font-size: 13px;
+  color: #1890ff;
+}
+
+/* 项目统计 */
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.project-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.project-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-name {
+  font-size: 14px;
+  color: #333;
+}
+
+.project-hours {
+  font-size: 12px;
+  color: #999;
+}
+
+.progress-bar {
+  flex: 2;
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1890ff, #36cfc9);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.project-percent {
+  width: 50px;
+  text-align: right;
+  font-size: 13px;
+  color: #666;
+}
+
+/* 打卡记录 */
+.record-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.record-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.record-item:last-child {
+  border-bottom: none;
+}
+
+.record-date {
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.date-day {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.date-week {
+  font-size: 12px;
+  color: #999;
+}
+
+.record-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 16px;
+}
+
+.record-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.time-label {
+  font-size: 12px;
+  color: #999;
+  width: 40px;
+}
+
+.time-value {
+  font-size: 14px;
+  color: #333;
+}
+
+.time-value.missed {
+  color: #ff4d4f;
+}
+
+.record-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.record-status.normal {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.record-status.late {
+  background: #fffbe6;
+  color: #faad14;
+}
+
+.record-status.early {
+  background: #fff2f0;
+  color: #ff4d4f;
+}
+
+/* 工时明细 */
+.workhour-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.workhour-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.workhour-item:last-child {
+  border-bottom: none;
+}
+
+.workhour-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.workhour-project {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+.workhour-time {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1890ff;
+}
+
+.workhour-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.workhour-date {
+  font-size: 12px;
+  color: #999;
+}
+
+.workhour-content {
+  font-size: 13px;
+  color: #666;
+}

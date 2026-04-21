@@ -1,0 +1,74 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 顶部标题栏 -->
+  <view class="header">
+    <text class="header-title">好品易链</text>
+    <view class="header-icons">
+      <text class="iconfont icon-exchange"></text>
+      <text class="iconfont icon-target"></text>
+    </view>
+  </view>
+
+  <!-- 用户信息 -->
+  <view class="user-info">
+    <view class="user-left">
+      <image class="user-avatar" src="/images/avatar.png" mode="aspectFill"></image>
+      <view class="user-details">
+        <text class="user-name">卢君</text>
+        <text class="user-company">好品易链（山东）... (<text class="link">查看规则</text>)</text>
+      </view>
+    </view>
+    <view class="apply-btn" bindtap="goToApply">
+      <text class="iconfont icon-apply"></text>
+      <text class="apply-text">申请</text>
+    </view>
+  </view>
+
+  <!-- 考勤状态 -->
+  <view class="attendance-status">
+    <view class="status-card {{checkInStatus === 'checked' ? 'active' : ''}}">
+      <text class="status-label">上班08:30</text>
+      <view class="status-time">
+        <text wx:if="{{checkInStatus === 'checked'}}" class="iconfont icon-check"></text>
+        <text class="status-text">{{checkInStatus === 'checked' ? '08:28已打卡' : '未打卡'}}</text>
+      </view>
+    </view>
+    <view class="status-card {{checkOutStatus === 'checked' ? 'active' : ''}}">
+      <text class="status-label">下班18:30</text>
+      <view class="status-time">
+        <text wx:if="{{checkOutStatus === 'checked'}}" class="iconfont icon-check"></text>
+        <text class="status-text">{{checkOutStatus === 'checked' ? '18:30已打卡' : '未打卡'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 打卡按钮 -->
+  <view class="clock-section">
+    <view class="clock-circle {{isWorking ? 'working' : ''}}" bindtap="toggleClock">
+      <text class="clock-text">{{isWorking ? '下班打卡' : '上班打卡'}}</text>
+      <text class="clock-date">{{currentDate}}</text>
+      <text class="clock-time">{{currentTime}}</text>
+    </view>
+  </view>
+
+  <!-- 工时填报任务 -->
+  <view class="task-section">
+    <view class="task-header">工时填报任务</view>
+    
+    <view class="task-list">
+      <view class="task-item" wx:for="{{taskList}}" wx:key="id" bindtap="fillWorkHour" data-item="{{item}}">
+        <view class="task-header-row">
+          <text class="task-name">{{item.name}}</text>
+          <text class="task-progress">当前进度：{{item.progress}}%</text>
+        </view>
+        <view class="task-details">
+          <text class="task-info">预计总工时：{{item.totalHours}}小时</text>
+          <text class="task-status {{item.filledToday ? 'completed' : ''}}">
+            {{item.filledToday ? '今日已填报' : '填报'}}
+          </text>
+        </view>
+        <view class="task-fill-rate">已填报工时：{{item.filledHours}}小时</view>
+      </view>
+    </view>
+  </view>
+</view>
