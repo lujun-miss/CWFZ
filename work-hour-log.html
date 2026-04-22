@@ -330,10 +330,7 @@
         <!-- 右侧主内容区域 -->
         <div class="flex-1 flex flex-col">
             <!-- 顶部信息栏 -->
-            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
-                <div class="flex items-center">
-                    <h2 id="page-title" class="text-lg font-medium text-gray-800">工时日志管理</h2>
-                </div>
+            <header class="bg-white shadow-sm h-16 flex items-center justify-end px-6">
                 <div class="flex items-center space-x-4">
                     <button class="text-gray-500 hover:text-gray-700">
                         <i class="fa fa-bell"></i>
@@ -348,38 +345,7 @@
             
             <!-- 主内容 -->
             <main class="flex-1 overflow-auto p-6">
-                <!-- 页面标题和操作按钮 -->
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-800">工时日志管理</h1>
-                        <div class="flex items-center mt-2">
-                            <nav class="flex" aria-label="Breadcrumb">
-                                <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                                    <li class="inline-flex items-center">
-                                        <a href="dashboard.html" class="text-sm font-medium text-gray-700 hover:text-primary">首页</a>
-                                    </li>
-                                    <li>
-                                        <div class="flex items-center">
-                                            <i class="fa fa-chevron-right text-gray-400 mx-2"></i>
-                                            <a href="#" class="text-sm font-medium text-gray-700 hover:text-primary">薪酬管理</a>
-                                        </div>
-                                    </li>
-                                    <li aria-current="page">
-                                        <div class="flex items-center">
-                                            <i class="fa fa-chevron-right text-gray-400 mx-2"></i>
-                                            <span class="text-sm font-medium text-primary">工时日志填报</span>
-                                        </div>
-                                    </li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                    <div class="flex space-x-4">
-                        <button onclick="loadPage('work-hour-entry.html')" class="bg-primary text-white px-4 py-2 rounded-md text-sm hover:bg-blue-600 flex items-center">
-                            <i class="fa fa-plus mr-2"></i>工时填报
-                        </button>
-                    </div>
-                </div>
+
                 
                 <!-- 标签页切换 -->
                 <div class="flex space-x-4">
@@ -394,66 +360,131 @@
                 
                 <!-- 搜索和筛选 -->
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <div class="flex items-center gap-4">
-                        <div class="flex-1">
-                            <input type="text" id="searchInput" placeholder="搜索员工姓名、项目名称..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex items-center gap-2">
+                            <label class="text-sm font-medium text-gray-700">员工姓名:</label>
+                            <input type="text" id="employeeInput" placeholder="请输入员工姓名" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
                         </div>
-                        <select id="statusFilter" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="">全部状态</option>
-                            <option value="pending">待审核</option>
-                            <option value="pm_approved">项目经理已审</option>
-                            <option value="approved">已审核</option>
-                            <option value="rejected">已驳回</option>
-                        </select>
-                        <select id="dateFilter" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="today">今天</option>
-                            <option value="week">本周</option>
-                            <option value="month" selected>本月</option>
-                            <option value="all">全部</option>
-                        </select>
+                        <div class="flex items-center gap-2">
+                            <label class="text-sm font-medium text-gray-700">状态:</label>
+                            <select id="statusFilter" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+                                <option value="">全部状态</option>
+                                <option value="pending">待审核</option>
+                                <option value="pm_approved">项目经理已审</option>
+                                <option value="approved">已审核</option>
+                                <option value="rejected">已驳回</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label class="text-sm font-medium text-gray-700">打卡时间:</label>
+                            <input type="date" id="startDate" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+                            <span class="text-gray-500 text-sm">至</span>
+                            <input type="date" id="endDate" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button id="queryBtn" class="px-3 py-1.5 bg-primary text-white rounded-md text-sm hover:bg-blue-600">
+                                查询
+                            </button>
+                            <button id="resetBtn" class="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-50">
+                                重置
+                            </button>
+                            <button onclick="loadPage('work-hour-entry.html')" class="px-3 py-1.5 bg-primary text-white rounded-md text-sm hover:bg-blue-600 flex items-center">
+                                <i class="fa fa-plus mr-1"></i>日志填报
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2 ml-auto">
+                            <button class="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50">全部</button>
+                            <button class="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50">今日</button>
+                            <button class="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50">本周</button>
+                            <button class="px-2 py-1 text-xs border border-primary bg-primary text-white rounded-full">本月</button>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- 工时记录列表 -->
-                <div class="overflow-x-auto" id="allRecordsView">
-                    <table class="min-w-full bg-white">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">员工姓名</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工时(小时)</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200" id="workHourTable">
-                            <!-- 数据将通过JavaScript动态加载 -->
-                        </tbody>
-                    </table>
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-700">提报列表</h3>
+                    </div>
+                    <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm" style="scrollbar-width: thin; scrollbar-color: #e5e7eb #f3f4f6;">
+                        <div style="min-width: 1200px;">
+                            <table class="min-w-full bg-white">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="w-10 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                                            <input type="checkbox" id="selectAll" class="rounded text-primary focus:ring-primary">
+                                        </th>
+                                        <th class="w-20 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">姓名</th>
+                                        <th class="w-28 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">填报日期</th>
+                                        <th class="w-24 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">上班打卡</th>
+                                        <th class="w-24 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">下班打卡</th>
+                                        <th class="w-20 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">工作时长</th>
+                                        <th class="w-24 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">状态</th>
+                                        <th class="w-28 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">所属项目编号</th>
+                                        <th class="w-36 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">所属项目</th>
+                                        <th class="w-28 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">所属阶段</th>
+                                        <th class="w-28 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">所属任务</th>
+                                        <th class="w-20 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">研发时长</th>
+                                        <th class="w-48 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">工作内容</th>
+                                        <th class="w-40 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200" id="workHourTable">
+                                    <!-- 数据将通过JavaScript动态加载 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- 待审核工时列表 -->
-                <div class="overflow-x-auto hidden" id="pendingRecordsView">
-                    <table class="min-w-full bg-white">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">员工姓名</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工时(小时)</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">提交时间</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200" id="pendingWorkHourTable">
-                            <!-- 数据将通过JavaScript动态加载 -->
-                        </tbody>
-                    </table>
+                <div class="mb-6 hidden" id="pendingRecordsView">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-700">待审核工时</h3>
+                    </div>
+                    <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm" style="scrollbar-width: thin; scrollbar-color: #e5e7eb #f3f4f6;">
+                        <div style="min-width: 800px;">
+                            <table class="min-w-full bg-white">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="w-10 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
+                                        </th>
+                                        <th class="w-24 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">员工姓名</th>
+                                        <th class="w-40 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">项目名称</th>
+                                        <th class="w-32 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">日期</th>
+                                        <th class="w-24 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">工时(小时)</th>
+                                        <th class="w-36 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">提交时间</th>
+                                        <th class="w-48 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200" id="pendingWorkHourTable">
+                                    <!-- 数据将通过JavaScript动态加载 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 批量操作 -->
+                <div class="flex items-center justify-between mt-4">
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200 flex items-center">
+                        <i class="fa fa-print mr-2"></i>批量审核
+                    </button>
+                </div>
+                
+                <!-- 提示信息 -->
+                <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+                    <h4 class="text-red-800 font-medium mb-2">跨月补录工时如何计入费用？</h4>
+                    <ol class="list-decimal list-inside text-red-700 space-y-1">
+                        <li>补录界时统一提示："您正在补报X月X日的工时，该费用将计入本月（Y月）。"</li>
+                        <li>在数据库中增加"实际工作日"字段，用于备注和查询。</li>
+                        <li>无需复杂审批，走常规填报审核流程即可。</li>
+                    </ol>
                 </div>
                 
                 <!-- 分页 -->
-                <div class="flex items-center justify-between mt-6">
+                <div class="flex items-center justify-end mt-6 space-x-4">
                     <div class="text-sm text-gray-600">
                         显示 1-10 条，共 100 条
                     </div>
@@ -512,59 +543,99 @@
             const tableBody = document.getElementById('workHourTable');
             tableBody.innerHTML = '';
             
-            // 模拟数据
+            // 模拟数据 - 一个员工在一天填报多个项目的情况
             const records = [
-                { id: 1, employee: '张三', project: '智能客服系统', date: '2026-04-20', hours: 8, status: 'approved' },
-                { id: 2, employee: '李四', project: 'AI算法研发', date: '2026-04-20', hours: 7.5, status: 'pm_approved' },
-                { id: 3, employee: '王五', project: '产品设计优化', date: '2026-04-20', hours: 8, status: 'pending' },
-                { id: 4, employee: '赵六', project: '智能客服系统', date: '2026-04-19', hours: 8, status: 'approved' },
-                { id: 5, employee: '张三', project: 'AI算法研发', date: '2026-04-19', hours: 8, status: 'approved' }
+                { id: 1, employee: '张三', projectNumber: '0001', project: '智能客服系统1', date: '2026-04-20', checkinTime: '07:40:21', checkoutTime: '14:00:00', workHours: 8, status: 'pending', stage: '立项阶段', task: '市场调研', rdHours: 1, workContent: '调研市场内容' },
+                { id: 2, employee: '张三', projectNumber: '0002', project: '智能客服系统2', date: '2026-04-20', checkinTime: '07:40:21', checkoutTime: '14:00:00', workHours: 8, status: 'pending', stage: '小试阶段', task: '市场调研', rdHours: 0, workContent: '调研市场内容' },
+                { id: 3, employee: '张三', projectNumber: '0003', project: '智能客服系统3', date: '2026-04-20', checkinTime: '07:40:21', checkoutTime: '14:00:00', workHours: 8, status: 'pending', stage: '需求分析', task: '市场调研', rdHours: 1, workContent: '调研市场内容' },
+                { id: 4, employee: '张三', projectNumber: '0004', project: '智能客服系统4', date: '2026-04-20', checkinTime: '07:40:21', checkoutTime: '14:00:00', workHours: 8, status: 'pending', stage: '测试验证', task: '市场调研', rdHours: 0, workContent: '调研市场内容' },
+                { id: 5, employee: '李四', projectNumber: '0001', project: '智能客服系统1', date: '2026-04-20', checkinTime: '08:00:00', checkoutTime: '17:00:00', workHours: 9, status: 'approved', stage: '开发阶段', task: '核心算法开发', rdHours: 8, workContent: '开发核心算法' }
             ];
             
+            // 按员工和日期分组
+            const groupedRecords = {};
             records.forEach(record => {
-                const row = document.createElement('tr');
-                row.className = 'task-row';
-                
-                let statusText = '';
-                let statusClass = '';
-                
-                switch(record.status) {
-                    case 'pending':
-                        statusText = '待审核';
-                        statusClass = 'bg-yellow-100 text-yellow-800';
-                        break;
-                    case 'pm_approved':
-                        statusText = '项目经理已审';
-                        statusClass = 'bg-blue-100 text-blue-800';
-                        break;
-                    case 'approved':
-                        statusText = '已审核';
-                        statusClass = 'bg-green-100 text-green-800';
-                        break;
-                    case 'rejected':
-                        statusText = '已驳回';
-                        statusClass = 'bg-red-100 text-red-800';
-                        break;
+                const key = `${record.employee}-${record.date}`;
+                if (!groupedRecords[key]) {
+                    groupedRecords[key] = [];
                 }
-                
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.employee}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.project}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.date}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.hours}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
-                            ${statusText}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick="viewDetails(${record.id})" class="text-primary hover:text-blue-600 mr-3">查看</button>
-                        ${record.status === 'pending' ? `<button onclick="approveRecord(${record.id})" class="text-green-600 hover:text-green-800 mr-3">审核</button>` : ''}
-                        <button onclick="editRecord(${record.id})" class="text-gray-600 hover:text-gray-800">编辑</button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
+                groupedRecords[key].push(record);
+            });
+            
+            // 生成表格行
+            Object.values(groupedRecords).forEach(group => {
+                group.forEach((record, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'task-row';
+                    
+                    let statusText = '';
+                    let statusClass = '';
+                    
+                    switch(record.status) {
+                        case 'pending':
+                            statusText = '待审核';
+                            statusClass = 'bg-yellow-100 text-yellow-800';
+                            break;
+                        case 'pm_approved':
+                            statusText = '项目经理已审';
+                            statusClass = 'bg-blue-100 text-blue-800';
+                            break;
+                        case 'approved':
+                            statusText = '已审核';
+                            statusClass = 'bg-green-100 text-green-800';
+                            break;
+                        case 'rejected':
+                            statusText = '已驳回';
+                            statusClass = 'bg-red-100 text-red-800';
+                            break;
+                    }
+                    
+                    if (index === 0) {
+                        // 第一行，显示所有单元格并设置 rowspan
+                        row.innerHTML = `
+                            <td class="py-3 text-center border-b border-gray-200" rowspan="${group.length}">
+                                <input type="checkbox" class="rounded text-primary focus:ring-primary">
+                            </td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200" rowspan="${group.length}">${record.employee}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200" rowspan="${group.length}">${record.date}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200" rowspan="${group.length}">${record.checkinTime}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200" rowspan="${group.length}">${record.checkoutTime}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200" rowspan="${group.length}">${record.workHours}</td>
+                            <td class="py-3 px-3 border-b border-gray-200" rowspan="${group.length}">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                                    ${statusText}
+                                </span>
+                            </td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.projectNumber}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.project}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.stage}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.task}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.rdHours}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.workContent}</td>
+                            <td class="py-3 px-3 text-sm font-medium border-b border-gray-200" rowspan="${group.length}">
+                                ${record.status === 'approved' ? `
+                                    <button onclick="viewDetails(${record.id})" class="text-primary hover:text-blue-600 text-xs">查看</button>
+                                ` : `
+                                    <button onclick="editRecord(${record.id})" class="text-primary hover:text-blue-600 mr-2 text-xs">修改</button>
+                                    <button onclick="deleteRecord(${record.id})" class="text-red-600 hover:text-red-800 mr-2 text-xs">删除</button>
+                                    <button onclick="auditRecord(${record.id})" class="text-gray-600 hover:text-gray-800 text-xs">审核</button>
+                                `}
+                            </td>
+                        `;
+                    } else {
+                        // 后续行，只显示不同的单元格
+                        row.innerHTML = `
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.projectNumber}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.project}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.stage}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.task}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.rdHours}</td>
+                            <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.workContent}</td>
+                        `;
+                    }
+                    
+                    tableBody.appendChild(row);
+                });
             });
         }
         
@@ -585,15 +656,18 @@
                 row.className = 'task-row';
                 
                 row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.employee}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.project}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.date}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.hours}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${record.submitTime}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick="viewDetails(${record.id})" class="text-primary hover:text-blue-600 mr-3">查看</button>
-                        <button onclick="approveRecord(${record.id})" class="text-green-600 hover:text-green-800 mr-3">通过</button>
-                        <button onclick="rejectRecord(${record.id})" class="text-red-600 hover:text-red-800">驳回</button>
+                    <td class="py-3 text-center border-b border-gray-200">
+                        <input type="checkbox" class="rounded text-primary focus:ring-primary">
+                    </td>
+                    <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.employee}</td>
+                    <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.project}</td>
+                    <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.date}</td>
+                    <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.hours}</td>
+                    <td class="py-3 px-3 text-sm text-gray-900 border-b border-gray-200">${record.submitTime}</td>
+                    <td class="py-3 px-3 text-sm font-medium border-b border-gray-200">
+                        <button onclick="viewDetails(${record.id})" class="text-primary hover:text-blue-600 mr-2 text-xs">查看</button>
+                        <button onclick="approveRecord(${record.id})" class="text-green-600 hover:text-green-800 mr-2 text-xs">通过</button>
+                        <button onclick="rejectRecord(${record.id})" class="text-red-600 hover:text-red-800 text-xs">驳回</button>
                     </td>
                 `;
                 
@@ -623,12 +697,32 @@
             alert(`编辑ID为${id}的工时记录`);
         }
         
+        // 删除记录
+        function deleteRecord(id) {
+            if (confirm(`确定要删除ID为${id}的工时记录吗？`)) {
+                alert(`删除ID为${id}的工时记录`);
+            }
+        }
+        
+        // 审核记录
+        function auditRecord(id) {
+            alert(`审核ID为${id}的工时记录`);
+        }
+        
         // 更新待审核数量
         function updatePendingCount() {
             // 模拟更新待审核数量
             const pendingCount = Math.floor(Math.random() * 5);
             document.getElementById('pendingCount').textContent = pendingCount;
         }
+        
+        // 全选/取消全选
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
         
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {

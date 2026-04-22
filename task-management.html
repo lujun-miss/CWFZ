@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -169,6 +169,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
                                     <i class="fa fa-check-circle w-6"></i>
                                     <span>阶段审核</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-template.html')">
+                                    <i class="fa fa-list-alt w-6"></i>
+                                    <span>阶段模板</span>
                                 </a>
                             </li>
                             <li>
@@ -466,25 +472,34 @@
 
         <!-- 右侧主内容区域 -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- 顶部信息栏 -->
-            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
-                <div class="flex items-center">
-                    <h2 id="page-title" class="text-lg font-medium text-gray-800">任务管理</h2>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button class="text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-bell"></i>
-                    </button>
+            <!-- 顶部导航栏 -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between p-4">
                     <div class="flex items-center">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
-                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
-                        <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                        <button id="mobile-menu-button" class="md:hidden text-gray-500 hover:text-gray-700 mr-2">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <h2 class="text-lg font-medium text-gray-800">任务管理</h2>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-gray-500 hover:text-gray-700">
+                            <i class="fa fa-bell"></i>
+                        </button>
+                        <button class="text-gray-500 hover:text-gray-700">
+                            <i class="fa fa-envelope"></i>
+                        </button>
+                        <div class="relative">
+                            <button class="flex items-center text-gray-700 hover:text-gray-900">
+                                <span class="mr-2">管理员</span>
+                                <i class="fa fa-caret-down"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
             
             <!-- 主内容 -->
-            <main class="flex-1 overflow-auto p-6">
+            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-semibold text-gray-800">任务管理</h1>
                 <a href="task-create.html" class="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
@@ -492,54 +507,63 @@
                 </a>
             </div>
 
-            <!-- 筛选器 -->
-            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                <h3 class="text-lg font-medium text-gray-800 mb-4">筛选条件</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">项目</label>
-                        <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option>全部项目</option>
-                            <option>智能研发管理系统</option>
-                            <option>企业数据分析平台</option>
-                            <option>移动应用开发</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
-                        <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option>全部状态</option>
-                            <option>待开始</option>
-                            <option>进行中</option>
-                            <option>已完成</option>
-                            <option>已取消</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">优先级</label>
-                        <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option>全部优先级</option>
-                            <option>低</option>
-                            <option>中</option>
-                            <option>高</option>
-                            <option>紧急</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
-                        <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option>全部负责人</option>
-                            <option>张三</option>
-                            <option>李四</option>
-                            <option>王五</option>
-                            <option>赵六</option>
-                        </select>
-                    </div>
+            <!-- 阶段选项卡 -->
+            <div class="bg-white rounded-lg shadow-sm p-0 mb-6">
+                <div class="flex border-b border-gray-200" id="stage-tabs">
+                    <button class="px-6 py-3 text-primary font-medium border-b-2 border-primary" data-stage="all">全部</button>
+                    <!-- 动态生成的阶段选项卡将在这里插入 -->
                 </div>
-                <div class="mt-4 flex justify-end">
-                    <button class="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium">
-                        筛选
-                    </button>
+                
+                <!-- 筛选器 -->
+                <div class="p-4">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div class="flex-1 min-w-[150px]">
+                            <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" id="project-select">
+                                <option value="">请选择项目</option>
+                                <option value="project1">智能研发管理系统</option>
+                                <option value="project2">企业数据分析平台</option>
+                                <option value="project3">移动应用开发</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 min-w-[150px]">
+                            <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option>任务状态</option>
+                                <option>待开始</option>
+                                <option>进行中</option>
+                                <option>已完成</option>
+                                <option>已取消</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 min-w-[150px]">
+                            <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option>优先级</option>
+                                <option>低</option>
+                                <option>中</option>
+                                <option>高</option>
+                                <option>紧急</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 min-w-[150px]">
+                            <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option>负责人</option>
+                                <option>张三</option>
+                                <option>李四</option>
+                                <option>王五</option>
+                                <option>赵六</option>
+                            </select>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium">
+                                查询
+                            </button>
+                            <button class="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium" onclick="batchUpdateProgress()">
+                                批量更新进度
+                            </button>
+                            <a href="task-create.html" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                                新建任务
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -550,22 +574,38 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <input type="checkbox" id="select-all" class="rounded text-primary focus:ring-primary">
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    任务编号
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    所属项目
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    阶段名称
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    任务状态
+                                    <span class="relative group cursor-pointer ml-1">
+                                        <i class="fa fa-question-circle text-gray-400 hover:text-gray-600"></i>
+                                        <div class="hidden group-hover:block absolute z-50 left-0 top-full mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-xs text-gray-600">
+                                            <div class="font-medium text-gray-700 mb-2">任务状态说明</div>
+                                            <div class="space-y-1">
+                                                <div><span class="font-medium text-gray-700">待开始：</span>进度为0%</div>
+                                                <div><span class="font-medium text-gray-700">进行中：</span>进度在1%-99%之间</div>
+                                                <div><span class="font-medium text-gray-700">已完成：</span>进度为100%</div>
+                                                <div><span class="font-medium text-gray-700">已取消：</span>手动取消的任务</div>
+                                            </div>
+                                            <div class="mt-2 pt-2 border-t border-gray-200">状态会根据进度自动更新</div>
+                                        </div>
+                                    </span>
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    任务进度
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     任务名称
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    项目
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    状态
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    优先级
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    负责人
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    截止日期
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     操作
@@ -576,22 +616,30 @@
                             <!-- 任务项 -->
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">开发用户管理模块</div>
+                                    <input type="checkbox" class="task-checkbox rounded text-primary focus:ring-primary" data-task-id="9">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">9</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">智能研发管理系统</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">立项申请</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="status-badge status-in-progress">进行中</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="priority-badge priority-high">高</span>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-32 bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-green-500 h-2.5 rounded-full" style="width: 50%"></div>
+                                        </div>
+                                        <span class="ml-2 text-sm text-gray-600">50%</span>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">张三</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">2024-01-20</div>
+                                    <div class="text-sm font-medium text-gray-900">收拾收拾</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="task-detail.html" class="text-primary hover:text-blue-700 mr-3">
@@ -600,29 +648,37 @@
                                     <a href="task-edit.html" class="text-green-600 hover:text-green-800 mr-3">
                                         编辑
                                     </a>
-                                    <button class="text-red-600 hover:text-red-800" onclick="confirmDelete('TASK-001')">
+                                    <button class="text-red-600 hover:text-red-800" onclick="confirmDelete('TASK-009')">
                                         删除
                                     </button>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">设计数据可视化界面</div>
+                                    <input type="checkbox" class="task-checkbox rounded text-primary focus:ring-primary" data-task-id="10">
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">企业数据分析平台</div>
+                                    <div class="text-sm text-gray-900">10</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="status-badge status-pending">待开始</span>
+                                    <div class="text-sm text-gray-900">智能研发管理系统</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="priority-badge priority-medium">中</span>
+                                    <div class="text-sm text-gray-900">立项申请</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">李四</div>
+                                    <span class="status-badge status-in-progress">进行中</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-32 bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-green-500 h-2.5 rounded-full" style="width: 90%"></div>
+                                        </div>
+                                        <span class="ml-2 text-sm text-gray-600">90%</span>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">2024-01-25</div>
+                                    <div class="text-sm font-medium text-gray-900">单独</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="task-detail.html" class="text-primary hover:text-blue-700 mr-3">
@@ -631,29 +687,37 @@
                                     <a href="task-edit.html" class="text-green-600 hover:text-green-800 mr-3">
                                         编辑
                                     </a>
-                                    <button class="text-red-600 hover:text-red-800" onclick="confirmDelete('TASK-002')">
+                                    <button class="text-red-600 hover:text-red-800" onclick="confirmDelete('TASK-010')">
                                         删除
                                     </button>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">编写API文档</div>
+                                    <input type="checkbox" class="task-checkbox rounded text-primary focus:ring-primary" data-task-id="25">
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">移动应用开发</div>
+                                    <div class="text-sm text-gray-900">25</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">智能研发管理系统</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">立项申请</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="status-badge status-completed">已完成</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="priority-badge priority-low">低</span>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-32 bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-green-500 h-2.5 rounded-full" style="width: 100%"></div>
+                                        </div>
+                                        <span class="ml-2 text-sm text-gray-600">100%</span>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">王五</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">2024-01-15</div>
+                                    <div class="text-sm font-medium text-gray-900">测试</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="task-detail.html" class="text-primary hover:text-blue-700 mr-3">
@@ -662,29 +726,37 @@
                                     <a href="task-edit.html" class="text-green-600 hover:text-green-800 mr-3">
                                         编辑
                                     </a>
-                                    <button class="text-red-600 hover:text-red-800" onclick="confirmDelete('TASK-003')">
+                                    <button class="text-red-600 hover:text-red-800" onclick="confirmDelete('TASK-025')">
                                         删除
                                     </button>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">测试系统功能</div>
+                                    <input type="checkbox" class="task-checkbox rounded text-primary focus:ring-primary" data-task-id="32">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">32</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">智能研发管理系统</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">立项申请</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="status-badge status-in-progress">进行中</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="priority-badge priority-urgent">紧急</span>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-32 bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-green-500 h-2.5 rounded-full" style="width: 40%"></div>
+                                        </div>
+                                        <span class="ml-2 text-sm text-gray-600">40%</span>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">赵六</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">2024-01-18</div>
+                                    <div class="text-sm font-medium text-gray-900">好</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="task-detail.html" class="text-primary hover:text-blue-700 mr-3">
@@ -693,7 +765,7 @@
                                     <a href="task-edit.html" class="text-green-600 hover:text-green-800 mr-3">
                                         编辑
                                     </a>
-                                    <button class="text-red-600 hover:text-red-800" onclick="confirmDelete('TASK-004')">
+                                    <button class="text-red-600 hover:text-red-800" onclick="confirmDelete('TASK-032')">
                                         删除
                                     </button>
                                 </td>
@@ -766,9 +838,364 @@
             }
         }
         
+        // 项目阶段模板数据
+        const projectStageTemplates = {
+            'project1': [ // 智能研发管理系统 - 标准模板
+                { id: 'stage1', name: '立项申请' },
+                { id: 'stage2', name: '需求分析' },
+                { id: 'stage3', name: '系统设计' },
+                { id: 'stage4', name: '开发实现' },
+                { id: 'stage5', name: '测试验证' },
+                { id: 'stage6', name: '项目结项' }
+            ],
+            'project2': [ // 企业数据分析平台 - 简化模板
+                { id: 'stage1', name: '项目启动' },
+                { id: 'stage2', name: '数据采集' },
+                { id: 'stage3', name: '分析实现' },
+                { id: 'stage4', name: '项目结项' }
+            ],
+            'project3': [ // 移动应用开发 - 高新模板
+                { id: 'stage1', name: '立项评估' },
+                { id: 'stage2', name: 'UI/UX设计' },
+                { id: 'stage3', name: '前端开发' },
+                { id: 'stage4', name: '后端开发' },
+                { id: 'stage5', name: '集成测试' },
+                { id: 'stage6', name: '项目结项' }
+            ]
+        };
+        
+        // 任务数据
+        const tasksData = [
+            { id: '9', projectId: 'project1', stage: 'stage1', stageName: '立项申请', status: 'in-progress', progress: 50, title: '收拾收拾', priority: '中', assignee: '张三' },
+            { id: '10', projectId: 'project1', stage: 'stage1', stageName: '立项申请', status: 'in-progress', progress: 90, title: '单独', priority: '高', assignee: '李四' },
+            { id: '25', projectId: 'project1', stage: 'stage1', stageName: '立项申请', status: 'completed', progress: 100, title: '测试', priority: '低', assignee: '王五' },
+            { id: '32', projectId: 'project1', stage: 'stage1', stageName: '立项申请', status: 'in-progress', progress: 40, title: '好', priority: '中', assignee: '赵六' },
+            { id: '11', projectId: 'project2', stage: 'stage1', stageName: '项目启动', status: 'pending', progress: 0, title: '项目初始化', priority: '高', assignee: '张三' },
+            { id: '12', projectId: 'project2', stage: 'stage2', stageName: '数据采集', status: 'in-progress', progress: 60, title: '收集数据源', priority: '中', assignee: '李四' },
+            { id: '13', projectId: 'project3', stage: 'stage1', stageName: '立项评估', status: 'completed', progress: 100, title: '可行性分析', priority: '高', assignee: '王五' },
+            { id: '14', projectId: 'project3', stage: 'stage2', stageName: 'UI/UX设计', status: 'in-progress', progress: 70, title: '界面设计', priority: '中', assignee: '赵六' },
+            { id: '15', projectId: 'project3', stage: 'stage3', stageName: '前端开发', status: 'pending', progress: 0, title: '前端实现', priority: '高', assignee: '张三' }
+        ];
+        
+        // 加载项目阶段
+        function loadProjectStages(projectId) {
+            const stageTabs = document.getElementById('stage-tabs');
+            
+            // 清除现有的阶段选项卡（保留"全部"）
+            const existingStages = stageTabs.querySelectorAll('button[data-stage]:not([data-stage="all"])');
+            existingStages.forEach(tab => tab.remove());
+            
+            if (!projectId) {
+                // 没有选择项目，显示全部任务
+                renderTasks(tasksData);
+                return;
+            }
+            
+            // 获取项目对应的阶段模板
+            const stages = projectStageTemplates[projectId] || [];
+            
+            // 动态生成阶段选项卡
+            stages.forEach(stage => {
+                const button = document.createElement('button');
+                button.className = 'px-6 py-3 text-gray-500 hover:text-primary';
+                button.setAttribute('data-stage', stage.id);
+                button.textContent = stage.name;
+                
+                // 添加点击事件
+                button.addEventListener('click', function() {
+                    // 移除所有选项卡的激活状态
+                    stageTabs.querySelectorAll('button').forEach(tab => {
+                        tab.removeAttribute('data-selected');
+                        tab.classList.remove('text-primary', 'font-medium', 'border-b-2', 'border-primary');
+                        tab.classList.add('text-gray-500');
+                    });
+                    
+                    // 激活当前选项卡
+                    this.setAttribute('data-selected', 'true');
+                    this.classList.remove('text-gray-500');
+                    this.classList.add('text-primary', 'font-medium', 'border-b-2', 'border-primary');
+                    
+                    // 根据阶段筛选任务
+                    filterTasks();
+                });
+                
+                stageTabs.appendChild(button);
+            });
+            
+            // 激活"全部"选项卡
+            const allTab = stageTabs.querySelector('button[data-stage="all"]');
+            if (allTab) {
+                allTab.setAttribute('data-selected', 'true');
+                allTab.classList.remove('text-gray-500');
+                allTab.classList.add('text-primary', 'font-medium', 'border-b-2', 'border-primary');
+            }
+            
+            // 筛选任务
+            filterTasks();
+        }
+        
+        // 筛选任务
+        function filterTasks() {
+            const projectId = document.getElementById('project-select')?.value || '';
+            
+            // 获取选中的阶段ID
+            let stageId = 'all';
+            const selectedStage = document.querySelector('#stage-tabs button[data-selected]');
+            if (selectedStage) {
+                stageId = selectedStage.getAttribute('data-stage') || 'all';
+            }
+            
+            // 获取筛选器值
+            const status = document.querySelector('select:nth-child(2)')?.value || '任务状态';
+            const priority = document.querySelector('select:nth-child(3)')?.value || '优先级';
+            const assignee = document.querySelector('select:nth-child(4)')?.value || '负责人';
+            
+            let filteredTasks = tasksData;
+            
+            // 项目筛选
+            if (projectId) {
+                filteredTasks = filteredTasks.filter(task => task.projectId === projectId);
+            }
+            
+            // 阶段筛选
+            if (stageId !== 'all') {
+                filteredTasks = filteredTasks.filter(task => task.stage === stageId);
+            }
+            
+            // 状态筛选
+            if (status !== '任务状态') {
+                let statusMap = {
+                    '待开始': 'pending',
+                    '进行中': 'in-progress',
+                    '已完成': 'completed',
+                    '已取消': 'cancelled'
+                };
+                filteredTasks = filteredTasks.filter(task => task.status === statusMap[status]);
+            }
+            
+            // 优先级筛选
+            if (priority !== '优先级') {
+                filteredTasks = filteredTasks.filter(task => task.priority === priority);
+            }
+            
+            // 负责人筛选
+            if (assignee !== '负责人') {
+                filteredTasks = filteredTasks.filter(task => task.assignee === assignee);
+            }
+            
+            // 渲染筛选后的任务
+            renderTasks(filteredTasks);
+        }
+        
+        // 渲染任务列表
+        function renderTasks(tasks) {
+            const tbody = document.querySelector('tbody');
+            if (!tbody) return;
+            
+            // 清空现有任务
+            tbody.innerHTML = '';
+            
+            if (tasks.length === 0) {
+                // 显示空状态
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="8" class="px-6 py-8 text-center text-gray-500">
+                        <i class="fa fa-inbox mr-2"></i>
+                        暂无任务数据
+                    </td>
+                `;
+                tbody.appendChild(emptyRow);
+                return;
+            }
+            
+            // 渲染任务列表
+            tasks.forEach(task => {
+                const statusClass = {
+                    'pending': 'status-pending',
+                    'in-progress': 'status-in-progress',
+                    'completed': 'status-completed',
+                    'cancelled': 'status-cancelled'
+                }[task.status] || 'status-pending';
+                
+                const statusText = {
+                    'pending': '待开始',
+                    'in-progress': '进行中',
+                    'completed': '已完成',
+                    'cancelled': '已取消'
+                }[task.status] || '待开始';
+                
+                // 获取项目名称
+                const projectName = {
+                    'project1': '智能研发管理系统',
+                    'project2': '企业数据分析平台',
+                    'project3': '移动应用开发'
+                }[task.projectId] || '未知项目';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <input type="checkbox" class="task-checkbox rounded text-primary focus:ring-primary" data-task-id="${task.id}">
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${task.id}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${projectName}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${task.stageName}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <div class="w-32 bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-green-500 h-2.5 rounded-full" style="width: ${task.progress}%"></div>
+                            </div>
+                            <span class="ml-2 text-sm text-gray-600">${task.progress}%</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${task.title}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="task-detail.html" class="text-primary hover:text-blue-700 mr-3">
+                            查看
+                        </a>
+                        <a href="task-edit.html" class="text-green-600 hover:text-green-800 mr-3">
+                            编辑
+                        </a>
+                        <button class="text-red-600 hover:text-red-800" onclick="confirmDelete('TASK-00${task.id}')">
+                            删除
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // 批量更新进度
+        function batchUpdateProgress() {
+            const selectedCheckboxes = document.querySelectorAll('.task-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                alert('请选择至少一个任务');
+                return;
+            }
+            
+            const progress = prompt('请输入要更新的进度（0-100）:', '100');
+            const progressValue = parseInt(progress);
+            
+            if (isNaN(progressValue) || progressValue < 0 || progressValue > 100) {
+                alert('请输入有效的进度值（0-100）');
+                return;
+            }
+            
+            selectedCheckboxes.forEach(checkbox => {
+                const taskId = checkbox.dataset.taskId;
+                updateProgress(taskId, progressValue);
+            });
+        }
+        
+        // 更新单个任务进度
+        function updateProgress(taskId, progress) {
+            // 这里实现进度更新逻辑
+            console.log(`更新任务 ${taskId} 进度为 ${progress}%`);
+            
+            // 找到任务在数据中的索引
+            const taskIndex = tasksData.findIndex(task => task.id === taskId);
+            if (taskIndex !== -1) {
+                // 更新数据
+                tasksData[taskIndex].progress = progress;
+                
+                // 自动更新状态
+                if (progress === 100) {
+                    tasksData[taskIndex].status = 'completed';
+                } else if (progress > 0) {
+                    tasksData[taskIndex].status = 'in-progress';
+                } else {
+                    tasksData[taskIndex].status = 'pending';
+                }
+                
+                // 重新渲染任务列表
+                filterTasks();
+                
+                // 模拟保存到服务器
+                setTimeout(() => {
+                    alert(`任务 ${taskId} 进度已更新为 ${progress}%`);
+                }, 500);
+            }
+        }
+        
+        // 根据阶段筛选任务
+        function filterTasksByStage(stageId) {
+            console.log('筛选阶段:', stageId);
+            filterTasks();
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const projectSubmenu = document.getElementById('project-submenu');
             if (projectSubmenu) projectSubmenu.classList.remove('collapsed');
+            
+            // 全选/取消全选
+            const selectAllCheckbox = document.getElementById('select-all');
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    const isChecked = this.checked;
+                    const taskCheckboxes = document.querySelectorAll('.task-checkbox');
+                    taskCheckboxes.forEach(checkbox => {
+                        checkbox.checked = isChecked;
+                    });
+                });
+            }
+            
+            // 初始化项目选择事件
+            const projectSelect = document.getElementById('project-select');
+            if (projectSelect) {
+                projectSelect.addEventListener('change', function() {
+                    loadProjectStages(this.value);
+                });
+            }
+            
+            // 初始化"全部"阶段选项卡
+            const allTab = document.querySelector('#stage-tabs button[data-stage="all"]');
+            if (allTab) {
+                allTab.setAttribute('data-selected', 'true');
+                allTab.classList.add('text-primary', 'font-medium', 'border-b-2', 'border-primary');
+                
+                // 添加点击事件
+                allTab.addEventListener('click', function() {
+                    // 移除所有选项卡的激活状态
+                    document.querySelectorAll('#stage-tabs button').forEach(tab => {
+                        tab.removeAttribute('data-selected');
+                        tab.classList.remove('text-primary', 'font-medium', 'border-b-2', 'border-primary');
+                        tab.classList.add('text-gray-500');
+                    });
+                    
+                    // 激活当前选项卡
+                    this.setAttribute('data-selected', 'true');
+                    this.classList.remove('text-gray-500');
+                    this.classList.add('text-primary', 'font-medium', 'border-b-2', 'border-primary');
+                    
+                    // 筛选任务
+                    filterTasks();
+                });
+            }
+            
+            // 初始化筛选器事件
+            const filters = document.querySelectorAll('select');
+            filters.forEach(filter => {
+                filter.addEventListener('change', filterTasks);
+            });
+            
+            // 初始化查询按钮事件
+            const searchButton = document.querySelector('button.bg-primary');
+            if (searchButton) {
+                searchButton.addEventListener('click', filterTasks);
+            }
+            
+            // 初始渲染所有任务
+            renderTasks(tasksData);
         });
     </script>
 </body>

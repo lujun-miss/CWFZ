@@ -571,6 +571,111 @@
                             </div>
                         </div>
 
+                        <!-- 从阶段配置选择附件 -->
+                        <div class="md:col-span-2">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">从阶段配置选择附件</h3>
+                            <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+                                <div class="mb-4">
+                                    <p class="text-sm text-gray-600 mb-2">提示：根据选择的项目和阶段，系统会显示该阶段配置的附件列表，您可以选择此任务需要上传的附件。</p>
+                                </div>
+                                <div id="stage-attachments" class="space-y-3">
+                                    <!-- 动态加载阶段附件列表 -->
+                                    <div class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded">
+                                        <input type="checkbox" class="form-checkbox h-4 w-4 text-primary" checked>
+                                        <span class="text-sm">阶段总结报告（必填）</span>
+                                        <span class="ml-auto text-xs text-gray-500">阶段级附件</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded">
+                                        <input type="checkbox" class="form-checkbox h-4 w-4 text-primary" checked>
+                                        <span class="text-sm">立项申请书（必填）</span>
+                                        <span class="ml-auto text-xs text-gray-500">研究阶段口径</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded">
+                                        <input type="checkbox" class="form-checkbox h-4 w-4 text-primary">
+                                        <span class="text-sm">技术可行性报告（选填）</span>
+                                        <span class="ml-auto text-xs text-gray-500">开发阶段口径</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 文件附件 -->
+                        <div class="md:col-span-2">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">文件附件</h3>
+                            <div class="flex items-center mb-4">
+                                <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                                    + 上传
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 border border-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <input type="checkbox">
+                                            </th>
+                                            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                文件名
+                                            </th>
+                                            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                大小
+                                            </th>
+                                            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                上传时间
+                                            </th>
+                                            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <input type="checkbox">
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <i class="fa fa-file-pdf-o text-red-500 mr-2"></i>
+                                                    <span>用户管理模块需求文档.pdf</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <span class="text-sm text-gray-500">2.5 MB</span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <span class="text-sm text-gray-500">2024-01-10</span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                                <a href="#" class="text-primary hover:text-blue-700 mr-3">下载</a>
+                                                <button class="text-red-600 hover:text-red-800">删除</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <input type="checkbox">
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <i class="fa fa-file-image-o text-green-500 mr-2"></i>
+                                                    <span>用户界面设计图.png</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <span class="text-sm text-gray-500">1.8 MB</span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <span class="text-sm text-gray-500">2024-01-10</span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                                <a href="#" class="text-primary hover:text-blue-700 mr-3">下载</a>
+                                                <button class="text-red-600 hover:text-red-800">删除</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                         <!-- 其他设置 -->
                         <div class="md:col-span-2">
                             <h3 class="text-lg font-medium text-gray-800 mb-4">其他设置</h3>
@@ -580,21 +685,19 @@
                                     <input type="text" id="tags" value="开发,用户管理,前端" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="用逗号分隔多个标签">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">附件</label>
-                                    <input type="file" id="attachments" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" multiple>
-                                    <div class="mt-2 space-y-1">
-                                        <div class="flex items-center justify-between text-sm">
-                                            <span class="text-gray-600">用户管理模块需求文档.pdf</span>
-                                            <button type="button" class="text-red-500 hover:text-red-700">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">任务进度 <span class="text-red-500">*</span></label>
+                                    <div class="flex items-center space-x-4">
+                                        <input type="text" id="progress" class="flex-1 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" value="50%" required>
+                                        <div class="flex space-x-2">
+                                            <button type="button" class="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300" onclick="setProgress(0)">0%</button>
+                                            <button type="button" class="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300" onclick="setProgress(25)">25%</button>
+                                            <button type="button" class="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300" onclick="setProgress(50)">50%</button>
+                                            <button type="button" class="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300" onclick="setProgress(75)">75%</button>
+                                            <button type="button" class="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300" onclick="setProgress(100)">100%</button>
                                         </div>
-                                        <div class="flex items-center justify-between text-sm">
-                                            <span class="text-gray-600">用户界面设计图.png</span>
-                                            <button type="button" class="text-red-500 hover:text-red-700">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                        <div id="progressBar" class="bg-primary h-2 rounded-full" style="width: 50%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -681,6 +784,12 @@
             const sidebar = document.querySelector('.w-64');
             sidebar.classList.toggle('hidden');
         });
+        
+        // 设置进度
+        function setProgress(progress) {
+            document.getElementById('progress').value = progress + '%';
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
         
         document.addEventListener('DOMContentLoaded', function() {
             const projectSubmenu = document.getElementById('project-submenu');

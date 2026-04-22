@@ -2,201 +2,448 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>移动打卡 - 研发费管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>移动打卡</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#3b82f6',
-                        secondary: '#10b981',
-                        accent: '#6366f1',
-                        danger: '#ef4444',
-                        warning: '#f59e0b',
-                        info: '#3b82f6',
-                        light: '#f3f4f6',
-                        dark: '#1f2937'
-                    }
+                        primary: '#1E88E5',
+                        secondary: '#4CAF50',
+                        warning: '#FFC107',
+                        danger: '#F44336',
+                    },
                 }
             }
         }
     </script>
     <style>
+        @media (max-width: 640px) {
+            body {
+                font-size: 14px;
+            }
+            .container {
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            main {
+                padding: 16px;
+            }
+            .checkin-btn {
+                box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+            }
+            .tab-active {
+                border-bottom: 2px solid #1E88E5;
+                color: #1E88E5;
+            }
+            /* 移动端专用样式 */
+            .mobile-container {
+                width: 100%;
+                max-width: 480px;
+                margin: 0 auto;
+                background-color: #f5f5f5;
+                min-height: 100vh;
+                position: relative;
+            }
+            footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: white;
+                border-top: 1px solid #e5e7eb;
+                z-index: 10;
+            }
+        }
+        
+        /* 桌面端模拟移动端 */
+        @media (min-width: 641px) {
+            .mobile-container {
+                width: 480px;
+                max-width: 480px;
+                margin: 0 auto;
+                background-color: #f5f5f5;
+                min-height: 100vh;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                position: relative;
+            }
+            footer {
+                position: fixed;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 480px;
+                background-color: white;
+                border-top: 1px solid #e5e7eb;
+                z-index: 10;
+            }
+        }
+        
         body {
-            font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: #f5f5f5;
         }
+        
         .checkin-btn {
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
         }
-        .checkin-btn:active {
-            transform: scale(0.95);
-        }
-        .card {
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        
+        .tab-active {
+            border-bottom: 2px solid #1E88E5;
+            color: #1E88E5;
         }
     </style>
 </head>
-<body class="min-h-screen bg-gray-50">
-    <!-- 顶部导航栏 -->
-    <header class="bg-white shadow-sm sticky top-0 z-10">
+<body class="bg-gray-50 min-h-screen">
+    <div class="mobile-container">
+        <!-- 顶部导航 -->
+        <header class="bg-white shadow-sm sticky top-0 z-10">
         <div class="flex items-center justify-between px-4 py-3">
-            <button class="text-gray-600" onclick="goBack()">
-                <i class="fa fa-arrow-left text-lg"></i>
-            </button>
-            <h1 class="text-lg font-medium text-gray-800">移动打卡</h1>
-            <div class="w-6"></div> <!-- 占位元素 -->
-        </div>
-    </header>
-    
-    <!-- 主内容 -->
-    <main class="px-4 py-6">
-        <!-- 打卡状态卡片 -->
-        <div class="bg-white card p-6 mb-6">
-            <div class="text-center">
-                <h2 class="text-xl font-bold text-gray-800 mb-2">今日打卡</h2>
-                <p class="text-gray-500 mb-4" id="currentDate">2026年4月20日</p>
-                <div class="flex justify-center items-center mb-6">
-                    <div class="w-32 h-32 rounded-full bg-blue-100 flex items-center justify-center">
-                        <span class="text-4xl font-bold text-primary" id="currentTime">12:30</span>
-                    </div>
-                </div>
-                
-                <!-- 打卡按钮 -->
-                <button id="checkinBtn" class="checkin-btn bg-primary text-white w-full py-4 rounded-lg font-medium text-lg flex items-center justify-center" onclick="checkin()">
-                    <i class="fa fa-clock-o mr-2"></i>
-                    <span>开始打卡</span>
+            <div class="flex items-center">
+                <button onclick="loadPage('work-hour-entry.html')" class="mr-4">
+                    <i class="fa fa-arrow-left text-gray-700"></i>
+                </button>
+                <h1 class="text-lg font-medium text-gray-900">好品易链</h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="text-gray-500">
+                    <i class="fa fa-refresh"></i>
+                </button>
+                <button class="text-gray-500">
+                    <i class="fa fa-cog"></i>
                 </button>
             </div>
         </div>
-        
-        <!-- 打卡记录 -->
-        <div class="bg-white card p-4 mb-6">
-            <h3 class="text-lg font-medium text-gray-800 mb-4">今日记录</h3>
-            <div class="space-y-4">
-                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
-                    <div>
-                        <p class="text-gray-800 font-medium">上班打卡</p>
-                        <p class="text-gray-500 text-sm">09:00</p>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="px-4 py-6">
+        <!-- 打卡页面 -->
+        <div id="checkinPage" class="page-content">
+            <!-- 用户信息 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-12 h-12 rounded-full">
+                        <div class="ml-3">
+                            <h2 class="font-medium text-gray-900">卢君</h2>
+                            <p class="text-sm text-gray-500">好品易链（山东）...</p>
+                        </div>
                     </div>
-                    <span class="text-green-600 text-sm">
-                        <i class="fa fa-check-circle mr-1"></i>已打卡
-                    </span>
+                    <div class="flex items-center">
+                        <button class="text-primary text-sm mr-3">
+                            <i class="fa fa-calendar-check-o mr-1"></i>申请
+                        </button>
+                        <button class="text-primary text-sm">
+                            查看规则
+                        </button>
+                    </div>
                 </div>
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-gray-800 font-medium">下班打卡</p>
-                        <p class="text-gray-500 text-sm">未打卡</p>
+            </div>
+
+            <!-- 打卡状态 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="border border-gray-200 rounded-lg p-3 text-center">
+                        <p class="text-sm text-gray-500 mb-1">上班 08:30</p>
+                        <div class="flex items-center justify-center">
+                            <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                            <span class="text-sm font-medium">08:28已打卡</span>
+                        </div>
                     </div>
-                    <span class="text-gray-400 text-sm">
-                        <i class="fa fa-clock-o mr-1"></i>待打卡
-                    </span>
+                    <div class="border border-gray-200 rounded-lg p-3 text-center">
+                        <p class="text-sm text-gray-500 mb-1">下班 18:30</p>
+                        <div class="flex items-center justify-center text-gray-400">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span class="text-sm">未打卡</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 打卡按钮 -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6 text-center">
+                <div class="inline-block relative">
+                    <div class="w-48 h-48 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <div class="text-center">
+                            <p class="text-lg font-medium text-primary mb-1">下班打卡</p>
+                            <p class="text-sm text-gray-500">4月20日 周一</p>
+                            <p class="text-xs text-gray-400 mt-1">09:30:30</p>
+                        </div>
+                    </div>
+                    <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
+                        <i class="fa fa-circle"></i>
+                    </div>
+                </div>
+                <button class="w-full py-3 bg-primary text-white rounded-lg font-medium checkin-btn">
+                    立即打卡
+                </button>
+            </div>
+
+            <!-- 工时填报任务 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <h3 class="font-medium text-gray-900 mb-3">工时填报任务</h3>
+                <div class="space-y-3">
+                    <div class="border border-gray-200 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium">项目A-核心算法开发</span>
+                            <span class="text-xs bg-blue-100 text-primary px-2 py-1 rounded">当前进度：30%</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-500 mb-2">
+                            <span>预计总工时：488小时</span>
+                            <button class="text-primary font-medium">填报</button>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium">项目B-前端界面开发</span>
+                            <span class="text-xs bg-blue-100 text-primary px-2 py-1 rounded">当前进度：40%</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-500 mb-2">
+                            <span>预计总工时：388小时</span>
+                            <button class="text-primary font-medium">今日已填报，修改</button>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: 40%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium">项目C-测试验证</span>
+                            <span class="text-xs bg-blue-100 text-primary px-2 py-1 rounded">当前进度：40%</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-500 mb-2">
+                            <span>预计总工时：288小时</span>
+                            <button class="text-primary font-medium">填报</button>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: 40%"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <!-- 最近打卡记录 -->
-        <div class="bg-white card p-4">
-            <h3 class="text-lg font-medium text-gray-800 mb-4">最近记录</h3>
-            <div class="space-y-4">
-                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
-                    <div>
-                        <p class="text-gray-800 font-medium">2026-04-19</p>
-                        <p class="text-gray-500 text-sm">上班: 09:00 | 下班: 18:00</p>
+
+        <!-- 统计页面 -->
+        <div id="statsPage" class="page-content hidden">
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-10 h-10 rounded-full">
+                        <div class="ml-2">
+                            <h2 class="font-medium text-gray-900">卢君</h2>
+                            <p class="text-xs text-gray-500">好品易链（山东）...</p>
+                        </div>
                     </div>
-                    <span class="text-green-600 text-sm">
-                        <i class="fa fa-check-circle"></i>
-                    </span>
+                    <button class="text-primary text-sm">
+                        查看规则
+                    </button>
                 </div>
-                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
-                    <div>
-                        <p class="text-gray-800 font-medium">2026-04-18</p>
-                        <p class="text-gray-500 text-sm">上班: 09:05 | 下班: 18:00</p>
-                    </div>
-                    <span class="text-green-600 text-sm">
-                        <i class="fa fa-check-circle"></i>
-                    </span>
+                
+                <div class="flex justify-end space-x-2 mb-4">
+                    <button class="px-3 py-1 text-xs border border-primary bg-primary text-white rounded-full">日</button>
+                    <button class="px-3 py-1 text-xs border border-gray-300 rounded-full">周</button>
+                    <button class="px-3 py-1 text-xs border border-gray-300 rounded-full">月</button>
                 </div>
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-gray-800 font-medium">2026-04-17</p>
-                        <p class="text-gray-500 text-sm">上班: 09:00 | 下班: 18:05</p>
+            </div>
+
+            <!-- 日历 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-medium text-gray-900">2026 04.15</h3>
+                    <button class="text-primary text-sm">回到今天</button>
+                </div>
+                
+                <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                    <span class="text-xs text-gray-500">一</span>
+                    <span class="text-xs text-gray-500">二</span>
+                    <span class="text-xs text-gray-500">三</span>
+                    <span class="text-xs text-gray-500">四</span>
+                    <span class="text-xs text-gray-500">五</span>
+                    <span class="text-xs text-gray-500">六</span>
+                    <span class="text-xs text-gray-500">日</span>
+                </div>
+                
+                <div class="grid grid-cols-7 gap-1 text-center">
+                    <span class="text-xs text-gray-400 py-2">30</span>
+                    <span class="text-xs text-gray-400 py-2">31</span>
+                    <span class="text-xs text-gray-600 py-2">1</span>
+                    <span class="text-xs text-gray-600 py-2">2</span>
+                    <span class="text-xs text-gray-600 py-2">3</span>
+                    <span class="text-xs text-gray-600 py-2">4</span>
+                    <span class="text-xs text-gray-600 py-2">5</span>
+                    <span class="text-xs text-gray-600 py-2">6</span>
+                    <span class="text-xs text-gray-600 py-2">7</span>
+                    <span class="text-xs text-gray-600 py-2">8</span>
+                    <span class="text-xs text-gray-600 py-2">9</span>
+                    <span class="text-xs text-gray-600 py-2">10</span>
+                    <span class="text-xs text-gray-600 py-2">11</span>
+                    <span class="text-xs text-gray-600 py-2">12</span>
+                    <span class="text-xs text-gray-600 py-2">13</span>
+                    <span class="text-xs text-gray-600 py-2">14</span>
+                    <span class="text-xs bg-primary text-white rounded-full py-2">15</span>
+                    <span class="text-xs text-gray-600 py-2">16</span>
+                    <span class="text-xs text-gray-600 py-2">17</span>
+                    <span class="text-xs text-gray-600 py-2">18</span>
+                    <span class="text-xs text-gray-600 py-2">19</span>
+                    <span class="text-xs text-gray-600 py-2">20</span>
+                    <span class="text-xs text-gray-600 py-2">21</span>
+                    <span class="text-xs text-gray-600 py-2">22</span>
+                    <span class="text-xs text-gray-600 py-2">23</span>
+                    <span class="text-xs text-gray-600 py-2">24</span>
+                    <span class="text-xs text-gray-600 py-2">25</span>
+                    <span class="text-xs text-gray-600 py-2">26</span>
+                    <span class="text-xs text-gray-400 py-2">27</span>
+                    <span class="text-xs text-gray-400 py-2">28</span>
+                    <span class="text-xs text-gray-400 py-2">29</span>
+                    <span class="text-xs text-gray-400 py-2">30</span>
+                    <span class="text-xs text-gray-400 py-2">1</span>
+                    <span class="text-xs text-gray-400 py-2">2</span>
+                    <span class="text-xs text-gray-400 py-2">3</span>
+                </div>
+            </div>
+
+            <!-- 打卡记录 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <h3 class="font-medium text-gray-900 mb-3">当日班次：固定上下班 4至10月作息时间 08:30-18:30</h3>
+                <p class="text-sm text-gray-500 mb-3">出勤统计：打卡2次，工时9.6小时</p>
+                
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fa fa-sign-in text-green-500 mr-2"></i>
+                            <span class="text-sm">上班 08:26</span>
+                        </div>
+                        <span class="text-xs text-gray-500">Y2-KN0695</span>
                     </div>
-                    <span class="text-green-600 text-sm">
-                        <i class="fa fa-check-circle"></i>
-                    </span>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fa fa-sign-out text-red-500 mr-2"></i>
+                            <span class="text-sm">下班 20:02</span>
+                        </div>
+                        <span class="text-xs text-gray-500">Y2-KN0695</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <button class="w-full py-2 bg-primary text-white rounded-lg text-sm font-medium">
+                        今日已填报，修改
+                    </button>
+                    <p class="text-xs text-gray-500 mt-1">注：代表今日已完成工时汇报</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置页面 -->
+        <div id="settingsPage" class="page-content hidden">
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <h3 class="font-medium text-gray-900 mb-4">设置</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 border-b border-gray-100">
+                        <span class="text-gray-700">个人信息</span>
+                        <i class="fa fa-chevron-right text-gray-400"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 border-b border-gray-100">
+                        <span class="text-gray-700">打卡设置</span>
+                        <i class="fa fa-chevron-right text-gray-400"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 border-b border-gray-100">
+                        <span class="text-gray-700">通知设置</span>
+                        <i class="fa fa-chevron-right text-gray-400"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 border-b border-gray-100">
+                        <span class="text-gray-700">关于我们</span>
+                        <i class="fa fa-chevron-right text-gray-400"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3">
+                        <span class="text-gray-700">退出登录</span>
+                        <i class="fa fa-sign-out text-gray-400"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
-    
+
     <!-- 底部导航 -->
-    <footer class="fixed bottom-0 left-0 right-0 bg-white shadow-lg">
-        <div class="flex justify-around py-3">
-            <a href="mobile-records.html" class="flex flex-col items-center text-gray-500">
-                <i class="fa fa-list text-lg mb-1"></i>
-                <span class="text-xs">记录</span>
-            </a>
-            <a href="mobile-checkin.html" class="flex flex-col items-center text-primary">
-                <i class="fa fa-clock-o text-lg mb-1"></i>
+    <footer class="shadow-sm border-t border-gray-200">
+        <div class="grid grid-cols-3 text-center">
+            <button class="py-3 tab-active" onclick="switchPage('checkin')">
+                <i class="fa fa-clock-o block text-lg mb-1"></i>
                 <span class="text-xs">打卡</span>
-            </a>
-            <a href="mobile-profile.html" class="flex flex-col items-center text-gray-500">
-                <i class="fa fa-user text-lg mb-1"></i>
-                <span class="text-xs">我的</span>
-            </a>
+            </button>
+            <button class="py-3 text-gray-500" onclick="switchPage('stats')">
+                <i class="fa fa-bar-chart block text-lg mb-1"></i>
+                <span class="text-xs">统计</span>
+            </button>
+            <button class="py-3 text-gray-500" onclick="switchPage('settings')">
+                <i class="fa fa-cog block text-lg mb-1"></i>
+                <span class="text-xs">设置</span>
+            </button>
         </div>
     </footer>
-    
+
     <script>
-        // 更新当前日期和时间
-        function updateDateTime() {
-            const now = new Date();
-            
-            // 更新日期
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
-            
-            // 更新时间
-            const timeOptions = { hour: '2-digit', minute: '2-digit' };
-            document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-CN', timeOptions);
+        // 加载页面
+        function loadPage(page) {
+            window.location.href = page;
         }
         
-        // 初始化
-        function init() {
-            updateDateTime();
-            setInterval(updateDateTime, 60000); // 每分钟更新一次
-        }
-        
-        // 打卡功能
-        function checkin() {
-            const checkinBtn = document.getElementById('checkinBtn');
-            const now = new Date();
-            const hour = now.getHours();
+        // 页面切换
+        function switchPage(page) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
             
-            if (hour < 12) {
-                // 上班打卡
-                alert('上班打卡成功！时间：' + now.toLocaleTimeString('zh-CN'));
-                checkinBtn.textContent = '开始打卡';
-            } else {
-                // 下班打卡
-                alert('下班打卡成功！时间：' + now.toLocaleTimeString('zh-CN'));
-                checkinBtn.textContent = '开始打卡';
+            // 显示选中的页面
+            if (page === 'checkin') {
+                document.getElementById('checkinPage').classList.remove('hidden');
+            } else if (page === 'stats') {
+                document.getElementById('statsPage').classList.remove('hidden');
+            } else if (page === 'settings') {
+                document.getElementById('settingsPage').classList.remove('hidden');
+            }
+            
+            // 更新底部导航状态
+            document.querySelectorAll('footer button').forEach(button => {
+                button.classList.remove('tab-active');
+                button.classList.add('text-gray-500');
+            });
+            
+            // 激活当前页面的导航按钮
+            const buttons = document.querySelectorAll('footer button');
+            if (page === 'checkin') {
+                buttons[0].classList.add('tab-active');
+                buttons[0].classList.remove('text-gray-500');
+            } else if (page === 'stats') {
+                buttons[1].classList.add('tab-active');
+                buttons[1].classList.remove('text-gray-500');
+            } else if (page === 'settings') {
+                buttons[2].classList.add('tab-active');
+                buttons[2].classList.remove('text-gray-500');
             }
         }
         
-        // 返回上一页
-        function goBack() {
-            window.history.back();
-        }
-        
         // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定填报和修改按钮事件
+            const submitButtons = document.querySelectorAll('button.text-primary.font-medium');
+            submitButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    loadPage('work-hour-report.html');
+                });
+            });
+        });
     </script>
+    </div>
 </body>
 </html>

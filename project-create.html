@@ -229,6 +229,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-template.html')">
+                                    <i class="fa fa-list-alt w-6"></i>
+                                    <span>阶段模板</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('progress-tracking.html')">
                                     <i class="fa fa-line-chart w-6"></i>
                                     <span>进度跟踪</span>
@@ -506,162 +512,426 @@
                     <div id="step1" class="step-content">
                         <h2 class="text-xl font-semibold text-gray-800 mb-6">项目基本信息</h2>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- 项目名称 -->
-                            <div>
-                                <label class="form-label">项目名称</label>
-                                <input type="text" class="form-input" placeholder="请输入项目名称">
-                            </div>
-                            
-                            <!-- 项目编号 -->
-                            <div>
-                                <label class="form-label">项目编号</label>
-                                <input type="text" class="form-input" placeholder="系统自动生成" disabled>
-                            </div>
-                            
-                            <!-- 项目类型 -->
-                            <div>
-                                <label class="form-label">项目类型 <span class="text-red-500">*</span></label>
-                                <select class="form-select">
-                                    <option value="">请选择</option>
-                                    <option value="internal">内部管理项目</option>
-                                    <option value="external">外部合作项目</option>
-                                    <option value="government">政府资助项目</option>
-                                </select>
-                                <div class="form-note">注：内部管理项目</div>
-                            </div>
-                            
-                            <!-- 项目总预算 -->
-                            <div>
-                                <label class="form-label">项目总预算（元） <span class="text-red-500">*</span></label>
-                                <div class="flex items-center">
-                                    <input type="number" class="form-input flex-1" placeholder="请输入预算金额">
-                                    <button class="ml-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200">
-                                        制定/管理预算明细
-                                    </button>
+                        <!-- 基本信息 -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4 flex items-center">
+                                <i class="fa fa-info-circle text-primary mr-2"></i>
+                                基本信息
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- 项目名称 -->
+                                <div>
+                                    <label class="form-label">项目名称</label>
+                                    <input type="text" class="form-input" placeholder="请输入项目名称">
                                 </div>
-                                <div class="form-note">注：内部管理项目</div>
-                            </div>
-                            
-                            <!-- 研发形式 -->
-                            <div>
-                                <label class="form-label">研发形式 <span class="text-red-500">*</span></label>
-                                <select class="form-select">
-                                    <option value="">请选择</option>
-                                    <option value="independent">自主研发</option>
-                                    <option value="cooperation">合作研发</option>
-                                    <option value="委托研发">委托研发</option>
-                                </select>
-                                <div class="form-note">注：根据扣除比例执行；变更选项，影响委托研发费用加计扣除政策要求</div>
-                            </div>
-                            
-                            <!-- 委托方类型 -->
-                            <div>
-                                <label class="form-label">委托方类型</label>
-                                <div class="flex items-center space-x-4">
-                                    <label class="flex items-center">
-                                        <input type="radio" name="delegateType" value="domestic" class="mr-2">
-                                        <span>境内</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="radio" name="delegateType" value="foreign" class="mr-2">
-                                        <span>境外</span>
-                                    </label>
+                                
+                                <!-- 项目编号 -->
+                                <div>
+                                    <label class="form-label">项目编号</label>
+                                    <input type="text" class="form-input" placeholder="系统自动生成" disabled>
                                 </div>
-                                <div class="form-note">注：当研发形式选择"委托研发"时，此选项为委托方类型（境内/境外）必选项，用于系统自动计算加计扣除路数。</div>
+                                
+                                <!-- 阶段模板 -->
+                                <div>
+                                    <label class="form-label">阶段模板 <span class="text-red-500">*</span></label>
+                                    <select class="form-select" onchange="onTemplateChange(this)">
+                                        <option value="">请选择模板</option>
+                                        <option value="TM001">标准研发项目模板（6阶段）</option>
+                                        <option value="TM002">简化研发项目模板（4阶段）</option>
+                                        <option value="TM003">高新企业专用模板（6阶段）</option>
+                                    </select>
+                                    <div class="form-note">注：选择模板后，系统将自动创建项目阶段。模板可在"阶段模板"中管理。</div>
+                                </div>
+                                
+                                <!-- 开始时间 -->
+                                <div>
+                                    <label class="form-label">开始时间 <span class="text-red-500">*</span></label>
+                                    <input type="date" class="form-input">
+                                </div>
+                                
+                                <!-- 结束时间 -->
+                                <div>
+                                    <label class="form-label">结束时间 <span class="text-red-500">*</span></label>
+                                    <input type="date" class="form-input">
+                                </div>
+                                
+                                <!-- 项目负责人 -->
+                                <div>
+                                    <label class="form-label">项目负责人 <span class="text-red-500">*</span></label>
+                                    <select class="form-select">
+                                        <option value="">请选择</option>
+                                        <option value="user1">张三</option>
+                                        <option value="user2">李四</option>
+                                        <option value="user3">王五</option>
+                                    </select>
+                                    <div class="form-note">注：高新技术企业一般由一个或多个部门负责人负责，此项目由个项目负责人负责</div>
+                                </div>
                             </div>
-                            
-                            <!-- 核算阶段 -->
-                            <div>
-                                <label class="form-label">核算阶段 <span class="text-red-500">*</span></label>
-                                <select class="form-select">
-                                    <option value="">请选择</option>
-                                    <option value="planning">规划阶段</option>
-                                    <option value="execution">执行阶段</option>
-                                    <option value="completion">完成阶段</option>
-                                </select>
-                                <div class="form-note">注：直接决定研发支出的费用化归集还是满足满条件的资本化</div>
+                        </div>
+                        
+                        <!-- 财务会计核算口径 -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4 flex items-center">
+                                <i class="fa fa-book text-primary mr-2"></i>
+                                财务会计核算口径
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- 项目总预算 -->
+                                <div>
+                                    <label class="form-label">项目总预算（元） <span class="text-red-500">*</span></label>
+                                    <div class="flex items-center">
+                                        <input type="number" class="form-input flex-1" placeholder="请输入预算金额">
+                                        <button class="ml-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200">
+                                            制定/管理预算明细
+                                        </button>
+                                    </div>
+                                    <div class="form-note">注：内部管理项目</div>
+                                </div>
+                                
+                                <!-- 核算阶段 -->
+                                <div>
+                                    <label class="form-label">核算阶段 <span class="text-red-500">*</span></label>
+                                    <select class="form-select">
+                                        <option value="">请选择</option>
+                                        <option value="planning">规划阶段</option>
+                                        <option value="execution">执行阶段</option>
+                                        <option value="completion">完成阶段</option>
+                                    </select>
+                                    <div class="form-note">注：直接决定研发支出的费用化归集还是满足满条件的资本化</div>
+                                </div>
                             </div>
-                            
-                            <!-- 技术领域 -->
-                            <div>
-                                <label class="form-label">技术领域 <span class="text-red-500">*</span></label>
-                                <select class="form-select">
-                                    <option value="">请选择</option>
-                                    <option value="information">信息技术</option>
-                                    <option value="biotechnology">生物技术</option>
-                                    <option value="newMaterials">新材料</option>
-                                    <option value="advancedManufacturing">先进制造</option>
-                                    <option value="energy">能源与环保</option>
-                                </select>
-                                <div class="form-note">注：财务加计扣除口径，用于判断项目是否属于【负面清单】</div>
+                        </div>
+                        
+                        <!-- 税务加计扣除口径 -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4 flex items-center">
+                                <i class="fa fa-calculator text-primary mr-2"></i>
+                                税务加计扣除口径
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- 研发形式 -->
+                                <div>
+                                    <label class="form-label">研发形式 <span class="text-red-500">*</span></label>
+                                    <select class="form-select">
+                                        <option value="">请选择</option>
+                                        <option value="independent">自主研发</option>
+                                        <option value="cooperation">合作研发</option>
+                                        <option value="委托研发">委托研发</option>
+                                    </select>
+                                    <div class="form-note">注：根据扣除比例执行；变更选项，影响委托研发费用加计扣除政策要求</div>
+                                </div>
+                                
+                                <!-- 委托方类型 -->
+                                <div>
+                                    <label class="form-label">委托方类型</label>
+                                    <div class="flex items-center space-x-4">
+                                        <label class="flex items-center">
+                                            <input type="radio" name="delegateType" value="domestic" class="mr-2">
+                                            <span>境内</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" name="delegateType" value="foreign" class="mr-2">
+                                            <span>境外</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-note">注：当研发形式选择"委托研发"时，此选项为委托方类型（境内/境外）必选项，用于系统自动计算加计扣除路数。</div>
+                                </div>
+                                
+                                <!-- 技术领域 -->
+                                <div>
+                                    <label class="form-label">技术领域 <span class="text-red-500">*</span></label>
+                                    <select class="form-select">
+                                        <option value="">请选择</option>
+                                        <option value="information">信息技术</option>
+                                        <option value="biotechnology">生物技术</option>
+                                        <option value="newMaterials">新材料</option>
+                                        <option value="advancedManufacturing">先进制造</option>
+                                        <option value="energy">能源与环保</option>
+                                    </select>
+                                    <div class="form-note">注：财务加计扣除口径，用于判断项目是否属于【负面清单】</div>
+                                </div>
                             </div>
-                            
-                            <!-- 高新领域 -->
-                            <div>
-                                <label class="form-label">高新领域 <span class="text-red-500">*</span></label>
-                                <select class="form-select">
-                                    <option value="">请选择</option>
-                                    <option value="electronicInformation">电子信息</option>
-                                    <option value="biotechnology">生物与新医药</option>
-                                    <option value="newMaterials">新材料</option>
-                                    <option value="highTechnologyServices">高技术服务</option>
-                                    <option value="advancedManufacturing">先进制造与自动化</option>
-                                    <option value="energySaving">节能与新能源</option>
-                                    <option value="environmentalProtection">资源与环境</option>
-                                </select>
-                                <div class="form-note">注：高新领域；必须选择匹配的领域，这是高企评审的门槛起始，建议支持选择到三级领域</div>
+                        </div>
+                        
+                        <!-- 高新技术企业认定口径 -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4 flex items-center">
+                                <i class="fa fa-lightbulb-o text-primary mr-2"></i>
+                                高新技术企业认定口径
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- 高新领域 -->
+                                <div>
+                                    <label class="form-label">高新领域 <span class="text-red-500">*</span></label>
+                                    <div class="relative">
+                                        <!-- 选择框 -->
+                                        <div class="form-select cursor-pointer relative" onclick="toggleTreeView()" id="highTechSelector">
+                                            <span id="selectedField">请选择</span>
+                                            <i class="fa fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2"></i>
+                                        </div>
+                                        
+                                        <!-- 树状选择视图 -->
+                                        <div class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-10 hidden" id="treeView">
+                                            <div class="max-h-96 overflow-y-auto p-2">
+                                                <!-- 电子信息 -->
+                                                <div class="tree-item">
+                                                    <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                        <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                        <span>电子信息</span>
+                                                    </div>
+                                                    <div class="pl-4 hidden">
+                                                        <!-- 软件 -->
+                                                        <div class="tree-item">
+                                                            <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                                <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                                <span>软件</span>
+                                                            </div>
+                                                            <div class="pl-4 hidden">
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 软件 - 基础软件')">基础软件</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 软件 - 应用软件')">应用软件</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 软件 - 嵌入式软件')">嵌入式软件</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 软件 - 信息安全软件')">信息安全软件</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 软件 - 其他软件')">其他软件</div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 集成电路 -->
+                                                        <div class="tree-item">
+                                                            <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                                <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                                <span>集成电路</span>
+                                                            </div>
+                                                            <div class="pl-4 hidden">
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 集成电路 - 集成电路设计')">集成电路设计</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 集成电路 - 集成电路制造')">集成电路制造</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 集成电路 - 集成电路封装测试')">集成电路封装测试</div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 通信技术 -->
+                                                        <div class="tree-item">
+                                                            <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                                <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                                <span>通信技术</span>
+                                                            </div>
+                                                            <div class="pl-4 hidden">
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 通信技术 - 通信网络技术')">通信网络技术</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 通信技术 - 光通信技术')">光通信技术</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('电子信息 - 通信技术 - 无线通信技术')">无线通信技术</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- 生物与新医药 -->
+                                                <div class="tree-item">
+                                                    <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                        <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                        <span>生物与新医药</span>
+                                                    </div>
+                                                    <div class="pl-4 hidden">
+                                                        <!-- 医药生物技术 -->
+                                                        <div class="tree-item">
+                                                            <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                                <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                                <span>医药生物技术</span>
+                                                            </div>
+                                                            <div class="pl-4 hidden">
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('生物与新医药 - 医药生物技术 - 抗体药物制备技术')">抗体药物制备技术</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('生物与新医药 - 医药生物技术 - 基因工程药物制备技术')">基因工程药物制备技术</div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 医疗器械 -->
+                                                        <div class="tree-item">
+                                                            <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                                <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                                <span>医疗器械</span>
+                                                            </div>
+                                                            <div class="pl-4 hidden">
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('生物与新医药 - 医疗器械 - 医学影像设备')">医学影像设备</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('生物与新医药 - 医疗器械 - 体外诊断试剂')">体外诊断试剂</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- 新材料 -->
+                                                <div class="tree-item">
+                                                    <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                        <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                        <span>新材料</span>
+                                                    </div>
+                                                    <div class="pl-4 hidden">
+                                                        <!-- 金属材料 -->
+                                                        <div class="tree-item">
+                                                            <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                                <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                                <span>金属材料</span>
+                                                            </div>
+                                                            <div class="pl-4 hidden">
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('新材料 - 金属材料 - 金属结构材料')">金属结构材料</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('新材料 - 金属材料 - 金属功能材料')">金属功能材料</div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 高分子材料 -->
+                                                        <div class="tree-item">
+                                                            <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                                <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                                <span>高分子材料</span>
+                                                            </div>
+                                                            <div class="pl-4 hidden">
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('新材料 - 高分子材料 - 塑料')">塑料</div>
+                                                                <div class="py-1 px-6 hover:bg-gray-100 cursor-pointer" onclick="selectField('新材料 - 高分子材料 - 橡胶')">橡胶</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- 其他领域... -->
+                                                <div class="tree-item">
+                                                    <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                        <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                        <span>高技术服务</span>
+                                                    </div>
+                                                </div>
+                                                <div class="tree-item">
+                                                    <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                        <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                        <span>先进制造与自动化</span>
+                                                    </div>
+                                                </div>
+                                                <div class="tree-item">
+                                                    <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                        <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                        <span>新能源与节能</span>
+                                                    </div>
+                                                </div>
+                                                <div class="tree-item">
+                                                    <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                        <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                        <span>资源与环境</span>
+                                                    </div>
+                                                </div>
+                                                <div class="tree-item">
+                                                    <div class="flex items-center py-1 px-2 hover:bg-gray-100 cursor-pointer" onclick="toggleNode(this)">
+                                                        <i class="fa fa-chevron-right mr-2 text-gray-500 transition-transform"></i>
+                                                        <span>航空航天</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-note mt-2">注：高新领域；必须选择匹配的领域，这是高企评审的门槛起始，已支持选择到三级领域</div>
+                                </div>
+                                
+                                <script>
+                                    // 切换树状视图显示/隐藏
+                                    function toggleTreeView() {
+                                        const treeView = document.getElementById('treeView');
+                                        treeView.classList.toggle('hidden');
+                                    }
+                                    
+                                    // 切换节点展开/折叠
+                                    function toggleNode(element) {
+                                        const icon = element.querySelector('i');
+                                        const submenu = element.nextElementSibling;
+                                        
+                                        if (submenu) {
+                                            submenu.classList.toggle('hidden');
+                                            if (submenu.classList.contains('hidden')) {
+                                                icon.classList.remove('rotate-90');
+                                            } else {
+                                                icon.classList.add('rotate-90');
+                                            }
+                                        }
+                                    }
+                                    
+                                    // 选择领域
+                                    function selectField(field) {
+                                        document.getElementById('selectedField').textContent = field;
+                                        document.getElementById('treeView').classList.add('hidden');
+                                    }
+                                    
+                                    // 阶段模板变更事件
+                                    function onTemplateChange(select) {
+                                        const templateId = select.value;
+                                        if (templateId) {
+                                            console.log('已选择模板:', templateId);
+                                            // 实际应用中，这里可以调用后端API获取模板详情
+                                            // 并自动填充项目阶段信息
+                                        }
+                                    }
+                                    
+                                    // 点击其他地方关闭树状视图
+                                    document.addEventListener('click', function(event) {
+                                        const treeView = document.getElementById('treeView');
+                                        const selector = document.getElementById('highTechSelector');
+                                        
+                                        if (!selector.contains(event.target) && !treeView.contains(event.target)) {
+                                            treeView.classList.add('hidden');
+                                        }
+                                    });
+                                </script>
+                                
+                                <style>
+                                    .tree-item {
+                                        margin-bottom: 2px;
+                                    }
+                                    
+                                    .tree-item .fa-chevron-right {
+                                        transition: transform 0.2s ease;
+                                    }
+                                    
+                                    .tree-item .fa-chevron-right.rotate-90 {
+                                        transform: rotate(90deg);
+                                    }
+                                </style>
+                                
+                                <!-- 知识产权类型 -->
+                                <div>
+                                    <label class="form-label">知识产权类型</label>
+                                    <select class="form-select">
+                                        <option value="">请选择</option>
+                                        <option value="patent">发明专利</option>
+                                        <option value="utilityModel">实用新型专利</option>
+                                        <option value="design">外观设计专利</option>
+                                        <option value="softwareCopyright">软件著作权</option>
+                                        <option value="integratedCircuit">集成电路布图设计</option>
+                                    </select>
+                                    <div class="form-note">注：高新领域；用于关联项目计划产生或生产的知识产权，是体现项目创新性与成果产出的核心证据。</div>
+                                </div>
                             </div>
-                            
-                            <!-- 知识产权类型 -->
-                            <div>
-                                <label class="form-label">知识产权类型</label>
-                                <select class="form-select">
-                                    <option value="">请选择</option>
-                                    <option value="patent">发明专利</option>
-                                    <option value="utilityModel">实用新型专利</option>
-                                    <option value="design">外观设计专利</option>
-                                    <option value="softwareCopyright">软件著作权</option>
-                                    <option value="integratedCircuit">集成电路布图设计</option>
-                                </select>
-                                <div class="form-note">注：高新领域；用于关联项目计划产生或生产的知识产权，是体现项目创新性与成果产出的核心证据。</div>
-                            </div>
-                            
-                            <!-- 开始时间 -->
-                            <div>
-                                <label class="form-label">开始时间 <span class="text-red-500">*</span></label>
-                                <input type="date" class="form-input">
-                            </div>
-                            
-                            <!-- 结束时间 -->
-                            <div>
-                                <label class="form-label">结束时间 <span class="text-red-500">*</span></label>
-                                <input type="date" class="form-input">
-                            </div>
-                            
-                            <!-- 项目状态 -->
-                            <div>
-                                <label class="form-label">项目状态 <span class="text-red-500">*</span></label>
-                                <select class="form-select">
-                                    <option value="">请选择</option>
-                                    <option value="planning">规划中</option>
-                                    <option value="inProgress">进行中</option>
-                                    <option value="completed">已完成</option>
-                                    <option value="suspended">已暂停</option>
-                                </select>
-                                <div class="form-note">注："进行中"的项目才能归集费用，"已结束"项目应关闭费用录入</div>
-                            </div>
-                            
-                            <!-- 项目负责人 -->
-                            <div>
-                                <label class="form-label">项目负责人 <span class="text-red-500">*</span></label>
-                                <select class="form-select">
-                                    <option value="">请选择</option>
-                                    <option value="user1">张三</option>
-                                    <option value="user2">李四</option>
-                                    <option value="user3">王五</option>
-                                </select>
-                                <div class="form-note">注：高新技术企业一般由一个或多个部门负责人负责，此项目由个项目负责人负责</div>
+                        </div>
+                        
+                        <!-- 内部管理口径 -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4 flex items-center">
+                                <i class="fa fa-cog text-primary mr-2"></i>
+                                内部管理口径
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- 项目类型 -->
+                                <div>
+                                    <label class="form-label">项目类型 <span class="text-red-500">*</span></label>
+                                    <select class="form-select">
+                                        <option value="">请选择</option>
+                                        <option value="internal">内部管理项目</option>
+                                        <option value="external">外部合作项目</option>
+                                        <option value="government">政府资助项目</option>
+                                    </select>
+                                    <div class="form-note">注：内部管理项目</div>
+                                </div>
+                                
+                                <!-- 项目状态 -->
+                                <div>
+                                    <label class="form-label">项目状态 <span class="text-red-500">*</span></label>
+                                    <select class="form-select">
+                                        <option value="">请选择</option>
+                                        <option value="planning">规划中</option>
+                                        <option value="inProgress">进行中</option>
+                                        <option value="completed">已完成</option>
+                                        <option value="suspended">已暂停</option>
+                                    </select>
+                                    <div class="form-note">注："进行中"的项目才能归集费用，"已结束"项目应关闭费用录入</div>
+                                </div>
                             </div>
                         </div>
                         
@@ -836,6 +1106,75 @@
                                             </td>
                                             <td class="px-4 py-3 border-b">
                                                 <input type="date" class="form-input">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="number" class="form-input" placeholder="0-100" min="0" max="100">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
+                                                    <i class="fa fa-trash"></i> 删除
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- 占用建筑物 -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-gray-800">占用建筑物</h3>
+                                <button class="px-3 py-1 bg-primary text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center" onclick="addBuilding()">
+                                    <i class="fa fa-plus mr-1"></i> 添加建筑物
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white border border-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">建筑物名称/编号</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">占用方式</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">占用开始日期</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">占用结束日期</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">占用面积（平方米）</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">预计使用时间占比</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="buildingTable" class="divide-y divide-gray-200">
+                                        <!-- 初始行 -->
+                                        <tr class="table-row-hover">
+                                            <td class="px-4 py-3 border-b">
+                                                <select class="form-select">
+                                                    <option value="">从资产管理同步</option>
+                                                    <option value="bld001">研发大楼A座</option>
+                                                    <option value="bld002">研发大楼B座</option>
+                                                    <option value="bld003">实验楼</option>
+                                                </select>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <div class="flex items-center space-x-4">
+                                                    <label class="flex items-center">
+                                                        <input type="radio" name="buildingUseType_0" value="exclusive" class="mr-2">
+                                                        <span>专用</span>
+                                                    </label>
+                                                    <label class="flex items-center">
+                                                        <input type="radio" name="buildingUseType_0" value="shared" class="mr-2">
+                                                        <span>共享</span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-note">注：占用方式是关键字段："专用"建筑物的折旧100%计入本项目；"共享"需按面积或工时等方法分摊</div>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="date" class="form-input">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="date" class="form-input">
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
+                                                <input type="number" class="form-input" placeholder="0" min="0">
                                             </td>
                                             <td class="px-4 py-3 border-b">
                                                 <input type="number" class="form-input" placeholder="0-100" min="0" max="100">
@@ -1103,6 +1442,55 @@
                 </td>
                 <td class="px-4 py-3 border-b">
                     <input type="date" class="form-input">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="number" class="form-input" placeholder="0-100" min="0" max="100">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
+                        <i class="fa fa-trash"></i> 删除
+                    </button>
+                </td>
+            `;
+            table.appendChild(newRow);
+        }
+        
+        // 添加建筑物
+        function addBuilding() {
+            const table = document.getElementById('buildingTable');
+            const newRow = document.createElement('tr');
+            newRow.className = 'table-row-hover';
+            const rowIndex = table.children.length;
+            newRow.innerHTML = `
+                <td class="px-4 py-3 border-b">
+                    <select class="form-select">
+                        <option value="">从资产管理同步</option>
+                        <option value="bld001">研发大楼A座</option>
+                        <option value="bld002">研发大楼B座</option>
+                        <option value="bld003">实验楼</option>
+                    </select>
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="buildingUseType_${rowIndex}" value="exclusive" class="mr-2">
+                            <span>专用</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="buildingUseType_${rowIndex}" value="shared" class="mr-2">
+                            <span>共享</span>
+                        </label>
+                    </div>
+                    <div class="form-note">注：占用方式是关键字段："专用"建筑物的折旧100%计入本项目；"共享"需按面积或工时等方法分摊</div>
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="date" class="form-input">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="date" class="form-input">
+                </td>
+                <td class="px-4 py-3 border-b">
+                    <input type="number" class="form-input" placeholder="0" min="0">
                 </td>
                 <td class="px-4 py-3 border-b">
                     <input type="number" class="form-input" placeholder="0-100" min="0" max="100">

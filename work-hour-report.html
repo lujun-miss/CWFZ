@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>汇报工时</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E88E5',
+                        secondary: '#4CAF50',
+                        warning: '#FFC107',
+                        danger: '#F44336',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @media (max-width: 640px) {
+            body {
+                font-size: 14px;
+            }
+            .container {
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            main {
+                padding: 16px;
+            }
+            /* 移动端专用样式 */
+            .mobile-container {
+                width: 100%;
+                max-width: 480px;
+                margin: 0 auto;
+                background-color: #f5f5f5;
+                min-height: 100vh;
+                position: relative;
+            }
+        }
+        
+        /* 桌面端模拟移动端 */
+        @media (min-width: 641px) {
+            .mobile-container {
+                width: 480px;
+                max-width: 480px;
+                margin: 0 auto;
+                background-color: #f5f5f5;
+                min-height: 100vh;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                position: relative;
+            }
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="mobile-container">
+        <!-- 顶部导航 -->
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="flex items-center justify-between px-4 py-3">
+                <div class="flex items-center">
+                    <button onclick="loadPage('mobile-checkin.html')" class="mr-4">
+                        <i class="fa fa-arrow-left text-gray-700"></i>
+                    </button>
+                    <h1 class="text-lg font-medium text-gray-900">汇报工时</h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主内容 -->
+        <main class="px-4 py-6">
+            <div class="bg-white rounded-lg shadow-sm p-4">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
+                    <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                        <option>项目A</option>
+                        <option>项目B</option>
+                        <option>项目C</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">对应任务</label>
+                    <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                        <option>立项</option>
+                        <option>开发</option>
+                        <option>测试</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">打卡工时</label>
+                    <input type="range" min="0" max="8" step="0.5" value="2" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>0小时</span>
+                        <span>2小时</span>
+                        <span>8小时</span>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">工作内容</label>
+                    <textarea class="w-full border border-gray-300 rounded-lg px-3 py-2 h-20" placeholder="对接需求方案"></textarea>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">项目设备（可选）</label>
+                    <div class="flex space-x-2 mb-2">
+                        <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm">台式电脑</button>
+                        <button class="px-3 py-1 border border-primary bg-primary/10 text-primary rounded-lg text-sm">笔记本</button>
+                    </div>
+                    <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="huawei001">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">设备使用时间</label>
+                    <input type="range" min="0" max="8" step="0.5" value="2" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>0小时</span>
+                        <span>2小时</span>
+                        <span>8小时</span>
+                    </div>
+                </div>
+                
+                <!-- 提交按钮 -->
+                <div class="mt-6">
+                    <button class="w-full py-3 bg-primary text-white rounded-lg font-medium">
+                        提交
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            // 加载页面
+            function loadPage(page) {
+                window.location.href = page;
+            }
+        </script>
+    </div>
+</body>
+</html>

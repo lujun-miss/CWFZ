@@ -127,12 +127,6 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-create.html')">
-                                    <i class="fa fa-plus-circle w-6"></i>
-                                    <span>项目立项</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
                                     <i class="fa fa-tasks w-6"></i>
                                     <span>任务管理</span>
@@ -142,6 +136,12 @@
                                 <a href="javascript:void(0)" class="nav-item active nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
                                     <i class="fa fa-check-circle w-6"></i>
                                     <span>阶段审核</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-template.html')">
+                                    <i class="fa fa-list-alt w-6"></i>
+                                    <span>阶段模板</span>
                                 </a>
                             </li>
                             <li>
@@ -464,62 +464,45 @@
 
             <!-- 筛选器 -->
             <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                <h3 class="text-lg font-medium text-gray-800 mb-4">筛选条件</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
+                <div class="flex items-center space-x-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">当前阶段审核人</label>
                         <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option>全部项目</option>
-                            <option>智能研发管理系统</option>
-                            <option>企业数据分析平台</option>
-                            <option>移动应用开发</option>
+                            <option>全部审核人</option>
+                            <option>管理员</option>
+                            <option>张三</option>
+                            <option>李四</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">审核状态</label>
-                        <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option>全部状态</option>
-                            <option>待审核</option>
-                            <option>已通过</option>
-                            <option>已拒绝</option>
-                        </select>
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">输入项目名称/项目编号</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="搜索项目">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">开始日期</label>
-                        <input type="date" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <div class="flex items-end">
+                        <button class="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium">
+                            筛选
+                        </button>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">结束日期</label>
-                        <input type="date" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                    </div>
-                </div>
-                <div class="mt-4 flex justify-end">
-                    <button class="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium">
-                        筛选
-                    </button>
                 </div>
             </div>
 
-            <!-- 审核列表 -->
+            <!-- 项目阶段列表 -->
             <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    项目名称
+                                    项目信息
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    阶段名称
+                                    项目阶段
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    提交人
+                                    任务完成状态
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    提交时间
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    状态
+                                    附件上传状态
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     操作
@@ -527,136 +510,569 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <!-- 待审核项 -->
+                            <!-- 项目1 -->
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">智能研发管理系统</div>
+                                <td class="px-6 py-4">
+                                    <div class="space-y-1">
+                                        <div class="text-sm font-medium text-gray-900">RD01</div>
+                                        <div class="text-sm text-gray-600">智能研发管理系统</div>
+                                        <div class="text-sm text-gray-500">2024-01-01 ~ 2026-12-31</div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex space-x-4">
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD01" checked class="mr-1" onchange="selectStage('RD01', 'stage1')">
+                                            <div class="text-xs">立项申请</div>
+                                            <div class="text-xs text-gray-500">（已完成）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD01" class="mr-1" onchange="selectStage('RD01', 'stage2')">
+                                            <div class="text-xs">研发设计</div>
+                                            <div class="text-xs text-gray-500">（未开始）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD01" class="mr-1" onchange="selectStage('RD01', 'stage3')">
+                                            <div class="text-xs">小试阶段</div>
+                                            <div class="text-xs text-gray-500">（未开始）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD01" class="mr-1" onchange="selectStage('RD01', 'stage4')">
+                                            <div class="text-xs">中试阶段</div>
+                                            <div class="text-xs text-gray-500">（未开始）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD01" class="mr-1" onchange="selectStage('RD01', 'stage5')">
+                                            <div class="text-xs">产品评审</div>
+                                            <div class="text-xs text-gray-500">（未开始）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD01" class="mr-1" onchange="selectStage('RD01', 'stage6')">
+                                            <div class="text-xs">项目结项</div>
+                                            <div class="text-xs text-gray-500">（未开始）</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div id="task-status-RD01">
+                                        <div id="task-status-RD01-stage1">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">4/4 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD01-stage2" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/3 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD01-stage3" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/2 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD01-stage4" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/2 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD01-stage5" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/1 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD01-stage6" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/1 任务已完成</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div id="attachment-status-RD01">
+                                        <div id="attachment-status-RD01-stage1">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">3/3 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD01-stage2" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/3 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD01-stage3" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/2 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD01-stage4" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/2 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD01-stage5" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/1 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD01-stage6" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/1 附件已上传</div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">需求分析阶段</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">张三</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">2024-01-15</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                        待审核
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-primary hover:text-blue-700 mr-3" onclick="viewStageDetail('RD01', '智能研发管理系统', '需求分析阶段', '张三', '2024-01-15', '待审核')">
-                                        查看详情
-                                    </button>
-                                    <button class="text-green-600 hover:text-green-800 mr-3" onclick="approveStage('RD01', '需求分析阶段')">
-                                        通过
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-800" onclick="rejectStage('RD01', '需求分析阶段')">
-                                        拒绝
-                                    </button>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs" onclick="auditStage('RD01', 'stage1')">审核</button>
+                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs" onclick="rejectStage('RD01', 'stage1')">驳回</button>
+                                        <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs" onclick="viewAttachments('RD01', 'stage1')">查看附件</button>
+                                    </div>
                                 </td>
                             </tr>
+                            <!-- 项目2 -->
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">企业数据分析平台</div>
+                                <td class="px-6 py-4">
+                                    <div class="space-y-1">
+                                        <div class="text-sm font-medium text-gray-900">RD02</div>
+                                        <div class="text-sm text-gray-600">企业数据分析平台</div>
+                                        <div class="text-sm text-gray-500">2024-01-01 ~ 2025-12-31</div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex space-x-4">
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD02" class="mr-1" onchange="selectStage('RD02', 'stage1')">
+                                            <div class="text-xs">立项申请</div>
+                                            <div class="text-xs text-gray-500">（已完成）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD02" class="mr-1" onchange="selectStage('RD02', 'stage2')">
+                                            <div class="text-xs">研发设计</div>
+                                            <div class="text-xs text-gray-500">（已完成）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD02" class="mr-1" onchange="selectStage('RD02', 'stage3')">
+                                            <div class="text-xs">小试阶段</div>
+                                            <div class="text-xs text-gray-500">（已完成）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD02" class="mr-1" onchange="selectStage('RD02', 'stage4')">
+                                            <div class="text-xs">中试阶段</div>
+                                            <div class="text-xs text-gray-500">（已完成）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD02" class="mr-1" onchange="selectStage('RD02', 'stage5')">
+                                            <div class="text-xs">产品评审</div>
+                                            <div class="text-xs text-gray-500">（已完成）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD02" checked class="mr-1" onchange="selectStage('RD02', 'stage6')">
+                                            <div class="text-xs">项目结项</div>
+                                            <div class="text-xs text-gray-500">（已完成）</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div id="task-status-RD02">
+                                        <div id="task-status-RD02-stage1" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">4/4 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD02-stage2" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">3/3 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD02-stage3" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">2/2 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD02-stage4" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">2/2 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD02-stage5" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">1/1 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD02-stage6">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">3/3 任务已完成</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div id="attachment-status-RD02">
+                                        <div id="attachment-status-RD02-stage1" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">3/3 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD02-stage2" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">3/3 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD02-stage3" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">2/2 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD02-stage4" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">2/2 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD02-stage5" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">100%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">1/1 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD02-stage6">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 66%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">66%</span>
+                                            </div>
+                                            <div class="text-xs text-red-500 mt-1">2/3 附件已上传</div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">开发阶段</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">李四</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">2024-01-14</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                        待审核
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-primary hover:text-blue-700 mr-3" onclick="viewStageDetail('RD02', '企业数据分析平台', '开发阶段', '李四', '2024-01-14', '待审核')">
-                                        查看详情
-                                    </button>
-                                    <button class="text-green-600 hover:text-green-800 mr-3" onclick="approveStage('RD02', '开发阶段')">
-                                        通过
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-800" onclick="rejectStage('RD02', '开发阶段')">
-                                        拒绝
-                                    </button>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="附件不齐全，无法审核">审核</button>
+                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs" onclick="rejectStage('RD02', 'stage6')">驳回</button>
+                                        <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs" onclick="viewAttachments('RD02', 'stage6')">查看附件</button>
+                                    </div>
                                 </td>
                             </tr>
-                            <!-- 已审核项 -->
+                            <!-- 项目3 -->
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">移动应用开发</div>
+                                <td class="px-6 py-4">
+                                    <div class="space-y-1">
+                                        <div class="text-sm font-medium text-gray-900">RD03</div>
+                                        <div class="text-sm text-gray-600">移动应用开发</div>
+                                        <div class="text-sm text-gray-500">2024-01-01 ~ 2025-12-31</div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex space-x-4">
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD03" checked class="mr-1" onchange="selectStage('RD03', 'stage1')">
+                                            <div class="text-xs">立项申请</div>
+                                            <div class="text-xs text-gray-500">（王云刚）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD03" class="mr-1" onchange="selectStage('RD03', 'stage2')">
+                                            <div class="text-xs">研发设计</div>
+                                            <div class="text-xs text-gray-500">（无审核）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD03" class="mr-1" onchange="selectStage('RD03', 'stage3')">
+                                            <div class="text-xs">小试阶段</div>
+                                            <div class="text-xs text-gray-500">（无审核）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD03" class="mr-1" onchange="selectStage('RD03', 'stage4')">
+                                            <div class="text-xs">中试阶段</div>
+                                            <div class="text-xs text-gray-500">（无审核）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD03" class="mr-1" onchange="selectStage('RD03', 'stage5')">
+                                            <div class="text-xs">产品评审</div>
+                                            <div class="text-xs text-gray-500">（无审核）</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="radio" name="stage_RD03" class="mr-1" onchange="selectStage('RD03', 'stage6')">
+                                            <div class="text-xs">项目结项</div>
+                                            <div class="text-xs text-gray-500">（无审核）</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div id="task-status-RD03">
+                                        <div id="task-status-RD03-stage1">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 75%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">75%</span>
+                                            </div>
+                                            <div class="text-xs text-yellow-500 mt-1">3/4 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD03-stage2" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/3 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD03-stage3" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/2 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD03-stage4" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/2 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD03-stage5" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/1 任务已完成</div>
+                                        </div>
+                                        <div id="task-status-RD03-stage6" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/1 任务已完成</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div id="attachment-status-RD03">
+                                        <div id="attachment-status-RD03-stage1">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-red-500 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-red-500 mt-1">0/2 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD03-stage2" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/3 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD03-stage3" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/2 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD03-stage4" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/2 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD03-stage5" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/1 附件已上传</div>
+                                        </div>
+                                        <div id="attachment-status-RD03-stage6" style="display: none;">
+                                            <div class="flex items-center">
+                                                <div class="w-24 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">0%</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-1">0/1 附件已上传</div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">设计阶段</div>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="任务未完成，附件不齐全，无法审核">审核</button>
+                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs" onclick="rejectStage('RD03', 'stage1')">驳回</button>
+                                        <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs" onclick="viewAttachments('RD03', 'stage1')">查看附件</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 项目4 -->
+                            <tr>
+                                <td class="px-6 py-4">
+                                    <div class="space-y-1">
+                                        <div class="text-sm font-medium text-gray-900">项目编号: RD04</div>
+                                        <div class="text-sm text-gray-600">项目名称: 自动化测试工具</div>
+                                        <div class="text-sm text-gray-600">起止时间: 2024-01-01 ~ 2025-12-31</div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex space-x-4">
+                                        <div class="text-center col-span-6">
+                                            <div class="text-xs text-gray-500">未设置阶段</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-xs text-gray-500">未设置阶段</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-xs text-gray-500">未设置阶段</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">王五</div>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法审核">审核</button>
+                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法驳回">驳回</button>
+                                        <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无附件可查看">查看附件</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 项目5 -->
+                            <tr>
+                                <td class="px-6 py-4">
+                                    <div class="space-y-1">
+                                        <div class="text-sm font-medium text-gray-900">项目编号: RD05</div>
+                                        <div class="text-sm text-gray-600">项目名称: 智能算法平台</div>
+                                        <div class="text-sm text-gray-600">起止时间: 2024-01-01 ~ 2027-12-31</div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex space-x-4">
+                                        <div class="text-center col-span-6">
+                                            <div class="text-xs text-gray-500">未设置阶段</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-xs text-gray-500">未设置阶段</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-xs text-gray-500">未设置阶段</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">2024-01-13</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        已通过
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-primary hover:text-blue-700" onclick="viewStageDetail('RD03', '移动应用开发', '设计阶段', '王五', '2024-01-13', '已通过')">
-                                        查看详情
-                                    </button>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法审核">审核</button>
+                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法驳回">驳回</button>
+                                        <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无附件可查看">查看附件</button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <!-- 分页 -->
-                <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                    <div class="flex-1 flex justify-between sm:hidden">
-                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                            上一页
-                        </a>
-                        <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                            下一页
-                        </a>
-                    </div>
-                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                        <div>
-                            <p class="text-sm text-gray-700">
-                                显示 <span class="font-medium">1</span> 到 <span class="font-medium">3</span> 共 <span class="font-medium">12</span> 条记录
-                            </p>
-                        </div>
-                        <div>
-                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                    <span class="sr-only">上一页</span>
-                                    <i class="fa fa-chevron-left"></i>
-                                </a>
-                                <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    1
-                                </a>
-                                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    2
-                                </a>
-                                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    3
-                                </a>
-                                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    4
-                                </a>
-                                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                    <span class="sr-only">下一页</span>
-                                    <i class="fa fa-chevron-right"></i>
-                                </a>
-                            </nav>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -744,7 +1160,82 @@
             subMenu.classList.toggle('collapsed');
             arrow.classList.toggle('collapsed');
         }
-        
+
+        // 阶段选择函数
+        function selectStage(projectId, stageId) {
+            // 隐藏所有任务状态和附件状态
+            document.querySelectorAll(`#task-status-${projectId} > div`).forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll(`#attachment-status-${projectId} > div`).forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // 显示当前选中阶段的状态
+            const taskStatusEl = document.getElementById(`task-status-${projectId}-${stageId}`);
+            const attachmentStatusEl = document.getElementById(`attachment-status-${projectId}-${stageId}`);
+            if (taskStatusEl) taskStatusEl.style.display = 'block';
+            if (attachmentStatusEl) attachmentStatusEl.style.display = 'block';
+        }
+
+        // 审核阶段函数
+        function auditStage(projectId, stageId) {
+            // 检查任务完成状态和附件上传状态
+            const taskStatusEl = document.getElementById(`task-status-${projectId}-${stageId}`);
+            const attachmentStatusEl = document.getElementById(`attachment-status-${projectId}-${stageId}`);
+            
+            if (!taskStatusEl || !attachmentStatusEl) {
+                alert('无法获取阶段状态信息');
+                return;
+            }
+            
+            // 检查任务是否全部完成
+            const taskProgress = taskStatusEl.querySelector('.text-sm.text-gray-600');
+            if (taskProgress && taskProgress.textContent !== '100%') {
+                alert('任务未全部完成，无法审核');
+                return;
+            }
+            
+            // 检查附件是否全部上传
+            const attachmentProgress = attachmentStatusEl.querySelector('.text-sm.text-gray-600');
+            if (attachmentProgress && attachmentProgress.textContent !== '100%') {
+                alert('附件未全部上传，无法审核');
+                return;
+            }
+            
+            // 显示审核模态框
+            document.getElementById('detailProjectId').textContent = projectId;
+            document.getElementById('detailStageName').textContent = getStageName(stageId);
+            document.getElementById('stageDetailModal').classList.remove('hidden');
+        }
+
+        // 驳回阶段函数
+        function rejectStage(projectId, stageId) {
+            if (confirm('确定要驳回此阶段吗？')) {
+                alert(`阶段 ${getStageName(stageId)} 已被驳回`);
+                // 这里可以添加实际的驳回逻辑
+            }
+        }
+
+        // 查看附件函数
+        function viewAttachments(projectId, stageId) {
+            alert(`查看项目 ${projectId} 阶段 ${getStageName(stageId)} 的附件`);
+            // 这里可以添加实际的附件查看逻辑
+        }
+
+        // 获取阶段名称
+        function getStageName(stageId) {
+            const stageMap = {
+                'stage1': '立项申请',
+                'stage2': '研发设计',
+                'stage3': '小试阶段',
+                'stage4': '中试阶段',
+                'stage5': '产品评审',
+                'stage6': '项目结项'
+            };
+            return stageMap[stageId] || stageId;
+        }
+
         // 查看阶段详情
         function viewStageDetail(projectId, projectName, stageName, submitter, submitTime, status) {
             document.getElementById('detailProjectId').textContent = projectId;
@@ -773,26 +1264,42 @@
             }
         }
 
-        function rejectStage(projectId, stageName) {
-            if (confirm('确定拒绝此阶段审核吗？')) {
-                alert('审核拒绝成功！');
-                // 这里可以添加实际的审核逻辑
-            }
-        }
-
         // 模态框内的审核按钮
         document.getElementById('approveBtn').addEventListener('click', function() {
+            const projectId = document.getElementById('detailProjectId').textContent;
+            const stageName = document.getElementById('detailStageName').textContent;
             const comment = document.getElementById('auditComment').value;
-            alert('审核通过成功！\n意见：' + (comment || '无'));
+            alert(`项目 ${projectId} 的 ${stageName} 阶段已审核通过\n意见：${comment || '无'}`);
             document.getElementById('stageDetailModal').classList.add('hidden');
         });
 
         document.getElementById('rejectBtn').addEventListener('click', function() {
+            const projectId = document.getElementById('detailProjectId').textContent;
+            const stageName = document.getElementById('detailStageName').textContent;
             const comment = document.getElementById('auditComment').value;
-            alert('审核拒绝成功！\n意见：' + (comment || '无'));
+            alert(`项目 ${projectId} 的 ${stageName} 阶段已被拒绝\n意见：${comment || '无'}`);
             document.getElementById('stageDetailModal').classList.add('hidden');
         });
-        
+
+        // 初始化显示默认阶段的状态
+        window.onload = function() {
+            // 根据每个项目当前选中的radio按钮初始化阶段状态
+            const projects = ['RD01', 'RD02', 'RD03'];
+            projects.forEach(projectId => {
+                // 获取当前选中的radio按钮
+                const checkedRadio = document.querySelector(`input[name="stage_${projectId}"]:checked`);
+                if (checkedRadio) {
+                    // 从onchange属性中提取stageId
+                    const onchangeValue = checkedRadio.getAttribute('onchange');
+                    const match = onchangeValue.match(/selectStage\(['"]([^'"]+)['"],\s*['"]([^'"]+)['"]\)/);
+                    if (match) {
+                        const stageId = match[2];
+                        selectStage(projectId, stageId);
+                    }
+                }
+            });
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             const projectSubmenu = document.getElementById('project-submenu');
             if (projectSubmenu) projectSubmenu.classList.remove('collapsed');
