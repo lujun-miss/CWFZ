@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>研发费管理系统</title>
+    <title>研发投入分析 - 研发费管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -44,19 +45,11 @@
         body {
             font-family: 'Inter', system-ui, sans-serif;
         }
-        iframe {
-            border: none;
-            width: 100%;
-            height: calc(100vh - 64px);
-        }
         .nav-item {
             transition: all 0.2s ease;
         }
         .nav-item:hover {
             transform: translateX(4px);
-        }
-        .nav-item.active {
-            border-left: 4px solid #3b82f6;
         }
         .menu-toggle {
             cursor: pointer;
@@ -82,6 +75,18 @@
         .menu-arrow.collapsed {
             transform: rotate(-90deg);
         }
+        .table-row-hover:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        .btn-primary {
+            @apply bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors;
+        }
+        .btn-secondary {
+            @apply bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors;
+        }
+        .btn-danger {
+            @apply bg-danger text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -100,7 +105,7 @@
             <nav class="mt-4">
                 <ul>
                     <li>
-                        <a href="javascript:void(0)" class="nav-item active nav-item-active flex items-center px-4 py-3" onclick="loadPage('dashboard.html')">
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
                             <i class="fa fa-home w-6"></i>
                             <span>首页</span>
                         </a>
@@ -148,6 +153,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-equipment.html')">
                                     <i class="fa fa-cogs w-6"></i>
                                     <span>研发设备</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
+                                    <i class="fa fa-shopping-cart w-6"></i>
+                                    <span>项目领料管理</span>
                                 </a>
                             </li>
                             <li>
@@ -208,6 +219,36 @@
                                     <span>资产折旧管理</span>
                                 </a>
                             </li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cube w-6"></i>
+                                <span>物料管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>物料信息管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
+                                    <i class="fa fa-trash w-6"></i>
+                                    <span>物料报废管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
+                                    <i class="fa fa-shopping-cart w-6"></i>
+                                    <span>项目领料管理</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -227,8 +268,8 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-log.html')">
-                                    <i class="fa fa-calendar-check-o w-6"></i>
-                                    <span>工时日志填报</span>
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时记录</span>
                                 </a>
                             </li>
                             <li>
@@ -271,70 +312,6 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-cube w-6"></i>
-                                <span>物料管理</span>
-                            </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
-                        <ul class="ml-6 sub-menu">
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-list w-6"></i>
-                                    <span>物料信息管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
-                                    <i class="fa fa-trash w-6"></i>
-                                    <span>物料报废管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
-                                    <i class="fa fa-shopping-cart w-6"></i>
-                                    <span>项目领料管理</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
-                            <div class="flex items-center">
-                                <i class="fa fa-shield w-6"></i>
-                                <span>合规管理</span>
-                            </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
-                        <ul class="ml-6 sub-menu">
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('compliance-check.html')">
-                                    <i class="fa fa-check-square-o w-6"></i>
-                                    <span>合规检查</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('tax-deduction.html')">
-                                    <i class="fa fa-calculator w-6"></i>
-                                    <span>税收减免</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('high-tech-cert.html')">
-                                    <i class="fa fa-certificate w-6"></i>
-                                    <span>高科技认证</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-600" onclick="loadPage('data-analysis.html')">
-                            <i class="fa fa-bar-chart w-6"></i>
-                            <span>数据分析</span>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
-                            <div class="flex items-center">
                                 <i class="fa fa-cubes w-6"></i>
                                 <span>资源管理</span>
                             </div>
@@ -345,6 +322,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour.html')">
                                     <i class="fa fa-clock-o w-6"></i>
                                     <span>工时费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intellectual-property.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>知识产权维护</span>
                                 </a>
                             </li>
                             <li>
@@ -360,7 +343,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="policy.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('policy.html')">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('policy.html')">
                                     <i class="fa fa-book w-6"></i>
                                     <span>政策查询</span>
                                 </a>
@@ -406,291 +389,228 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-database w-6"></i>
-                                <span>系统设置</span>
+                                <i class="fa fa-legal w-6"></i>
+                                <span>合规管理</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-type.html')">
-                                    <i class="fa fa-list w-6"></i>
-                                    <span>费用类型管理</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('compliance-management.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>合规性管理</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('deduction-policy.html')">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('tax-deduction.html')">
                                     <i class="fa fa-calculator w-6"></i>
-                                    <span>加计扣除政策配置</span>
+                                    <span>加计扣除管理</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('finance-policy.html')">
-                                    <i class="fa fa-money w-6"></i>
-                                    <span>财务核算口径配置</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('hi-tech-policy.html')">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('hi-tech-certification.html')">
                                     <i class="fa fa-star w-6"></i>
-                                    <span>高新认定口径配置</span>
+                                    <span>高新认定管理</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('settings.html')">
-                            <i class="fa fa-cog w-6"></i>
-                            <span>设置</span>
-                        </a>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-bar-chart w-6"></i>
+                                <span>数据分析</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-active flex items-center px-4 py-2 text-white" onclick="loadPage('data-analysis.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>研发投入分析</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-benefit.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>项目效益分析</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('industry-benchmark.html')">
+                                    <i class="fa fa-bullseye w-6"></i>
+                                    <span>行业对标分析</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('profile.html')">
-                            <i class="fa fa-user w-6"></i>
-                            <span>个人资料</span>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('system.html')">
+                            <i class="fa fa-cog w-6"></i>
+                            <span>系统设置</span>
                         </a>
                     </li>
                 </ul>
             </nav>
         </div>
         
-        <!-- 右侧主内容区域 -->
-        <div class="flex-1 flex flex-col">
-            <!-- 顶部信息栏 -->
-            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
-                <div class="flex items-center">
-                    <h2 id="page-title" class="text-lg font-medium text-gray-800">首页</h2>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button class="text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-bell"></i>
-                    </button>
+        <!-- 主内容区 -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between p-4">
                     <div class="flex items-center">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
-                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
-                        <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                        <button class="text-gray-500 mr-4 lg:hidden" onclick="toggleSidebar()">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <h2 class="text-lg font-semibold text-gray-800">研发投入分析</h2>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button class="flex items-center text-gray-700 hover:text-primary">
+                                <i class="fa fa-bell mr-1"></i>
+                                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-gray-700 mr-2">管理员</span>
+                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                <i class="fa fa-user text-gray-600"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>
             
-            <!-- 主内容 -->
-            <main class="flex-1 overflow-auto p-6">
-                <!-- 页面标题 -->
-                <div class="mb-6">
-                    <h1 class="text-2xl font-bold text-gray-800">首页</h1>
-                    <p class="text-gray-600">欢迎使用研发费管理系统</p>
-                </div>
-                
-                <!-- 统计卡片 -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-6">
-                    <!-- 项目数量 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">项目数量</p>
-                                <h3 class="text-2xl font-bold text-gray-800">14</h3>
-                                <p class="text-sm text-green-600 flex items-center mt-1">
-                                    <i class="fa fa-arrow-up mr-1"></i>
-                                    <span>2 个新增</span>
-                                </p>
+            <!-- 内容区域 -->
+            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <div class="max-w-7xl mx-auto">
+                    <!-- 筛选条件 -->
+                    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                        <div class="flex flex-wrap items-center gap-4">
+                            <div class="flex items-center">
+                                <label class="text-gray-700 mr-2">年份：</label>
+                                <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="2026">2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                </select>
                             </div>
-                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-folder text-primary text-xl"></i>
+                            <div class="flex items-center">
+                                <label class="text-gray-700 mr-2">项目：</label>
+                                <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="">全部项目</option>
+                                    <option value="PROJ001">新型智能传感器研发</option>
+                                    <option value="PROJ002">高精度控制系统开发</option>
+                                    <option value="PROJ003">新能源材料研究</option>
+                                </select>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 人员数量 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">人员数量</p>
-                                <h3 class="text-2xl font-bold text-gray-800">5</h3>
-                                <p class="text-sm text-green-600 flex items-center mt-1">
-                                    <i class="fa fa-arrow-up mr-1"></i>
-                                    <span>1 个新增</span>
-                                </p>
+                            <div class="flex items-center">
+                                <label class="text-gray-700 mr-2">费用类型：</label>
+                                <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="">全部类型</option>
+                                    <option value="personnel">人员人工费用</option>
+                                    <option value="material">直接投入费用</option>
+                                    <option value="depreciation">折旧费用</option>
+                                    <option value="amortization">无形资产摊销</option>
+                                    <option value="other">其他费用</option>
+                                </select>
                             </div>
-                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-users text-secondary text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 固定资产 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">固定资产</p>
-                                <h3 class="text-2xl font-bold text-gray-800">101</h3>
-                                <p class="text-sm text-green-600 flex items-center mt-1">
-                                    <i class="fa fa-arrow-up mr-1"></i>
-                                    <span>3 个新增</span>
-                                </p>
-                            </div>
-                            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-building text-warning text-xl"></i>
+                            <div class="ml-auto">
+                                <button class="btn-primary">查询</button>
+                                <button class="btn-secondary ml-2">重置</button>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- 无形资产 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">无形资产</p>
-                                <h3 class="text-2xl font-bold text-gray-800">23</h3>
-                                <p class="text-sm text-green-600 flex items-center mt-1">
-                                    <i class="fa fa-arrow-up mr-1"></i>
-                                    <span>5 个新增</span>
-                                </p>
-                            </div>
-                            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-lightbulb-o text-accent text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 长期待摊 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">长期待摊</p>
-                                <h3 class="text-2xl font-bold text-gray-800">3,153</h3>
-                                <p class="text-sm text-green-600 flex items-center mt-1">
-                                    <i class="fa fa-arrow-up mr-1"></i>
-                                    <span>123 个新增</span>
-                                </p>
-                            </div>
-                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-archive text-danger text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 租赁资产 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">租赁资产</p>
-                                <h3 class="text-2xl font-bold text-gray-800">357</h3>
-                                <p class="text-sm text-green-600 flex items-center mt-1">
-                                    <i class="fa fa-arrow-up mr-1"></i>
-                                    <span>17 个新增</span>
-                                </p>
-                            </div>
-                            <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-search text-info text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 图表区域 -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <!-- 月度金额分析 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">各口径月度金额分析</h3>
+                    <!-- 研发投入趋势 -->
+                    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">研发投入趋势</h3>
                         <div class="h-80">
-                            <canvas id="monthlyAmountChart"></canvas>
+                            <canvas id="investmentTrendChart"></canvas>
                         </div>
                     </div>
                     
-                    <!-- 研发费用类型占比分析 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">各口径研发费用类型占比分析</h3>
-                        <div class="h-80">
-                            <canvas id="expenseTypeChart"></canvas>
+                    <!-- 研发费用构成 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">研发费用构成</h3>
+                            <div class="h-64">
+                                <canvas id="expenseCompositionChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">项目研发投入分布</h3>
+                            <div class="h-64">
+                                <canvas id="projectInvestmentChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- 数据表格 -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- 项目列表 -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-gray-800">项目列表</h3>
-                            <button class="text-primary hover:text-blue-600 text-sm font-medium">
-                                查看全部
-                            </button>
+                    
+                    <!-- 研发投入详情 -->
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800">研发投入详情</h3>
+                            <button class="btn-primary">导出数据</button>
                         </div>
+                        
                         <div class="overflow-x-auto">
                             <table class="min-w-full">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目编号</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目经理</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">年份</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">项目名称</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">人员人工费用</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">直接投入费用</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">折旧费用</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">无形资产摊销</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">其他费用</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">总投入</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
+                                <tbody class="divide-y divide-gray-200">
                                     <tr class="table-row-hover">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">202604001</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">智能客服系统</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">进行中</span>
-                                        </td>
+                                        <td class="px-4 py-3 border-b">2025</td>
+                                        <td class="px-4 py-3 border-b">新型智能传感器研发</td>
+                                        <td class="px-4 py-3 border-b">¥150,000</td>
+                                        <td class="px-4 py-3 border-b">¥80,000</td>
+                                        <td class="px-4 py-3 border-b">¥30,000</td>
+                                        <td class="px-4 py-3 border-b">¥20,000</td>
+                                        <td class="px-4 py-3 border-b">¥25,000</td>
+                                        <td class="px-4 py-3 border-b font-medium">¥320,000</td>
                                     </tr>
                                     <tr class="table-row-hover">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">202604002</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AI算法研发</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">进行中</span>
-                                        </td>
+                                        <td class="px-4 py-3 border-b">2025</td>
+                                        <td class="px-4 py-3 border-b">高精度控制系统开发</td>
+                                        <td class="px-4 py-3 border-b">¥120,000</td>
+                                        <td class="px-4 py-3 border-b">¥60,000</td>
+                                        <td class="px-4 py-3 border-b">¥40,000</td>
+                                        <td class="px-4 py-3 border-b">¥15,000</td>
+                                        <td class="px-4 py-3 border-b">¥20,000</td>
+                                        <td class="px-4 py-3 border-b font-medium">¥275,000</td>
                                     </tr>
                                     <tr class="table-row-hover">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">202604003</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">产品设计优化</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">王五</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">待启动</span>
-                                        </td>
+                                        <td class="px-4 py-3 border-b">2025</td>
+                                        <td class="px-4 py-3 border-b">新能源材料研究</td>
+                                        <td class="px-4 py-3 border-b">¥180,000</td>
+                                        <td class="px-4 py-3 border-b">¥100,000</td>
+                                        <td class="px-4 py-3 border-b">¥50,000</td>
+                                        <td class="px-4 py-3 border-b">¥25,000</td>
+                                        <td class="px-4 py-3 border-b">¥35,000</td>
+                                        <td class="px-4 py-3 border-b font-medium">¥420,000</td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <!-- 费用记录 -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-gray-800">费用记录</h3>
-                            <button class="text-primary hover:text-blue-600 text-sm font-medium">
-                                查看全部
-                            </button>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">费用ID</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">费用类型</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">金额</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr class="table-row-hover">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RD-2026-001</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">智能客服系统</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">人员费用</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥50,000</td>
-                                    </tr>
-                                    <tr class="table-row-hover">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RD-2026-002</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AI算法研发</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">设备费用</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥80,000</td>
-                                    </tr>
-                                    <tr class="table-row-hover">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RD-2026-003</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">产品设计优化</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">材料费用</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥15,000</td>
+                                    <tr class="bg-gray-50">
+                                        <td class="px-4 py-3 border-b font-medium">2025合计</td>
+                                        <td class="px-4 py-3 border-b"></td>
+                                        <td class="px-4 py-3 border-b">¥450,000</td>
+                                        <td class="px-4 py-3 border-b">¥240,000</td>
+                                        <td class="px-4 py-3 border-b">¥120,000</td>
+                                        <td class="px-4 py-3 border-b">¥60,000</td>
+                                        <td class="px-4 py-3 border-b">¥80,000</td>
+                                        <td class="px-4 py-3 border-b font-bold">¥1,015,000</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -711,15 +631,20 @@
                 alert('页面跳转失败，请检查文件是否存在: ' + pageUrl);
             }
         }
-
+        
         function toggleMenu(element) {
             const subMenu = element.nextElementSibling;
             const arrow = element.querySelector('.menu-arrow');
-
+            
             subMenu.classList.toggle('collapsed');
             arrow.classList.toggle('collapsed');
         }
-
+        
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.w-64');
+            sidebar.classList.toggle('hidden');
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const projectSubmenu = document.getElementById('project-submenu');
             if (projectSubmenu) {
@@ -729,6 +654,96 @@
             if (salarySubmenu) {
                 salarySubmenu.classList.remove('collapsed');
             }
+            
+            // 研发投入趋势图表
+            const investmentTrendCtx = document.getElementById('investmentTrendChart').getContext('2d');
+            const investmentTrendChart = new Chart(investmentTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2022', '2023', '2024', '2025', '2026'],
+                    datasets: [{
+                        label: '研发投入',
+                        data: [700000, 850000, 950000, 1015000, 1100000],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '金额 (元)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 研发费用构成图表
+            const expenseCompositionCtx = document.getElementById('expenseCompositionChart').getContext('2d');
+            const expenseCompositionChart = new Chart(expenseCompositionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['人员人工费用', '直接投入费用', '折旧费用', '无形资产摊销', '其他费用'],
+                    datasets: [{
+                        data: [450000, 240000, 120000, 60000, 80000],
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#10b981',
+                            '#f59e0b',
+                            '#6366f1',
+                            '#ef4444'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // 项目研发投入分布图表
+            const projectInvestmentCtx = document.getElementById('projectInvestmentChart').getContext('2d');
+            const projectInvestmentChart = new Chart(projectInvestmentCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['新型智能传感器研发', '高精度控制系统开发', '新能源材料研究'],
+                    datasets: [{
+                        label: '研发投入',
+                        data: [320000, 275000, 420000],
+                        backgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '金额 (元)'
+                            }
+                        }
+                    }
+                }
+            });
         });
     </script>
 </body>

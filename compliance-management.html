@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目领料管理 - 研发费管理系统</title>
+    <title>合规性管理 - 研发费管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -19,6 +19,9 @@
                         info: '#3b82f6',
                         light: '#f3f4f6',
                         dark: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
                     }
                 }
             }
@@ -26,6 +29,9 @@
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
             .nav-item-active {
                 @apply bg-primary text-white;
             }
@@ -98,7 +104,7 @@
             <nav class="mt-4">
                 <ul>
                     <li>
-                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
                             <i class="fa fa-home w-6"></i>
                             <span>首页</span>
                         </a>
@@ -146,6 +152,18 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-equipment.html')">
                                     <i class="fa fa-cogs w-6"></i>
                                     <span>研发设备</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
+                                    <i class="fa fa-shopping-cart w-6"></i>
+                                    <span>项目领料管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('pilot-production.html')">
+                                    <i class="fa fa-industry w-6"></i>
+                                    <span>试生产管理</span>
                                 </a>
                             </li>
                         </ul>
@@ -200,6 +218,7 @@
                                     <span>资产折旧管理</span>
                                 </a>
                             </li>
+
                         </ul>
                     </li>
                     <li>
@@ -223,12 +242,6 @@
                                     <span>物料报废管理</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
-                                    <i class="fa fa-shopping-cart w-6"></i>
-                                    <span>项目领料管理</span>
-                                </a>
-                            </li>
                         </ul>
                     </li>
                     <li>
@@ -244,6 +257,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('salary-management.html')">
                                     <i class="fa fa-calculator w-6"></i>
                                     <span>薪酬结构管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-log.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时记录</span>
                                 </a>
                             </li>
                             <li>
@@ -296,6 +315,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour.html')">
                                     <i class="fa fa-clock-o w-6"></i>
                                     <span>工时费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
+                                    <i class="fa fa-shopping-cart w-6"></i>
+                                    <span>项目领料管理</span>
                                 </a>
                             </li>
                             <li>
@@ -365,8 +390,66 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('role.html')">
-                                    <i class="fa fa-id-card-o w-6"></i>
+                                    <i class="fa fa-shield w-6"></i>
                                     <span>角色管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-legal w-6"></i>
+                                <span>合规管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-active flex items-center px-4 py-2 text-white" onclick="loadPage('compliance-management.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>合规性管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('tax-deduction.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>加计扣除管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('hi-tech-certification.html')">
+                                    <i class="fa fa-star w-6"></i>
+                                    <span>高新认定管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-bar-chart w-6"></i>
+                                <span>数据分析</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('data-analysis.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>研发投入分析</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-benefit.html')">
+                                    <i class="fa fa-pie-chart w-6"></i>
+                                    <span>项目效益分析</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('industry-benchmark.html')">
+                                    <i class="fa fa-bullseye w-6"></i>
+                                    <span>行业对标分析</span>
                                 </a>
                             </li>
                         </ul>
@@ -390,7 +473,7 @@
                         <button class="text-gray-500 mr-4 lg:hidden" onclick="toggleSidebar()">
                             <i class="fa fa-bars"></i>
                         </button>
-                        <h2 class="text-lg font-semibold text-gray-800">项目领料管理</h2>
+                        <h2 class="text-lg font-semibold text-gray-800">合规性管理</h2>
                     </div>
                     <div class="flex items-center space-x-4">
                         <div class="relative">
@@ -412,311 +495,93 @@
             <!-- 内容区域 -->
             <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
                 <div class="max-w-7xl mx-auto">
-                    <!-- 搜索筛选区 -->
-                    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                        <div class="flex flex-wrap items-center gap-4">
-                            <div class="flex items-center">
-                                <label class="text-gray-700 mr-2">项目：</label>
-                                <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                                    <option value="">全部状态</option>
-                                    <option value="active">进行中</option>
-                                    <option value="completed">已完成</option>
-                                    <option value="cancelled">已取消</option>
-                                </select>
-                            </div>
-                            
-                            <div class="flex items-center">
-                                <label class="text-gray-700 mr-2">领科人：</label>
-                                <input type="text" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入领科人">
-                            </div>
-                            
-                            <div class="flex items-center">
-                                <label class="text-gray-700 mr-2">物料：</label>
-                                <input type="text" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入物料名称">
-                            </div>
-                            
-                            <div class="flex items-center">
-                                <label class="text-gray-700 mr-2">审批状态：</label>
-                                <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                                    <option value="">全部</option>
-                                    <option value="pending">待审核</option>
-                                    <option value="approved">已通过</option>
-                                    <option value="rejected">已驳回</option>
-                                    <option value="issued">已出库</option>
-                                    <option value="returned">已返回</option>
-                                </select>
-                            </div>
-                            
-                            <div class="flex items-center space-x-2">
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">全部</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">今日</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">本周</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">本月</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">自定义</button>
-                            </div>
-                            
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                                <span class="text-gray-500">至</span>
-                                <input type="date" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                            </div>
-                            
-                            <div class="ml-auto flex items-center space-x-2">
-                                <button class="btn-primary">查询</button>
-                                <button class="btn-secondary">重置</button>
-                                <button class="btn-primary">新建领料单</button>
-                            </div>
+                    <!-- 合规检查 -->
+                    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800">合规检查</h3>
+                            <button class="btn-primary">新建检查</button>
                         </div>
-                    </div>
-                    
-                    <!-- 审核列表 -->
-                    <div class="bg-white rounded-lg shadow-sm">
-                        <div class="p-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-800">审核列表</h3>
+                        
+                        <div class="mb-4">
+                            <div class="flex flex-wrap items-center gap-4">
+                                <div class="flex items-center">
+                                    <label class="text-gray-700 mr-2">检查编号：</label>
+                                    <input type="text" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入检查编号">
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="text-gray-700 mr-2">检查类型：</label>
+                                    <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                        <option value="">请选择</option>
+                                        <option value="tax">税务检查</option>
+                                        <option value="audit">审计检查</option>
+                                        <option value="internal">内部检查</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="text-gray-700 mr-2">状态：</label>
+                                    <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                        <option value="">请选择</option>
+                                        <option value="pending">待检查</option>
+                                        <option value="in_progress">进行中</option>
+                                        <option value="completed">已完成</option>
+                                    </select>
+                                </div>
+                                <div class="ml-auto">
+                                    <button class="btn-primary">查询</button>
+                                    <button class="btn-secondary ml-2">重置</button>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="overflow-x-auto">
                             <table class="min-w-full">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
-                                        </th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">所属项目</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料部门</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料时间</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料人</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">用途说明</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">物料编码/名称</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">规格</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">申领数量</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">库存单位</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">预计单价</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">金额（元）</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">审批状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">检查编号</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">检查类型</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">检查范围</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">开始日期</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">结束日期</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">状态</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
                                     <tr class="table-row-hover">
+                                        <td class="px-4 py-3 border-b">Check001</td>
+                                        <td class="px-4 py-3 border-b">税务检查</td>
+                                        <td class="px-4 py-3 border-b">2025年度研发费用</td>
+                                        <td class="px-4 py-3 border-b">2026-04-01</td>
+                                        <td class="px-4 py-3 border-b">2026-04-10</td>
                                         <td class="px-4 py-3 border-b">
-                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
-                                        </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统A</td>
-                                        <td class="px-4 py-3 border-b">生产部门</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">张三</td>
-                                        <td class="px-4 py-3 border-b">用于研发使用</td>
-                                        <td class="px-4 py-3 border-b">BM001 物料A</td>
-                                        <td class="px-4 py-3 border-b">ml</td>
-                                        <td class="px-4 py-3 border-b">1000</td>
-                                        <td class="px-4 py-3 border-b">件</td>
-                                        <td class="px-4 py-3 border-b">10</td>
-                                        <td class="px-4 py-3 border-b">10000</td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">待审核</span>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已完成</span>
                                         </td>
                                         <td class="px-4 py-3 border-b">
-                                            <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
+                                            <div class="flex space-x-2">
+                                                <button class="text-blue-500 hover:text-blue-700" title="编辑">
+                                                    <i class="fa fa-edit"></i>
                                                 </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                                <button class="text-blue-500 hover:text-blue-700" title="详情">
+                                                <button class="text-green-500 hover:text-green-700" title="查看报告">
                                                     <i class="fa fa-eye"></i>
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr class="table-row-hover">
+                                        <td class="px-4 py-3 border-b">Check002</td>
+                                        <td class="px-4 py-3 border-b">审计检查</td>
+                                        <td class="px-4 py-3 border-b">2025年度财务报表</td>
+                                        <td class="px-4 py-3 border-b">2026-03-15</td>
+                                        <td class="px-4 py-3 border-b">2026-03-25</td>
                                         <td class="px-4 py-3 border-b">
-                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
-                                        </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统B</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">1</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">10000</td>
-                                        <td class="px-4 py-3 border-b">10000</td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已出库</span>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已完成</span>
                                         </td>
                                         <td class="px-4 py-3 border-b">
-                                            <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
+                                            <div class="flex space-x-2">
+                                                <button class="text-blue-500 hover:text-blue-700" title="编辑">
+                                                    <i class="fa fa-edit"></i>
                                                 </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                                <button class="text-blue-500 hover:text-blue-700" title="详情">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="table-row-hover">
-                                        <td class="px-4 py-3 border-b">
-                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
-                                        </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统C</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">4</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">10000</td>
-                                        <td class="px-4 py-3 border-b">40000</td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">已返回</span>
-                                        </td>
-                                        <td class="px-4 py-3 border-b">
-                                            <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                                <button class="text-blue-500 hover:text-blue-700" title="详情">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="table-row-hover">
-                                        <td class="px-4 py-3 border-b">
-                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
-                                        </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统D</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">2025-09-09</td>
-                                        <td class="px-4 py-3 border-b">张三</td>
-                                        <td class="px-4 py-3 border-b">用于研发使用</td>
-                                        <td class="px-4 py-3 border-b">BM001 物料A</td>
-                                        <td class="px-4 py-3 border-b">ml</td>
-                                        <td class="px-4 py-3 border-b">1000</td>
-                                        <td class="px-4 py-3 border-b">件</td>
-                                        <td class="px-4 py-3 border-b">10</td>
-                                        <td class="px-4 py-3 border-b">10000</td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">待审核</span>
-                                        </td>
-                                        <td class="px-4 py-3 border-b">
-                                            <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                                <button class="text-blue-500 hover:text-blue-700" title="详情">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="table-row-hover">
-                                        <td class="px-4 py-3 border-b">
-                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
-                                        </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统E</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">2025-09-09</td>
-                                        <td class="px-4 py-3 border-b">张三</td>
-                                        <td class="px-4 py-3 border-b">用于研发使用</td>
-                                        <td class="px-4 py-3 border-b">BM001 物料A</td>
-                                        <td class="px-4 py-3 border-b">ml</td>
-                                        <td class="px-4 py-3 border-b">1000</td>
-                                        <td class="px-4 py-3 border-b">件</td>
-                                        <td class="px-4 py-3 border-b">10</td>
-                                        <td class="px-4 py-3 border-b">10000</td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">待审核</span>
-                                        </td>
-                                        <td class="px-4 py-3 border-b">
-                                            <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                                <button class="text-blue-500 hover:text-blue-700" title="详情">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="table-row-hover">
-                                        <td class="px-4 py-3 border-b">
-                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
-                                        </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统F</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已通过</span>
-                                        </td>
-                                        <td class="px-4 py-3 border-b">
-                                            <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                                <button class="text-blue-500 hover:text-blue-700" title="详情">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="table-row-hover">
-                                        <td class="px-4 py-3 border-b">
-                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
-                                        </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统G</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已通过</span>
-                                        </td>
-                                        <td class="px-4 py-3 border-b">
-                                            <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                                <button class="text-blue-500 hover:text-blue-700" title="详情">
+                                                <button class="text-green-500 hover:text-green-700" title="查看报告">
                                                     <i class="fa fa-eye"></i>
                                                 </button>
                                             </div>
@@ -725,21 +590,118 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    
+                    <!-- 合规问题管理 -->
+                    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800">合规问题管理</h3>
+                            <button class="btn-primary">新增问题</button>
+                        </div>
                         
-                        <div class="p-4 border-t border-gray-200 flex items-center justify-between">
-                            <button class="btn-primary">批量审核</button>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-gray-600">共 7 条记录</span>
-                                <div class="flex items-center space-x-1">
-                                    <button class="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50" disabled>
-                                        <i class="fa fa-chevron-left text-gray-500"></i>
-                                    </button>
-                                    <button class="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-md bg-primary text-white">1</button>
-                                    <button class="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50" disabled>
-                                        <i class="fa fa-chevron-right text-gray-500"></i>
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">问题编号</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">关联检查</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">问题描述</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">严重程度</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">发现日期</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr class="table-row-hover">
+                                        <td class="px-4 py-3 border-b">Issue001</td>
+                                        <td class="px-4 py-3 border-b">Check001</td>
+                                        <td class="px-4 py-3 border-b">部分研发费用凭证不全</td>
+                                        <td class="px-4 py-3 border-b">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">中等</span>
+                                        </td>
+                                        <td class="px-4 py-3 border-b">2026-04-05</td>
+                                        <td class="px-4 py-3 border-b">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已解决</span>
+                                        </td>
+                                        <td class="px-4 py-3 border-b">
+                                            <div class="flex space-x-2">
+                                                <button class="text-blue-500 hover:text-blue-700" title="编辑">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button class="text-green-500 hover:text-green-700" title="查看详情">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 合规文档管理 -->
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800">合规文档管理</h3>
+                            <button class="btn-primary">上传文档</button>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">文档编号</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">文档名称</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">文档类型</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">上传日期</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">上传人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr class="table-row-hover">
+                                        <td class="px-4 py-3 border-b">Doc001</td>
+                                        <td class="px-4 py-3 border-b">2025年度研发费用审计报告</td>
+                                        <td class="px-4 py-3 border-b">审计报告</td>
+                                        <td class="px-4 py-3 border-b">2026-03-30</td>
+                                        <td class="px-4 py-3 border-b">管理员</td>
+                                        <td class="px-4 py-3 border-b">
+                                            <div class="flex space-x-2">
+                                                <button class="text-blue-500 hover:text-blue-700" title="下载">
+                                                    <i class="fa fa-download"></i>
+                                                </button>
+                                                <button class="text-green-500 hover:text-green-700" title="查看">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-700" title="删除">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row-hover">
+                                        <td class="px-4 py-3 border-b">Doc002</td>
+                                        <td class="px-4 py-3 border-b">2025年度研发费用加计扣除申报表</td>
+                                        <td class="px-4 py-3 border-b">税务申报</td>
+                                        <td class="px-4 py-3 border-b">2026-04-10</td>
+                                        <td class="px-4 py-3 border-b">管理员</td>
+                                        <td class="px-4 py-3 border-b">
+                                            <div class="flex space-x-2">
+                                                <button class="text-blue-500 hover:text-blue-700" title="下载">
+                                                    <i class="fa fa-download"></i>
+                                                </button>
+                                                <button class="text-green-500 hover:text-green-700" title="查看">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-700" title="删除">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -749,7 +711,13 @@
     
     <script>
         function loadPage(pageUrl) {
-            window.location.href = pageUrl;
+            try {
+                console.log('准备跳转到页面:', pageUrl);
+                window.location.assign(pageUrl);
+            } catch (error) {
+                console.error('页面跳转失败:', error);
+                alert('页面跳转失败，请检查文件是否存在: ' + pageUrl);
+            }
         }
         
         function toggleMenu(element) {
@@ -766,9 +734,13 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
-            const resourceSubmenu = document.getElementById('resource-submenu');
-            if (resourceSubmenu) {
-                resourceSubmenu.classList.remove('collapsed');
+            const projectSubmenu = document.getElementById('project-submenu');
+            if (projectSubmenu) {
+                projectSubmenu.classList.remove('collapsed');
+            }
+            const salarySubmenu = document.getElementById('salary-submenu');
+            if (salarySubmenu) {
+                salarySubmenu.classList.remove('collapsed');
             }
         });
     </script>
