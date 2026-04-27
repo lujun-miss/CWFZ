@@ -63,21 +63,23 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <div class="mobile-container">
-        <!-- 顶部导航 -->
-        <header class="bg-white shadow-sm sticky top-0 z-10">
-            <div class="flex items-center justify-between px-4 py-3">
-                <div class="flex items-center">
-                    <button onclick="loadPage('mobile-checkin.html')" class="mr-4">
-                        <i class="fa fa-arrow-left text-gray-700"></i>
-                    </button>
-                    <h1 class="text-lg font-medium text-gray-900">汇报工时</h1>
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-center min-h-screen p-4">
+        <!-- 手机壳 -->
+        <div class="mobile-container">
+            <!-- 顶部导航 -->
+            <header class="bg-white shadow-sm sticky top-0 z-10">
+                <div class="flex items-center justify-between px-4 py-3">
+                    <div class="flex items-center">
+                        <button onclick="loadPage('mobile-checkin.html')" class="mr-4">
+                            <i class="fa fa-arrow-left text-gray-700"></i>
+                        </button>
+                        <h1 class="text-lg font-medium text-gray-900">汇报工时</h1>
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <!-- 主内容 -->
-        <main class="px-4 py-6">
+            <!-- 主内容 -->
+            <main class="px-4 py-6">
             <div class="bg-white rounded-lg shadow-sm p-4">
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
@@ -112,22 +114,147 @@
                     <textarea class="w-full border border-gray-300 rounded-lg px-3 py-2 h-20" placeholder="对接需求方案"></textarea>
                 </div>
                 
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">项目设备（可选）</label>
-                    <div class="flex space-x-2 mb-2">
-                        <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm">台式电脑</button>
-                        <button class="px-3 py-1 border border-primary bg-primary/10 text-primary rounded-lg text-sm">笔记本</button>
+                <div class="mb-4" id="equipmentSelectionSection">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">设备选择</label>
+                    
+                    <!-- 设备组选择 -->
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-xs font-medium text-gray-600">设备组</label>
+                            <span class="text-xs text-gray-500">可选</span>
+                        </div>
+                        <select id="deviceGroupSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-2">
+                            <option value="">不使用设备组</option>
+                            <option value="group1" selected>开发设备组</option>
+                            <option value="group2">测试设备组</option>
+                            <option value="group3">设计设备组</option>
+                        </select>
+                        
+                        <!-- 设备组设备使用时间 -->
+                        <div class="mt-2" id="groupUsageTimeSection">
+                            <div id="groupTotalUsageTime" class="mb-3">
+                                <label class="block text-xs font-medium text-gray-600 mb-1">设备组使用时间</label>
+                                <input type="range" id="groupDeviceUsageTime" min="0" max="8" step="0.5" value="2" class="w-full">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>0小时</span>
+                                    <span id="groupHoursDisplay">2小时</span>
+                                    <span>8小时</span>
+                                </div>
+                            </div>
+                            
+                            <!-- 生产+研发共用设备的工时分配 -->
+                            <div id="groupUsageTimeSplit" class="hidden">
+                                <label class="block text-xs font-medium text-gray-600 mb-1">工时分配</label>
+                                <div class="space-y-2">
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1">生产工时</label>
+                                        <input type="range" id="groupProductionTime" min="0" max="8" step="0.5" value="0" class="w-full">
+                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                            <span>0小时</span>
+                                            <span id="groupProductionHoursDisplay">0小时</span>
+                                            <span>8小时</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-500 mb-1">研发工时</label>
+                                        <input type="range" id="groupRDTime" min="0" max="8" step="0.5" value="2" class="w-full">
+                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                            <span>0小时</span>
+                                            <span id="groupRDHoursDisplay">2小时</span>
+                                            <span>8小时</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 p-2 bg-gray-50 rounded-md">
+                                        <div class="flex justify-between text-xs text-gray-700">
+                                            <span>年度累计工时:</span>
+                                            <span id="groupTotalHoursDisplay">2小时</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs text-gray-700">
+                                            <span>研发占比:</span>
+                                            <span id="groupRDPctDisplay">100%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 设备组内设备列表 -->
+                        <div id="groupDevices" class="border border-gray-200 rounded-lg p-2 bg-gray-50 mt-2">
+                            <!-- 设备列表将通过JavaScript动态生成 -->
+                        </div>
                     </div>
-                    <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="huawei001">
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">设备使用时间</label>
-                    <input type="range" min="0" max="8" step="0.5" value="2" class="w-full">
-                    <div class="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>0小时</span>
-                        <span>2小时</span>
-                        <span>8小时</span>
+                    
+                    <!-- 单独设备选择 -->
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-xs font-medium text-gray-600">单独设备</label>
+                            <span class="text-xs text-gray-500">可选</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
+                                台式电脑
+                            </button>
+                            <button class="py-2 border border-primary bg-primary/10 text-primary rounded-lg text-sm text-center">
+                                笔记本
+                            </button>
+                            <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
+                                服务器
+                            </button>
+                            <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
+                                测试设备
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 设备使用时间 -->
+                    <div class="mt-3" id="singleUsageTimeSection">
+                        <div id="singleTotalUsageTime" class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">设备使用时间</label>
+                            <input type="range" id="singleDeviceUsageTime" min="0" max="8" step="0.5" value="2" class="w-full">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>0小时</span>
+                                <span id="singleHoursDisplay">2小时</span>
+                                <span>8小时</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 生产+研发共用设备的工时分配 -->
+                        <div id="singleUsageTimeSplit" class="hidden">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">工时分配</label>
+                            <div class="space-y-2">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">生产工时</label>
+                                    <input type="range" id="singleProductionTime" min="0" max="8" step="0.5" value="0" class="w-full">
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>0小时</span>
+                                        <span id="singleProductionHoursDisplay">0小时</span>
+                                        <span>8小时</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">研发工时</label>
+                                    <input type="range" id="singleRDTime" min="0" max="8" step="0.5" value="2" class="w-full">
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>0小时</span>
+                                        <span id="singleRDHoursDisplay">2小时</span>
+                                        <span>8小时</span>
+                                    </div>
+                                </div>
+                                <div class="mt-2 p-2 bg-gray-50 rounded-md">
+                                    <div class="flex justify-between text-xs text-gray-700">
+                                        <span>年度累计工时:</span>
+                                        <span id="singleTotalHoursDisplay">2小时</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-gray-700">
+                                        <span>研发占比:</span>
+                                        <span id="singleRDPctDisplay">100%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">
+                            <i class="fa fa-info-circle mr-1"></i>同一条线的设备工时将保持一致
+                        </p>
                     </div>
                 </div>
                 
@@ -143,9 +270,464 @@
         <script>
             // 加载页面
             function loadPage(page) {
-                window.location.href = page;
+                // 确保使用正确的路径格式
+                window.location.href = './' + page;
             }
+            
+            // 设备组数据
+            const deviceGroups = {
+                group1: {
+                    name: '开发设备组',
+                    devices: ['台式电脑001', '台式电脑002', '笔记本001', '笔记本002'],
+                    type: '研发专用'
+                },
+                group2: {
+                    name: '测试设备组',
+                    devices: ['测试服务器001', '测试设备002', '测试终端003'],
+                    type: '研发专用'
+                },
+                group3: {
+                    name: '设计设备组',
+                    devices: ['设计工作站001', '设计工作站002', '绘图板001'],
+                    type: '生产+研发共用'
+                }
+            };
+            
+            // 单独设备数据
+            const singleDevices = {
+                '台式电脑': { type: '生产+研发共用' },
+                '笔记本': { type: '研发专用' },
+                '服务器': { type: '生产+研发共用' },
+                '测试设备': { type: '研发专用' }
+            };
+            
+            // 项目关联的设备组（模拟数据）
+            const projectAssociatedDeviceGroup = 'group3'; // 假设当前项目关联了设计设备组（生产+研发共用）
+            
+            // 初始化设备组选择
+            function initDeviceGroup() {
+                const deviceGroupSelect = document.getElementById('deviceGroupSelect');
+                const groupDevicesContainer = document.getElementById('groupDevices');
+                const groupDeviceUsageTime = document.getElementById('groupDeviceUsageTime');
+                const selectedHours = groupDeviceUsageTime.value;
+                
+                // 模拟项目关联的设备组，设置为默认选中
+                deviceGroupSelect.value = projectAssociatedDeviceGroup;
+                
+                // 生成设备组内的设备列表
+                const group = deviceGroups[projectAssociatedDeviceGroup];
+                if (group) {
+                    let devicesHtml = '<div class="space-y-1">';
+                    group.devices.forEach(device => {
+                        devicesHtml += `
+                            <div class="flex items-center justify-between p-1 border-b border-gray-100 last:border-b-0">
+                                <span class="text-xs">${device}</span>
+                                <div class="flex items-center">
+                                    <span class="text-xs text-gray-500 mr-2">工时: ${selectedHours}小时</span>
+                                    <input type="checkbox" class="rounded text-primary focus:ring-primary" checked>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    devicesHtml += '</div>';
+                    groupDevicesContainer.innerHTML = devicesHtml;
+                } else {
+                    groupDevicesContainer.innerHTML = '<p class="text-xs text-gray-500 text-center py-2">请先选择设备组</p>';
+                }
+            }
+            
+            // 检查研发工时限制
+            function checkRDDeviationLimit(deviceType, rdHours, totalHours) {
+                if (deviceType === '生产+研发共用') {
+                    const maxRDPct = 0.15; // 15%
+                    if (totalHours > 0) {
+                        const rdPct = rdHours / totalHours;
+                        if (rdPct > maxRDPct) {
+                            return {
+                                exceeded: true,
+                                maxPct: (maxRDPct * 100).toFixed(0),
+                                currentPct: (rdPct * 100).toFixed(0)
+                            };
+                        }
+                    }
+                }
+                return { exceeded: false };
+            }
+            
+            // 显示警告信息
+            function showWarning(message) {
+                // 移除已有的警告
+                const existingWarning = document.querySelector('.warning-message');
+                if (existingWarning) {
+                    existingWarning.remove();
+                }
+                
+                // 创建新的警告
+                const warning = document.createElement('div');
+                warning.className = 'warning-message mt-2 p-2 bg-yellow-100 border border-yellow-300 rounded-md text-sm text-yellow-800';
+                warning.innerHTML = `<i class="fa fa-exclamation-triangle mr-1"></i> ${message}`;
+                
+                // 添加到设备选择部分
+                const equipmentSection = document.getElementById('equipmentSelectionSection');
+                if (equipmentSection) {
+                    equipmentSection.appendChild(warning);
+                } else {
+                    console.error('无法找到设备选择部分，无法显示警告信息');
+                }
+            }
+            
+            // 切换设备组工时显示模式
+            function toggleGroupUsageTimeDisplay(groupId) {
+                const totalUsageTime = document.getElementById('groupTotalUsageTime');
+                const usageTimeSplit = document.getElementById('groupUsageTimeSplit');
+                
+                console.log('切换设备组工时显示模式:', groupId);
+                
+                if (totalUsageTime && usageTimeSplit) {
+                    if (groupId) {
+                        const group = deviceGroups[groupId];
+                        console.log('设备组类型:', group ? group.type : '未知');
+                        
+                        if (group && group.type === '生产+研发共用') {
+                            console.log('显示工时分配部分');
+                            totalUsageTime.classList.add('hidden');
+                            usageTimeSplit.classList.remove('hidden');
+                        } else {
+                            console.log('显示总工时部分');
+                            totalUsageTime.classList.remove('hidden');
+                            usageTimeSplit.classList.add('hidden');
+                        }
+                    } else {
+                        console.log('不使用设备组，显示总工时部分');
+                        totalUsageTime.classList.remove('hidden');
+                        usageTimeSplit.classList.add('hidden');
+                    }
+                } else {
+                    console.error('无法找到工时显示元素');
+                }
+            }
+            
+            // 切换单独设备工时显示模式
+            function toggleSingleUsageTimeDisplay(deviceName) {
+                const totalUsageTime = document.getElementById('singleTotalUsageTime');
+                const usageTimeSplit = document.getElementById('singleUsageTimeSplit');
+                
+                console.log('切换单独设备工时显示模式:', deviceName);
+                
+                if (totalUsageTime && usageTimeSplit) {
+                    if (deviceName) {
+                        const device = singleDevices[deviceName];
+                        console.log('设备类型:', device ? device.type : '未知');
+                        
+                        if (device && device.type === '生产+研发共用') {
+                            console.log('显示工时分配部分');
+                            totalUsageTime.classList.add('hidden');
+                            usageTimeSplit.classList.remove('hidden');
+                        } else {
+                            console.log('显示总工时部分');
+                            totalUsageTime.classList.remove('hidden');
+                            usageTimeSplit.classList.add('hidden');
+                        }
+                    } else {
+                        console.log('未选择设备，显示总工时部分');
+                        totalUsageTime.classList.remove('hidden');
+                        usageTimeSplit.classList.add('hidden');
+                    }
+                } else {
+                    console.error('无法找到工时显示元素');
+                }
+            }
+            
+            // 更新设备组工时分配
+            function updateGroupUsageTimeSplit() {
+                const productionTime = parseFloat(document.getElementById('groupProductionTime').value) || 0;
+                const rdTime = parseFloat(document.getElementById('groupRDTime').value) || 0;
+                const totalTime = productionTime + rdTime;
+                const rdPct = totalTime > 0 ? (rdTime / totalTime) * 100 : 0;
+                
+                // 更新显示
+                document.getElementById('groupProductionHoursDisplay').textContent = productionTime + '小时';
+                document.getElementById('groupRDHoursDisplay').textContent = rdTime + '小时';
+                document.getElementById('groupTotalHoursDisplay').textContent = totalTime + '小时';
+                document.getElementById('groupRDPctDisplay').textContent = rdPct.toFixed(0) + '%';
+                
+                // 检查研发工时限制
+                const selectedGroup = document.getElementById('deviceGroupSelect').value;
+                if (selectedGroup) {
+                    const group = deviceGroups[selectedGroup];
+                    const checkResult = checkRDDeviationLimit(group.type, rdTime, totalTime);
+                    if (checkResult.exceeded) {
+                        showWarning(`该设备组为生产+研发共用设备，研发工时占比不能超过年度总工时的${checkResult.maxPct}%（当前为${checkResult.currentPct}%）`);
+                    } else {
+                        // 移除警告
+                        const existingWarning = document.querySelector('.warning-message');
+                        if (existingWarning) {
+                            existingWarning.remove();
+                        }
+                    }
+                }
+            }
+            
+            // 更新单独设备工时分配
+            function updateSingleUsageTimeSplit() {
+                const productionTime = parseFloat(document.getElementById('singleProductionTime').value) || 0;
+                const rdTime = parseFloat(document.getElementById('singleRDTime').value) || 0;
+                const totalTime = productionTime + rdTime;
+                const rdPct = totalTime > 0 ? (rdTime / totalTime) * 100 : 0;
+                
+                // 更新显示
+                document.getElementById('singleProductionHoursDisplay').textContent = productionTime + '小时';
+                document.getElementById('singleRDHoursDisplay').textContent = rdTime + '小时';
+                document.getElementById('singleTotalHoursDisplay').textContent = totalTime + '小时';
+                document.getElementById('singleRDPctDisplay').textContent = rdPct.toFixed(0) + '%';
+                
+                // 检查研发工时限制
+                const selectedDevice = document.querySelector('.grid.grid-cols-2 button.border-primary');
+                if (selectedDevice) {
+                    const deviceName = selectedDevice.textContent.trim();
+                    const device = singleDevices[deviceName];
+                    if (device) {
+                        const checkResult = checkRDDeviationLimit(device.type, rdTime, totalTime);
+                        if (checkResult.exceeded) {
+                            showWarning(`该设备为生产+研发共用设备，研发工时占比不能超过年度总工时的${checkResult.maxPct}%（当前为${checkResult.currentPct}%）`);
+                        } else {
+                            // 移除警告
+                            const existingWarning = document.querySelector('.warning-message');
+                            if (existingWarning) {
+                                existingWarning.remove();
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 设备组选择事件
+            document.getElementById('deviceGroupSelect').addEventListener('change', function() {
+                const groupId = this.value;
+                const groupDevicesContainer = document.getElementById('groupDevices');
+                
+                // 切换工时显示模式
+                toggleGroupUsageTimeDisplay(groupId);
+                
+                if (groupId) {
+                    const group = deviceGroups[groupId];
+                    let devicesHtml = '<div class="space-y-1">';
+                    
+                    // 根据设备组类型获取工时
+                    let selectedHours = 2; // 默认值
+                    if (group.type === '生产+研发共用') {
+                        const productionTime = parseFloat(document.getElementById('groupProductionTime').value) || 0;
+                        const rdTime = parseFloat(document.getElementById('groupRDTime').value) || 0;
+                        selectedHours = productionTime + rdTime;
+                    } else {
+                        selectedHours = parseFloat(document.getElementById('groupDeviceUsageTime').value) || 0;
+                    }
+                    
+                    group.devices.forEach(device => {
+                        devicesHtml += `
+                            <div class="flex items-center justify-between p-1 border-b border-gray-100 last:border-b-0">
+                                <span class="text-xs">${device}</span>
+                                <div class="flex items-center">
+                                    <span class="text-xs text-gray-500 mr-2">工时: ${selectedHours}小时</span>
+                                    <input type="checkbox" class="rounded text-primary focus:ring-primary" checked>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    devicesHtml += '</div>';
+                    groupDevicesContainer.innerHTML = devicesHtml;
+                    
+                    // 检查研发工时限制
+                    if (group.type === '生产+研发共用') {
+                        updateGroupUsageTimeSplit();
+                    } else {
+                        const selectedHours = parseFloat(document.getElementById('groupDeviceUsageTime').value) || 0;
+                        const checkResult = checkRDDeviationLimit(group.type, selectedHours, selectedHours);
+                        if (checkResult.exceeded) {
+                            showWarning(`该设备组为生产+研发共用设备，研发工时占比不能超过年度总工时的${checkResult.maxPct}%（当前为${checkResult.currentPct}%）`);
+                        } else {
+                            // 移除警告
+                            const existingWarning = document.querySelector('.warning-message');
+                            if (existingWarning) {
+                                existingWarning.remove();
+                            }
+                        }
+                    }
+                } else {
+                    groupDevicesContainer.innerHTML = '<p class="text-xs text-gray-500 text-center py-2">不使用设备组</p>';
+                    // 移除警告
+                    const existingWarning = document.querySelector('.warning-message');
+                    if (existingWarning) {
+                        existingWarning.remove();
+                    }
+                }
+            });
+            
+            // 设备组使用时间滑块事件
+            document.getElementById('groupDeviceUsageTime').addEventListener('input', function() {
+                const selectedHours = this.value;
+                const hoursDisplay = document.getElementById('groupHoursDisplay');
+                hoursDisplay.textContent = selectedHours + '小时';
+                
+                // 更新设备组内所有设备的工时显示
+                const groupDevices = document.querySelectorAll('#groupDevices .flex.items-center.justify-between');
+                groupDevices.forEach(device => {
+                    const hoursSpan = device.querySelector('.text-xs.text-gray-500');
+                    if (hoursSpan) {
+                        hoursSpan.textContent = '工时: ' + selectedHours + '小时';
+                    }
+                });
+                
+                // 检查研发工时限制
+                const selectedGroup = document.getElementById('deviceGroupSelect').value;
+                if (selectedGroup) {
+                    const group = deviceGroups[selectedGroup];
+                    const checkResult = checkRDDeviationLimit(group.type, selectedHours, selectedHours);
+                    if (checkResult.exceeded) {
+                        showWarning(`该设备组为生产+研发共用设备，研发工时占比不能超过年度总工时的${checkResult.maxPct}%（当前为${checkResult.currentPct}%）`);
+                    } else {
+                        // 移除警告
+                        const existingWarning = document.querySelector('.warning-message');
+                        if (existingWarning) {
+                            existingWarning.remove();
+                        }
+                    }
+                }
+            });
+            
+            // 设备组生产工时滑块事件
+            document.getElementById('groupProductionTime').addEventListener('input', updateGroupUsageTimeSplit);
+            
+            // 设备组研发工时滑块事件
+            document.getElementById('groupRDTime').addEventListener('input', updateGroupUsageTimeSplit);
+            
+            // 单独设备使用时间滑块事件
+            document.getElementById('singleDeviceUsageTime').addEventListener('input', function() {
+                const selectedHours = this.value;
+                const hoursDisplay = document.getElementById('singleHoursDisplay');
+                hoursDisplay.textContent = selectedHours + '小时';
+                
+                // 检查研发工时限制
+                const selectedDevice = document.querySelector('.grid.grid-cols-2 button.border-primary');
+                if (selectedDevice) {
+                    const deviceName = selectedDevice.textContent.trim();
+                    const device = singleDevices[deviceName];
+                    if (device) {
+                        const checkResult = checkRDDeviationLimit(device.type, selectedHours, selectedHours);
+                        if (checkResult.exceeded) {
+                            showWarning(`该设备为生产+研发共用设备，研发工时占比不能超过年度总工时的${checkResult.maxPct}%（当前为${checkResult.currentPct}%）`);
+                        } else {
+                            // 移除警告
+                            const existingWarning = document.querySelector('.warning-message');
+                            if (existingWarning) {
+                                existingWarning.remove();
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 单独设备生产工时滑块事件
+            document.getElementById('singleProductionTime').addEventListener('input', updateSingleUsageTimeSplit);
+            
+            // 单独设备研发工时滑块事件
+            document.getElementById('singleRDTime').addEventListener('input', updateSingleUsageTimeSplit);
+            
+            // 单独设备选择
+            const singleDeviceButtons = document.querySelectorAll('.grid.grid-cols-2 button');
+            singleDeviceButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    singleDeviceButtons.forEach(btn => {
+                        btn.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
+                        btn.classList.add('border-gray-300');
+                    });
+                    this.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+                    this.classList.remove('border-gray-300');
+                    
+                    // 切换工时显示模式
+                    const deviceName = this.textContent.trim();
+                    toggleSingleUsageTimeDisplay(deviceName);
+                    
+                    // 检查研发工时限制
+                    const device = singleDevices[deviceName];
+                    if (device) {
+                        if (device.type === '生产+研发共用') {
+                            updateSingleUsageTimeSplit();
+                        } else {
+                            const selectedHours = parseFloat(document.getElementById('singleDeviceUsageTime').value) || 0;
+                            const checkResult = checkRDDeviationLimit(device.type, selectedHours, selectedHours);
+                            if (checkResult.exceeded) {
+                                showWarning(`该设备为生产+研发共用设备，研发工时占比不能超过年度总工时的${checkResult.maxPct}%（当前为${checkResult.currentPct}%）`);
+                            } else {
+                                // 移除警告
+                                const existingWarning = document.querySelector('.warning-message');
+                                if (existingWarning) {
+                                    existingWarning.remove();
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // 页面加载时初始化
+            document.addEventListener('DOMContentLoaded', function() {
+                initDeviceGroup();
+                
+                // 延迟执行，确保DOM完全加载
+                setTimeout(function() {
+                    // 初始化设备组工时显示模式
+                    const selectedGroup = document.getElementById('deviceGroupSelect').value;
+                    console.log('初始化设备组:', selectedGroup);
+                    toggleGroupUsageTimeDisplay(selectedGroup);
+                    
+                    // 初始化单独设备工时显示模式
+                    const selectedDevice = document.querySelector('.grid.grid-cols-2 button.border-primary');
+                    if (selectedDevice) {
+                        const deviceName = selectedDevice.textContent.trim();
+                        console.log('初始化单独设备:', deviceName);
+                        toggleSingleUsageTimeDisplay(deviceName);
+                    }
+                    
+                    // 触发一次设备组选择事件，确保所有元素都正确显示
+                    const deviceGroupSelect = document.getElementById('deviceGroupSelect');
+                    if (deviceGroupSelect) {
+                        deviceGroupSelect.dispatchEvent(new Event('change'));
+                    }
+                }, 100);
+            });
         </script>
     </div>
+    
+    <!-- 右侧备注信息 -->
+    <div class="md:ml-8 mt-4 md:mt-0 w-full md:w-80">
+        <div class="bg-white rounded-lg shadow-sm p-4">
+            <h3 class="font-medium text-gray-800 mb-3">备注信息</h3>
+            <div class="space-y-3">
+                <div class="p-2 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <h4 class="text-sm font-medium text-yellow-800 mb-1">工时限制</h4>
+                    <p class="text-xs text-yellow-700">
+                        对于生产+研发共用的设备，研发工时占比不能超过年度总工时的15%。<br>
+                        <span class="font-medium">注：系统仅做警告提示，不做强制限制。</span>
+                    </p>
+                </div>
+                <div class="p-2 bg-blue-50 border border-blue-200 rounded-md">
+                    <h4 class="text-sm font-medium text-blue-800 mb-1">设备类型说明</h4>
+                    <p class="text-xs text-blue-700">
+                        - 生产+研发共用设备：需要分别填写生产工时和研发工时<br>
+                        - 研发专用设备：只需要填写总工时
+                    </p>
+                </div>
+                <div class="p-2 bg-green-50 border border-green-200 rounded-md">
+                    <h4 class="text-sm font-medium text-green-800 mb-1">操作提示</h4>
+                    <p class="text-xs text-green-700">
+                        - 选择设备组或单独设备后，系统会根据设备类型自动调整工时输入方式<br>
+                        - 调整工时滑块时，系统会实时计算研发占比并显示警告信息
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

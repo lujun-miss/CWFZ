@@ -157,12 +157,6 @@
                                     <span>资产信息管理</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-depreciation.html')">
-                                    <i class="fa fa-calculator w-6"></i>
-                                    <span>资产折旧管理</span>
-                                </a>
-                            </li>
                         </ul>
                     </li>
                     <li>
@@ -483,19 +477,28 @@
                                         资产类型
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        使用模式
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         购置日期
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         原值
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        累计折旧
+                                        累计折旧/摊销
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         净值
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        状态
+                                        资产状态
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        设备属性
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        项目属性
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         操作
@@ -507,13 +510,18 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AST-2026-001</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发服务器</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">电子设备</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">共享</span>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01-15</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥20,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥12,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥8,000</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常使用</span>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常使用中</span>
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发专用</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">多项目共用</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showAssetDetail('AST-2026-001')">查看</a>
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
@@ -524,13 +532,18 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AST-2026-002</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发电脑</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">电子设备</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">共享</span>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01-20</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥8,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥4,800</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥3,200</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常使用</span>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">折旧中</span>
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">生产设备（生产+研发共用）</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">多项目共用</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showAssetDetail('AST-2026-002')">查看</a>
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
@@ -541,13 +554,18 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AST-2026-003</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发实验室设备</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">专用设备</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">专用</span>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-02-01</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥50,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥15,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥35,000</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常使用</span>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常使用中</span>
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发专用</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">单项目专用</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showAssetDetail('AST-2026-003')">查看</a>
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
@@ -558,13 +576,18 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AST-2026-004</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发软件</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">无形资产</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">共享</span>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-02-15</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥15,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥15,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥0</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">已提完折旧</span>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">已折旧完毕</span>
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发专用</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">多项目共用</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showAssetDetail('AST-2026-004')">查看</a>
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
@@ -575,13 +598,18 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AST-2026-005</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发办公家具</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">办公设备</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">共享</span>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-03-01</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥6,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥3,600</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥2,400</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常使用</span>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">折旧中</span>
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">生产设备（生产+研发共用）</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">多项目共用</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showAssetDetail('AST-2026-005')">查看</a>
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
@@ -592,13 +620,18 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AST-2026-006</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发网络设备</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">电子设备</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">共享</span>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-03-15</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥12,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥7,200</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥4,800</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常使用</span>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">已报废</span>
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发专用</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">单项目专用</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showAssetDetail('AST-2026-006')">查看</a>
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
@@ -633,7 +666,7 @@
 
     <!-- 资产详情模态框 -->
     <div id="assetDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl mx-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl mx-4 max-h-[90vh] overflow-y-auto">
             <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800">资产详情</h3>
                 <button onclick="closeDetailModal()" class="text-gray-500 hover:text-gray-700">
@@ -668,49 +701,119 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-sm font-medium text-gray-500 mb-3">折旧信息</h4>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">累计折旧</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="¥12,000" disabled>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">净值</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="¥8,000" disabled>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">折旧方法</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="直线法" disabled>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">预计使用年限</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="3年" disabled>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">月折旧额</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="¥500" disabled>
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">折旧信息</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">累计折旧</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="¥12,000" disabled>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">净值</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="¥8,000" disabled>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">折旧方法</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="直线法" disabled>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">预计使用年限</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="3年" disabled>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">月折旧额</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="¥500" disabled>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">折旧截止日期</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="2029-01-15" disabled>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     <div class="md:col-span-2">
-                        <h4 class="text-sm font-medium text-gray-500 mb-3">其他信息</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">资产状态</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="正常使用" disabled>
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">其他信息</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">资产状态</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="正常使用中" disabled>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">所属部门</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="研发部" disabled>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">使用人</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="张三" disabled>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">所属部门</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="研发部" disabled>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">设备属性</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="研发专用" disabled>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">项目属性</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="多项目共用" disabled>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">使用人</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="张三" disabled>
+                            <div class="mt-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
+                                <textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" disabled>用于研发项目数据处理的服务器，配置为16核32G内存，运行稳定。</textarea>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
-                            <textarea rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" disabled>用于研发项目数据处理的服务器，配置为16核32G内存，运行稳定。</textarea>
+                    <div class="md:col-span-2">
+                        <h4 class="text-sm font-medium text-gray-500 mb-3">折旧明细记录</h4>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            折旧期间
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            折旧方法
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            月折旧额
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            累计折旧
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            资产净值
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直线法</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥19,500</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-02</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直线法</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥1,000</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥19,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-03</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直线法</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥1,500</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥18,500</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直线法</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥2,000</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥18,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -748,7 +851,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">资产类型 <span class="text-red-500">*</span></label>
-                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <select id="assetType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="updateAssetForm()">
                                         <option value="">请选择资产类型</option>
                                         <option value="electronic">电子设备</option>
                                         <option value="specialized">专用设备</option>
@@ -764,9 +867,19 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">资产原值 <span class="text-red-500">*</span></label>
                                     <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入资产原值" min="0">
                                 </div>
+                                <div id="depreciationField">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">月折旧额 <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" placeholder="请输入月折旧额" min="0" readonly>
+                                    <p class="mt-1 text-xs text-gray-500">公式：月折旧额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
+                                </div>
+                                <div id="amortizationField" class="hidden">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">月摊销额 <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" placeholder="请输入月摊销额" min="0" readonly>
+                                    <p class="mt-1 text-xs text-gray-500">公式：月摊销额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
+                                </div>
                             </div>
                         </div>
-                        <div>
+                        <div id="depreciationInfo">
                             <h4 class="text-sm font-medium text-gray-500 mb-3">折旧信息</h4>
                             <div class="space-y-4">
                                 <div>
@@ -777,33 +890,53 @@
                                         <option value="sum_of_years">年数总和法</option>
                                         <option value="double_declining">双倍余额递减法</option>
                                     </select>
+                                    <div class="mt-2 text-xs text-gray-500 space-y-1">
+                                        <p><strong>直线法：</strong>月折旧额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
+                                        <p><strong>年数总和法：</strong>年折旧率 = 剩余使用年限 / 年数总和，年折旧额 = (资产原值 - 预计残值) × 年折旧率，月折旧额 = 年折旧额 / 12</p>
+                                        <p><strong>双倍余额递减法：</strong>年折旧率 = 2 / 预计使用年限 × 100%，年折旧额 = 年初固定资产净值 × 年折旧率，月折旧额 = 年折旧额 / 12（最后两年改为直线法）</p>
+                                    </div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">预计使用年限（年） <span class="text-red-500">*</span></label>
-                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3" min="1">
+                                    <input type="number" id="usefulLife" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3" min="1" onchange="calculateDepreciationEndDate()">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">预计残值率（%） <span class="text-red-500">*</span></label>
                                     <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="5" min="0" max="100">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">月折旧额 <span class="text-red-500">*</span></label>
-                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入月折旧额" min="0">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">折旧截止日期</label>
+                                    <input type="date" id="depreciationEndDate" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" readonly>
+                                    <p class="mt-1 text-xs text-gray-500">根据购置日期和预计使用年限自动计算</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="amortizationInfo" class="hidden">
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">摊销信息</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">摊销方法 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="straight">直线法</option>
+                                    </select>
+                                    <div class="mt-2 text-xs text-gray-500 space-y-1">
+                                        <p><strong>直线法：</strong>月摊销额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">预计使用年限（年） <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="10" min="1">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">预计残值率（%） <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="0" min="0" max="100">
                                 </div>
                             </div>
                         </div>
                         <div class="md:col-span-2">
                             <h4 class="text-sm font-medium text-gray-500 mb-3">其他信息</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">资产状态</label>
-                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                        <option value="active">正常使用</option>
-                                        <option value="idle">闲置</option>
-                                        <option value="maintenance">维修中</option>
-                                        <option value="scrapped">已报废</option>
-                                    </select>
-                                </div>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">所属部门 <span class="text-red-500">*</span></label>
                                     <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
@@ -815,13 +948,34 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">使用人</label>
-                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入使用人">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">资产状态 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择资产状态</option>
+                                        <option value="in_use">正常使用中</option>
+                                        <option value="depreciating">折旧中</option>
+                                        <option value="depreciated">已折旧完毕</option>
+                                        <option value="scrapped">已报废</option>
+                                    </select>
+                                    <p class="mt-1 text-xs text-gray-500">备注：到了折旧截止日期，资产状态为"已折旧完毕"；未到折旧截止日期为"折旧中"；"正常使用中"适用于无需折旧的资产（如低值易耗品等）。</p>
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
-                                <textarea rows="3" placeholder="请输入备注信息" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">设备属性 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择设备属性</option>
+                                        <option value="production">生产设备（生产+研发共用）</option>
+                                        <option value="rd_only">研发专用</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">项目属性 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择项目属性</option>
+                                        <option value="single_project">单项目专用</option>
+                                        <option value="multi_project">多项目共用</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -875,14 +1029,22 @@
             // 表单验证
             const assetCode = document.querySelector('input[placeholder="例如：AST-2026-001"]');
             const assetName = document.querySelector('input[placeholder="请输入资产名称"]');
-            const assetType = document.querySelector('select');
+            const assetType = document.getElementById('assetType');
             const purchaseDate = document.querySelector('input[type="date"]');
             const assetValue = document.querySelector('input[type="number"]:nth-of-type(1)');
-            const depreciationMethod = document.querySelector('select:nth-of-type(2)');
-            const usefulLife = document.querySelector('input[type="number"]:nth-of-type(2)');
-            const residualRate = document.querySelector('input[type="number"]:nth-of-type(3)');
-            const monthlyDepreciation = document.querySelector('input[type="number"]:nth-of-type(4)');
-            const department = document.querySelector('select:nth-of-type(4)');
+            const depreciationMethod = assetType.value === 'intangible' ? 
+                document.querySelector('#amortizationInfo select') : 
+                document.querySelector('#depreciationInfo select');
+            const usefulLife = assetType.value === 'intangible' ? 
+                document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(1)') : 
+                document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(1)');
+            const residualRate = assetType.value === 'intangible' ? 
+                document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(2)') : 
+                document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(2)');
+            const monthlyAmount = assetType.value === 'intangible' ? 
+                document.querySelector('#amortizationField input[type="number"]') : 
+                document.querySelector('#depreciationField input[type="number"]');
+            const department = document.querySelector('select:nth-of-type(3)');
             
             if (!assetCode.value) {
                 alert('请输入资产编号');
@@ -916,8 +1078,8 @@
                 alert('请输入有效的预计残值率');
                 return;
             }
-            if (!monthlyDepreciation.value || monthlyDepreciation.value < 0) {
-                alert('请输入有效的月折旧额');
+            if (!monthlyAmount.value || monthlyAmount.value < 0) {
+                alert('请输入有效的月折旧/摊销额');
                 return;
             }
             if (!department.value) {
@@ -935,16 +1097,50 @@
                 depreciationMethod: depreciationMethod.value,
                 usefulLife: usefulLife.value,
                 residualRate: residualRate.value,
-                monthlyDepreciation: monthlyDepreciation.value,
-                status: document.querySelector('select:nth-of-type(3)').value,
-                department: department.value,
-                user: document.querySelector('input[placeholder="请输入使用人"]').value,
-                remark: document.querySelector('textarea').value
+                monthlyAmount: monthlyAmount.value,
+                department: department.value
             };
             
             console.log('保存的资产数据', assetData);
             alert('资产保存成功！');
             closeAddModal();
+        }
+        
+        // 计算月折旧额
+        function calculateMonthlyDepreciation() {
+            const addAssetModal = document.getElementById('addAssetModal');
+            if (!addAssetModal) return;
+            
+            // 找到各个输入字段
+            const assetValueInput = addAssetModal.querySelector('input[placeholder="请输入资产原值"]');
+            const usefulLifeInput = addAssetModal.querySelector('input[type="number"][min="1"]');
+            const residualRateInput = addAssetModal.querySelector('input[type="number"][min="0"][max="100"]');
+            const depreciationMethodSelect = addAssetModal.querySelectorAll('select')[1]; // 第二个select元素是折旧方法
+            const monthlyDepreciationInput = addAssetModal.querySelector('input[type="number"][readonly]');
+            
+            // 获取输入值
+            const assetValue = parseFloat(assetValueInput ? assetValueInput.value : '0') || 0;
+            const usefulLife = parseFloat(usefulLifeInput ? usefulLifeInput.value : '0') || 0;
+            const residualRate = parseFloat(residualRateInput ? residualRateInput.value : '0') || 0;
+            const depreciationMethod = depreciationMethodSelect ? depreciationMethodSelect.value : 'straight';
+            
+            let monthlyDepreciation = 0;
+            if (assetValue > 0 && usefulLife > 0) {
+                const residualValue = assetValue * (residualRate / 100);
+                const depreciableAmount = assetValue - residualValue;
+                
+                switch (depreciationMethod) {
+                    case 'straight': // 直线法
+                        monthlyDepreciation = depreciableAmount / (usefulLife * 12);
+                        break;
+                    // 可以添加其他折旧方法的计算逻辑
+                }
+            }
+            
+            // 更新月折旧额字段
+            if (monthlyDepreciationInput) {
+                monthlyDepreciationInput.value = monthlyDepreciation.toFixed(2);
+            }
         }
         
         document.addEventListener('DOMContentLoaded', function() {
@@ -955,6 +1151,123 @@
                     document.getElementById('addAssetModal').classList.remove('hidden');
                 });
             }
+            
+            // 为相关字段添加事件监听器
+            const addAssetModal = document.getElementById('addAssetModal');
+            if (addAssetModal) {
+                const assetValueInput = addAssetModal.querySelector('input[placeholder="请输入资产原值"]');
+                const usefulLifeInput = addAssetModal.querySelector('input[type="number"][min="1"]');
+                const residualRateInput = addAssetModal.querySelector('input[type="number"][min="0"][max="100"]');
+                const depreciationMethodSelect = addAssetModal.querySelectorAll('select')[1]; // 第二个select元素是折旧方法
+                
+                if (assetValueInput) assetValueInput.addEventListener('input', calculateMonthlyDepreciation);
+                if (usefulLifeInput) usefulLifeInput.addEventListener('input', calculateMonthlyDepreciation);
+                if (residualRateInput) residualRateInput.addEventListener('input', calculateMonthlyDepreciation);
+                if (depreciationMethodSelect) depreciationMethodSelect.addEventListener('change', calculateMonthlyDepreciation);
+            }
+        });
+        
+        // 更新资产表单字段
+        function updateAssetForm() {
+            const assetType = document.getElementById('assetType').value;
+            const depreciationField = document.getElementById('depreciationField');
+            const amortizationField = document.getElementById('amortizationField');
+            const depreciationInfo = document.getElementById('depreciationInfo');
+            const amortizationInfo = document.getElementById('amortizationInfo');
+            
+            if (assetType === 'intangible') {
+                // 显示摊销字段，隐藏折旧字段
+                depreciationField.classList.add('hidden');
+                amortizationField.classList.remove('hidden');
+                depreciationInfo.classList.add('hidden');
+                amortizationInfo.classList.remove('hidden');
+            } else {
+                // 显示折旧字段，隐藏摊销字段
+                depreciationField.classList.remove('hidden');
+                amortizationField.classList.add('hidden');
+                depreciationInfo.classList.remove('hidden');
+                amortizationInfo.classList.add('hidden');
+            }
+            
+            // 重新计算
+            calculateMonthlyDepreciation();
+        }
+        
+        // 计算月折旧额或月摊销额
+        function calculateMonthlyDepreciation() {
+            const assetType = document.getElementById('assetType').value;
+            const assetValue = parseFloat(document.querySelector('input[type="number"]:nth-of-type(1)').value) || 0;
+            const usefulLifeInput = assetType === 'intangible' ? 
+                document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(1)') : 
+                document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(1)');
+            const residualRateInput = assetType === 'intangible' ? 
+                document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(2)') : 
+                document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(2)');
+            
+            const usefulLife = usefulLifeInput ? parseFloat(usefulLifeInput.value) || 0 : 0;
+            const residualRate = residualRateInput ? parseFloat(residualRateInput.value) || 0 : 0;
+            
+            let monthlyAmount = 0;
+            if (assetValue > 0 && usefulLife > 0) {
+                const residualValue = assetValue * (residualRate / 100);
+                const depreciableAmount = assetValue - residualValue;
+                monthlyAmount = depreciableAmount / (usefulLife * 12);
+            }
+            
+            // 更新相应字段
+            if (assetType === 'intangible') {
+                document.querySelector('#amortizationField input[type="number"]').value = monthlyAmount.toFixed(2);
+            } else {
+                document.querySelector('#depreciationField input[type="number"]').value = monthlyAmount.toFixed(2);
+            }
+        }
+        
+        // 计算折旧截止日期
+        function calculateDepreciationEndDate() {
+            const purchaseDateInput = document.querySelector('input[type="date"]');
+            const usefulLifeInput = document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(1)');
+            const depreciationEndDateInput = document.getElementById('depreciationEndDate');
+            
+            if (purchaseDateInput && usefulLifeInput && depreciationEndDateInput) {
+                const purchaseDate = new Date(purchaseDateInput.value);
+                const usefulLife = parseFloat(usefulLifeInput.value) || 0;
+                
+                if (purchaseDate && !isNaN(purchaseDate.getTime()) && usefulLife > 0) {
+                    // 计算截止日期：购置日期 + 预计使用年限
+                    const endDate = new Date(purchaseDate);
+                    endDate.setFullYear(endDate.getFullYear() + usefulLife);
+                    
+                    // 格式化日期为YYYY-MM-DD
+                    const year = endDate.getFullYear();
+                    const month = String(endDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(endDate.getDate()).padStart(2, '0');
+                    const formattedDate = `${year}-${month}-${day}`;
+                    
+                    depreciationEndDateInput.value = formattedDate;
+                } else {
+                    depreciationEndDateInput.value = '';
+                }
+            }
+        }
+        
+        // 为相关字段添加事件监听器
+        document.addEventListener('DOMContentLoaded', function() {
+            const assetValueInput = document.querySelector('input[type="number"]:nth-of-type(1)');
+            const purchaseDateInput = document.querySelector('input[type="date"]');
+            const depreciationUsefulLifeInput = document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(1)');
+            const depreciationResidualRateInput = document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(2)');
+            const amortizationUsefulLifeInput = document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(1)');
+            const amortizationResidualRateInput = document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(2)');
+            
+            if (assetValueInput) assetValueInput.addEventListener('input', calculateMonthlyDepreciation);
+            if (depreciationUsefulLifeInput) depreciationUsefulLifeInput.addEventListener('input', calculateMonthlyDepreciation);
+            if (depreciationResidualRateInput) depreciationResidualRateInput.addEventListener('input', calculateMonthlyDepreciation);
+            if (amortizationUsefulLifeInput) amortizationUsefulLifeInput.addEventListener('input', calculateMonthlyDepreciation);
+            if (amortizationResidualRateInput) amortizationResidualRateInput.addEventListener('input', calculateMonthlyDepreciation);
+            
+            // 为购置日期和预计使用年限添加事件监听器，计算折旧截止日期
+            if (purchaseDateInput) purchaseDateInput.addEventListener('change', calculateDepreciationEndDate);
+            if (depreciationUsefulLifeInput) depreciationUsefulLifeInput.addEventListener('input', calculateDepreciationEndDate);
         });
     </script>
 </body>

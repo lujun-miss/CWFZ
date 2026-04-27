@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -121,7 +121,7 @@
 
     <!-- 主内容 -->
     <main class="px-4 py-6">
-        <!-- 打卡页面 -->
+        <!-- 工时填报页面 -->
         <div id="checkinPage" class="page-content">
             <!-- 用户信息 -->
             <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
@@ -134,9 +134,6 @@
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <button class="text-primary text-sm mr-3">
-                            <i class="fa fa-calendar-check-o mr-1"></i>申请
-                        </button>
                         <button class="text-primary text-sm">
                             查看规则
                         </button>
@@ -144,91 +141,115 @@
                 </div>
             </div>
 
-            <!-- 打卡状态 -->
-            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="border border-gray-200 rounded-lg p-3 text-center">
-                        <p class="text-sm text-gray-500 mb-1">上班 08:30</p>
-                        <div class="flex items-center justify-center">
-                            <i class="fa fa-check-circle text-green-500 mr-2"></i>
-                            <span class="text-sm font-medium">08:28已打卡</span>
-                        </div>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-3 text-center">
-                        <p class="text-sm text-gray-500 mb-1">下班 18:30</p>
-                        <div class="flex items-center justify-center text-gray-400">
-                            <i class="fa fa-clock-o mr-2"></i>
-                            <span class="text-sm">未打卡</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- 打卡按钮 -->
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-6 text-center">
-                <div class="inline-block relative">
-                    <div class="w-48 h-48 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                        <div class="text-center">
-                            <p class="text-lg font-medium text-primary mb-1">下班打卡</p>
-                            <p class="text-sm text-gray-500">4月20日 周一</p>
-                            <p class="text-xs text-gray-400 mt-1">09:30:30</p>
-                        </div>
-                    </div>
-                    <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
-                        <i class="fa fa-circle"></i>
-                    </div>
-                </div>
-                <button class="w-full py-3 bg-primary text-white rounded-lg font-medium checkin-btn">
-                    立即打卡
-                </button>
-            </div>
+
+
 
             <!-- 工时填报任务 -->
             <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                <h3 class="font-medium text-gray-900 mb-3">工时填报任务</h3>
-                <div class="space-y-3">
-                    <div class="border border-gray-200 rounded-lg p-3">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-medium">项目A-核心算法开发</span>
-                            <span class="text-xs bg-blue-100 text-primary px-2 py-1 rounded">当前进度：30%</span>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-medium text-gray-900">项目工时填报</h3>
+                    <button class="text-xs text-primary">查看全部</button>
+                </div>
+                <div class="space-y-4">
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-medium text-gray-800">项目A-核心算法开发</h4>
+                                <p class="text-xs text-gray-500 mt-1">项目编号: PRJ-2026-001</p>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-primary">
+                                进行中
+                            </span>
                         </div>
                         <div class="flex justify-between text-sm text-gray-500 mb-2">
                             <span>预计总工时：488小时</span>
-                            <button class="text-primary font-medium">填报</button>
+                            <span>已填报：146小时</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
                             <div class="bg-primary h-2 rounded-full" style="width: 30%"></div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 py-2 text-xs bg-primary text-white rounded-lg hover:bg-blue-600" onclick="loadPage('work-hour-report.html')">
+                                快速填报
+                            </button>
+                            <button class="flex-1 py-2 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                                查看详情
+                            </button>
                         </div>
                     </div>
                     
-                    <div class="border border-gray-200 rounded-lg p-3">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-medium">项目B-前端界面开发</span>
-                            <span class="text-xs bg-blue-100 text-primary px-2 py-1 rounded">当前进度：40%</span>
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-medium text-gray-800">项目B-前端界面开发</h4>
+                                <p class="text-xs text-gray-500 mt-1">项目编号: PRJ-2026-002</p>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-600">
+                                今日已填报
+                            </span>
                         </div>
                         <div class="flex justify-between text-sm text-gray-500 mb-2">
                             <span>预计总工时：388小时</span>
-                            <button class="text-primary font-medium">今日已填报，修改</button>
+                            <span>已填报：155小时</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
                             <div class="bg-primary h-2 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 py-2 text-xs bg-primary text-white rounded-lg hover:bg-blue-600" onclick="loadPage('work-hour-report.html')">
+                                修改填报
+                            </button>
+                            <button class="flex-1 py-2 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                                查看详情
+                            </button>
                         </div>
                     </div>
                     
-                    <div class="border border-gray-200 rounded-lg p-3">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-medium">项目C-测试验证</span>
-                            <span class="text-xs bg-blue-100 text-primary px-2 py-1 rounded">当前进度：40%</span>
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-medium text-gray-800">项目C-测试验证</h4>
+                                <p class="text-xs text-gray-500 mt-1">项目编号: PRJ-2026-003</p>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-primary">
+                                进行中
+                            </span>
                         </div>
                         <div class="flex justify-between text-sm text-gray-500 mb-2">
                             <span>预计总工时：288小时</span>
-                            <button class="text-primary font-medium">填报</button>
+                            <span>已填报：115小时</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
                             <div class="bg-primary h-2 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 py-2 text-xs bg-primary text-white rounded-lg hover:bg-blue-600" onclick="loadPage('work-hour-report.html')">
+                                快速填报
+                            </button>
+                            <button class="flex-1 py-2 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                                查看详情
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- 填报指南 -->
+            <div class="bg-blue-50 rounded-lg border border-blue-200 p-4 mb-6">
+                <h4 class="text-blue-800 font-medium mb-2 flex items-center">
+                    <i class="fa fa-info-circle mr-2"></i>填报指南
+                </h4>
+                <ul class="text-xs text-blue-700 space-y-1">
+                    <li class="flex items-start">
+                        <i class="fa fa-check-circle mt-0.5 mr-2"></i>
+                        <span>点击项目卡片上的"快速填报"按钮录入工时</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa fa-check-circle mt-0.5 mr-2"></i>
+                        <span>跨月补录工时将自动计入本月费用</span>
+                    </li>
+                </ul>
             </div>
         </div>
 
@@ -248,11 +269,7 @@
                     </button>
                 </div>
                 
-                <div class="flex justify-end space-x-2 mb-4">
-                    <button class="px-3 py-1 text-xs border border-primary bg-primary text-white rounded-full">日</button>
-                    <button class="px-3 py-1 text-xs border border-gray-300 rounded-full">周</button>
-                    <button class="px-3 py-1 text-xs border border-gray-300 rounded-full">月</button>
-                </div>
+
             </div>
 
             <!-- 日历 -->
@@ -283,22 +300,40 @@
                     <span class="text-xs text-gray-600 py-2">6</span>
                     <span class="text-xs text-gray-600 py-2">7</span>
                     <span class="text-xs text-gray-600 py-2">8</span>
-                    <span class="text-xs text-gray-600 py-2">9</span>
-                    <span class="text-xs text-gray-600 py-2">10</span>
-                    <span class="text-xs text-gray-600 py-2">11</span>
+                    <span class="text-xs text-gray-600 py-2 relative">9
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </span>
+                    <span class="text-xs text-gray-600 py-2 relative">10
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></span>
+                    </span>
+                    <span class="text-xs text-gray-600 py-2 relative">11
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></span>
+                    </span>
                     <span class="text-xs text-gray-600 py-2">12</span>
                     <span class="text-xs text-gray-600 py-2">13</span>
-                    <span class="text-xs text-gray-600 py-2">14</span>
-                    <span class="text-xs bg-primary text-white rounded-full py-2">15</span>
-                    <span class="text-xs text-gray-600 py-2">16</span>
+                    <span class="text-xs text-gray-600 py-2 relative">14
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></span>
+                    </span>
+                    <span class="text-xs bg-primary text-white rounded-full py-2 relative">15
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></span>
+                    </span>
+                    <span class="text-xs text-gray-600 py-2 relative">16
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></span>
+                    </span>
                     <span class="text-xs text-gray-600 py-2">17</span>
                     <span class="text-xs text-gray-600 py-2">18</span>
-                    <span class="text-xs text-gray-600 py-2">19</span>
+                    <span class="text-xs text-gray-600 py-2 relative">19
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></span>
+                    </span>
                     <span class="text-xs text-gray-600 py-2">20</span>
-                    <span class="text-xs text-gray-600 py-2">21</span>
+                    <span class="text-xs text-gray-600 py-2 relative">21
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></span>
+                    </span>
                     <span class="text-xs text-gray-600 py-2">22</span>
                     <span class="text-xs text-gray-600 py-2">23</span>
-                    <span class="text-xs text-gray-600 py-2">24</span>
+                    <span class="text-xs text-gray-600 py-2 relative">24
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></span>
+                    </span>
                     <span class="text-xs text-gray-600 py-2">25</span>
                     <span class="text-xs text-gray-600 py-2">26</span>
                     <span class="text-xs text-gray-400 py-2">27</span>
@@ -311,33 +346,40 @@
                 </div>
             </div>
 
-            <!-- 打卡记录 -->
+            <!-- 当日工时填报情况 -->
             <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                <h3 class="font-medium text-gray-900 mb-3">当日班次：固定上下班 4至10月作息时间 08:30-18:30</h3>
-                <p class="text-sm text-gray-500 mb-3">出勤统计：打卡2次，工时9.6小时</p>
+                <h3 class="font-medium text-gray-900 mb-3">当日工时填报情况</h3>
+                <p class="text-sm text-gray-500 mb-3">今日已填报 2 个项目，设备使用 2.0 小时，总计 8.5 小时</p>
                 
                 <div class="space-y-3">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between p-2 border-b border-gray-100">
                         <div class="flex items-center">
-                            <i class="fa fa-sign-in text-green-500 mr-2"></i>
-                            <span class="text-sm">上班 08:26</span>
+                            <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                            <span class="text-sm">项目A-核心算法开发</span>
                         </div>
-                        <span class="text-xs text-gray-500">Y2-KN0695</span>
+                        <span class="text-sm font-medium">3.5小时</span>
                     </div>
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between p-2 border-b border-gray-100">
                         <div class="flex items-center">
-                            <i class="fa fa-sign-out text-red-500 mr-2"></i>
-                            <span class="text-sm">下班 20:02</span>
+                            <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                            <span class="text-sm">项目B-前端界面开发</span>
                         </div>
-                        <span class="text-xs text-gray-500">Y2-KN0695</span>
+                        <span class="text-sm font-medium">3.0小时</span>
+                    </div>
+                    <div class="flex items-center justify-between p-2">
+                        <div class="flex items-center">
+                            <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                            <span class="text-sm">设备使用</span>
+                        </div>
+                        <span class="text-sm font-medium">2.0小时</span>
                     </div>
                 </div>
                 
                 <div class="mt-4">
-                    <button class="w-full py-2 bg-primary text-white rounded-lg text-sm font-medium">
-                        今日已填报，修改
+                    <button class="w-full py-2 bg-primary text-white rounded-lg text-sm font-medium" onclick="loadPage('work-hour-report.html')">
+                        今日已填报，可修改
                     </button>
-                    <p class="text-xs text-gray-500 mt-1">注：代表今日已完成工时汇报</p>
+                    <p class="text-xs text-gray-500 mt-1">注：您可以修改今日的工时填报</p>
                 </div>
             </div>
         </div>
@@ -350,10 +392,6 @@
                 <div class="space-y-4">
                     <div class="flex items-center justify-between p-3 border-b border-gray-100">
                         <span class="text-gray-700">个人信息</span>
-                        <i class="fa fa-chevron-right text-gray-400"></i>
-                    </div>
-                    <div class="flex items-center justify-between p-3 border-b border-gray-100">
-                        <span class="text-gray-700">打卡设置</span>
                         <i class="fa fa-chevron-right text-gray-400"></i>
                     </div>
                     <div class="flex items-center justify-between p-3 border-b border-gray-100">
@@ -378,7 +416,7 @@
         <div class="grid grid-cols-3 text-center">
             <button class="py-3 tab-active" onclick="switchPage('checkin')">
                 <i class="fa fa-clock-o block text-lg mb-1"></i>
-                <span class="text-xs">打卡</span>
+                <span class="text-xs">工时</span>
             </button>
             <button class="py-3 text-gray-500" onclick="switchPage('stats')">
                 <i class="fa fa-bar-chart block text-lg mb-1"></i>
@@ -394,6 +432,7 @@
     <script>
         // 加载页面
         function loadPage(page) {
+            // 确保使用正确的路径格式
             window.location.href = page;
         }
         
@@ -431,6 +470,19 @@
                 buttons[2].classList.add('tab-active');
                 buttons[2].classList.remove('text-gray-500');
             }
+        }
+        
+
+        
+        // 获取当前日期
+        function getCurrentDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            const weekday = weekdays[now.getDay()];
+            return `${year}年${month}月${day}日 ${weekday}`;
         }
         
         // 页面加载完成后初始化
