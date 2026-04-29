@@ -857,9 +857,107 @@
             }, 1500);
         }
 
+        // 人工费归集详情数据
+        const laborCostDetails = {
+            1: {
+                type: '人工费 - 应发工资',
+                month: '2024-04',
+                project: '智能传感器研发',
+                amount: '¥ 450,000',
+                time: '2024-05-01 10:30',
+                operator: '张三',
+                items: [
+                    { name: '张三', department: '研发部', position: '高级工程师', hours: 160, ratio: '40%', amount: '¥ 180,000' },
+                    { name: '李四', department: '研发部', position: '工程师', hours: 120, ratio: '30%', amount: '¥ 135,000' },
+                    { name: '王五', department: '技术部', position: '技术员', hours: 80, ratio: '20%', amount: '¥ 90,000' },
+                    { name: '赵六', department: '研发部', position: '助理工程师', hours: 40, ratio: '10%', amount: '¥ 45,000' }
+                ]
+            },
+            2: {
+                type: '人工费 - 五险一金',
+                month: '2024-04',
+                project: '智能传感器研发',
+                amount: '¥ 135,000',
+                time: '2024-05-01 10:30',
+                operator: '李四',
+                items: [
+                    { name: '张三', department: '研发部', position: '高级工程师', hours: 160, ratio: '40%', amount: '¥ 54,000' },
+                    { name: '李四', department: '研发部', position: '工程师', hours: 120, ratio: '30%', amount: '¥ 40,500' },
+                    { name: '王五', department: '技术部', position: '技术员', hours: 80, ratio: '20%', amount: '¥ 27,000' },
+                    { name: '赵六', department: '研发部', position: '助理工程师', hours: 40, ratio: '10%', amount: '¥ 13,500' }
+                ]
+            },
+            3: {
+                type: '人工费 - 劳务费',
+                month: '2024-04',
+                project: '智能传感器研发',
+                amount: '¥ 45,000',
+                time: '2024-05-01 10:30',
+                operator: '王五',
+                items: [
+                    { name: '外部顾问A', department: '外部合作', position: '技术顾问', hours: 80, ratio: '60%', amount: '¥ 27,000' },
+                    { name: '外部顾问B', department: '外部合作', position: '研发顾问', hours: 50, ratio: '40%', amount: '¥ 18,000' }
+                ]
+            },
+            4: {
+                type: '人工费 - 应发工资',
+                month: '2024-04',
+                project: '工业机器人控制系统',
+                amount: '¥ 380,000',
+                time: '2024-05-01 11:15',
+                operator: '张三',
+                items: [
+                    { name: '孙七', department: '研发部', position: '项目经理', hours: 180, ratio: '35%', amount: '¥ 133,000' },
+                    { name: '周八', department: '研发部', position: '高级工程师', hours: 150, ratio: '30%', amount: '¥ 114,000' },
+                    { name: '吴九', department: '技术部', position: '工程师', hours: 100, ratio: '20%', amount: '¥ 76,000' },
+                    { name: '郑十', department: '研发部', position: '助理工程师', hours: 75, ratio: '15%', amount: '¥ 57,000' }
+                ]
+            },
+            5: {
+                type: '人工费 - 五险一金',
+                month: '2024-04',
+                project: '工业机器人控制系统',
+                amount: '¥ 114,000',
+                time: '2024-05-01 11:15',
+                operator: '李四',
+                items: [
+                    { name: '孙七', department: '研发部', position: '项目经理', hours: 180, ratio: '35%', amount: '¥ 39,900' },
+                    { name: '周八', department: '研发部', position: '高级工程师', hours: 150, ratio: '30%', amount: '¥ 34,200' },
+                    { name: '吴九', department: '技术部', position: '工程师', hours: 100, ratio: '20%', amount: '¥ 22,800' },
+                    { name: '郑十', department: '研发部', position: '助理工程师', hours: 75, ratio: '15%', amount: '¥ 17,100' }
+                ]
+            }
+        };
+
         // 查看详情
         function viewDetail(id) {
-            // 这里可以根据 id 加载不同的详情数据
+            const detail = laborCostDetails[id];
+            if (detail) {
+                // 更新基本信息
+                document.getElementById('detailType').textContent = detail.type;
+                document.getElementById('detailMonth').textContent = detail.month;
+                document.getElementById('detailProject').textContent = detail.project;
+                document.getElementById('detailAmount').textContent = detail.amount;
+                document.getElementById('detailTime').textContent = detail.time;
+                document.getElementById('detailOperator').textContent = detail.operator;
+                
+                // 更新人员明细表格
+                const tbody = document.querySelector('#detailModal tbody');
+                tbody.innerHTML = '';
+                detail.items.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-4 py-2 text-sm">${item.name}</td>
+                        <td class="px-4 py-2 text-sm">${item.department}</td>
+                        <td class="px-4 py-2 text-sm">${item.position}</td>
+                        <td class="px-4 py-2 text-sm">${item.hours}</td>
+                        <td class="px-4 py-2 text-sm">${item.ratio}</td>
+                        <td class="px-4 py-2 text-sm">${item.amount}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            
             document.getElementById('detailModal').classList.remove('hidden');
             document.getElementById('detailModal').classList.add('flex');
         }

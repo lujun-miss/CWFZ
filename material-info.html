@@ -61,7 +61,7 @@
             <div class="p-4 border-b border-gray-200">
                 <h1 class="text-xl font-bold text-primary flex items-center">
                     <i class="fa fa-cogs mr-2"></i>
-                    <span>研发费管理系统</span>
+                    <span>研知π</span>
                 </h1>
             </div>
             
@@ -640,7 +640,12 @@
                 <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-medium text-gray-800">物料信息管理</h3>
-                        <button class="btn-primary">新增物料</button>
+                        <div class="flex space-x-2">
+                            <button class="btn-primary">新增物料</button>
+                            <button class="btn-secondary" onclick="importMaterial()">
+                                <i class="fa fa-upload mr-1"></i>导入
+                            </button>
+                        </div>
                     </div>
                     <div class="flex flex-wrap items-center gap-4 mb-6">
                         <div class="flex items-center">
@@ -789,6 +794,10 @@
                 sidebar.classList.remove('hidden');
                 sidebar.classList.add('w-64');
             }
+        }
+
+        function importMaterial() {
+            alert('导入物料信息功能开发中');
         }
     </script>
 </body>

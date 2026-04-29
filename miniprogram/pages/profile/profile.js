@@ -73,7 +73,7 @@ Page({
   goToAbout() {
     wx.showModal({
       title: '关于我们',
-      content: '研发费管理系统 v1.0.0\n\n专为研发企业打造的费用管理工具',
+      content: '研知π v1.0.0\n\n专为研发企业打造的费用管理工具',
       showCancel: false
     })
   },

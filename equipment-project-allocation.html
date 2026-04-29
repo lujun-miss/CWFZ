@@ -73,14 +73,14 @@
             <div class="p-4 border-b border-gray-200">
                 <h1 class="text-xl font-bold text-primary flex items-center">
                     <i class="fa fa-cogs mr-2"></i>
-                    <span>研发费管理系统</span>
+                    <span>研知π</span>
                 </h1>
             </div>
 
             <nav class="mt-4">
                 <ul>
                     <li>
-                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3" onclick="loadPage('dashboard.html')">
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3" onclick="loadPage('dashboard.html')">
                             <i class="fa fa-home w-6"></i>
                             <span>首页</span>
                         </a>
@@ -424,10 +424,7 @@
                 <div class="bg-white rounded-lg shadow p-4 mb-6">
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div class="flex space-x-2">
-                            <button class="px-4 py-2 bg-primary text-white rounded-md" id="viewByProject">
-                                <i class="fa fa-folder-open mr-2"></i>按项目查看
-                            </button>
-                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300" id="viewByEquipment">
+                            <button class="px-4 py-2 bg-primary text-white rounded-md" id="viewByEquipment">
                                 <i class="fa fa-cog mr-2"></i>按设备查看
                             </button>
                         </div>
@@ -508,193 +505,15 @@
 
 
 
-                <div class="bg-white rounded-lg shadow overflow-hidden mb-6" id="projectViewTable">
-                    <div class="p-4 border-b border-gray-200">
-                        <h3 class="font-medium text-gray-800">项目设备工时分配详情</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        时间
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        项目名称
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        设备组
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        设备名称
-                                    </th>
-
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        使用工时
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        项目总工时
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        占比
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        操作
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr class="bg-blue-50">
-                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
-                                        <div class="text-sm text-gray-900">2026.04</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
-                                        <div class="text-sm font-bold text-gray-900">智能传感器研发</div>
-                                        <div class="text-xs text-gray-500">项目编号: PRJ-2026-001</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">传感器生产线</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">数控机床</div>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">320</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
-                                        <div class="text-sm font-bold text-gray-900">720</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">44.4%</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <button class="text-primary hover:text-blue-700">查看明细</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">传感器生产线</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">3D打印机</div>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">400</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">55.6%</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <button class="text-primary hover:text-blue-700">查看明细</button>
-                                    </td>
-                                </tr>
-                                <tr class="bg-green-50">
-                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
-                                        <div class="text-sm text-gray-900">2026.04</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
-                                        <div class="text-sm font-bold text-gray-900">工业机器人控制系统</div>
-                                        <div class="text-xs text-gray-500">项目编号: PRJ-2026-002</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">机器人装配线</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">光谱分析仪</div>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">280</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
-                                        <div class="text-sm font-bold text-gray-900">560</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">50.0%</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <button class="text-primary hover:text-blue-700">查看明细</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">机器人装配线</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">激光切割机</div>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">280</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">50.0%</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <button class="text-primary hover:text-blue-700">查看明细</button>
-                                    </td>
-                                </tr>
-                                <tr class="bg-yellow-50">
-                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
-                                        <div class="text-sm text-gray-900">2026.04</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
-                                        <div class="text-sm font-bold text-gray-900">新能源材料研究</div>
-                                        <div class="text-xs text-gray-500">项目编号: PRJ-2026-003</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">X射线衍射仪</div>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">360</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
-                                        <div class="text-sm font-bold text-gray-900">720</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">50.0%</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <button class="text-primary hover:text-blue-700">查看明细</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">电子显微镜</div>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">360</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">50.0%</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <button class="text-primary hover:text-blue-700">查看明细</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="p-4 border-t border-gray-200 flex justify-between items-center">
-                        <div class="text-sm text-gray-500">
-                            显示 1 至 3 条，共 8 条项目
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">上一页</button>
-                            <button class="px-3 py-1 border border-primary bg-primary text-white rounded-md text-sm">1</button>
-                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">2</button>
-                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">下一页</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow overflow-hidden mb-6 hidden" id="equipmentViewTable">
+                <div class="bg-white rounded-lg shadow overflow-hidden mb-6" id="equipmentViewTable">
                     <div class="p-4 border-b border-gray-200">
                         <h3 class="font-medium text-gray-800">设备项目工时分配详情</h3>
+                    </div>
+                    <div class="p-4 bg-red-50 border-b border-red-200">
+                        <p class="text-sm text-red-700">
+                            <i class="fa fa-exclamation-triangle mr-2"></i>
+                            <strong>注意：</strong>同一个设备，研发工时占比之和超过15%，则需标红提示用户
+                        </p>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
@@ -711,13 +530,16 @@
                                         参与项目
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        项目工时
+                                        生产工时
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        研发工时
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         设备总工时
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        占比
+                                        研发占比
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         操作
@@ -725,7 +547,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr class="bg-blue-50">
+                                <tr class="bg-blue-50 bg-red-100 border-l-4 border-red-500">
                                     <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
                                         <div class="text-sm text-gray-900">2026.04</div>
                                     </td>
@@ -736,30 +558,36 @@
                                         <div class="text-sm text-gray-900">智能传感器研发</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">320</div>
+                                        <div class="text-sm text-gray-900">240</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">80</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
                                         <div class="text-sm font-bold text-gray-900">560</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">57.1%</div>
+                                        <div class="text-sm font-bold text-red-600">14.3%</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
                                         <button class="text-primary hover:text-blue-700">查看明细</button>
                                     </td>
                                 </tr>
-                                <tr class="bg-blue-50">
+                                <tr class="bg-blue-50 bg-red-100 border-l-4 border-red-500">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">工业机器人控制系统</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">240</div>
+                                        <div class="text-sm text-gray-900">180</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">42.9%</div>
+                                        <div class="text-sm text-gray-900">60</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-bold text-red-600">10.7%</div>
                                     </td>
                                 </tr>
-                                <tr class="bg-green-50">
+                                <tr class="bg-green-50 bg-red-100 border-l-4 border-red-500">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">2026.04</div>
                                     </td>
@@ -771,19 +599,22 @@
                                         <div class="text-sm text-gray-900">智能传感器研发</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">400</div>
+                                        <div class="text-sm text-gray-900">320</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">80</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-bold text-gray-900">400</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">100%</div>
+                                        <div class="text-sm font-bold text-red-600">20.0%</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <button class="text-primary hover:text-blue-700">查看明细</button>
                                     </td>
                                 </tr>
-                                <tr class="bg-yellow-50">
+                                <tr class="bg-yellow-50 bg-red-100 border-l-4 border-red-500">
                                     <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
                                         <div class="text-sm text-gray-900">2026.04</div>
                                     </td>
@@ -794,19 +625,22 @@
                                         <div class="text-sm text-gray-900">工业机器人控制系统</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">280</div>
+                                        <div class="text-sm text-gray-900">210</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">70</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
                                         <div class="text-sm font-bold text-gray-900">600</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">46.7%</div>
+                                        <div class="text-sm font-bold text-red-600">11.7%</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
                                         <button class="text-primary hover:text-blue-700">查看明细</button>
                                     </td>
                                 </tr>
-                                <tr class="bg-yellow-50">
+                                <tr class="bg-yellow-50 bg-red-100 border-l-4 border-red-500">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">智能传感器研发</div>
                                     </td>
@@ -814,18 +648,24 @@
                                         <div class="text-sm text-gray-900">180</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">30.0%</div>
+                                        <div class="text-sm text-gray-900">50</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-bold text-red-600">8.3%</div>
                                     </td>
                                 </tr>
-                                <tr class="bg-yellow-50">
+                                <tr class="bg-yellow-50 bg-red-100 border-l-4 border-red-500">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">新能源材料研究</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">140</div>
+                                        <div class="text-sm text-gray-900">150</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">23.3%</div>
+                                        <div class="text-sm text-gray-900">40</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-bold text-red-600">6.7%</div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -849,22 +689,8 @@
     </div>
 
     <script>
-        document.getElementById('viewByProject').addEventListener('click', function() {
-            this.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
-            this.classList.add('bg-primary', 'text-white');
-            document.getElementById('viewByEquipment').classList.remove('bg-primary', 'text-white');
-            document.getElementById('viewByEquipment').classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
-            document.getElementById('projectViewTable').classList.remove('hidden');
-            document.getElementById('equipmentViewTable').classList.add('hidden');
-        });
-
         document.getElementById('viewByEquipment').addEventListener('click', function() {
-            this.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
-            this.classList.add('bg-primary', 'text-white');
-            document.getElementById('viewByProject').classList.remove('bg-primary', 'text-white');
-            document.getElementById('viewByProject').classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
-            document.getElementById('equipmentViewTable').classList.remove('hidden');
-            document.getElementById('projectViewTable').classList.add('hidden');
+            // 已经是默认选中状态，无需切换
         });
 
         // 为"查看明细"按钮添加点击事件

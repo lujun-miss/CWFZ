@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备能源消耗档案 - 研发费用管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .nav-item {
+            @apply flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors duration-200;
+        }
+        
+        .nav-item-active {
+            @apply bg-blue-500 text-white;
+        }
+        
+        .nav-item:hover {
+            @apply bg-gray-100;
+        }
+        
+        .table-row-hover:hover {
+            @apply bg-gray-50;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航栏 -->
+        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto" style="max-height: 100vh;">
+            <!-- 系统标题 -->
+            <div class="p-4 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-primary flex items-center">
+                    <i class="fa fa-cogs mr-2"></i>
+                    <span>研知π</span>
+                </h1>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="mt-4">
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="project-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目要素</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>阶段审核</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('progress-tracking.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>阶段跟踪</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-personnel.html')">
+                                    <i class="fa fa-users w-6"></i>
+                                    <span>项目人员</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-equipment.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>研发设备</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('design-project-management.html')">
+                                    <i class="fa fa-paint-brush w-6"></i>
+                                    <span>设计项目管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-users w-6"></i>
+                                <span>人事管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>人员管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>岗位管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('department.html')">
+                                    <i class="fa fa-sitemap w-6"></i>
+                                    <span>部门管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-salary.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>人员工资管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资产管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
+                                    <i class="fa fa-cog w-6"></i>
+                                    <span>资产信息管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-active flex items-center px-4 py-2 text-white" onclick="loadPage('equipment-energy-consumption.html')">
+                                    <i class="fa fa-bolt w-6"></i>
+                                    <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-usage-record.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>无形资产使用记录</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cogs w-6"></i>
+                                <span>费用归集</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('cost-allocation.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>费用归集管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('labor-cost-allocation.html')">
+                                    <i class="fa fa-users w-6"></i>
+                                    <span>人工费归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-depreciation-allocation.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>设备折旧归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-cost-allocation.html')">
+                                    <i class="fa fa-cubes w-6"></i>
+                                    <span>直接投入归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('test-cost-allocation.html')">
+                                    <i class="fa fa-flask w-6"></i>
+                                    <span>试验费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-cost-allocation.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>无形资产摊销</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('consult-cost-allocation.html')">
+                                    <i class="fa fa-comments w-6"></i>
+                                    <span>咨询费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-cost-allocation.html')">
+                                    <i class="fa fa-ellipsis-h w-6"></i>
+                                    <span>其他费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('outsourced-rd-contract-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>委托研发合同管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-related-expenses.html')">
+                                    <i class="fa fa-ellipsis-h w-6"></i>
+                                    <span>其他相关费用</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-clock-o w-6"></i>
+                                <span>研发工时</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-attendance.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>人员考勤表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-work-hour-record.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>人员工时记录</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-work-hour-record.html')">
+                                    <i class="fa fa-cog w-6"></i>
+                                    <span>设备工时记录</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-project-allocation.html')">
+                                    <i class="fa fa-share-alt w-6"></i>
+                                    <span>人员工时分配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-project-allocation.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>设备工时分配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-allocation.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>工时分配管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-group-management.html')">
+                                    <i class="fa fa-th-large w-6"></i>
+                                    <span>设备组管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cube w-6"></i>
+                                <span>物料管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>物料信息管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
+                                    <i class="fa fa-trash w-6"></i>
+                                    <span>物料报废管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
+                                    <i class="fa fa-shopping-cart w-6"></i>
+                                    <span>项目领料管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-usage-statistics.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>物料使用量统计</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-600" onclick="loadPage('pilot-production.html')">
+                            <i class="fa fa-industry w-6"></i>
+                            <span>试生产管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-shield w-6"></i>
+                                <span>合规管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('compliance-check.html')">
+                                    <i class="fa fa-check-square-o w-6"></i>
+                                    <span>合规检查</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('tax-deduction.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>税收减免</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('high-tech-cert.html')">
+                                    <i class="fa fa-certificate w-6"></i>
+                                    <span>高科技认证</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-600" onclick="loadPage('data-analysis.html')">
+                            <i class="fa fa-bar-chart w-6"></i>
+                            <span>数据分析</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-file-text-o w-6"></i>
+                                <span>多口径报表</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>财务加计扣除</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="hi-tech-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-certificate w-6"></i>
+                                    <span>高企认定</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="accounting-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-book w-6"></i>
+                                    <span>会计口径</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-flask w-6"></i>
+                                    <span>R&D统计</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="ipo-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>IPO审查</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="generate-account-table.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-magic w-6"></i>
+                                    <span>账套表生成</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资源管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intellectual-property.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>知识产权维护</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>多口径报表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('reference-materials.html')">
+                                    <i class="fa fa-folder-o w-6"></i>
+                                    <span>备查资料</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('policy.html')">
+                                    <i class="fa fa-book w-6"></i>
+                                    <span>政策查询</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('intangible.html')">
+                            <i class="fa fa-lightbulb-o w-6"></i>
+                            <span>无形资产管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-file-text w-6"></i>
+                                <span>凭证管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-import.html')">
+                                    <i class="fa fa-upload w-6"></i>
+                                    <span>凭证导入</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-matching.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>凭证匹配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('import-history.html')">
+                                    <i class="fa fa-history w-6"></i>
+                                    <span>导入历史</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('matching-rules.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>匹配规则设置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-list.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>序时记账凭证一览表</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-building w-6"></i>
+                                <span>企业档案</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('enterprise-info.html')">
+                                    <i class="fa fa-info-circle w-6"></i>
+                                    <span>企业基础信息维护</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('user.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>用户管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('role.html')">
+                                    <i class="fa fa-shield w-6"></i>
+                                    <span>角色管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-database w-6"></i>
+                                <span>系统设置</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-type.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>费用类型管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('allocation-rule.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>分摊规则配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('deduction-policy.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>加计扣除政策配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('finance-policy.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>财务核算口径配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-bolt w-6"></i>
+                                    <span>能源价格管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('settings.html')">
+                            <i class="fa fa-cog w-6"></i>
+                            <span>设置</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('profile.html')">
+                            <i class="fa fa-user w-6"></i>
+                            <span>个人资料</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 右侧主内容区域 -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- 顶部信息栏 -->
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+                <div class="flex items-center">
+                    <button class="md:hidden mr-4 text-gray-500" onclick="toggleMobileMenu()">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                    <h2 id="page-title" class="text-lg font-medium text-gray-800">设备能源消耗档案</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center" id="addEnergyConsumptionBtn">
+                        <i class="fa fa-plus mr-2"></i> 配置设备能耗参数
+                    </button>
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-bell"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
+                        <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 内容区 -->
+            <div class="flex-1 overflow-y-auto p-6">
+                <!-- 搜索和筛选 -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">设备名称</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">请选择设备</option>
+                                <option value="EQ-001">数控机床 (EQ-001)</option>
+                                <option value="EQ-015">3D打印机 (EQ-015)</option>
+                                <option value="EQ-023">光谱分析仪 (EQ-023)</option>
+                                <option value="EQ-042">其他设备 (EQ-042)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">计量方式</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">请选择计量方式</option>
+                                <option value="direct">直接计量</option>
+                                <option value="quota">定额分配</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button class="w-full px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors">
+                                <i class="fa fa-search mr-2"></i> 搜索
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 设备能耗参数配置列表 -->
+                <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                    <div class="p-4 border-b border-gray-200">
+                        <h3 class="font-medium text-gray-800">设备能耗参数配置</h3>
+                        <p class="text-sm text-gray-500 mt-1">用于设备工时记录时自动计算能源消耗</p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        设备名称
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        设备编号
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        计量方式
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        能源类型
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        设备功率 (kW)
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        效率系数
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        计量表编号
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        状态
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">数控机床</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">EQ-001</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">直接计量</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">电力</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">15.0</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">0.95</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">EM-001</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已启用</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showEnergyConsumptionDetail('EQ-001')">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
+                                        <a href="#" class="text-danger hover:text-red-600" onclick="confirmDelete('EQ-001')">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">3D打印机</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">EQ-015</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">定额分配</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">电力</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">5.5</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">0.92</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-400">-</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已启用</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showEnergyConsumptionDetail('EQ-015')">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
+                                        <a href="#" class="text-danger hover:text-red-600" onclick="confirmDelete('EQ-015')">删除</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">光谱分析仪</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">EQ-023</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">直接计量</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">电力、天然气</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">3.0</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">0.98</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">EM-003</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已启用</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showEnergyConsumptionDetail('EQ-023')">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
+                                        <a href="#" class="text-danger hover:text-red-600" onclick="confirmDelete('EQ-023')">删除</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                        <div class="text-sm text-gray-700">
+                            共 3 条记录，1 页
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50" disabled>
+                                <i class="fa fa-chevron-left"></i>
+                            </button>
+                            <button class="px-3 py-1 border border-primary bg-primary text-white rounded-md">1</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50" disabled>
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 使用说明 -->
+                <div class="bg-blue-50 rounded-lg shadow p-6">
+                    <h3 class="font-medium text-blue-800 mb-3 flex items-center">
+                        <i class="fa fa-info-circle mr-2"></i> 使用说明
+                    </h3>
+                    <div class="text-sm text-blue-700 space-y-2">
+                        <p><strong>1. 档案用途：</strong>此页面用于配置设备的能源消耗基础参数，供设备工时记录模块调用自动计算能耗。</p>
+                        <p><strong>2. 计量方式：</strong></p>
+                        <ul class="list-disc ml-4">
+                            <li><strong>直接计量：</strong>设备装有独立电表等计量表，按实际抄表数计算能耗</li>
+                            <li><strong>定额分配：</strong>无法独立计量，按公式计算：能耗 = 功率 × 工时 × 效率系数</li>
+                        </ul>
+                        <p><strong>3. 数据流向：</strong>设备工时记录 → 自动读取本档案参数 → 计算能耗 → 归集到项目</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设备能耗参数详情模态框 -->
+    <div id="energyConsumptionDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800">设备能耗参数详情</h3>
+                <button onclick="closeDetailModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 max-h-[70vh] overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500 mb-3">基本信息</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">设备名称</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="数控机床" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">设备编号</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="EQ-001" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">计量方式</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="直接计量" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">能源类型</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="电力" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500 mb-3">能耗参数</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">设备功率 (kW)</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="15.0" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">能源效率系数</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="0.95" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">计量表编号</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="EM-001" disabled>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已启用</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
+                        <i class="fa fa-info-circle mr-2"></i> 计算公式说明
+                    </h4>
+                    <p class="text-sm text-blue-700">
+                        <strong>定额分配模式：</strong>能耗 = 功率 × 工时 × 效率系数
+                    </p>
+                    <p class="text-sm text-blue-700 mt-1">
+                        <strong>直接计量模式：</strong>能耗根据实际抄表数据计算
+                    </p>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-200 flex justify-end">
+                <button onclick="closeDetailModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 配置设备能耗参数模态框 -->
+    <div id="addEnergyConsumptionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 transform transition-all">
+                <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-800">配置设备能耗参数</h3>
+                    <button onclick="closeAddModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-6 max-h-[70vh] overflow-y-auto">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">设备名称 <span class="text-red-500">*</span></label>
+                            <select id="equipmentSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">请选择设备</option>
+                                <option value="EQ-001" data-power="15.0">数控机床 (EQ-001)</option>
+                                <option value="EQ-015" data-power="5.5">3D打印机 (EQ-015)</option>
+                                <option value="EQ-023" data-power="3.0">光谱分析仪 (EQ-023)</option>
+                                <option value="EQ-042" data-power="2.0">其他设备 (EQ-042)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">计量方式 <span class="text-red-500">*</span></label>
+                            <select id="measurementType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="onMeasurementTypeChange()">
+                                <option value="">请选择计量方式</option>
+                                <option value="direct">直接计量</option>
+                                <option value="quota">定额分配</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">能源类型 <span class="text-red-500">*</span></label>
+                            <div class="flex flex-wrap gap-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="energyType" value="electricity" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                                    <span class="ml-2 text-sm text-gray-700">电力</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="energyType" value="water" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                                    <span class="ml-2 text-sm text-gray-700">水</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="energyType" value="gas" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                                    <span class="ml-2 text-sm text-gray-700">天然气</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="energyType" value="steam" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                                    <span class="ml-2 text-sm text-gray-700">蒸汽</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">设备功率 (kW) <span class="text-red-500">*</span></label>
+                            <input type="number" step="0.1" id="equipmentPower" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入设备功率">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">能源效率系数</label>
+                            <input type="number" step="0.01" min="0.1" max="1" id="efficiencyFactor" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="0.95" placeholder="0.1-1.0">
+                        </div>
+                        <!-- 直接计量模式字段 -->
+                        <div id="directMeteringFields" class="hidden">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">计量表编号</label>
+                                <input type="text" id="meterNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入计量表编号">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+                            <select id="statusSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="enabled">已启用</option>
+                                <option value="disabled">已停用</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                        <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
+                            <i class="fa fa-info-circle mr-2"></i> 配置说明
+                        </h4>
+                        <p class="text-sm text-blue-700">
+                            <strong>定额分配模式：</strong>能耗 = 功率 × 工时 × 效率系数
+                        </p>
+                        <p class="text-sm text-blue-700 mt-1">
+                            <strong>直接计量模式：</strong>能耗根据实际抄表数据计算
+                        </p>
+                        <p class="text-sm text-blue-700 mt-1">
+                            <strong>数据流向：</strong>此配置供设备工时记录模块调用，自动计算能耗并归集到项目
+                        </p>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button onclick="closeAddModal()" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">
+                        取消
+                    </button>
+                    <button onclick="saveEnergyConsumption()" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors">
+                        保存配置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 切换菜单
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+
+            if (subMenu.classList.contains('hidden')) {
+                subMenu.classList.remove('hidden');
+                arrow.classList.remove('fa-chevron-right');
+                arrow.classList.add('fa-chevron-down');
+            } else {
+                subMenu.classList.add('hidden');
+                arrow.classList.remove('fa-chevron-down');
+                arrow.classList.add('fa-chevron-right');
+            }
+        }
+
+        // 移动端菜单切换
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('aside');
+            sidebar.classList.toggle('hidden');
+        }
+
+        // 加载页面
+        function loadPage(page) {
+            window.location.href = page;
+        }
+
+        // 显示能源消耗详情
+        function showEnergyConsumptionDetail(equipmentId) {
+            document.getElementById('energyConsumptionDetailModal').classList.remove('hidden');
+        }
+
+        // 关闭详情模态框
+        function closeDetailModal() {
+            document.getElementById('energyConsumptionDetailModal').classList.add('hidden');
+        }
+
+        // 归集到项目
+        function allocateToProject() {
+            alert('已归集到项目');
+            closeDetailModal();
+        }
+
+        // 显示添加能源消耗记录模态框
+        document.getElementById('addEnergyConsumptionBtn').addEventListener('click', function() {
+            document.getElementById('addEnergyConsumptionModal').classList.remove('hidden');
+        });
+
+        // 关闭添加模态框
+        function closeAddModal() {
+            document.getElementById('addEnergyConsumptionModal').classList.add('hidden');
+            resetForm();
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('equipmentSelect').value = '';
+            document.getElementById('measurementType').value = '';
+            // 重置多选框
+            document.querySelectorAll('input[name="energyType"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.getElementById('equipmentPower').value = '';
+            document.getElementById('efficiencyFactor').value = '0.95';
+            document.getElementById('meterNumber').value = '';
+            document.getElementById('statusSelect').value = 'enabled';
+
+            document.getElementById('directMeteringFields').classList.add('hidden');
+        }
+
+        // 计量方式变更时触发
+        function onMeasurementTypeChange() {
+            const measurementType = document.getElementById('measurementType').value;
+            const directFields = document.getElementById('directMeteringFields');
+
+            directFields.classList.add('hidden');
+
+            if (measurementType === 'direct') {
+                directFields.classList.remove('hidden');
+            }
+        }
+
+        // 设备变更时自动填充功率
+        function onEquipmentChange() {
+            const equipmentSelect = document.getElementById('equipmentSelect');
+            const selectedOption = equipmentSelect.options[equipmentSelect.selectedIndex];
+            const power = selectedOption.getAttribute('data-power');
+
+            // 填充设备功率
+            if (power) {
+                document.getElementById('equipmentPower').value = power;
+            }
+        }
+
+        // 保存设备能耗参数配置
+        function saveEnergyConsumption() {
+            const equipment = document.getElementById('equipmentSelect').value;
+            const measurementType = document.getElementById('measurementType').value;
+            const energyTypes = Array.from(document.querySelectorAll('input[name="energyType"]:checked'))
+                                    .map(checkbox => checkbox.value);
+            const power = document.getElementById('equipmentPower').value;
+
+            if (!equipment || !measurementType || energyTypes.length === 0 || !power) {
+                alert('请填写必填项（设备名称、计量方式、能源类型、设备功率）');
+                return;
+            }
+
+            alert('保存成功');
+            closeAddModal();
+        }
+
+        // 确认删除
+        function confirmDelete(equipmentId) {
+            if (confirm('确定要删除这条记录吗？')) {
+                alert('删除成功');
+            }
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            resetForm();
+        });
+    </script>
+</body>
+</html>

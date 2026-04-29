@@ -1,5 +1,5 @@
 {
-  "description": "研发费管理系统小程序",
+  "description": "研知π小程序",
   "packOptions": {
     "ignore": [],
     "include": []
@@ -37,7 +37,7 @@
   "compileType": "miniprogram",
   "libVersion": "2.19.4",
   "appid": "touristappid",
-  "projectname": "研发费管理系统",
+  "projectname": "研知π",
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",

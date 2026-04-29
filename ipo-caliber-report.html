@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPO审查口径报表 - 研发费管理系统</title>
+    <title>IPO审查口径报表 - 研知π</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
@@ -101,7 +101,7 @@
             <div class="p-4 border-b border-gray-200">
                 <h1 class="text-xl font-bold text-primary flex items-center">
                     <i class="fa fa-cogs mr-2"></i>
-                    <span>研发费管理系统</span>
+                    <span>研知π</span>
                 </h1>
             </div>
             
@@ -703,164 +703,401 @@
                     <div class="tab-content">
                         <!-- IPO审查辅助账明细表 -->
                         <div id="ipo-detail" class="tab-pane active">
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目编号</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">费用类型</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">发生额</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">凭证号</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">备注</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">RD02</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">人工智能</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">人工费</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥120,000.00</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">记-001</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2026-01-15</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">研发人员工资</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">RD02</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">人工智能</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">直接投入</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥85,000.00</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">记-002</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2026-01-20</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">实验材料</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">RD03</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">新能源</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">设备折旧</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥45,000.00</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">记-003</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2026-01-25</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">研发设备折旧</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="bg-white p-6 rounded-lg border border-gray-200">
+                                <!-- 表头信息 -->
+                                <div class="text-center mb-6">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">研发支出辅助账（IPO审查口径）</h3>
+                                    <p class="text-sm text-gray-600">依据：国家税务总局公告2021年第28号、中国证监会《首次公开发行股票并上市管理办法》</p>
+                                </div>
+                                
+                                <!-- 项目信息 -->
+                                <div class="flex flex-wrap gap-6 mb-6 p-4 bg-gray-50 rounded-lg">
+                                    <div>
+                                        <span class="font-medium">项目编号：</span><span>RD001</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">项目名称：</span><span>人工智能算法研发</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">完成情况：</span><span>未结束</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">支出类型：</span><span>费用化</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">金额单位：</span><span>元</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 主表格 -->
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full border border-gray-800">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">序号</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium" colspan="4">凭证信息</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">会计凭证记载的金额</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium" colspan="8">费用明细（IPO审查口径）</th>
+                                            </tr>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium"></th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">日期</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">种类</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">号数</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">摘要</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium"></th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">人员人工费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">直接投入费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">折旧费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">无形资产摊销</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">设计费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">装备调试费</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">委托外部研发费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">其他相关费用</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">1</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-01-15</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">0001</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">研发人员工资</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥120,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥120,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">2</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-01-20</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">0002</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">实验材料采购</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥85,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥85,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">3</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-01-25</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">0003</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">研发设备折旧</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥45,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥45,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">4</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-02-10</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">0004</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">软件摊销</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥8,333.33</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥8,333.33</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">5</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-02-15</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">0005</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">研发差旅费</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥16,666.67</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥16,666.67</td>
+                                            </tr>
+                                            <tr class="bg-gray-100 font-medium">
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm" colspan="5">合计</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥275,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥120,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥85,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥45,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥8,333.33</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥16,666.67</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- 底部信息 -->
+                                <div class="mt-6 flex justify-between items-center">
+                                    <div class="flex space-x-8">
+                                        <p><span class="font-medium">单位负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">财务负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">制表人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                    </div>
+                                    <p><span class="font-medium">制表日期：</span>2026年03月31日</p>
+                                </div>
                             </div>
                         </div>
                         
                         <!-- IPO审查辅助账汇总表 -->
                         <div id="ipo-summary" class="tab-pane hidden">
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full border border-gray-200">
-                                    <thead class="bg-gray-50">
-                                            <tr>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目编号</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">人员人工费用</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">直接投入费用</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">折旧费用</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">无形资产摊销</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">设计费用</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">装备调试费</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">委托外部研究开发费用</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">其他费用</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">合计</th>
+                            <div class="bg-white p-6 rounded-lg border border-gray-200">
+                                <!-- 表头信息 -->
+                                <div class="text-center mb-6">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">研发支出辅助账汇总表（IPO审查口径）</h3>
+                                    <p class="text-sm text-gray-600">依据：国家税务总局公告2021年第28号、中国证监会《首次公开发行股票并上市管理办法》</p>
+                                    <p class="text-lg font-medium">2026 年度</p>
+                                </div>
+                                
+                                <!-- 主表格 -->
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full border border-gray-800">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">项目编号</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">项目名称</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">人员人工费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">直接投入费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">折旧费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">无形资产摊销</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">设计费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">装备调试费</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">委托外部研发费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">其他相关费用</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">资本化支出</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">费用化支出</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">合计</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="divide-y divide-gray-200">
+                                        <tbody>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">RD02</td>
-                                                <td class="px-4 py-3 border-b">人工智能</td>
-                                                <td class="px-4 py-3 border-b">¥120,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥85,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥15,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥10,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥12,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥9,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥30,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥20,000.00</td>
-                                                <td class="px-4 py-3 border-b font-medium">¥301,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">RD001</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">人工智能算法研发</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,440,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,020,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥540,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥100,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥144,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥108,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥360,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥200,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥3,912,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm font-medium">¥3,912,000.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">RD03</td>
-                                                <td class="px-4 py-3 border-b">新能源</td>
-                                                <td class="px-4 py-3 border-b">¥150,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥90,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥25,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥15,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥15,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥12,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥40,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥30,000.00</td>
-                                                <td class="px-4 py-3 border-b font-medium">¥377,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">RD002</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">新能源材料研究</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,800,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,080,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥300,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥180,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥180,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥144,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥480,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥360,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥500,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥4,824,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm font-medium">¥5,324,000.00</td>
                                             </tr>
-                                            <tr class="bg-gray-50 font-medium">
-                                                <td class="px-4 py-3 border-b" colspan="2">合计</td>
-                                                <td class="px-4 py-3 border-b">¥270,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥175,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥40,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥25,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥27,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥21,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥70,000.00</td>
-                                                <td class="px-4 py-3 border-b">¥50,000.00</td>
-                                                <td class="px-4 py-3 border-b font-bold">¥678,000.00</td>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">RD003</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">工业机器人控制系统</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥960,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥640,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥160,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥80,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥80,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥64,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥240,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥160,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥2,384,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm font-medium">¥2,384,000.00</td>
+                                            </tr>
+                                            <tr class="bg-gray-100 font-bold">
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm" colspan="2">合计</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥4,200,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥2,740,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,000,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥360,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥404,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥316,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,080,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥720,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥500,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥11,120,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥11,620,000.00</td>
                                             </tr>
                                         </tbody>
-                                </table>
+                                    </table>
+                                </div>
+                                
+                                <!-- 底部信息 -->
+                                <div class="mt-6 flex justify-between items-center">
+                                    <div class="flex space-x-8">
+                                        <p><span class="font-medium">单位负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">财务负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">制表人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                    </div>
+                                    <p><span class="font-medium">制表日期：</span>2026年03月31日</p>
+                                </div>
                             </div>
                         </div>
                         
                         <!-- 序时记账凭证一览表 -->
                         <div id="ipo-voucher" class="tab-pane hidden">
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full border border-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">序号</th>
-                                            <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
-                                            <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">凭证号</th>
-                                            <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">摘要</th>
-                                            <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">科目名称</th>
-                                            <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">借方金额</th>
-                                            <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">贷方金额</th>
-                                            <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        <tr>
-                                            <td class="px-4 py-3 border-b">1</td>
-                                            <td class="px-4 py-3 border-b">2026-01-31</td>
-                                            <td class="px-4 py-3 border-b">0001</td>
-                                            <td class="px-4 py-3 border-b">研发人员工资</td>
-                                            <td class="px-4 py-3 border-b">研发支出-人员人工</td>
-                                            <td class="px-4 py-3 border-b">¥120,000.00</td>
-                                            <td class="px-4 py-3 border-b">¥0.00</td>
-                                            <td class="px-4 py-3 border-b">人工智能</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-4 py-3 border-b">2</td>
-                                            <td class="px-4 py-3 border-b">2026-02-28</td>
-                                            <td class="px-4 py-3 border-b">0002</td>
-                                            <td class="px-4 py-3 border-b">研发材料采购</td>
-                                            <td class="px-4 py-3 border-b">研发支出-直接投入</td>
-                                            <td class="px-4 py-3 border-b">¥85,000.00</td>
-                                            <td class="px-4 py-3 border-b">¥0.00</td>
-                                            <td class="px-4 py-3 border-b">人工智能</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-4 py-3 border-b">3</td>
-                                            <td class="px-4 py-3 border-b">2026-03-31</td>
-                                            <td class="px-4 py-3 border-b">0003</td>
-                                            <td class="px-4 py-3 border-b">研发设备折旧</td>
-                                            <td class="px-4 py-3 border-b">研发支出-折旧</td>
-                                            <td class="px-4 py-3 border-b">¥15,000.00</td>
-                                            <td class="px-4 py-3 border-b">¥0.00</td>
-                                            <td class="px-4 py-3 border-b">新能源</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="bg-white p-6 rounded-lg border border-gray-200">
+                                <!-- 表头信息 -->
+                                <div class="text-center mb-6">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">序时记账凭证一览表（IPO审查口径）</h3>
+                                    <p class="text-sm text-gray-600">依据：国家税务总局公告2021年第28号、中国证监会《首次公开发行股票并上市管理办法》</p>
+                                </div>
+                                
+                                <!-- 主表格 -->
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full border border-gray-800">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">序号</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">日期</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">凭证号</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">凭证种类</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">摘要</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">一级科目</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">二级科目</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">借方金额</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">贷方金额</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">项目编号</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">项目名称</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">1</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-01-15</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记-001</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记账凭证</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">支付研发人员工资</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">研发支出</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">人员人工费用</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥120,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">RD001</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">人工智能算法研发</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">2</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-01-15</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记-001</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记账凭证</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">支付研发人员工资</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">应付职工薪酬</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">工资薪金</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥120,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">3</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-01-20</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记-002</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记账凭证</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">采购实验材料</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">研发支出</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">直接投入费用</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥85,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">RD001</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">人工智能算法研发</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">4</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-01-20</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记-002</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记账凭证</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">采购实验材料</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">应付账款</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">XX供应商</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥85,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">5</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-01-25</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记-003</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记账凭证</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">计提研发设备折旧</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">研发支出</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">折旧费用</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥45,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">RD002</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">新能源材料研究</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">6</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">2026-01-25</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记-003</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">记账凭证</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">计提研发设备折旧</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">累计折旧</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">研发设备</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥45,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">-</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="bg-gray-100 font-medium">
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm" colspan="7">合计</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥250,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥250,000.00</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-center text-sm" colspan="2">-</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                
+                                <!-- 底部信息 -->
+                                <div class="mt-6 flex justify-between items-center">
+                                    <div class="flex space-x-8">
+                                        <p><span class="font-medium">单位负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">财务负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">制表人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                    </div>
+                                    <p><span class="font-medium">制表日期：</span>2026年03月31日</p>
+                                </div>
                             </div>
                         </div>
                     </div>

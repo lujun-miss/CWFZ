@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R&D统计口径报表 - 研发费管理系统</title>
+    <title>R&D统计口径报表 - 研知π</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
@@ -101,7 +101,7 @@
             <div class="p-4 border-b border-gray-200">
                 <h1 class="text-xl font-bold text-primary flex items-center">
                     <i class="fa fa-cogs mr-2"></i>
-                    <span>研发费管理系统</span>
+                    <span>研知π</span>
                 </h1>
             </div>
             
@@ -701,8 +701,199 @@
                     
                     <!-- 标签页内容 -->
                     <div class="tab-content">
+                        <!-- 企业研发项目情况表【R&D 107-1】 -->
+                        <div id="rd-main" class="tab-pane active">
+                            <div class="bg-white p-6 rounded-lg border border-gray-200">
+                                <!-- 表头信息 -->
+                                <div class="text-center mb-6">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">企业研究开发项目情况</h3>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <div class="text-left">
+                                            <p><span class="font-medium">组织机构代码：</span><span class="border-b border-gray-400 px-2"></span></p>
+                                            <p><span class="font-medium">统一社会信用代码：</span><span class="border-b border-gray-400 px-2"></span></p>
+                                            <p><span class="font-medium">单位详细名称：</span></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p><span class="font-medium">表　号：</span>107-1表</p>
+                                            <p><span class="font-medium">制定机关：</span>国家统计局</p>
+                                            <p><span class="font-medium">文　号：</span>国统字(2022)90号</p>
+                                            <p><span class="font-medium">有效期至：</span>2023年6月</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-lg font-medium">2022 年</p>
+                                </div>
+                                
+                                <!-- 审核按钮 -->
+                                <div class="flex justify-center mb-4 space-x-8"></div>
+                                
+                                <!-- 主表格 -->
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full border border-gray-800">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">序号</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目名称</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目来源</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目开展形式</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目当年成果形式</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目当年经济目标</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目技术目标</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目起始日期</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目完成日期</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">跨年项目当年所处主要进展阶段</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目研究开发人员（人）</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目工作人员实际工作时间（人月）</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目经费支出（千元）</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">政府资金</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">甲</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">乙</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">1</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">2</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">3</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">4</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">5</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">6</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">7</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">8</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">9</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">10</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium">11</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">1</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-sm">智能传感器研发</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">自主研发</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">独立研发</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">专利</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">新产品</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">技术改进</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-01-01</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-12-31</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">研发阶段</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">15</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">180</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">3000</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">500</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-sm">工业机器人控制系统</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">产学研合作</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">合作研发</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">软件著作权</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">新技术</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">技术创新</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-03-01</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2023-02-28</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">试验阶段</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">12</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">144</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2500</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">800</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">3</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-sm">新能源材料研究</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">政府资助</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">独立研发</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">论文</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">新工艺</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">基础研究</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-06-01</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2024-05-31</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">研发阶段</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">20</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">240</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">4000</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">1500</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">4</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-sm">高精度数控机床</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">自主研发</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">委托研发</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">专利</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">新产品</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">技术改进</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-09-01</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2023-08-31</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">中试阶段</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">8</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">96</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">1800</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">300</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">5</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-sm">人工智能算法优化</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">自主研发</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">独立研发</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">软件著作权</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">新技术</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">技术创新</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-01-15</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-11-30</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">完成</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">10</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">120</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">2200</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">0</td>
+                                            </tr>
+                                            <!-- 空行 -->
+                                            <tr><td class="border border-gray-800 px-2 py-1 text-center text-sm">6</td><td colspan="13" class="border border-gray-800 px-2 py-1"></td></tr>
+                                            <tr><td class="border border-gray-800 px-2 py-1 text-center text-sm">7</td><td colspan="13" class="border border-gray-800 px-2 py-1"></td></tr>
+                                            <tr><td class="border border-gray-800 px-2 py-1 text-center text-sm">8</td><td colspan="13" class="border border-gray-800 px-2 py-1"></td></tr>
+                                            <tr><td class="border border-gray-800 px-2 py-1 text-center text-sm">9</td><td colspan="13" class="border border-gray-800 px-2 py-1"></td></tr>
+                                            <tr><td class="border border-gray-800 px-2 py-1 text-center text-sm">10</td><td colspan="13" class="border border-gray-800 px-2 py-1"></td></tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <!-- 本表合计行 -->
+                                            <tr class="bg-gray-100">
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm font-medium" colspan="10">本表合计</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm font-medium">65</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm font-medium">780</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm font-medium">13500</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm font-medium">3100</td>
+                                            </tr>
+                                            <!-- 备注行 -->
+                                            <tr>
+                                                <td class="border border-gray-800 px-2 py-2 text-sm" colspan="10">注：以下表格将根据计算直接生成相关数据</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm">项目研究开发人员（人）</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm">项目人员实际工作时间（人月）</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm">项目经费支出（千元）</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm">政府资金（千元）</td>
+                                            </tr>
+                                            <!-- 107-2表相关指标提示 -->
+                                            <tr>
+                                                <td class="border border-gray-800 px-2 py-2 text-sm" colspan="10">107-2表相关指标，点击数据显示对应指标名称</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-2 py-2 text-center text-sm">-</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                
+                                <!-- 底部信息 -->
+                                <div class="mt-6 flex justify-between items-center">
+                                    <div class="flex space-x-8">
+                                        <p><span class="font-medium">单位负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">统计负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">填表人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">联系电话：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                    </div>
+                                    <p><span class="font-medium">报出日期：</span>20 年 月 日</p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- R&D统计辅助账明细表 -->
-                        <div id="rd-detail" class="tab-pane active">
+                        <div id="rd-detail" class="tab-pane hidden">
                             <div class="mb-4 bg-white p-4 rounded-lg border border-gray-200">
                                 <div class="flex justify-between items-center mb-4">
                                     <div class="flex items-center">
@@ -887,6 +1078,392 @@
                             </div>
                         </div>
                         
+                        <!-- 企业研发活动及相关情况表【R&D 107-2】 -->
+                        <div id="rd-activity" class="tab-pane hidden">
+                            <div class="bg-white p-6 rounded-lg border border-gray-200">
+                                <!-- 表头信息 -->
+                                <div class="text-center mb-6">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">企业研究开发活动及相关情况</h3>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <div class="text-left">
+                                            <p><span class="font-medium">组织机构代码：</span><span class="border-b border-gray-400 px-2"></span></p>
+                                            <p><span class="font-medium">统一社会信用代码：</span><span class="border-b border-gray-400 px-2"></span></p>
+                                            <p><span class="font-medium">单位详细名称：</span></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p><span class="font-medium">表　号：</span>107-2表</p>
+                                            <p><span class="font-medium">制定机关：</span>国家统计局</p>
+                                            <p><span class="font-medium">文　号：</span>国统字(2022)90号</p>
+                                            <p><span class="font-medium">有效期至：</span>2023年6月</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-lg font-medium">2022 年</p>
+                                </div>
+                                
+                                <!-- 审核按钮区域（空） -->
+                                <div class="flex justify-center mb-4 space-x-8"></div>
+                                
+                                <!-- 主表格 - 双栏布局 -->
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full border border-gray-800">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium" colspan="4">点击指标名称显示指标解释</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium" colspan="4">点击指标名称显示指标解释</th>
+                                            </tr>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">甲</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">计量单位</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">代码</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">数量</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">甲</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">计量单位</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">代码</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">数量</th>
+                                            </tr>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium"></th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">乙</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">丙</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">1</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium"></th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">乙</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">丙</th>
+                                                <th class="border border-gray-800 px-3 py-2 text-center text-xs font-medium">1</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- 一、研究开发人员情况 -->
+                                            <tr class="bg-gray-50">
+                                                <td class="border border-gray-800 px-3 py-2 text-sm font-medium" colspan="4">一、研究开发人员情况</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm font-medium" colspan="4">五、企业办研究开发机构（境内）情况</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">研究开发人员合计</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">1</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">65</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">机构数合计</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">个</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">22</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">3</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">其中：管理和服务人员</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">2</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">8</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">机构研究开发人员</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">23</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">45</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">其中：女性</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">3</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">25</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">博士毕业</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">24</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">8</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">其中：全职人员</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">4</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">40</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">硕士毕业</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">25</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">15</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">其中：本科及以上人员</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">5</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">55</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">机构研究开发费用</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">26</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">8500</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">其中：本科毕业及以上人员</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">6</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">50</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">机构仪器和设备原价</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">27</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">12000</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">其中：外籍人员</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">人</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">7</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">3</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm font-medium" colspan="4">六、研究开发产出及相关情况</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm font-medium" colspan="4">二、研究开发费用情况</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">（一）专利情况</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">研究开发费用合计</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">8</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">13500</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">当年专利申请数</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">件</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">28</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">12</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">1.人员人工费用</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">9</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">4500</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">其中：发明专利</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">件</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">29</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">8</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">2.直接投入费用</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">10</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">2800</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">期末有效发明专利数</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">件</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">30</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">35</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">3.折旧费用与长期待摊费用</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">11</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">1500</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">其中：已实施</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">件</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">31</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">28</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">4.无形资产摊销费用</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">12</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">800</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">专利所有权转让及许可数</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">件</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">32</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">5</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">5.设计费用</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">13</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">1200</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">专利所有权转让及许可收入</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">33</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">1500</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">6.装备调试费用与试验费用</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">14</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">900</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">（二）新产品情况</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">7.委托外部研究开发费用</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">15</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">1200</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">新产品销售收入</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">34</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">85000</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">①委托境内研究机构</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">16</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">400</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">#新产品出口</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">35</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">25000</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">②委托境内高等学校</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">17</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">500</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">（三）其他情况</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">③委托境内企业</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">18</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">300</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">#拥有注册商标数</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">件</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">36</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">25</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">8.其他费用</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">19</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">1600</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">发表科技论文</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">篇</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">40</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">15</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm font-medium" colspan="4">三、研究开发资产情况</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">形成国家或行业标准</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">项</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">41</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">8</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">当年形成用于研究开发的固定资产</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">20</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">5000</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm font-medium" colspan="4">七、其他相关情况</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">其中：仪器和设备</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">21</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">3500</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">（一）技术改造和技术获取情况</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm font-medium" colspan="4">四、研究开发资金来源</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">技术改造经费支出</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">46</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">3000</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">1.来自企业自身</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">33</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">10400</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">购买境内技术经费支出</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">47</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">1200</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">2.来自政府部门</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">34</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">3100</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">引进境外技术经费支出</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">48</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">800</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">3.来自金融机构</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">35</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">0</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">引进境外技术的消化吸收经费支出</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">49</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">500</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">4.来自风险投资</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">36</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">0</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm font-medium" colspan="4">（三）企业办研究开发机构（境外）情况</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">5.来自其他渠道</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">37</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">0</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">期末企业在境外设立的研究开发机构数</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">个</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">50</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">2</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm font-medium" colspan="4">五、政府及相关政策落实情况</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">申报加计扣除政策的研究开发支出</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">38</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">13500</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">研究开发费用加计扣除减免税额</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">39</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">2025</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm">高新技术企业减免税额</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">千元</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">44</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm">3375</td>
+                                                <td class="border border-gray-800 px-3 py-1 text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                                <td class="border border-gray-800 px-3 py-1 text-center text-sm"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- 底部信息 -->
+                                <div class="mt-6 flex justify-between items-center">
+                                    <div class="flex space-x-8">
+                                        <p><span class="font-medium">单位负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">统计负责人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">填表人：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                        <p><span class="font-medium">联系电话：</span><span class="border-b border-gray-400 px-4"></span></p>
+                                    </div>
+                                    <p><span class="font-medium">报出日期：</span>20 年 月 日</p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- R&D统计辅助账汇总表 -->
                         <div id="rd-summary" class="tab-pane hidden">
                             <div class="mb-4 bg-white p-4 rounded-lg border border-gray-200">
@@ -1052,6 +1629,8 @@
             const subMenu = element.nextElementSibling;
             const arrow = element.querySelector('.menu-arrow');
             
+            if (!subMenu || !arrow) return;
+            
             if (subMenu.classList.contains('collapsed')) {
                 subMenu.classList.remove('collapsed');
                 arrow.classList.remove('collapsed');
@@ -1074,6 +1653,8 @@
                 button.addEventListener('click', function() {
                     const tabId = this.getAttribute('data-tab');
                     const tabPane = document.getElementById(tabId);
+                    
+                    if (!tabPane) return;
                     
                     // 隐藏所有标签页内容
                     document.querySelectorAll('.tab-pane').forEach(pane => {
@@ -1104,6 +1685,8 @@
                 const activeTab = document.querySelector('.tab-pane:not(.hidden)');
                 const activeTabId = activeTab ? activeTab.id : 'rd-detail';
                 const tabTitleMap = {
+                    'rd-main': '企业研发项目情况表【R&D 107-1】',
+                    'rd-activity': '企业研发活动及相关情况表【R&D 107-2】',
                     'rd-detail': 'R&D统计辅助账明细表',
                     'rd-summary': 'R&D统计辅助账汇总表',
                     'rd-structure': 'R&D经费结构分析表'
@@ -1122,6 +1705,8 @@
                 }
                 
                 const tabTitleMap = {
+                    'rd-main': '企业研发项目情况表【R&D 107-1】',
+                    'rd-activity': '企业研发活动及相关情况表【R&D 107-2】',
                     'rd-detail': 'R&D统计辅助账明细表',
                     'rd-summary': 'R&D统计辅助账汇总表',
                     'rd-structure': 'R&D经费结构分析表'

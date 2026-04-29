@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加资产 - 研知π</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        accent: '#6366f1',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        info: '#3b82f6',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .nav-item-active {
+                @apply bg-primary text-white;
+            }
+            .nav-item-hover {
+                @apply hover:bg-blue-100 transition-colors duration-200;
+            }
+        }
+    </style>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover {
+            transform: translateX(4px);
+        }
+        .nav-item.active {
+            border-left: 4px solid #3b82f6;
+        }
+        .menu-toggle {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-toggle:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        .sub-menu {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .sub-menu.collapsed {
+            max-height: 0;
+        }
+        .menu-arrow {
+            transition: transform 0.3s ease;
+        }
+        .menu-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .stat-card {
+            transition: all 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: scale(1.02);
+        }
+        .table-row-hover:hover {
+            @apply bg-gray-50;
+        }
+    </style>
+    <script>
+        // 导航菜单折叠/展开功能
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const menuArrow = element.querySelector('.menu-arrow');
+            
+            if (subMenu) {
+                subMenu.classList.toggle('collapsed');
+                menuArrow.classList.toggle('collapsed');
+            }
+        }
+        
+        // 页面加载功能
+        function loadPage(page) {
+            window.location.href = page;
+        }
+        
+        // 移动端菜单切换
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.w-64');
+            sidebar.classList.toggle('hidden');
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-x-auto">
+        <!-- 左侧导航栏 -->
+        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto" style="max-height: 100vh;">
+            <!-- 系统标题 -->
+            <div class="p-4 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-primary flex items-center">
+                    <i class="fa fa-cogs mr-2"></i>
+                    <span>研知π</span>
+                </h1>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="mt-4">
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu" id="project-submenu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目要素</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>阶段审核</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('progress-tracking.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>阶段跟踪</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-personnel.html')">
+                                    <i class="fa fa-users w-6"></i>
+                                    <span>项目人员</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-equipment.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>研发设备</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('design-project-management.html')">
+                                    <i class="fa fa-paint-brush w-6"></i>
+                                    <span>设计项目管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-users w-6"></i>
+                                <span>人事管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>人员管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
+                                    <i class="fa fa-briefcase w-6"></i>
+                                    <span>岗位管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('department.html')">
+                                    <i class="fa fa-sitemap w-6"></i>
+                                    <span>部门管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-salary.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>人员工资管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资产管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
+                                    <i class="fa fa-cog w-6"></i>
+                                    <span>资产信息管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
+                                    <i class="fa fa-bolt w-6"></i>
+                                    <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-usage-record.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>无形资产使用记录</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cogs w-6"></i>
+                                <span>费用归集</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('cost-allocation.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>费用归集管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('labor-cost-allocation.html')">
+                                    <i class="fa fa-users w-6"></i>
+                                    <span>人工费归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-depreciation-allocation.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>设备折旧归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-cost-allocation.html')">
+                                    <i class="fa fa-cubes w-6"></i>
+                                    <span>直接投入归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('test-cost-allocation.html')">
+                                    <i class="fa fa-flask w-6"></i>
+                                    <span>试验费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-cost-allocation.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>无形资产摊销</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('consult-cost-allocation.html')">
+                                    <i class="fa fa-comments w-6"></i>
+                                    <span>咨询费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-cost-allocation.html')">
+                                    <i class="fa fa-ellipsis-h w-6"></i>
+                                    <span>其他费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('outsourced-rd-contract-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>委托研发合同管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-related-expenses.html')">
+                                    <i class="fa fa-ellipsis-h w-6"></i>
+                                    <span>其他相关费用</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-clock-o w-6"></i>
+                                <span>研发工时</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-attendance.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>人员考勤表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-work-hour-record.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>人员工时记录</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-work-hour-record.html')">
+                                    <i class="fa fa-cog w-6"></i>
+                                    <span>设备工时记录</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-project-allocation.html')">
+                                    <i class="fa fa-share-alt w-6"></i>
+                                    <span>人员工时分配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-project-allocation.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>设备工时分配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-allocation.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>工时分配管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-group-management.html')">
+                                    <i class="fa fa-th-large w-6"></i>
+                                    <span>设备组管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cube w-6"></i>
+                                <span>物料管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>物料信息管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
+                                    <i class="fa fa-trash w-6"></i>
+                                    <span>物料报废管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
+                                    <i class="fa fa-shopping-cart w-6"></i>
+                                    <span>项目领料管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-usage-statistics.html')">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>物料使用量统计</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-600" onclick="loadPage('pilot-production.html')">
+                            <i class="fa fa-industry w-6"></i>
+                            <span>试生产管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-shield w-6"></i>
+                                <span>合规管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('compliance-check.html')">
+                                    <i class="fa fa-check-square-o w-6"></i>
+                                    <span>合规检查</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('tax-deduction.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>税收减免</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('high-tech-cert.html')">
+                                    <i class="fa fa-certificate w-6"></i>
+                                    <span>高科技认证</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-600" onclick="loadPage('data-analysis.html')">
+                            <i class="fa fa-bar-chart w-6"></i>
+                            <span>数据分析</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-file-text-o w-6"></i>
+                                <span>多口径报表</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>财务加计扣除</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="hi-tech-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-certificate w-6"></i>
+                                    <span>高企认定</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="accounting-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-book w-6"></i>
+                                    <span>会计口径</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-flask w-6"></i>
+                                    <span>R&D统计</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="ipo-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>IPO审查</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="generate-account-table.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-magic w-6"></i>
+                                    <span>账套表生成</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-cubes w-6"></i>
+                                <span>资源管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour.html')">
+                                    <i class="fa fa-clock-o w-6"></i>
+                                    <span>工时费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intellectual-property.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>知识产权维护</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-bar-chart w-6"></i>
+                                    <span>多口径报表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('reference-materials.html')">
+                                    <i class="fa fa-folder-o w-6"></i>
+                                    <span>备查资料</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('policy.html')">
+                                    <i class="fa fa-book w-6"></i>
+                                    <span>政策查询</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('intangible.html')">
+                            <i class="fa fa-lightbulb-o w-6"></i>
+                            <span>无形资产管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-file-text w-6"></i>
+                                <span>凭证管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-import.html')">
+                                    <i class="fa fa-upload w-6"></i>
+                                    <span>凭证导入</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-matching.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>凭证匹配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('import-history.html')">
+                                    <i class="fa fa-history w-6"></i>
+                                    <span>导入历史</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('matching-rules.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>匹配规则设置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-list.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>序时记账凭证一览表</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-building w-6"></i>
+                                <span>企业档案</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('enterprise-info.html')">
+                                    <i class="fa fa-info-circle w-6"></i>
+                                    <span>企业基础信息维护</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('user.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>用户管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('role.html')">
+                                    <i class="fa fa-shield w-6"></i>
+                                    <span>角色管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-database w-6"></i>
+                                <span>系统设置</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-type.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>费用类型管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('allocation-rule.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>分摊规则配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('deduction-policy.html')">
+                                    <i class="fa fa-calculator w-6"></i>
+                                    <span>加计扣除政策配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('finance-policy.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>财务核算口径配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-bolt w-6"></i>
+                                    <span>能源价格管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('settings.html')">
+                            <i class="fa fa-cog w-6"></i>
+                            <span>设置</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('profile.html')">
+                            <i class="fa fa-user w-6"></i>
+                            <span>个人资料</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- 右侧主内容区域 -->
+        <div class="flex-1 flex flex-col">
+            <!-- 顶部信息栏 -->
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+                <div class="flex items-center">
+                    <button class="text-gray-500 hover:text-gray-700 mr-4 md:hidden" onclick="toggleMobileMenu()">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <h2 id="page-title" class="text-lg font-medium text-gray-800">添加资产</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center" onclick="window.location.href='asset-management.html'">
+                        <i class="fa fa-arrow-left mr-2"></i> 返回资产列表
+                    </button>
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-bell"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
+                        <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- 主内容 -->
+            <main class="flex-1 overflow-auto p-6">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">基本信息</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">资产编号 <span class="text-red-500">*</span></label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="例如：AST-2026-001">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">资产名称 <span class="text-red-500">*</span></label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入资产名称">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">资产类型 <span class="text-red-500">*</span></label>
+                                    <select id="assetType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="updateAssetForm()">
+                                        <option value="">请选择资产类型</option>
+                                        <option value="fixed">固定资产</option>
+                                        <option value="intangible">无形资产</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">购置日期 <span class="text-red-500">*</span></label>
+                                    <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">资产原值 <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入资产原值" min="0">
+                                </div>
+                                <div id="depreciationField">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">月折旧额 <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" placeholder="请输入月折旧额" min="0" readonly>
+                                    <p class="mt-1 text-xs text-gray-500">公式：月折旧额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
+                                </div>
+                                <div id="amortizationField" class="hidden">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">月摊销额 <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" placeholder="请输入月摊销额" min="0" readonly>
+                                    <p class="mt-1 text-xs text-gray-500">公式：月摊销额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="depreciationInfo">
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">折旧信息</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">折旧方法 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="straight">直线法</option>
+                                        <option value="accelerated">加速折旧法</option>
+                                        <option value="sum_of_years">年数总和法</option>
+                                        <option value="double_declining">双倍余额递减法</option>
+                                    </select>
+                                    <div class="mt-2 text-xs text-gray-500 space-y-1">
+                                        <p><strong>直线法：</strong>月折旧额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
+                                        <p><strong>年数总和法：</strong>年折旧率 = 剩余使用年限 / 年数总和，年折旧额 = (资产原值 - 预计残值) × 年折旧率，月折旧额 = 年折旧额 / 12</p>
+                                        <p><strong>双倍余额递减法：</strong>年折旧率 = 2 / 预计使用年限 × 100%，年折旧额 = 年初固定资产净值 × 年折旧率，月折旧额 = 年折旧额 / 12（最后两年改为直线法）</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">预计使用年限（年） <span class="text-red-500">*</span></label>
+                                    <input type="number" id="usefulLife" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3" min="1" onchange="calculateDepreciationEndDate()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">预计残值率（%） <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="5" min="0" max="100">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">折旧截止日期</label>
+                                    <input type="date" id="depreciationEndDate" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" readonly>
+                                    <p class="mt-1 text-xs text-gray-500">根据购置日期和预计使用年限自动计算</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="amortizationInfo" class="hidden">
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">摊销信息</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">摊销方法 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="straight">直线法</option>
+                                    </select>
+                                    <div class="mt-2 text-xs text-gray-500 space-y-1">
+                                        <p><strong>直线法：</strong>月摊销额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">预计使用年限（年） <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="10" min="1">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">预计残值率（%） <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="0" min="0" max="100">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">其他信息</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">所属部门 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择部门</option>
+                                        <option value="rd">研发部</option>
+                                        <option value="it">IT部</option>
+                                        <option value="finance">财务部</option>
+                                        <option value="admin">行政部</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">资产状态 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择资产状态</option>
+                                        <option value="in_use">正常使用中</option>
+                                        <option value="depreciating">折旧中</option>
+                                        <option value="depreciated">已折旧完毕</option>
+                                        <option value="scrapped">已报废</option>
+                                    </select>
+                                    <p class="mt-1 text-xs text-gray-500">备注：到了折旧截止日期，资产状态为"已折旧完毕"；未到折旧截止日期为"折旧中"；"正常使用中"适用于无需折旧的资产（如低值易耗品等）。</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">设备属性 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择设备属性</option>
+                                        <option value="production">生产设备（生产+研发共用）</option>
+                                        <option value="rd_only">研发专用</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">项目属性 <span class="text-red-500">*</span></label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">请选择项目属性</option>
+                                        <option value="single_project">单项目专用</option>
+                                        <option value="multi_project">多项目共用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2" id="energyConsumptionField">
+                            <h4 class="text-sm font-medium text-gray-500 mb-3">能源消耗信息</h4>
+                            
+                            <!-- 电力 -->
+                            <div class="mb-4 p-4 border border-gray-200 rounded-md">
+                                <div class="flex items-center mb-3">
+                                    <input type="checkbox" id="energyTypeElectricity" class="mr-2">
+                                    <label for="energyTypeElectricity" class="font-medium">电力</label>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">能耗计量方式 <span class="text-red-500">*</span></label>
+                                        <select id="electricityMeteringMethod" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="toggleRatedConsumptionField(this, 'electricityRatedConsumptionField')">
+                                            <option value="">请选择能耗计量方式</option>
+                                            <option value="direct">直接计量</option>
+                                            <option value="quota">定额分配</option>
+                                        </select>
+                                    </div>
+                                    <div id="electricityRatedConsumptionField" class="hidden">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">额定能耗率 <span class="text-red-500">*</span></label>
+                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="例如：55" min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">能耗单位 <span class="text-red-500">*</span></label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                            <option value="kwh">度/小时</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 柴油 -->
+                            <div class="mb-4 p-4 border border-gray-200 rounded-md">
+                                <div class="flex items-center mb-3">
+                                    <input type="checkbox" id="energyTypeDiesel" class="mr-2">
+                                    <label for="energyTypeDiesel" class="font-medium">柴油</label>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">能耗计量方式 <span class="text-red-500">*</span></label>
+                                        <select id="dieselMeteringMethod" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="toggleRatedConsumptionField(this, 'dieselRatedConsumptionField')">
+                                            <option value="">请选择能耗计量方式</option>
+                                            <option value="direct">直接计量</option>
+                                            <option value="quota">定额分配</option>
+                                        </select>
+                                    </div>
+                                    <div id="dieselRatedConsumptionField" class="hidden">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">额定能耗率 <span class="text-red-500">*</span></label>
+                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="例如：12" min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">能耗单位 <span class="text-red-500">*</span></label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                            <option value="l">升/小时</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 天然气 -->
+                            <div class="mb-4 p-4 border border-gray-200 rounded-md">
+                                <div class="flex items-center mb-3">
+                                    <input type="checkbox" id="energyTypeNaturalGas" class="mr-2">
+                                    <label for="energyTypeNaturalGas" class="font-medium">天然气</label>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">能耗计量方式 <span class="text-red-500">*</span></label>
+                                        <select id="naturalGasMeteringMethod" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="toggleRatedConsumptionField(this, 'naturalGasRatedConsumptionField')">
+                                            <option value="">请选择能耗计量方式</option>
+                                            <option value="direct">直接计量</option>
+                                            <option value="quota">定额分配</option>
+                                        </select>
+                                    </div>
+                                    <div id="naturalGasRatedConsumptionField" class="hidden">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">额定能耗率 <span class="text-red-500">*</span></label>
+                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="例如：10" min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">能耗单位 <span class="text-red-500">*</span></label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                            <option value="m3">立方米/小时</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 蒸汽 -->
+                            <div class="mb-4 p-4 border border-gray-200 rounded-md">
+                                <div class="flex items-center mb-3">
+                                    <input type="checkbox" id="energyTypeSteam" class="mr-2">
+                                    <label for="energyTypeSteam" class="font-medium">蒸汽</label>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">能耗计量方式 <span class="text-red-500">*</span></label>
+                                        <select id="steamMeteringMethod" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="toggleRatedConsumptionField(this, 'steamRatedConsumptionField')">
+                                            <option value="">请选择能耗计量方式</option>
+                                            <option value="direct">直接计量</option>
+                                            <option value="quota">定额分配</option>
+                                        </select>
+                                    </div>
+                                    <div id="steamRatedConsumptionField" class="hidden">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">额定能耗率 <span class="text-red-500">*</span></label>
+                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="例如：5" min="0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">能耗单位 <span class="text-red-500">*</span></label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                            <option value="t">吨/小时</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end space-x-2">
+                        <button onclick="window.location.href='asset-management.html'" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                            取消
+                        </button>
+                        <button onclick="saveAsset()" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors">
+                            保存
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function loadPage(pageUrl) {
+            // 直接跳转到新页面
+            window.location.href = pageUrl;
+        }
+        
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+            
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+        }
+        
+        function saveAsset() {
+            // 表单验证
+            const assetCode = document.querySelector('input[placeholder="例如：AST-2026-001"]');
+            const assetName = document.querySelector('input[placeholder="请输入资产名称"]');
+            const assetType = document.getElementById('assetType');
+            const purchaseDate = document.querySelector('input[type="date"]');
+            const assetValue = document.querySelector('input[type="number"]:nth-of-type(1)');
+            const depreciationMethod = assetType.value === 'intangible' ? 
+                document.querySelector('#amortizationInfo select') : 
+                document.querySelector('#depreciationInfo select');
+            const usefulLife = assetType.value === 'intangible' ? 
+                document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(1)') : 
+                document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(1)');
+            const residualRate = assetType.value === 'intangible' ? 
+                document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(2)') : 
+                document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(2)');
+            const monthlyAmount = assetType.value === 'intangible' ? 
+                document.querySelector('#amortizationField input[type="number"]') : 
+                document.querySelector('#depreciationField input[type="number"]');
+            const department = document.querySelector('select:nth-of-type(3)');
+            
+            if (!assetCode.value) {
+                alert('请输入资产编号');
+                return;
+            }
+            if (!assetName.value) {
+                alert('请输入资产名称');
+                return;
+            }
+            if (!assetType.value) {
+                alert('请选择资产类型');
+                return;
+            }
+            if (!purchaseDate.value) {
+                alert('请选择购置日期');
+                return;
+            }
+            if (!assetValue.value || assetValue.value <= 0) {
+                alert('请输入有效的资产原值');
+                return;
+            }
+            if (!depreciationMethod.value) {
+                alert('请选择折旧方法');
+                return;
+            }
+            if (!usefulLife.value || usefulLife.value <= 0) {
+                alert('请输入有效的预计使用年限');
+                return;
+            }
+            if (!residualRate.value || residualRate.value < 0 || residualRate.value > 100) {
+                alert('请输入有效的预计残值率');
+                return;
+            }
+            if (!monthlyAmount.value || monthlyAmount.value < 0) {
+                alert('请输入有效的月折旧/摊销额');
+                return;
+            }
+            if (!department.value) {
+                alert('请选择所属部门');
+                return;
+            }
+            
+            // 构建资产对象
+            const assetData = {
+                code: assetCode.value,
+                name: assetName.value,
+                type: assetType.value,
+                purchaseDate: purchaseDate.value,
+                value: assetValue.value,
+                depreciationMethod: depreciationMethod.value,
+                usefulLife: usefulLife.value,
+                residualRate: residualRate.value,
+                monthlyAmount: monthlyAmount.value,
+                department: department.value
+            };
+            
+            console.log('保存的资产数据', assetData);
+            alert('资产保存成功！');
+            window.location.href = 'asset-management.html';
+        }
+        
+        // 更新资产表单字段
+        function updateAssetForm() {
+            const assetType = document.getElementById('assetType').value;
+            const depreciationField = document.getElementById('depreciationField');
+            const amortizationField = document.getElementById('amortizationField');
+            const depreciationInfo = document.getElementById('depreciationInfo');
+            const amortizationInfo = document.getElementById('amortizationInfo');
+            const energyConsumptionField = document.getElementById('energyConsumptionField');
+            
+            if (assetType === 'intangible') {
+                // 显示摊销字段，隐藏折旧字段和能源消耗字段
+                depreciationField.classList.add('hidden');
+                amortizationField.classList.remove('hidden');
+                depreciationInfo.classList.add('hidden');
+                amortizationInfo.classList.remove('hidden');
+                energyConsumptionField.classList.add('hidden');
+            } else if (assetType === 'fixed') {
+                // 显示折旧字段和能源消耗字段，隐藏摊销字段
+                depreciationField.classList.remove('hidden');
+                amortizationField.classList.add('hidden');
+                depreciationInfo.classList.remove('hidden');
+                amortizationInfo.classList.add('hidden');
+                energyConsumptionField.classList.remove('hidden');
+            } else {
+                // 都隐藏
+                depreciationField.classList.add('hidden');
+                amortizationField.classList.add('hidden');
+                depreciationInfo.classList.add('hidden');
+                amortizationInfo.classList.add('hidden');
+                energyConsumptionField.classList.add('hidden');
+            }
+            
+            // 重新计算
+            calculateMonthlyDepreciation();
+        }
+        
+        // 根据能耗计量方式切换额定能耗率字段显示
+        function toggleRatedConsumptionField(selectElement, fieldId) {
+            const ratedConsumptionField = document.getElementById(fieldId);
+
+            if (selectElement.value === 'quota') {
+                ratedConsumptionField.classList.remove('hidden');
+            } else {
+                ratedConsumptionField.classList.add('hidden');
+            }
+        }
+        
+        // 计算月折旧额或月摊销额
+        function calculateMonthlyDepreciation() {
+            const assetType = document.getElementById('assetType').value;
+            const assetValue = parseFloat(document.querySelector('input[type="number"]:nth-of-type(1)').value) || 0;
+            const usefulLifeInput = assetType === 'intangible' ? 
+                document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(1)') : 
+                document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(1)');
+            const residualRateInput = assetType === 'intangible' ? 
+                document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(2)') : 
+                document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(2)');
+            
+            const usefulLife = usefulLifeInput ? parseFloat(usefulLifeInput.value) || 0 : 0;
+            const residualRate = residualRateInput ? parseFloat(residualRateInput.value) || 0 : 0;
+            
+            let monthlyAmount = 0;
+            if (assetValue > 0 && usefulLife > 0) {
+                const residualValue = assetValue * (residualRate / 100);
+                const depreciableAmount = assetValue - residualValue;
+                monthlyAmount = depreciableAmount / (usefulLife * 12);
+            }
+            
+            // 更新相应字段
+            if (assetType === 'intangible') {
+                document.querySelector('#amortizationField input[type="number"]').value = monthlyAmount.toFixed(2);
+            } else {
+                document.querySelector('#depreciationField input[type="number"]').value = monthlyAmount.toFixed(2);
+            }
+        }
+        
+        // 计算折旧截止日期
+        function calculateDepreciationEndDate() {
+            const purchaseDateInput = document.querySelector('input[type="date"]');
+            const usefulLifeInput = document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(1)');
+            const depreciationEndDateInput = document.getElementById('depreciationEndDate');
+            
+            if (purchaseDateInput && usefulLifeInput && depreciationEndDateInput) {
+                const purchaseDate = new Date(purchaseDateInput.value);
+                const usefulLife = parseFloat(usefulLifeInput.value) || 0;
+                
+                if (purchaseDate && !isNaN(purchaseDate.getTime()) && usefulLife > 0) {
+                    // 计算截止日期：购置日期 + 预计使用年限
+                    const endDate = new Date(purchaseDate);
+                    endDate.setFullYear(endDate.getFullYear() + usefulLife);
+                    
+                    // 格式化日期为YYYY-MM-DD
+                    const year = endDate.getFullYear();
+                    const month = String(endDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(endDate.getDate()).padStart(2, '0');
+                    const formattedDate = `${year}-${month}-${day}`;
+                    
+                    depreciationEndDateInput.value = formattedDate;
+                } else {
+                    depreciationEndDateInput.value = '';
+                }
+            }
+        }
+        
+        // 为相关字段添加事件监听器
+        document.addEventListener('DOMContentLoaded', function() {
+            const assetValueInput = document.querySelector('input[type="number"]:nth-of-type(1)');
+            const purchaseDateInput = document.querySelector('input[type="date"]');
+            const depreciationUsefulLifeInput = document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(1)');
+            const depreciationResidualRateInput = document.querySelector('#depreciationInfo input[type="number"]:nth-of-type(2)');
+            const amortizationUsefulLifeInput = document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(1)');
+            const amortizationResidualRateInput = document.querySelector('#amortizationInfo input[type="number"]:nth-of-type(2)');
+            
+            if (assetValueInput) {
+                assetValueInput.addEventListener('input', calculateMonthlyDepreciation);
+            }
+            if (depreciationUsefulLifeInput) {
+                depreciationUsefulLifeInput.addEventListener('input', function() {
+                    calculateMonthlyDepreciation();
+                    calculateDepreciationEndDate();
+                });
+            }
+            if (depreciationResidualRateInput) {
+                depreciationResidualRateInput.addEventListener('input', calculateMonthlyDepreciation);
+            }
+            if (amortizationUsefulLifeInput) {
+                amortizationUsefulLifeInput.addEventListener('input', calculateMonthlyDepreciation);
+            }
+            if (amortizationResidualRateInput) {
+                amortizationResidualRateInput.addEventListener('input', calculateMonthlyDepreciation);
+            }
+            if (purchaseDateInput) {
+                purchaseDateInput.addEventListener('change', calculateDepreciationEndDate);
+            }
+        });
+    </script>
+</body>
+</html>
