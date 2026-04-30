@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>设备折旧归集 - 研发费用管理系统</title>
+    <title>折旧与长期待摊费用归集 - 研发费用管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -267,7 +267,7 @@
                     <li>
                         <a href="javascript:void(0)" class="nav-item active nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-depreciation-allocation.html')">
                             <i class="fa fa-cogs w-6"></i>
-                            <span>设备折旧归集</span>
+                            <span>折旧与长期待摊费用归集</span>
                         </a>
                     </li>
                     <li>
@@ -386,9 +386,9 @@
                         <i class="fa fa-chevron-right text-xs"></i>
                         <span>费用归集</span>
                         <i class="fa fa-chevron-right text-xs"></i>
-                        <span class="text-primary font-medium">设备折旧归集</span>
+                        <span class="text-primary font-medium">折旧与长期待摊费用归集</span>
                     </div>
-                    <h1 class="text-2xl font-bold text-gray-800">设备折旧归集</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">折旧与长期待摊费用归集</h1>
                 </div>
 
                 <!-- 筛选条件区域 -->
@@ -422,13 +422,11 @@
 
                         <!-- 设备类型 -->
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-700">设备类型：</span>
-                            <select id="filterEquipmentType" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
+                            <span class="text-sm text-gray-700">归集类型：</span>
+                            <select id="filterAllocationType" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
                                 <option value="">全部类型</option>
-                                <option value="数控机床">数控机床</option>
-                                <option value="3D打印机">3D打印机</option>
-                                <option value="光谱分析仪">光谱分析仪</option>
-                                <option value="其他设备">其他设备</option>
+                                <option value="equipment">设备折旧</option>
+                                <option value="longTerm">长期待摊费用归集</option>
                             </select>
                         </div>
 
@@ -563,11 +561,27 @@
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(5)">查看详情</a>
                                     </td>
                                 </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">6</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">长期待摊费用归集</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">智能传感器研发</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 3,333</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 12:00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">王五</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(6)">查看详情</a>
+                                    </td>
+                                </tr>
                             </tbody>
                             <tfoot class="bg-gray-50">
                                 <tr>
                                     <td colspan="4" class="px-6 py-4 text-right text-sm font-medium text-gray-700">合计：</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">¥ 51,000</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">¥ 54,333</td>
                                     <td colspan="3"></td>
                                 </tr>
                             </tfoot>
@@ -577,7 +591,7 @@
                     <!-- 分页 -->
                     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
                         <div class="text-sm text-gray-700">
-                            显示 1 到 5 条，共 <span id="totalRecords">10</span> 条记录
+                            显示 1 到 6 条，共 <span id="totalRecords">11</span> 条记录
                         </div>
                         <div class="flex items-center space-x-2">
                             <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50" disabled>上一页</button>
@@ -592,11 +606,11 @@
         </main>
     </div>
 
-    <!-- 设备折旧归集模态框 -->
+    <!-- 折旧与长期待摊费用归集模态框 -->
     <div id="allocationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold text-gray-900">设备折旧归集</h3>
+                <h3 class="text-xl font-semibold text-gray-900">折旧与长期待摊费用归集</h3>
                 <button onclick="closeAllocationModal()" class="text-gray-400 hover:text-gray-500">
                     <i class="fa fa-times text-xl"></i>
                 </button>
@@ -633,13 +647,17 @@
                     <input type="month" id="allocationMonth" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                 </div>
 
-                <!-- 折旧费用类型 -->
+                <!-- 费用类型 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">折旧费用类型</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">费用类型</label>
                     <div class="space-y-2 ml-4">
                         <div class="flex items-center">
-                            <input type="checkbox" id="allocateDepreciation" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                            <label for="allocateDepreciation" class="ml-2 text-sm text-gray-700">设备折旧</label>
+                            <input type="radio" id="allocateEquipment" name="costType" value="equipment" class="h-4 w-4 text-primary focus:ring-primary border-gray-300" checked>
+                            <label for="allocateEquipment" class="ml-2 text-sm text-gray-700">设备折旧</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="allocateLongTerm" name="costType" value="longTerm" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                            <label for="allocateLongTerm" class="ml-2 text-sm text-gray-700">长期待摊费用</label>
                         </div>
                     </div>
                 </div>
@@ -666,11 +684,11 @@
         </div>
     </div>
 
-    <!-- 设备折旧详情模态框 -->
+    <!-- 归集详情模态框 -->
     <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold text-gray-900">设备折旧详情</h3>
+                <h3 class="text-xl font-semibold text-gray-900">归集详情</h3>
                 <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-500">
                     <i class="fa fa-times text-xl"></i>
                 </button>
@@ -779,7 +797,7 @@
             const project = document.getElementById('allocationProject').value;
             const department = document.getElementById('allocationDepartment').value;
             const month = document.getElementById('allocationMonth').value;
-            const depreciationChecked = document.getElementById('allocateDepreciation').checked;
+            const costType = document.querySelector('input[name="costType"]:checked').value;
             const method = document.getElementById('allocationMethod').value;
 
             // 验证必填项
@@ -791,8 +809,8 @@
                 showMessage('请选择月份', 'error');
                 return;
             }
-            if (!depreciationChecked) {
-                showMessage('请选择设备折旧', 'error');
+            if (!costType) {
+                showMessage('请选择费用类型', 'error');
                 return;
             }
             if (!method) {
@@ -813,7 +831,7 @@
                     showMessage('保存失败：系统暂时无法处理请求，请稍后重试', 'error');
                 } else {
                     // 保存成功
-                    showMessage('设备折旧归集成功', 'success');
+                    showMessage('归集成功', 'success');
                     setTimeout(() => {
                         closeAllocationModal();
                         // 刷新列表（实际项目中可实现）
