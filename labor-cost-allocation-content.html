@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人工费归集</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f3f4f6;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+                <!-- 筛选条件区域 -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <!-- 时间范围 -->
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-700">时间范围：</span>
+                            <label class="flex items-center">
+                                <input type="radio" name="timeRange" value="month" checked class="mr-1">
+                                <span class="text-sm">按月</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="timeRange" value="year" class="mr-1">
+                                <span class="text-sm">年</span>
+                            </label>
+                            <input type="month" id="filterMonth" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+
+                        <!-- 项目名称 -->
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-700">项目名称：</span>
+                            <select id="filterProject" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
+                                <option value="">全部项目</option>
+                                <option value="智能传感器研发">智能传感器研发</option>
+                                <option value="工业机器人控制系统">工业机器人控制系统</option>
+                                <option value="新能源材料研究">新能源材料研究</option>
+                                <option value="高精度数控机床">高精度数控机床</option>
+                            </select>
+                        </div>
+
+                        <!-- 部门 -->
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-700">部门：</span>
+                            <select id="filterDepartment" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
+                                <option value="">全部部门</option>
+                                <option value="研发部">研发部</option>
+                                <option value="技术部">技术部</option>
+                                <option value="生产部">生产部</option>
+                                <option value="质量部">质量部</option>
+                            </select>
+                        </div>
+
+                        <!-- 操作按钮 -->
+                        <div class="flex items-center space-x-2">
+                            <button class="bg-blue-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition-colors">
+                                <i class="fa fa-search mr-1"></i>查询
+                            </button>
+                            <button class="bg-gray-300 text-gray-700 px-4 py-1.5 rounded-md text-sm hover:bg-gray-400 transition-colors">
+                                <i class="fa fa-refresh mr-1"></i>重置
+                            </button>
+                            <button class="bg-blue-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition-colors" onclick="openLaborAllocationModal()">
+                                <i class="fa fa-cogs mr-1"></i>开始归集
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 归集记录表格 -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-800">归集记录</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        序号
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        归集类型
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        归集月份
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        归集项目
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        归集金额
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        归集时间
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        操作人
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">人工费 - 应发工资</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">智能传感器研发</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 450,000</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewLaborDetail(1)">查看详情</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">人工费 - 五险一金</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">智能传感器研发</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 135,000</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewLaborDetail(2)">查看详情</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">人工费 - 劳务费</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">智能传感器研发</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 45,000</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">王五</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewLaborDetail(3)">查看详情</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">4</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">人工费 - 应发工资</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">工业机器人控制系统</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 380,000</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 11:15</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewLaborDetail(4)">查看详情</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">人工费 - 五险一金</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">工业机器人控制系统</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 114,000</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 11:15</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewLaborDetail(5)">查看详情</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="bg-gray-50">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-right text-sm font-medium text-gray-700">合计：</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">¥ 1,124,000</td>
+                                    <td colspan="3"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- 分页 -->
+                    <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                        <div class="text-sm text-gray-700">
+                            显示 1 到 5 条，共 10 条记录
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50" disabled>上一页</button>
+                            <button class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm">1</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50">2</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50">3</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50">下一页</button>
+                        </div>
+                    </div>
+                </div>
+<!-- 归集模态框 -->
+    <div id="allocationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="z-index: 1000;">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl" style="max-height: 60vh;">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-xl font-semibold text-gray-900">人工费归集</h3>
+                <button onclick="closeAllocationModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="p-4" style="max-height: 35vh; overflow-y: auto;">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">选择归集项目</label>
+                        <select id="allocationProject" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                            <option value="">请选择项目</option>
+                            <option value="智能传感器研发">智能传感器研发</option>
+                            <option value="工业机器人控制系统">工业机器人控制系统</option>
+                            <option value="新能源材料研究">新能源材料研究</option>
+                            <option value="高精度数控机床">高精度数控机床</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">选择部门</label>
+                        <select id="allocationDepartment" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                            <option value="">请选择部门</option>
+                            <option value="研发部">研发部</option>
+                            <option value="生产部">生产部</option>
+                            <option value="技术部">技术部</option>
+                            <option value="质量部">质量部</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">选择月份</label>
+                        <input type="month" id="allocationMonth" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">归集方式</label>
+                        <select id="allocationMethod" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                            <option value="manual">手动分配</option>
+                            <option value="auto">自动分配</option>
+                            <option value="import">导入分配</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">费用类型</label>
+                        <div class="flex space-x-6">
+                            <label class="flex items-center">
+                                <input type="radio" name="costType" value="salary" checked class="mr-2">
+                                <span class="text-sm">应发工资</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="costType" value="insurance" class="mr-2">
+                                <span class="text-sm">五险一金</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="costType" value="service" class="mr-2">
+                                <span class="text-sm">劳务费</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeAllocationModal()" class="px-5 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">取消</button>
+                <button onclick="saveAllocation()" class="px-5 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 归集详情模态框 -->
+    <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-900">归集详情</h3>
+                <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">归集类型</label>
+                        <p class="text-gray-900" id="detailType">人工费 - 应发工资</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">归集月份</label>
+                        <p class="text-gray-900" id="detailMonth">2024-04</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">归集项目</label>
+                        <p class="text-gray-900" id="detailProject">智能传感器研发</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">部门</label>
+                        <p class="text-gray-900" id="detailDepartment">研发部</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">归集金额</label>
+                        <p class="text-gray-900" id="detailAmount">¥ 450,000</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">操作人</label>
+                        <p class="text-gray-900" id="detailOperator">张三</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-4">人工费明细</label>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">姓名</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">岗位</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">应发工资</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">五险一金</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">个税</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">实发工资</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="detailTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button onclick="closeDetailModal()" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const laborCostDetails = {
+            1: {
+                type: '人工费 - 应发工资',
+                month: '2024-04',
+                project: '智能传感器研发',
+                department: '研发部',
+                amount: '¥ 450,000',
+                operator: '张三',
+                items: [
+                    { name: '张三', position: '高级工程师', salary: 30000, insurance: 6000, tax: 1500, netSalary: 22500 },
+                    { name: '李四', position: '工程师', salary: 20000, insurance: 4000, tax: 800, netSalary: 15200 },
+                    { name: '王五', position: '技术员', salary: 15000, insurance: 3000, tax: 500, netSalary: 11500 }
+                ]
+            },
+            2: {
+                type: '人工费 - 五险一金',
+                month: '2024-04',
+                project: '智能传感器研发',
+                department: '研发部',
+                amount: '¥ 135,000',
+                operator: '李四',
+                items: [
+                    { name: '张三', position: '高级工程师', salary: 30000, insurance: 6000, tax: 1500, netSalary: 22500 },
+                    { name: '李四', position: '工程师', salary: 20000, insurance: 4000, tax: 800, netSalary: 15200 },
+                    { name: '王五', position: '技术员', salary: 15000, insurance: 3000, tax: 500, netSalary: 11500 }
+                ]
+            },
+            3: {
+                type: '人工费 - 劳务费',
+                month: '2024-04',
+                project: '智能传感器研发',
+                department: '研发部',
+                amount: '¥ 45,000',
+                operator: '王五',
+                items: [
+                    { name: '赵六', position: '外部专家', salary: 45000, insurance: 0, tax: 5000, netSalary: 40000 }
+                ]
+            },
+            4: {
+                type: '人工费 - 应发工资',
+                month: '2024-04',
+                project: '工业机器人控制系统',
+                department: '技术部',
+                amount: '¥ 380,000',
+                operator: '张三',
+                items: [
+                    { name: '陈七', position: '高级工程师', salary: 25000, insurance: 5000, tax: 1200, netSalary: 18800 },
+                    { name: '周八', position: '工程师', salary: 18000, insurance: 3600, tax: 700, netSalary: 13700 }
+                ]
+            },
+            5: {
+                type: '人工费 - 五险一金',
+                month: '2024-04',
+                project: '工业机器人控制系统',
+                department: '技术部',
+                amount: '¥ 114,000',
+                operator: '李四',
+                items: [
+                    { name: '陈七', position: '高级工程师', salary: 25000, insurance: 5000, tax: 1200, netSalary: 18800 },
+                    { name: '周八', position: '工程师', salary: 18000, insurance: 3600, tax: 700, netSalary: 13700 }
+                ]
+            }
+        };
+
+        function openLaborAllocationModal() {
+            document.getElementById('allocationModal').classList.remove('hidden');
+            document.getElementById('allocationModal').classList.add('flex');
+        }
+
+        function closeAllocationModal() {
+            document.getElementById('allocationModal').classList.add('hidden');
+            document.getElementById('allocationModal').classList.remove('flex');
+        }
+
+        function saveAllocation() {
+            const project = document.getElementById('allocationProject').value;
+            const department = document.getElementById('allocationDepartment').value;
+            const month = document.getElementById('allocationMonth').value;
+            const costType = document.querySelector('input[name="costType"]:checked').value;
+            const method = document.getElementById('allocationMethod').value;
+
+            if (!project) {
+                alert('请选择归集项目');
+                return;
+            }
+            if (!month) {
+                alert('请选择月份');
+                return;
+            }
+
+            alert('人工费归集成功！');
+            closeAllocationModal();
+        }
+
+        function viewLaborDetail(id) {
+            const detail = laborCostDetails[id];
+            if (detail) {
+                document.getElementById('detailType').textContent = detail.type;
+                document.getElementById('detailMonth').textContent = detail.month;
+                document.getElementById('detailProject').textContent = detail.project;
+                document.getElementById('detailDepartment').textContent = detail.department;
+                document.getElementById('detailAmount').textContent = detail.amount;
+                document.getElementById('detailOperator').textContent = detail.operator;
+                
+                const tableBody = document.getElementById('detailTableBody');
+                tableBody.innerHTML = '';
+                
+                detail.items.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-4 py-2 whitespace-nowrap">${item.name}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">${item.position}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">¥ ${item.salary.toLocaleString()}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">¥ ${item.insurance.toLocaleString()}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">¥ ${item.tax.toLocaleString()}</td>
+                        <td class="px-4 py-2 whitespace-nowrap">¥ ${item.netSalary.toLocaleString()}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                
+                document.getElementById('detailModal').classList.remove('hidden');
+                document.getElementById('detailModal').classList.add('flex');
+            }
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+            document.getElementById('detailModal').classList.remove('flex');
+        }
+    </script>
+</body>
+</html>

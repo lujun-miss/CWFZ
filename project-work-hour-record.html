@@ -58,6 +58,23 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
+    <script>
+        if (window.self !== window.top) {
+            document.addEventListener('DOMContentLoaded', function() {
+                var sidebar = document.querySelector('.w-64.bg-white');
+                if (sidebar) sidebar.style.display = 'none';
+                var topBar = document.querySelector('header');
+                if (topBar) topBar.style.display = 'none';
+                var mainContent = document.querySelector('main');
+                if (mainContent) {
+                    mainContent.style.marginLeft = '0';
+                    mainContent.style.width = '100%';
+                }
+                var body = document.querySelector('body');
+                if (body) body.style.overflow = 'auto';
+            });
+        }
+    </script>
     <!-- 顶部导航栏 -->
     <header class="bg-white shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -255,6 +272,11 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('consult-cost-allocation.html')">
                                     <i class="fa fa-comments w-6"></i>
                                     <span>咨询费用归集</span>
+                                </a>
+                            </li>                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('design-cost-allocation.html')">
+                                    <i class="fa fa-pencil w-6"></i>
+                                    <span>设计费用归集</span>
                                 </a>
                             </li>
                             <li>

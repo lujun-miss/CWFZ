@@ -205,7 +205,12 @@
                             <i class="fa fa-comments w-6"></i>
                             <span>咨询费用归集</span>
                         </a>
-                    </li>
+                    </li>                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('design-cost-allocation.html')">
+                                    <i class="fa fa-pencil w-6"></i>
+                                    <span>设计费用归集</span>
+                                </a>
+                            </li>
                     <li>
                         <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-cost-allocation.html')">
                             <i class="fa fa-ellipsis-h w-6"></i>
@@ -839,11 +844,13 @@
         
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
-            // 展开费用归集菜单
-            const costAllocationMenu = document.querySelector('div.menu-toggle:has(span:contains("费用归集"))');
-            if (costAllocationMenu) {
-                toggleMenu(costAllocationMenu);
-            }
+            const menuToggles = document.querySelectorAll('div.menu-toggle');
+            menuToggles.forEach(function(menu) {
+                const span = menu.querySelector('span');
+                if (span && span.textContent === '费用归集') {
+                    toggleMenu(menu);
+                }
+            });
         });
     </script>
 </body>

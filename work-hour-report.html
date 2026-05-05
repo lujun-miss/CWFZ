@@ -101,11 +101,11 @@
                 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">打卡工时</label>
-                    <input type="range" min="0" max="8" step="0.5" value="2" class="w-full">
+                    <input type="range" min="0" max="24" step="0.5" value="2" class="w-full">
                     <div class="flex justify-between text-xs text-gray-500 mt-1">
                         <span>0小时</span>
                         <span>2小时</span>
-                        <span>8小时</span>
+                        <span>24小时</span>
                     </div>
                 </div>
                 
@@ -114,147 +114,200 @@
                     <textarea class="w-full border border-gray-300 rounded-lg px-3 py-2 h-20" placeholder="对接需求方案"></textarea>
                 </div>
                 
-                <div class="mb-4" id="equipmentSelectionSection">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">设备选择</label>
+                <!-- 设备与无形资产选项卡 -->
+                <div class="mb-4">
+                    <!-- 选项卡标签 -->
+                    <div class="flex border-b border-gray-200">
+                        <button id="tabEquipment" class="flex-1 py-2 text-sm font-medium text-primary border-b-2 border-primary" onclick="switchTab('equipment')">
+                            设备
+                        </button>
+                        <button id="tabIntangible" class="flex-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" onclick="switchTab('intangible')">
+                            无形资产
+                        </button>
+                    </div>
                     
-                    <!-- 设备组选择 -->
-                    <div class="mb-4">
-                        <div class="flex justify-between items-center mb-1">
-                            <label class="block text-xs font-medium text-gray-600">设备组</label>
-                            <span class="text-xs text-gray-500">可选</span>
+                    <!-- 设备选项卡内容 -->
+                    <div id="tabContentEquipment" class="mt-4">
+                        <!-- 设备组选择 -->
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="block text-xs font-medium text-gray-600">设备组</label>
+                                <span class="text-xs text-gray-500">可选</span>
+                            </div>
+                            <select id="deviceGroupSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-2">
+                                <option value="">不使用设备组</option>
+                                <option value="group1" selected>开发设备组</option>
+                                <option value="group2">测试设备组</option>
+                                <option value="group3">设计设备组</option>
+                            </select>
+                            
+                            <!-- 设备组设备使用时间 -->
+                            <div class="mt-2" id="groupUsageTimeSection">
+                                <div id="groupTotalUsageTime" class="mb-3">
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">设备组使用时间</label>
+                                    <input type="range" id="groupDeviceUsageTime" min="0" max="24" step="0.5" value="2" class="w-full">
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>0小时</span>
+                                        <span id="groupHoursDisplay">2小时</span>
+                                        <span>24小时</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 生产+研发共用设备的工时分配 -->
+                                <div id="groupUsageTimeSplit" class="hidden">
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">工时分配</label>
+                                    <div class="space-y-2">
+                                        <div>
+                                            <label class="block text-xs text-gray-500 mb-1">生产工时</label>
+                                            <input type="range" id="groupProductionTime" min="0" max="24" step="0.5" value="0" class="w-full">
+                                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                                <span>0小时</span>
+                                                <span id="groupProductionHoursDisplay">0小时</span>
+                                                <span>24小时</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-gray-500 mb-1">研发工时</label>
+                                            <input type="range" id="groupRDTime" min="0" max="24" step="0.5" value="2" class="w-full">
+                                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                                <span>0小时</span>
+                                                <span id="groupRDHoursDisplay">2小时</span>
+                                                <span>24小时</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 p-2 bg-gray-50 rounded-md">
+                                            <div class="flex justify-between text-xs text-gray-700">
+                                                <span>年度累计工时:</span>
+                                                <span id="groupTotalHoursDisplay">2小时</span>
+                                            </div>
+                                            <div class="flex justify-between text-xs text-gray-700">
+                                                <span>研发占比:</span>
+                                                <span id="groupRDPctDisplay">100%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 设备组内设备列表 -->
+                            <div id="groupDevices" class="border border-gray-200 rounded-lg p-2 bg-gray-50 mt-2">
+                                <!-- 设备列表将通过JavaScript动态生成 -->
+                            </div>
                         </div>
-                        <select id="deviceGroupSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-2">
-                            <option value="">不使用设备组</option>
-                            <option value="group1" selected>开发设备组</option>
-                            <option value="group2">测试设备组</option>
-                            <option value="group3">设计设备组</option>
-                        </select>
                         
-                        <!-- 设备组设备使用时间 -->
-                        <div class="mt-2" id="groupUsageTimeSection">
-                            <div id="groupTotalUsageTime" class="mb-3">
-                                <label class="block text-xs font-medium text-gray-600 mb-1">设备组使用时间</label>
-                                <input type="range" id="groupDeviceUsageTime" min="0" max="8" step="0.5" value="2" class="w-full">
+                        <!-- 单独设备选择 -->
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="block text-xs font-medium text-gray-600">单独设备</label>
+                                <span class="text-xs text-gray-500">可选</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
+                                    台式电脑
+                                </button>
+                                <button class="py-2 border border-primary bg-primary/10 text-primary rounded-lg text-sm text-center">
+                                    笔记本
+                                </button>
+                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
+                                    服务器
+                                </button>
+                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
+                                    测试设备
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 设备使用时间 -->
+                        <div class="mt-3" id="singleUsageTimeSection">
+                            <div id="singleTotalUsageTime" class="mb-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">设备使用时间</label>
+                                <input type="range" id="singleDeviceUsageTime" min="0" max="24" step="0.5" value="2" class="w-full">
                                 <div class="flex justify-between text-xs text-gray-500 mt-1">
                                     <span>0小时</span>
-                                    <span id="groupHoursDisplay">2小时</span>
-                                    <span>8小时</span>
+                                    <span id="singleHoursDisplay">2小时</span>
+                                    <span>24小时</span>
                                 </div>
                             </div>
                             
                             <!-- 生产+研发共用设备的工时分配 -->
-                            <div id="groupUsageTimeSplit" class="hidden">
+                            <div id="singleUsageTimeSplit" class="hidden">
                                 <label class="block text-xs font-medium text-gray-600 mb-1">工时分配</label>
                                 <div class="space-y-2">
                                     <div>
                                         <label class="block text-xs text-gray-500 mb-1">生产工时</label>
-                                        <input type="range" id="groupProductionTime" min="0" max="8" step="0.5" value="0" class="w-full">
+                                        <input type="range" id="singleProductionTime" min="0" max="24" step="0.5" value="0" class="w-full">
                                         <div class="flex justify-between text-xs text-gray-500 mt-1">
                                             <span>0小时</span>
-                                            <span id="groupProductionHoursDisplay">0小时</span>
-                                            <span>8小时</span>
+                                            <span id="singleProductionHoursDisplay">0小时</span>
+                                            <span>24小时</span>
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-xs text-gray-500 mb-1">研发工时</label>
-                                        <input type="range" id="groupRDTime" min="0" max="8" step="0.5" value="2" class="w-full">
+                                        <input type="range" id="singleRDTime" min="0" max="24" step="0.5" value="2" class="w-full">
                                         <div class="flex justify-between text-xs text-gray-500 mt-1">
                                             <span>0小时</span>
-                                            <span id="groupRDHoursDisplay">2小时</span>
-                                            <span>8小时</span>
+                                            <span id="singleRDHoursDisplay">2小时</span>
+                                            <span>24小时</span>
                                         </div>
                                     </div>
                                     <div class="mt-2 p-2 bg-gray-50 rounded-md">
                                         <div class="flex justify-between text-xs text-gray-700">
                                             <span>年度累计工时:</span>
-                                            <span id="groupTotalHoursDisplay">2小时</span>
+                                            <span id="singleTotalHoursDisplay">2小时</span>
                                         </div>
                                         <div class="flex justify-between text-xs text-gray-700">
                                             <span>研发占比:</span>
-                                            <span id="groupRDPctDisplay">100%</span>
+                                            <span id="singleRDPctDisplay">100%</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- 设备组内设备列表 -->
-                        <div id="groupDevices" class="border border-gray-200 rounded-lg p-2 bg-gray-50 mt-2">
-                            <!-- 设备列表将通过JavaScript动态生成 -->
+                            <p class="text-xs text-gray-500 mt-1">
+                                <i class="fa fa-info-circle mr-1"></i>同一条线的设备工时将保持一致
+                            </p>
                         </div>
                     </div>
                     
-                    <!-- 单独设备选择 -->
-                    <div class="mb-4">
-                        <div class="flex justify-between items-center mb-1">
-                            <label class="block text-xs font-medium text-gray-600">单独设备</label>
-                            <span class="text-xs text-gray-500">可选</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
-                                台式电脑
-                            </button>
-                            <button class="py-2 border border-primary bg-primary/10 text-primary rounded-lg text-sm text-center">
-                                笔记本
-                            </button>
-                            <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
-                                服务器
-                            </button>
-                            <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
-                                测试设备
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- 设备使用时间 -->
-                    <div class="mt-3" id="singleUsageTimeSection">
-                        <div id="singleTotalUsageTime" class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">设备使用时间</label>
-                            <input type="range" id="singleDeviceUsageTime" min="0" max="8" step="0.5" value="2" class="w-full">
-                            <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                <span>0小时</span>
-                                <span id="singleHoursDisplay">2小时</span>
-                                <span>8小时</span>
+                    <!-- 无形资产选项卡内容 -->
+                    <div id="tabContentIntangible" class="mt-4 hidden">
+                        <!-- 单独无形资产选择 -->
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="block text-xs font-medium text-gray-600">无形资产</label>
+                                <span class="text-xs text-gray-500">可选</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
+                                    设计软件A
+                                </button>
+                                <button class="py-2 border border-primary bg-primary/10 text-primary rounded-lg text-sm text-center">
+                                    专利技术B
+                                </button>
+                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
+                                    数据库C
+                                </button>
+                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center">
+                                    著作权D
+                                </button>
                             </div>
                         </div>
                         
-                        <!-- 生产+研发共用设备的工时分配 -->
-                        <div id="singleUsageTimeSplit" class="hidden">
-                            <label class="block text-xs font-medium text-gray-600 mb-1">工时分配</label>
-                            <div class="space-y-2">
-                                <div>
-                                    <label class="block text-xs text-gray-500 mb-1">生产工时</label>
-                                    <input type="range" id="singleProductionTime" min="0" max="8" step="0.5" value="0" class="w-full">
-                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                        <span>0小时</span>
-                                        <span id="singleProductionHoursDisplay">0小时</span>
-                                        <span>8小时</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs text-gray-500 mb-1">研发工时</label>
-                                    <input type="range" id="singleRDTime" min="0" max="8" step="0.5" value="2" class="w-full">
-                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                        <span>0小时</span>
-                                        <span id="singleRDHoursDisplay">2小时</span>
-                                        <span>8小时</span>
-                                    </div>
-                                </div>
-                                <div class="mt-2 p-2 bg-gray-50 rounded-md">
-                                    <div class="flex justify-between text-xs text-gray-700">
-                                        <span>年度累计工时:</span>
-                                        <span id="singleTotalHoursDisplay">2小时</span>
-                                    </div>
-                                    <div class="flex justify-between text-xs text-gray-700">
-                                        <span>研发占比:</span>
-                                        <span id="singleRDPctDisplay">100%</span>
-                                    </div>
+                        <!-- 无形资产使用时间 -->
+                        <div class="mt-3" id="intangibleSingleUsageTimeSection">
+                            <div id="intangibleSingleTotalUsageTime" class="mb-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">无形资产使用时间</label>
+                                <input type="range" id="intangibleSingleUsageTime" min="0" max="24" step="0.5" value="2" class="w-full">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>0小时</span>
+                                    <span id="intangibleSingleHoursDisplay">2小时</span>
+                                    <span>24小时</span>
                                 </div>
                             </div>
+                            <p class="text-xs text-gray-500 mt-1">
+                                <i class="fa fa-info-circle mr-1"></i>无形资产使用时间将计入研发工时
+                            </p>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">
-                            <i class="fa fa-info-circle mr-1"></i>同一条线的设备工时将保持一致
-                        </p>
                     </div>
                 </div>
                 
@@ -272,6 +325,30 @@
             function loadPage(page) {
                 // 确保使用正确的路径格式
                 window.location.href = './' + page;
+            }
+            
+            // 选项卡切换函数
+            function switchTab(tabName) {
+                // 切换选项卡标签样式
+                document.getElementById('tabEquipment').classList.remove('text-primary', 'border-b-2', 'border-primary');
+                document.getElementById('tabIntangible').classList.remove('text-primary', 'border-b-2', 'border-primary');
+                document.getElementById('tabEquipment').classList.add('text-gray-500', 'hover:text-gray-700');
+                document.getElementById('tabIntangible').classList.add('text-gray-500', 'hover:text-gray-700');
+                
+                // 切换内容显示
+                document.getElementById('tabContentEquipment').classList.add('hidden');
+                document.getElementById('tabContentIntangible').classList.add('hidden');
+                
+                // 设置选中的选项卡
+                if (tabName === 'equipment') {
+                    document.getElementById('tabEquipment').classList.remove('text-gray-500', 'hover:text-gray-700');
+                    document.getElementById('tabEquipment').classList.add('text-primary', 'border-b-2', 'border-primary');
+                    document.getElementById('tabContentEquipment').classList.remove('hidden');
+                } else {
+                    document.getElementById('tabIntangible').classList.remove('text-gray-500', 'hover:text-gray-700');
+                    document.getElementById('tabIntangible').classList.add('text-primary', 'border-b-2', 'border-primary');
+                    document.getElementById('tabContentIntangible').classList.remove('hidden');
+                }
             }
             
             // 设备组数据
@@ -303,6 +380,15 @@
             
             // 项目关联的设备组（模拟数据）
             const projectAssociatedDeviceGroup = 'group3'; // 假设当前项目关联了设计设备组（生产+研发共用）
+            
+            // 更新无形资产工时显示
+            function updateIntangibleUsageTime() {
+                const usageTime = document.getElementById('intangibleSingleUsageTime').value;
+                document.getElementById('intangibleSingleHoursDisplay').textContent = usageTime + '小时';
+            }
+            
+            // 无形资产工时滑块事件
+            document.getElementById('intangibleSingleUsageTime').addEventListener('input', updateIntangibleUsageTime);
             
             // 初始化设备组选择
             function initDeviceGroup() {
@@ -367,10 +453,10 @@
                 warning.className = 'warning-message mt-2 p-2 bg-yellow-100 border border-yellow-300 rounded-md text-sm text-yellow-800';
                 warning.innerHTML = `<i class="fa fa-exclamation-triangle mr-1"></i> ${message}`;
                 
-                // 添加到设备选择部分
-                const equipmentSection = document.getElementById('equipmentSelectionSection');
+                // 添加到设备选项卡内容部分
+                const equipmentSection = document.getElementById('tabContentEquipment');
                 if (equipmentSection) {
-                    equipmentSection.appendChild(warning);
+                    equipmentSection.insertBefore(warning, equipmentSection.firstChild);
                 } else {
                     console.error('无法找到设备选择部分，无法显示警告信息');
                 }

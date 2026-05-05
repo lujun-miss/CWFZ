@@ -152,6 +152,12 @@
                                     <span>阶段跟踪</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-template.html')">
+                                    <i class="fa fa-list-alt w-6"></i>
+                                    <span>阶段模板</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -208,6 +214,24 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('rental-contract-library.html')">
                                     <i class="fa fa-file-text w-6"></i>
                                     <span>租赁合同档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('outsourced-rd-contract-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>委托研发合同管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('repair-cost-management.html')">
+                                    <i class="fa fa-wrench w-6"></i>
+                                    <span>维修费用管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('comprehensive-cost-management.html')">
+                                    <i class="fa fa-puzzle-piece w-6"></i>
+                                    <span>综合费用管理</span>
                                 </a>
                             </li>
                         </ul>
@@ -286,6 +310,11 @@
                                     <i class="fa fa-comments w-6"></i>
                                     <span>咨询费用归集</span>
                                 </a>
+                            </li>                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('design-cost-allocation.html')">
+                                    <i class="fa fa-pencil w-6"></i>
+                                    <span>设计费用归集</span>
+                                </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-cost-allocation.html')">
@@ -293,18 +322,14 @@
                                     <span>其他费用归集</span>
                                 </a>
                             </li>
+                            
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('outsourced-rd-contract-management.html')">
-                                    <i class="fa fa-file-text-o w-6"></i>
-                                    <span>委托研发合同管理</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('outsourced-rd-allocation.html')">
+                                    <i class="fa fa-handshake-o w-6"></i>
+                                    <span>委托外部研究开发费用归集</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-related-expenses.html')">
-                                    <i class="fa fa-ellipsis-h w-6"></i>
-                                    <span>其他相关费用</span>
-                                </a>
-                            </li>
+
                         </ul>
                     </li>
                     <li>
@@ -659,6 +684,18 @@
                         </select>
                     </div>
 
+                    <!-- 关联项目 -->
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-700">关联项目：</span>
+                        <select id="filterProject" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="">全部</option>
+                            <option value="智能传感器研发">智能传感器研发</option>
+                            <option value="新能源材料研究">新能源材料研究</option>
+                            <option value="工业机器人控制系统">工业机器人控制系统</option>
+                            <option value="物联网平台开发">物联网平台开发</option>
+                        </select>
+                    </div>
+
                     <!-- 状态 -->
                     <div class="flex items-center space-x-2">
                         <span class="text-sm text-gray-700">状态：</span>
@@ -704,10 +741,16 @@
                                     资产名称
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    月租金
+                                    支付方式
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    租金金额
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     租期
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    关联项目
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     状态
@@ -723,13 +766,21 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">五轴加工中心租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">设备租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">五轴加工中心</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">月付</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 15,000/月</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01-01 至 2026-12-31</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col space-y-1">
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">智能传感器研发</span>
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">工业机器人控制系统</span>
+                                    </div>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">生效中</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('ZL2026001')">查看</a>
+                                    <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewPaymentSchedule('ZL2026001')">费用明细</a>
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="editRecord('ZL2026001')">编辑</a>
                                     <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="deleteRecord('ZL2026001')">删除</a>
                                 </td>
@@ -739,13 +790,20 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">激光切割机租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">设备租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">激光切割机</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">月付</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 5,000/月</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01-01 至 2026-12-31</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col space-y-1">
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">新能源材料研究</span>
+                                    </div>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">生效中</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('ZL2026002')">查看</a>
+                                    <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewPaymentSchedule('ZL2026002')">费用明细</a>
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="editRecord('ZL2026002')">编辑</a>
                                     <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="deleteRecord('ZL2026002')">删除</a>
                                 </td>
@@ -755,13 +813,22 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发实验室租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">场地租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发实验室</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 8,000/月</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">季付</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 24,000/季</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01-01 至 2026-12-31</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col space-y-1">
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">智能传感器研发</span>
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">新能源材料研究</span>
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">物联网平台开发</span>
+                                    </div>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">待审核</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('ZL2026003')">查看</a>
+                                    <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewPaymentSchedule('ZL2026003')">费用明细</a>
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="editRecord('ZL2026003')">编辑</a>
                                     <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="auditRecord('ZL2026003')">审核</a>
                                 </td>
@@ -771,13 +838,20 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">精密测量仪租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">设备租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">精密测量仪</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">月付</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 3,000/月</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-03-01 至 2026-08-31</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col space-y-1">
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">工业机器人控制系统</span>
+                                    </div>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">生效中</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('ZL2026004')">查看</a>
+                                    <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewPaymentSchedule('ZL2026004')">费用明细</a>
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="editRecord('ZL2026004')">编辑</a>
                                     <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="deleteRecord('ZL2026004')">删除</a>
                                 </td>
@@ -787,13 +861,21 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">三坐标测量机租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">设备租赁</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">三坐标测量机</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 6,000/月</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">半年付</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 36,000/半年</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2025-06-01 至 2025-12-31</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col space-y-1">
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">新能源材料研究</span>
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">物联网平台开发</span>
+                                    </div>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">已到期</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('ZL2025005')">查看</a>
+                                    <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewPaymentSchedule('ZL2025005')">费用明细</a>
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="editRecord('ZL2025005')">编辑</a>
                                     <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="deleteRecord('ZL2025005')">删除</a>
                                 </td>
@@ -868,19 +950,21 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             资产名称 <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" id="assetName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入资产名称">
+                        <select id="assetName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="">请选择资产</option>
+                            <option value="EQ-001">EQ-001 - 精密测量仪</option>
+                            <option value="EQ-002">EQ-002 - 气相色谱仪</option>
+                            <option value="EQ-003">EQ-003 - 电子显微镜</option>
+                            <option value="EQ-004">EQ-004 - 高低温试验箱</option>
+                            <option value="EQ-005">EQ-005 - 万能材料试验机</option>
+                            <option value="EQ-006">EQ-006 - 激光切割机</option>
+                            <option value="场地-001">场地-001 - 研发实验室</option>
+                            <option value="场地-002">场地-002 - 中试车间</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- 供应商 -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            供应商 <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="supplier" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入供应商">
-                    </div>
-
                     <!-- 合同金额 -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">合同金额</label>
@@ -907,18 +991,12 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- 月租金 -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            月租金 <span class="text-red-500">*</span>
-                        </label>
-                        <input type="number" id="monthlyRent" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入月租金">
-                    </div>
-
                     <!-- 租金支付方式 -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">租金支付方式</label>
-                        <select id="paymentMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            租金支付方式 <span class="text-red-500">*</span>
+                        </label>
+                        <select id="paymentMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" onchange="updateRentLabel()">
                             <option value="">请选择支付方式</option>
                             <option value="月付">月付</option>
                             <option value="季付">季付</option>
@@ -926,12 +1004,20 @@
                             <option value="年付">年付</option>
                         </select>
                     </div>
+
+                    <!-- 租金金额 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <span id="rentLabel">租金金额</span> <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" id="rentAmount" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入租金金额">
+                    </div>
                 </div>
 
-                <!-- 关联项目 -->
+                <!-- 关联项目及分摊比例 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        关联项目 <span class="text-red-500">*</span>
+                        关联项目及分摊比例 <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <div class="custom-multiselect border border-gray-300 rounded-md px-4 py-2 cursor-pointer" onclick="toggleDropdown('relatedProjectDropdown')">
@@ -940,29 +1026,36 @@
                                 <i class="fa fa-chevron-down text-gray-400"></i>
                             </div>
                         </div>
-                        <div id="relatedProjectDropdown" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto">
+                        <div id="relatedProjectDropdown" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-80 overflow-y-auto">
                             <label class="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
                                 <input type="checkbox" class="project-checkbox" value="智能传感器研发" onchange="updateProjectSelection('relatedProject')">
                                 <span class="ml-2 text-gray-700">智能传感器研发</span>
                             </label>
                             <label class="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="project-checkbox" value="高精度数控机床" onchange="updateProjectSelection('relatedProject')">
-                                <span class="ml-2 text-gray-700">高精度数控机床</span>
+                                <input type="checkbox" class="project-checkbox" value="新能源材料研究" onchange="updateProjectSelection('relatedProject')">
+                                <span class="ml-2 text-gray-700">新能源材料研究</span>
                             </label>
                             <label class="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="project-checkbox" value="新型材料研究" onchange="updateProjectSelection('relatedProject')">
-                                <span class="ml-2 text-gray-700">新型材料研究</span>
+                                <input type="checkbox" class="project-checkbox" value="工业机器人控制系统" onchange="updateProjectSelection('relatedProject')">
+                                <span class="ml-2 text-gray-700">工业机器人控制系统</span>
                             </label>
                             <label class="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="project-checkbox" value="软件系统开发" onchange="updateProjectSelection('relatedProject')">
-                                <span class="ml-2 text-gray-700">软件系统开发</span>
-                            </label>
-                            <label class="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="project-checkbox" value="自动化生产线" onchange="updateProjectSelection('relatedProject')">
-                                <span class="ml-2 text-gray-700">自动化生产线</span>
+                                <input type="checkbox" class="project-checkbox" value="物联网平台开发" onchange="updateProjectSelection('relatedProject')">
+                                <span class="ml-2 text-gray-700">物联网平台开发</span>
                             </label>
                         </div>
                         <input type="hidden" id="relatedProject" name="relatedProject">
+                    </div>
+                    
+                    <!-- 分摊比例设置区域 -->
+                    <div id="allocationRatioContainer" class="mt-4 border border-gray-200 rounded-md p-4 hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm text-gray-600">分摊比例设置（合计需为100%）</span>
+                            <span class="text-sm font-medium text-primary" id="totalRatio">合计: 0%</span>
+                        </div>
+                        <div id="allocationItems" class="space-y-2">
+                            <!-- 动态生成的分摊比例行 -->
+                        </div>
                     </div>
                 </div>
 
@@ -1168,6 +1261,60 @@
         </div>
     </div>
 
+    <!-- 分期费用明细弹窗 -->
+    <div id="paymentScheduleModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[80vh] overflow-y-auto">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800">分期费用明细</h3>
+                <button onclick="closePaymentScheduleModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="px-6 py-4">
+                <div id="scheduleContractInfo" class="mb-4 p-4 bg-gray-50 rounded-lg">
+                    <!-- 合同基本信息 -->
+                </div>
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-700">费用明细列表</span>
+                        <span id="scheduleSummary" class="text-sm text-gray-500"></span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="scheduleTable" class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden">
+                            <thead id="scheduleTableHead" class="bg-gray-50">
+                                <!-- 动态生成表头 -->
+                            </thead>
+                            <tbody id="scheduleItems" class="bg-white divide-y divide-gray-200">
+                                <!-- 动态渲染费用明细 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 备注区域 -->
+                <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div class="flex items-start">
+                        <i class="fa fa-info-circle text-yellow-600 mt-0.5 mr-2"></i>
+                        <div class="text-sm text-yellow-800">
+                            <p class="font-medium mb-1">费用归集说明</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>月付合同：每月按合同金额全额归集</li>
+                                <li>季付合同：季度金额均摊到3个月，每月归集月均金额</li>
+                                <li>半年付合同：半年金额均摊到6个月，每月归集月均金额</li>
+                                <li>年付合同：年度金额均摊到12个月，每月归集月均金额</li>
+                                <li>多项目分摊：按设置的分摊比例计算各项目应归集金额</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end mt-4">
+                    <button onclick="closePaymentScheduleModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function loadPage(pageUrl) {
             window.location.href = pageUrl;
@@ -1186,7 +1333,10 @@
                 endDate: '2026-12-31',
                 paymentMethod: '月付',
                 contractAmount: 180000,
-                project: '高精度数控机床',
+                projects: [
+                    { name: '智能传感器研发', ratio: 60 },
+                    { name: '工业机器人控制系统', ratio: 40 }
+                ],
                 remark: '用于高精度零件的加工制造',
                 status: '生效中',
                 attachments: ['租赁合同_ZL2026001.pdf']
@@ -1202,7 +1352,9 @@
                 endDate: '2026-12-31',
                 paymentMethod: '月付',
                 contractAmount: 60000,
-                project: '高精度数控机床',
+                projects: [
+                    { name: '新能源材料研究', ratio: 100 }
+                ],
                 remark: '用于板材切割加工',
                 status: '生效中',
                 attachments: []
@@ -1213,12 +1365,16 @@
                 type: '场地租赁',
                 asset: '研发实验室',
                 supplier: '科技园物业',
-                monthlyRent: 8000,
+                monthlyRent: 24000,
                 startDate: '2026-01-01',
                 endDate: '2026-12-31',
                 paymentMethod: '季付',
                 contractAmount: 96000,
-                project: '智能传感器研发',
+                projects: [
+                    { name: '智能传感器研发', ratio: 40 },
+                    { name: '新能源材料研究', ratio: 30 },
+                    { name: '物联网平台开发', ratio: 30 }
+                ],
                 remark: '用于传感器研发测试',
                 status: '待审核',
                 attachments: []
@@ -1234,7 +1390,9 @@
                 endDate: '2026-08-31',
                 paymentMethod: '月付',
                 contractAmount: 18000,
-                project: '智能传感器研发',
+                projects: [
+                    { name: '智能传感器研发', ratio: 100 }
+                ],
                 remark: '用于精密尺寸测量',
                 status: '生效中',
                 attachments: ['精密测量仪合同.pdf']
@@ -1245,12 +1403,14 @@
                 type: '设备租赁',
                 asset: '三坐标测量机',
                 supplier: '海克斯康',
-                monthlyRent: 6000,
+                monthlyRent: 18000,
                 startDate: '2025-06-01',
                 endDate: '2025-12-31',
                 paymentMethod: '季付',
                 contractAmount: 42000,
-                project: '工业机器人控制系统',
+                projects: [
+                    { name: '工业机器人控制系统', ratio: 100 }
+                ],
                 remark: '用于零部件精度检测',
                 status: '已到期',
                 attachments: []
@@ -1266,6 +1426,18 @@
                 subMenu.classList.toggle('collapsed');
                 arrow.classList.toggle('collapsed');
             }
+        }
+
+        // 更新租金标签
+        function updateRentLabel() {
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const labelMap = {
+                '月付': '月租金',
+                '季付': '季租金',
+                '半年付': '半年租金',
+                '年付': '年租金'
+            };
+            document.getElementById('rentLabel').textContent = labelMap[paymentMethod] || '租金金额';
         }
 
         function toggleDropdown(dropdownId) {
@@ -1295,10 +1467,78 @@
                 }
                 displaySpan.classList.remove('text-gray-400');
                 displaySpan.classList.add('text-gray-700');
+                
+                // 显示分摊比例设置区域
+                showAllocationRatioPanel(selectedValues);
             } else {
                 displaySpan.textContent = '请选择关联项目';
                 displaySpan.classList.remove('text-gray-700');
                 displaySpan.classList.add('text-gray-400');
+                
+                // 隐藏分摊比例设置区域
+                document.getElementById('allocationRatioContainer').classList.add('hidden');
+            }
+        }
+
+        // 显示分摊比例设置面板
+        function showAllocationRatioPanel(selectedProjects) {
+            const container = document.getElementById('allocationRatioContainer');
+            const itemsContainer = document.getElementById('allocationItems');
+            
+            // 清空现有内容
+            itemsContainer.innerHTML = '';
+            
+            // 计算平均比例（当有多个项目时）
+            const equalRatio = selectedProjects.length > 0 ? Math.round(100 / selectedProjects.length * 100) / 100 : 0;
+            const remainder = selectedProjects.length > 0 ? 100 % selectedProjects.length : 0;
+            
+            // 为每个项目生成分摊比例输入行
+            selectedProjects.forEach((project, index) => {
+                // 最后一个项目分配剩余比例
+                let defaultRatio = index === selectedProjects.length - 1 && remainder > 0 
+                    ? equalRatio + remainder 
+                    : equalRatio;
+                
+                const item = document.createElement('div');
+                item.className = 'flex items-center space-x-3';
+                item.innerHTML = `
+                    <span class="flex-1 text-sm text-gray-700">${project}</span>
+                    <input type="number" 
+                           min="0" 
+                           max="100" 
+                           step="0.01" 
+                           value="${defaultRatio}" 
+                           class="w-24 px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary allocation-ratio-input"
+                           data-project="${project}"
+                           oninput="updateTotalRatio()">
+                    <span class="text-sm text-gray-500">%</span>
+                `;
+                itemsContainer.appendChild(item);
+            });
+            
+            // 显示面板
+            container.classList.remove('hidden');
+            
+            // 更新合计比例
+            updateTotalRatio();
+        }
+
+        // 更新合计比例
+        function updateTotalRatio() {
+            const inputs = document.querySelectorAll('.allocation-ratio-input');
+            let total = 0;
+            inputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+            
+            const totalRatioSpan = document.getElementById('totalRatio');
+            totalRatioSpan.textContent = `合计: ${total.toFixed(2)}%`;
+            
+            // 根据合计值改变颜色
+            if (Math.abs(total - 100) < 0.01) {
+                totalRatioSpan.className = 'text-sm font-medium text-green-600';
+            } else {
+                totalRatioSpan.className = 'text-sm font-medium text-red-600';
             }
         }
 
@@ -1427,18 +1667,252 @@
             const name = document.getElementById('contractName').value;
             const type = document.getElementById('rentalType').value;
             const asset = document.getElementById('assetName').value;
-            const supplier = document.getElementById('supplier').value;
-            const monthlyRent = document.getElementById('monthlyRent').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const rentAmount = document.getElementById('rentAmount').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
+            const relatedProject = document.getElementById('relatedProject').value;
 
-            if (!code || !name || !type || !asset || !supplier || !monthlyRent || !startDate || !endDate) {
+            if (!code || !name || !type || !asset || !paymentMethod || !rentAmount || !startDate || !endDate) {
                 alert('请填写必填项');
                 return;
             }
 
-            alert('提交成功，等待审核');
+            // 如果选择了关联项目，验证分摊比例
+            if (relatedProject) {
+                const inputs = document.querySelectorAll('.allocation-ratio-input');
+                let totalRatio = 0;
+                inputs.forEach(input => {
+                    totalRatio += parseFloat(input.value) || 0;
+                });
+                
+                if (Math.abs(totalRatio - 100) >= 0.01) {
+                    alert('分摊比例合计必须为100%');
+                    return;
+                }
+            }
+
+            // 计算并生成分期费用明细
+            const schedule = generatePaymentSchedule(code, paymentMethod, parseFloat(rentAmount), startDate, endDate);
+            
+            alert(`提交成功！\n\n已自动生成 ${schedule.length} 条费用明细：\n${schedule.map(s => `${s.period}: ¥${s.amount.toLocaleString()}`).join('\n')}`);
             closeAddEditModal();
+        }
+
+        // 根据付款方式和合同期限生成分期费用明细
+        function generatePaymentSchedule(contractCode, paymentMethod, rentAmount, startDate, endDate) {
+            const schedule = [];
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            let current = new Date(start);
+            
+            while (current <= end) {
+                let periodKey, periodAmount, monthlyAmount;
+                
+                switch (paymentMethod) {
+                    case '月付':
+                        periodKey = formatPaymentPeriod(current, 'month');
+                        periodAmount = rentAmount;
+                        monthlyAmount = rentAmount;
+                        current.setMonth(current.getMonth() + 1);
+                        break;
+                    case '季付':
+                        periodKey = formatPaymentPeriod(current, 'quarter');
+                        periodAmount = rentAmount;
+                        monthlyAmount = rentAmount / 3;
+                        current.setMonth(current.getMonth() + 3);
+                        break;
+                    case '半年付':
+                        periodKey = formatPaymentPeriod(current, 'halfyear');
+                        periodAmount = rentAmount;
+                        monthlyAmount = rentAmount / 6;
+                        current.setMonth(current.getMonth() + 6);
+                        break;
+                    case '年付':
+                        periodKey = formatPaymentPeriod(current, 'year');
+                        periodAmount = rentAmount;
+                        monthlyAmount = rentAmount / 12;
+                        current.setFullYear(current.getFullYear() + 1);
+                        break;
+                    default:
+                        periodKey = formatPaymentPeriod(current, 'month');
+                        periodAmount = rentAmount;
+                        monthlyAmount = rentAmount;
+                        current.setMonth(current.getMonth() + 1);
+                }
+                
+                schedule.push({
+                    contractCode: contractCode,
+                    period: periodKey,
+                    amount: periodAmount,
+                    monthlyAmount: monthlyAmount,
+                    status: '待归集'
+                });
+            }
+            
+            return schedule;
+        }
+
+        // 格式化付款期间
+        function formatPaymentPeriod(date, type) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            
+            switch (type) {
+                case 'month':
+                    return `${year}-${String(month).padStart(2, '0')}`;
+                case 'quarter':
+                    const quarter = Math.ceil(month / 3);
+                    return `${year}年Q${quarter}`;
+                case 'halfyear':
+                    return `${year}年${month <= 6 ? '上半年' : '下半年'}`;
+                case 'year':
+                    return `${year}年度`;
+                default:
+                    return `${year}-${String(month).padStart(2, '0')}`;
+            }
+        }
+
+        // 查看分期费用明细
+        function viewPaymentSchedule(contractCode) {
+            const data = rentalContractData[contractCode];
+            if (!data) {
+                alert('未找到合同信息');
+                return;
+            }
+            
+            // 获取项目列表和分摊比例
+            const projectList = data.projects || [];
+            const projectDisplay = projectList.length > 0 
+                ? projectList.map(p => `${p.name}(${p.ratio}%)`).join('、')
+                : '未关联';
+            
+            // 显示合同基本信息
+            const infoHtml = `
+                <div class="grid grid-cols-4 gap-4">
+                    <div>
+                        <span class="text-xs text-gray-500">合同编号</span>
+                        <p class="text-sm font-medium text-gray-800">${data.code}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500">合同名称</span>
+                        <p class="text-sm font-medium text-gray-800">${data.name}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500">资产名称</span>
+                        <p class="text-sm font-medium text-gray-800">${data.asset}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500">支付方式</span>
+                        <p class="text-sm font-medium text-gray-800">${data.paymentMethod}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500">每期金额</span>
+                        <p class="text-sm font-medium text-gray-800">¥${data.monthlyRent.toLocaleString()}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500">合同期限</span>
+                        <p class="text-sm font-medium text-gray-800">${data.startDate} 至 ${data.endDate}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500">关联项目及比例</span>
+                        <p class="text-sm font-medium text-gray-800">${projectDisplay}</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500">合同状态</span>
+                        <p class="text-sm font-medium text-gray-800">${data.status}</p>
+                    </div>
+                </div>
+            `;
+            document.getElementById('scheduleContractInfo').innerHTML = infoHtml;
+            
+            // 生成动态表头
+            let headerHtml = `<tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 bg-gray-50">付款期间</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 bg-gray-50">应付金额</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 bg-gray-50">月均金额</th>`;
+            
+            if (projectList.length > 0) {
+                projectList.forEach(p => {
+                    headerHtml += `<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 bg-green-50" colspan="2">${p.name}<br><span class="text-green-600">(${p.ratio}%)</span></th>`;
+                });
+            } else {
+                headerHtml += `<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 bg-gray-50">分摊项目</th>`;
+            }
+            
+            headerHtml += `<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 bg-gray-50">状态</th></tr>`;
+            
+            // 添加子表头（金额、比例分列）
+            headerHtml += `<tr>`;
+            if (projectList.length > 0) {
+                headerHtml += `<th class="px-4 py-3 text-left text-xs font-medium text-gray-400 bg-gray-50"></th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 bg-gray-50"></th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 bg-gray-50"></th>`;
+                projectList.forEach(() => {
+                    headerHtml += `<th class="px-4 py-3 text-left text-xs font-medium text-gray-400 bg-green-50">分摊金额</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 bg-green-50">月均金额</th>`;
+                });
+            }
+            headerHtml += `<th class="px-4 py-3 text-left text-xs font-medium text-gray-400 bg-gray-50"></th></tr>`;
+            
+            document.getElementById('scheduleTableHead').innerHTML = headerHtml;
+            
+            // 生成分期费用明细
+            const schedule = generatePaymentSchedule(data.code, data.paymentMethod, data.monthlyRent, data.startDate, data.endDate);
+            
+            // 渲染费用明细列表
+            let totalAmount = 0;
+            const today = new Date();
+            const itemsHtml = schedule.map(s => {
+                totalAmount += s.amount;
+                
+                // 判断当前期间是否已过
+                const periodDate = new Date(s.period.replace(/年|Q\d|上半年|下半年/g, (match) => {
+                    if (match === '年') return '-01-01';
+                    if (match.startsWith('Q')) return `-${(parseInt(match[1]) * 3) - 2}-01`;
+                    if (match === '上半年') return '-06-30';
+                    if (match === '下半年') return '-12-31';
+                    return '';
+                }));
+                
+                const isPast = periodDate < today;
+                const statusClass = isPast ? 'bg-gray-100 text-gray-600' : 'bg-blue-100 text-blue-800';
+                const statusText = isPast ? '已到期' : '待支付';
+                
+                let rowHtml = `
+                    <tr>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">${s.period}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900">¥${s.amount.toLocaleString()}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900">¥${s.monthlyAmount.toLocaleString()}</td>
+                `;
+                
+                if (projectList.length > 0) {
+                    projectList.forEach(p => {
+                        const allocatedAmount = s.amount * p.ratio / 100;
+                        const monthlyAllocated = s.monthlyAmount * p.ratio / 100;
+                        rowHtml += `<td class="px-4 py-3 text-sm text-green-700 font-medium">¥${allocatedAmount.toLocaleString()}</td>
+                            <td class="px-4 py-3 text-sm text-green-600">¥${monthlyAllocated.toLocaleString()}</td>`;
+                    });
+                } else {
+                    rowHtml += `<td class="px-4 py-3 text-sm text-gray-500">未关联项目</td>`;
+                }
+                
+                rowHtml += `<td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded ${statusClass}">${statusText}</span></td></tr>`;
+                
+                return rowHtml;
+            }).join('');
+            
+            document.getElementById('scheduleItems').innerHTML = itemsHtml;
+            document.getElementById('scheduleSummary').textContent = `共 ${schedule.length} 期，合计 ¥${totalAmount.toLocaleString()}`;
+            
+            // 显示弹窗
+            document.getElementById('paymentScheduleModal').classList.remove('hidden');
+            document.getElementById('paymentScheduleModal').classList.add('flex');
+        }
+
+        function closePaymentScheduleModal() {
+            document.getElementById('paymentScheduleModal').classList.add('hidden');
+            document.getElementById('paymentScheduleModal').classList.remove('flex');
         }
 
         function handleFileUpload(files) {

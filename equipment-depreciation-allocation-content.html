@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备折旧归集内容 - 研发费用管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        danger: '#ef4444',
+                        success: '#22c55e',
+                        warning: '#f59e0b',
+                    },
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .table-row-hover:hover {
+                background-color: #f9fafb;
+            }
+        }
+    </style>
+    <style>
+        .icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .icon-search::before { content: '\1F50D'; }
+        .icon-refresh::before { content: '\21BB'; }
+        .icon-cogs::before { content: '\2699'; }
+        .icon-chevron-right::before { content: '\203A'; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans p-6">
+    <!-- 筛选条件区域 -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- 时间范围 -->
+            <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-700">时间范围：</span>
+                <label class="flex items-center">
+                    <input type="radio" name="timeRange" value="month" checked class="mr-1">
+                    <span class="text-sm">按月</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="timeRange" value="year" class="mr-1">
+                    <span class="text-sm">年</span>
+                </label>
+                <input type="month" id="filterMonth" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+
+            <!-- 项目名称 -->
+            <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-700">项目名称：</span>
+                <select id="filterProject" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
+                    <option value="">全部项目</option>
+                    <option value="智能传感器研发">智能传感器研发</option>
+                    <option value="工业机器人控制系统">工业机器人控制系统</option>
+                    <option value="新能源材料研究">新能源材料研究</option>
+                    <option value="高精度数控机床">高精度数控机床</option>
+                </select>
+            </div>
+
+            <!-- 设备类型 -->
+            <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-700">设备类型：</span>
+                <select id="filterAllocationType" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
+                    <option value="">全部类型</option>
+                    <option value="equipment">设备折旧</option>
+                </select>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="flex items-center space-x-2">
+                <button onclick="searchRecords()" class="bg-primary text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition-colors">
+                    <span class="mr-1">🔍</span>查询
+                </button>
+                <button onclick="resetFilter()" class="bg-gray-300 text-gray-700 px-4 py-1.5 rounded-md text-sm hover:bg-gray-400 transition-colors">
+                    <span class="mr-1">🔄</span>重置
+                </button>
+                <button onclick="openAllocationModal()" class="bg-blue-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition-colors">
+                    <span class="mr-1">⚙️</span>开始归集
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 归集记录表格 -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800">归集记录</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">序号</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集类型</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集月份</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集项目</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集金额</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集时间</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作人</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr class="table-row-hover">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">研发设备折旧</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">智能传感器研发</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 15,000</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(1)">查看详情</a>
+                        </td>
+                    </tr>
+                    <tr class="table-row-hover">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">研发设备折旧</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">智能传感器研发</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 8,000</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(2)">查看详情</a>
+                        </td>
+                    </tr>
+                    <tr class="table-row-hover">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">研发设备折旧</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">智能传感器研发</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 12,000</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">王五</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(3)">查看详情</a>
+                        </td>
+                    </tr>
+                    <tr class="table-row-hover">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">4</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">研发设备折旧</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">工业机器人控制系统</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 10,000</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 11:15</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(4)">查看详情</a>
+                        </td>
+                    </tr>
+                    <tr class="table-row-hover">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">研发设备折旧</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">工业机器人控制系统</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 6,000</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 11:15</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(5)">查看详情</a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot class="bg-gray-50">
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-right text-sm font-medium text-gray-700">合计：</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">¥ 51,000</td>
+                        <td colspan="3"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- 分页 -->
+        <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+            <div class="text-sm text-gray-700">显示 1 到 5 条，共 <span id="totalRecords">5</span> 条记录</div>
+            <div class="flex items-center space-x-2">
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50" disabled>上一页</button>
+                <button class="px-3 py-1 bg-primary text-white rounded-md text-sm">1</button>
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50">2</button>
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50">3</button>
+                <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50">下一页</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchRecords() { alert('搜索功能已触发'); }
+        function resetFilter() { alert('重置功能已触发'); }
+        function openAllocationModal() { parent.openAllocationModal(); }
+        function viewDetail(id) { parent.viewDetail(id); }
+    </script>
+</body>
+</html>
