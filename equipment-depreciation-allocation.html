@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>设备折旧归集 - 研发费用管理系统</title>
+    <title>折旧与长期摊销费用 - 研发费用管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
@@ -239,7 +239,7 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-depreciation-allocation.html')">
                                     <i class="fa fa-cogs w-6"></i>
-                                    <span>设备折旧归集</span>
+                                    <span>折旧与长期摊销费用</span>
                                 </a>
                             </li>
                             <li>
@@ -320,20 +320,6 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-allocation.html')">
                                     <i class="fa fa-bolt w-6"></i>
                                     <span>设备能耗工时分配</span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('long-term-allocation.html')">
-                                    <i class="fa fa-file-text-o w-6"></i>
-                                    <span>长期待摊分配</span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('long-term-allocation-detail.html')">
-                                    <i class="fa fa-file-text-o w-6"></i>
-                                    <span>长期待摊费用分摊明细</span>
                                 </a>
                             </li>
 
@@ -713,13 +699,13 @@
                         <i class="fa fa-chevron-right text-xs"></i>
                         <span>费用归集</span>
                         <i class="fa fa-chevron-right text-xs"></i>
-                        <span class="text-primary font-medium">设备折旧归集</span>
+                        <span class="text-primary font-medium">折旧与长期摊销费用</span>
                     </div>
-                    <h1 class="text-2xl font-bold text-gray-800">设备折旧归集</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">折旧与长期摊销费用</h1>
                 
                 <!-- 选项卡区域 -->
                 <div class="flex border-b border-gray-200 mt-4">
-                    <button id="tabWorkHour" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 border-b-2 border-transparent hover:border-primary transition-colors" onclick="loadTabContent('equipment-work-hour-record-content.html', 'tabWorkHour')">
+                    <button id="tabWorkHour" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 border-b-2 border-transparent hover:border-primary transition-colors" onclick="loadTabContent('equipment-work-hour-record.html', 'tabWorkHour')">
                         <i class="fa fa-clock-o mr-1"></i>
                         设备工时记录
                     </button>
@@ -727,9 +713,17 @@
                         <i class="fa fa-share-alt mr-1"></i>
                         设备工时分配
                     </button>
-                    <button id="tabEquipmentDepreciation" class="px-4 py-2 text-sm font-medium text-primary border-b-2 border-primary bg-blue-50" onclick="loadTabContent('equipment-depreciation-allocation-content.html', 'tabEquipmentDepreciation')">
+                    <button id="tabLongTerm" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 border-b-2 border-transparent hover:border-primary transition-colors" onclick="loadTabContent('long-term-allocation-content.html', 'tabLongTerm')">
+                        <i class="fa fa-file-text-o mr-1"></i>
+                        长期待摊分配
+                    </button>
+                    <button id="tabLongTermDetail" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 border-b-2 border-transparent hover:border-primary transition-colors" onclick="loadTabContent('long-term-allocation-detail-content.html', 'tabLongTermDetail')">
+                        <i class="fa fa-list-alt mr-1"></i>
+                        长期待摊明细
+                    </button>
+                    <button id="tabEquipmentDepreciation" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 border-b-2 border-transparent hover:border-primary transition-colors" onclick="loadTabContent('equipment-depreciation-allocation-content.html', 'tabEquipmentDepreciation')">
                         <i class="fa fa-cogs mr-1"></i>
-                        设备折旧归集
+                        折旧与长期摊销费用
                     </button>
                 </div>
             </div>
@@ -741,11 +735,11 @@
         </main>
     </div>
 
-    <!-- 设备折旧归集模态框 -->
+    <!-- 折旧与长期摊销费用模态框 -->
     <div id="allocationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold text-gray-900">设备折旧归集</h3>
+                <h3 class="text-xl font-semibold text-gray-900">折旧与长期摊销费用</h3>
                 <button onclick="closeAllocationModal()" class="text-gray-400 hover:text-gray-500">
                     <i class="fa fa-times text-xl"></i>
                 </button>
@@ -899,12 +893,7 @@
             });
             document.getElementById(tabId).className = 'px-4 py-2 text-sm font-medium text-primary border-b-2 border-primary bg-blue-50';
 
-            const frame = document.getElementById('contentFrame');
-            if (tabId === 'tabEquipmentDepreciation') {
-                frame.src = 'equipment-depreciation-allocation-content.html';
-            } else {
-                frame.src = pageUrl;
-            }
+            document.getElementById('contentFrame').src = pageUrl;
         }
 
         // 导航菜单折叠/展开

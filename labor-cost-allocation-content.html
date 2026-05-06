@@ -349,7 +349,7 @@
     </div>
 
     <script>
-        const laborCostDetails = {
+        var laborCostDetails = {
             1: {
                 type: '人工费 - 应发工资',
                 month: '2024-04',
@@ -424,11 +424,11 @@
         }
 
         function saveAllocation() {
-            const project = document.getElementById('allocationProject').value;
-            const department = document.getElementById('allocationDepartment').value;
-            const month = document.getElementById('allocationMonth').value;
-            const costType = document.querySelector('input[name="costType"]:checked').value;
-            const method = document.getElementById('allocationMethod').value;
+            var project = document.getElementById('allocationProject').value;
+            var department = document.getElementById('allocationDepartment').value;
+            var month = document.getElementById('allocationMonth').value;
+            var costType = document.querySelector('input[name="costType"]:checked').value;
+            var method = document.getElementById('allocationMethod').value;
 
             if (!project) {
                 alert('请选择归集项目');
@@ -444,7 +444,7 @@
         }
 
         function viewLaborDetail(id) {
-            const detail = laborCostDetails[id];
+            var detail = laborCostDetails[id];
             if (detail) {
                 document.getElementById('detailType').textContent = detail.type;
                 document.getElementById('detailMonth').textContent = detail.month;
@@ -453,21 +453,21 @@
                 document.getElementById('detailAmount').textContent = detail.amount;
                 document.getElementById('detailOperator').textContent = detail.operator;
                 
-                const tableBody = document.getElementById('detailTableBody');
+                var tableBody = document.getElementById('detailTableBody');
                 tableBody.innerHTML = '';
                 
-                detail.items.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td class="px-4 py-2 whitespace-nowrap">${item.name}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">${item.position}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">¥ ${item.salary.toLocaleString()}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">¥ ${item.insurance.toLocaleString()}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">¥ ${item.tax.toLocaleString()}</td>
-                        <td class="px-4 py-2 whitespace-nowrap">¥ ${item.netSalary.toLocaleString()}</td>
-                    `;
+                for (var i = 0; i < detail.items.length; i++) {
+                    var item = detail.items[i];
+                    var row = document.createElement('tr');
+                    row.innerHTML = 
+                        '<td class="px-4 py-2 whitespace-nowrap">' + item.name + '</td>' +
+                        '<td class="px-4 py-2 whitespace-nowrap">' + item.position + '</td>' +
+                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.salary.toLocaleString() + '</td>' +
+                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.insurance.toLocaleString() + '</td>' +
+                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.tax.toLocaleString() + '</td>' +
+                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.netSalary.toLocaleString() + '</td>';
                     tableBody.appendChild(row);
-                });
+                }
                 
                 document.getElementById('detailModal').classList.remove('hidden');
                 document.getElementById('detailModal').classList.add('flex');

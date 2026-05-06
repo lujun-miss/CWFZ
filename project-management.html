@@ -41,8 +41,39 @@
         }
     </style>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
         body {
             font-family: 'Inter', system-ui, sans-serif;
+            position: relative;
+        }
+        .flex-container {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        .app-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
         }
         .nav-item {
             transition: all 0.2s ease;
@@ -92,10 +123,11 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <div class="flex h-screen overflow-hidden">
+<body class="bg-gray-50 font-sans" style="width: 100%; max-width: 100%; overflow-x: hidden; margin: 0; padding: 0;">
+    <div style="width: 100%; max-width: 100%; overflow-x: hidden;">
+    <div class="flex h-screen overflow-hidden app-container" style="width: 100%; max-width: 100%;">
         <!-- 左侧导航栏 -->
-        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto" style="max-height: 100vh;">
+        <div class="w-60 bg-white shadow-md z-10 overflow-y-auto flex-shrink-0" style="max-height: 100vh; flex-shrink: 0;">
             <!-- 系统标题 -->
             <div class="p-4 border-b border-gray-200">
                 <h1 class="text-xl font-bold text-primary flex items-center">
@@ -306,16 +338,10 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-depreciation-allocation.html')">
                                     <i class="fa fa-cogs w-6"></i>
-                                    <span>设备折旧归集</span>
+                                    <span>折旧与长期摊销费用</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('long-term-depreciation-allocation.html')">
-                                    <i class="fa fa-file-text-o w-6"></i>
-                                    <span>长期待摊费用归集</span>
-                                </a>
-                            </li>
-                            <li>
+
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-cost-allocation.html')">
                                     <i class="fa fa-cubes w-6"></i>
                                     <span>直接投入归集</span>
@@ -638,7 +664,7 @@
         </div>
 
         <!-- 主内容区 -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden min-w-0">
             <!-- 顶部导航栏 -->
             <header class="bg-white shadow-sm z-10">
                 <div class="flex items-center justify-between p-4">
@@ -666,9 +692,9 @@
             </header>
 
             <!-- 内容区域 -->
-            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <main class="flex-1 overflow-y-auto p-4 bg-gray-50" style="min-width: 0;">
                 <!-- 页面标题 -->
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
                     <h1 class="text-2xl font-bold text-gray-800">项目管理</h1>
                     <div class="flex space-x-2">
                         <div class="relative">
@@ -684,7 +710,7 @@
 
                 <!-- 项目列表 -->
                 <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                    <div class="px-4 py-3 border-b border-gray-200 flex flex-wrap justify-between items-center gap-2">
                         <h3 class="font-medium text-gray-700">项目列表</h3>
                         <div class="flex space-x-2">
                             <select class="border border-gray-300 rounded-md px-3 py-1 text-sm">
@@ -698,35 +724,35 @@
                             </button>
                         </div>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
+                    <div class="overflow-x-auto" style="width: 100%;">
+                        <table class="w-full divide-y divide-gray-200 text-xs">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         项目名称
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         项目负责人
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         执行负责人
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         开始日期
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         结束日期
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         状态
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         资源
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         预算
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-2 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         操作
                                     </th>
                                 </tr>
@@ -734,231 +760,226 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <!-- 项目1 -->
                                 <tr class="table-row-hover">
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center">
-                                                <i class="fa fa-folder text-primary"></i>
+                                            <div class="flex-shrink-0 h-6 w-6 bg-blue-100 rounded-md flex items-center justify-center">
+                                                <i class="fa fa-folder text-primary text-xs"></i>
                                             </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">AI智能算法研发</div>
-                                                <div class="text-sm text-gray-500">PROJ-2024-001</div>
+                                            <div class="ml-1">
+                                                <div class="text-xs font-medium text-gray-900">AI智能算法研发</div>
+                                                <div class="text-xs text-gray-500">PROJ-2024-001</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">张三</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">张三</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">王五</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">王五</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2024-01-15</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2024-01-15</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2024-12-31</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2024-12-31</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <span class="px-1 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800">
                                             进行中
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">
                                             <div>人员(15)</div>
                                             <div>设备(12)</div>
-                                            <div>建筑物(1)</div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-2 py-2 whitespace-nowrap text-xs text-gray-500">
                                         ¥1,200,000
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">查看</a>
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">编辑</a>
+                                    <td class="px-2 py-2 whitespace-nowrap text-right text-xs font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">编辑</a>
                                         <a href="#" class="text-danger hover:text-red-600">删除</a>
                                     </td>
                                 </tr>
                                 <!-- 项目2 -->
                                 <tr class="table-row-hover">
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center">
-                                                <i class="fa fa-folder text-primary"></i>
+                                            <div class="flex-shrink-0 h-6 w-6 bg-blue-100 rounded-md flex items-center justify-center">
+                                                <i class="fa fa-folder text-primary text-xs"></i>
                                             </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">大数据分析平台</div>
-                                                <div class="text-sm text-gray-500">PROJ-2024-002</div>
+                                            <div class="ml-1">
+                                                <div class="text-xs font-medium text-gray-900">大数据分析平台</div>
+                                                <div class="text-xs text-gray-500">PROJ-2024-002</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">李四</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">李四</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">张三</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">张三</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2024-02-01</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2024-02-01</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2024-11-30</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2024-11-30</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <span class="px-1 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                             已暂停
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">
                                             <div>人员(8)</div>
                                             <div>设备(6)</div>
-                                            <div>建筑物(0)</div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-2 py-2 whitespace-nowrap text-xs text-gray-500">
                                         ¥850,000
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">查看</a>
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">编辑</a>
+                                    <td class="px-2 py-2 whitespace-nowrap text-right text-xs font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">编辑</a>
                                         <a href="#" class="text-danger hover:text-red-600">删除</a>
                                     </td>
                                 </tr>
                                 <!-- 项目3 -->
                                 <tr class="table-row-hover">
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center">
-                                                <i class="fa fa-folder text-primary"></i>
+                                            <div class="flex-shrink-0 h-6 w-6 bg-blue-100 rounded-md flex items-center justify-center">
+                                                <i class="fa fa-folder text-primary text-xs"></i>
                                             </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">移动应用开发</div>
-                                                <div class="text-sm text-gray-500">PROJ-2024-003</div>
+                                            <div class="ml-1">
+                                                <div class="text-xs font-medium text-gray-900">移动应用开发</div>
+                                                <div class="text-xs text-gray-500">PROJ-2024-003</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">王五</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">王五</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">李四</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">李四</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2024-03-10</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2024-03-10</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2024-09-30</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2024-09-30</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <span class="px-1 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800">
                                             进行中
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">
                                             <div>人员(10)</div>
                                             <div>设备(8)</div>
-                                            <div>建筑物(0)</div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-2 py-2 whitespace-nowrap text-xs text-gray-500">
                                         ¥600,000
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">查看</a>
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">编辑</a>
+                                    <td class="px-2 py-2 whitespace-nowrap text-right text-xs font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">编辑</a>
                                         <a href="#" class="text-danger hover:text-red-600">删除</a>
                                     </td>
                                 </tr>
                                 <!-- 项目4 -->
                                 <tr class="table-row-hover">
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center">
-                                                <i class="fa fa-folder text-primary"></i>
+                                            <div class="flex-shrink-0 h-6 w-6 bg-blue-100 rounded-md flex items-center justify-center">
+                                                <i class="fa fa-folder text-primary text-xs"></i>
                                             </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">物联网系统</div>
-                                                <div class="text-sm text-gray-500">PROJ-2024-004</div>
+                                            <div class="ml-1">
+                                                <div class="text-xs font-medium text-gray-900">物联网系统</div>
+                                                <div class="text-xs text-gray-500">PROJ-2024-004</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">赵六</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">赵六</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">王五</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">王五</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2023-11-01</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2023-11-01</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2024-06-30</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2024-06-30</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <span class="px-1 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full bg-gray-100 text-gray-800">
                                             已完成
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">
                                             <div>人员(12)</div>
                                             <div>设备(15)</div>
-                                            <div>建筑物(1)</div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-2 py-2 whitespace-nowrap text-xs text-gray-500">
                                         ¥950,000
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">查看</a>
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">编辑</a>
+                                    <td class="px-2 py-2 whitespace-nowrap text-right text-xs font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">编辑</a>
                                         <a href="#" class="text-danger hover:text-red-600">删除</a>
                                     </td>
                                 </tr>
                                 <!-- 项目5 -->
                                 <tr class="table-row-hover">
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center">
-                                                <i class="fa fa-folder text-primary"></i>
+                                            <div class="flex-shrink-0 h-6 w-6 bg-blue-100 rounded-md flex items-center justify-center">
+                                                <i class="fa fa-folder text-primary text-xs"></i>
                                             </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">云计算平台</div>
-                                                <div class="text-sm text-gray-500">PROJ-2024-005</div>
+                                            <div class="ml-1">
+                                                <div class="text-xs font-medium text-gray-900">云计算平台</div>
+                                                <div class="text-xs text-gray-500">PROJ-2024-005</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">孙七</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">孙七</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">张三</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">张三</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2024-04-01</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2024-04-01</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">2024-12-31</div>
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">2024-12-31</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <span class="px-1 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800">
                                             进行中
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">
+                                    <td class="px-2 py-2 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">
                                             <div>人员(20)</div>
                                             <div>设备(18)</div>
-                                            <div>建筑物(2)</div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-2 py-2 whitespace-nowrap text-xs text-gray-500">
                                         ¥1,500,000
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">查看</a>
-                                        <a href="#" class="text-primary hover:text-blue-600 mr-3">编辑</a>
+                                    <td class="px-2 py-2 whitespace-nowrap text-right text-xs font-medium">
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">查看</a>
+                                        <a href="#" class="text-primary hover:text-blue-600 mr-0.5">编辑</a>
                                         <a href="#" class="text-danger hover:text-red-600">删除</a>
                                     </td>
                                 </tr>
@@ -966,7 +987,7 @@
                         </table>
                     </div>
                     <!-- 分页 -->
-                    <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                    <div class="px-3 py-2 flex flex-wrap items-center justify-between border-t border-gray-200 sm:px-4 gap-2">
                         <div class="flex-1 flex justify-between sm:hidden">
                             <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                                 上一页
@@ -1013,6 +1034,7 @@
                 </div>
             </main>
         </div>
+    </div>
     </div>
 
     <script>

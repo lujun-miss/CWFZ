@@ -230,7 +230,7 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-depreciation-allocation.html')">
                                     <i class="fa fa-cogs w-6"></i>
-                                    <span>设备折旧归集</span>
+                                    <span>折旧与长期摊销费用</span>
                                 </a>
                             </li>
                             <li>
@@ -1241,9 +1241,32 @@
             }
         }
         
+        // 检测是否在 iframe 中
+        function isInIframe() {
+            try {
+                return window.self !== window.top;
+            } catch (e) {
+                return true;
+            }
+        }
+
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             initHelpTooltips();
+            
+            // 如果在 iframe 中，隐藏导航栏和顶部栏
+            if (isInIframe()) {
+                const header = document.querySelector('header');
+                const sidebar = document.querySelector('.w-64.bg-white.shadow-md');
+                
+                if (header) {
+                    header.style.display = 'none';
+                }
+                
+                if (sidebar) {
+                    sidebar.style.display = 'none';
+                }
+            }
         });
 
     </script>

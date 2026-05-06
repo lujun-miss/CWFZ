@@ -627,6 +627,32 @@
             alert('工时提报已保存');
             loadPage('project-work-hour-record.html');
         }
+
+        // 检测是否在 iframe 中
+        function isInIframe() {
+            try {
+                return window.self !== window.top;
+            } catch (e) {
+                return true;
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 如果在 iframe 中，隐藏导航栏和顶部栏
+            if (isInIframe()) {
+                const header = document.querySelector('header');
+                const sidebar = document.querySelector('.w-64.bg-white.shadow-md');
+                
+                if (header) {
+                    header.style.display = 'none';
+                }
+                
+                if (sidebar) {
+                    sidebar.style.display = 'none';
+                }
+            }
+        });
     </script>
 </body>
 </html>

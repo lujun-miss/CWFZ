@@ -288,15 +288,10 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-depreciation-allocation.html')">
                                     <i class="fa fa-cogs w-6"></i>
-                                    <span>设备折旧归集</span>
+                                    <span>折旧与长期摊销费用</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('long-term-depreciation-allocation.html')">
-                                    <i class="fa fa-file-text-o w-6"></i>
-                                    <span>长期待摊费用归集</span>
-                                </a>
-                            </li>
+
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-cost-allocation.html')">
                                     <i class="fa fa-cubes w-6"></i>
@@ -658,10 +653,11 @@
                                         <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
                                     </th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">序号</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工号</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">姓名</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">部门</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">人员类型</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">职位</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">人员类别</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">学历</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">入职时间</th>
@@ -674,16 +670,17 @@
                                         <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">1</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">RD202401001</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">张三</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">正式员工</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">项目经理</td>
-                                    <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">研发人员</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">硕士</td>
                                     <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">在职</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2024-01-15</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(1)">编辑</a>
-                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(1)">删除</a>
+                                        <a href="javascript:void(0)" class="text-orange-500 hover:text-orange-600" onclick="resetPassword(1)">重置密码</a>
                                     </td>
                                 </tr>
                                 <tr class="table-row-hover">
@@ -691,16 +688,17 @@
                                         <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">RD202402002</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">李四</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">正式员工</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发工程师</td>
-                                    <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">研发人员</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">本科</td>
                                     <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">在职</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2024-02-01</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(2)">编辑</a>
-                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(2)">删除</a>
+                                        <a href="javascript:void(0)" class="text-orange-500 hover:text-orange-600" onclick="resetPassword(2)">重置密码</a>
                                     </td>
                                 </tr>
                                 <tr class="table-row-hover">
@@ -708,16 +706,17 @@
                                         <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">3</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">RD202403003</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">王五</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">劳务派遣</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">测试工程师</td>
-                                    <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">研发人员</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">本科</td>
                                     <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">在职</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2024-03-10</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(3)">编辑</a>
-                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(3)">删除</a>
+                                        <a href="javascript:void(0)" class="text-orange-500 hover:text-orange-600" onclick="resetPassword(3)">重置密码</a>
                                     </td>
                                 </tr>
                                 <tr class="table-row-hover">
@@ -725,16 +724,17 @@
                                         <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">4</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">RD202404004</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">赵六</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">实习生</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">前端工程师</td>
-                                    <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">研发人员</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">本科</td>
                                     <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">在职</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2024-04-05</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(4)">编辑</a>
-                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(4)">删除</a>
+                                        <a href="javascript:void(0)" class="text-orange-500 hover:text-orange-600" onclick="resetPassword(4)">重置密码</a>
                                     </td>
                                 </tr>
                                 <tr class="table-row-hover">
@@ -742,16 +742,17 @@
                                         <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">5</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">RD202405005</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">钱七</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">正式员工</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">后端工程师</td>
-                                    <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">研发人员</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">硕士</td>
                                     <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">在职</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2024-05-20</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(5)">编辑</a>
-                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(5)">删除</a>
+                                        <a href="javascript:void(0)" class="text-orange-500 hover:text-orange-600" onclick="resetPassword(5)">重置密码</a>
                                     </td>
                                 </tr>
                                 <tr class="table-row-hover">
@@ -759,16 +760,17 @@
                                         <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">6</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">MK202406006</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">孙八</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">市场部</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">外包人员</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">产品经理</td>
-                                    <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">非研发人员</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">本科</td>
                                     <td class="px-4 py-3 whitespace-nowrap"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">在职</span></td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2024-06-10</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPerson(6)">编辑</a>
-                                        <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePerson(6)">删除</a>
+                                        <a href="javascript:void(0)" class="text-orange-500 hover:text-orange-600" onclick="resetPassword(6)">重置密码</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -809,11 +811,25 @@
                 </button>
             </div>
             <form id="personForm">
-                <input type="hidden" id="personId">
+                <input type="hidden" id="personId" value="">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">姓名</label>
-                        <input type="text" id="personName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                        <label class="block text-sm font-medium text-gray-700">工号</label>
+                        <input type="text" id="personNo" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="手动输入或留空自动生成">
+                        <p class="mt-1 text-xs text-gray-500">备注：手动输入则使用输入值，留空则自动生成。自动生成规则为 DEPT+YYYYMM+3位序号。部门前缀：研发部=RD，市场部=MK，财务部=FN，行政部=AD</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">姓名 <span class="text-red-500">*</span></label>
+                        <input type="text" id="personName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">密码 <span class="text-red-500">*</span></label>
+                        <input type="password" id="personPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="用于小程序打卡登录">
+                        <p class="mt-1 text-xs text-gray-500">备注：密码长度6-16位，包含数字和字母</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">入职时间</label>
+                        <input type="date" id="personEntryDate" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">部门</label>
@@ -823,6 +839,16 @@
                             <option value="市场部">市场部</option>
                             <option value="财务部">财务部</option>
                             <option value="行政部">行政部</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">人员类型</label>
+                        <select id="personType" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                            <option value="">请选择人员类型</option>
+                            <option value="正式员工">正式员工</option>
+                            <option value="劳务派遣">劳务派遣</option>
+                            <option value="实习生">实习生</option>
+                            <option value="外包人员">外包人员</option>
                         </select>
                     </div>
                     <div>
@@ -838,32 +864,12 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">人员类别</label>
-                        <select id="personCategory" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
-                            <option value="">请选择人员类别</option>
-                            <option value="研发人员">研发人员</option>
-                            <option value="非研发人员">非研发人员</option>
-                        </select>
-                    </div>
-                    <div>
                         <label class="block text-sm font-medium text-gray-700">状态</label>
                         <select id="personStatus" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
                             <option value="">请选择状态</option>
-                            <option value="在职">在职</option>
+                            <option value="在职" selected>在职</option>
                             <option value="离职">离职</option>
                         </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">基本薪资</label>
-                        <input type="number" id="personBaseSalary" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">绩效薪资</label>
-                        <input type="number" id="personPerformanceSalary" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">社保公积金</label>
-                        <input type="number" id="personSocialSecurity" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
                     </div>
                 </div>
                 <div class="mt-6 flex justify-end space-x-3">
@@ -890,7 +896,8 @@
                 </div>
                 <div class="text-sm text-gray-500">
                     <p>请按照模板格式填写数据，支持Excel文件导入</p>
-                    <p class="mt-1">模板字段：姓名、部门、职位、人员类别、学历、状态、基本薪资、绩效薪资、社保公积金、入职时间</p>
+                    <p class="mt-1">模板字段：工号、姓名、密码、部门、职位、学历、状态、入职时间</p>
+                    <p class="mt-1 text-xs text-gray-400">备注：工号和密码均可留空自动生成。工号自动生成规则为 DEPT+YYYYMM+3位序号；密码留空则默认设为 123456</p>
                 </div>
             </div>
             <div class="mt-6 flex justify-end space-x-3">
@@ -903,8 +910,8 @@
     <script>
         // 菜单折叠/展开
         function toggleMenu(element) {
-            const subMenu = element.nextElementSibling;
-            const arrow = element.querySelector('.menu-arrow');
+            var subMenu = element.nextElementSibling;
+            var arrow = element.querySelector('.menu-arrow');
             
             if (subMenu.classList.contains('collapsed')) {
                 subMenu.classList.remove('collapsed');
@@ -920,18 +927,51 @@
             window.location.href = page;
         }
 
+        // 生成工号（仅当工号为空时自动生成）
+        function generatePersonNo() {
+            var personNoField = document.getElementById('personNo');
+            // 如果工号已有值，则不自动生成
+            if (personNoField.value && personNoField.value.trim() !== '') {
+                return;
+            }
+            
+            var department = document.getElementById('personDepartment').value;
+            if (!department) {
+                personNoField.value = '';
+                return;
+            }
+            
+            // 根据部门生成前缀
+            var prefix = 'RD'; // 默认研发部
+            if (department === '市场部') prefix = 'MK';
+            else if (department === '财务部') prefix = 'FN';
+            else if (department === '行政部') prefix = 'AD';
+            
+            // 获取当前年月
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = String(now.getMonth() + 1).padStart(2, '0');
+            
+            // 生成3位序号（模拟，实际应从数据库获取最大序号）
+            var seq = String(Math.floor(Math.random() * 900) + 100);
+            
+            personNoField.value = prefix + year + month + seq;
+        }
+
+        // 监听部门选择变化，自动生成工号
+        document.getElementById('personDepartment').addEventListener('change', generatePersonNo);
+
         // 打开新增人员模态框
         document.getElementById('addPersonBtn').addEventListener('click', function() {
             document.getElementById('modalTitle').textContent = '新增人员';
             document.getElementById('personId').value = '';
+            document.getElementById('personNo').value = '';
             document.getElementById('personName').value = '';
+            document.getElementById('personPassword').value = '';
             document.getElementById('personDepartment').value = '';
             document.getElementById('personPosition').value = '';
-            document.getElementById('personCategory').value = '';
-            document.getElementById('personStatus').value = '';
-            document.getElementById('personBaseSalary').value = '';
-            document.getElementById('personPerformanceSalary').value = '';
-            document.getElementById('personSocialSecurity').value = '';
+            document.getElementById('personEntryDate').value = '';
+            document.getElementById('personStatus').value = '在职';
             document.getElementById('personModal').classList.remove('hidden');
         });
 
@@ -944,9 +984,6 @@
             document.getElementById('personName').value = '测试人员';
             document.getElementById('personDepartment').value = '研发部';
             document.getElementById('personPosition').value = '研发工程师';
-            document.getElementById('personBaseSalary').value = '10000';
-            document.getElementById('personPerformanceSalary').value = '5000';
-            document.getElementById('personSocialSecurity').value = '2000';
             document.getElementById('personModal').classList.remove('hidden');
         }
 
@@ -966,23 +1003,55 @@
 
         // 保存人员
         function savePerson() {
-            const id = document.getElementById('personId').value;
-            const name = document.getElementById('personName').value;
-            const department = document.getElementById('personDepartment').value;
-            const position = document.getElementById('personPosition').value;
-            const baseSalary = document.getElementById('personBaseSalary').value;
-            const performanceSalary = document.getElementById('personPerformanceSalary').value;
-            const socialSecurity = document.getElementById('personSocialSecurity').value;
+            var id = document.getElementById('personId').value;
+            var personNo = document.getElementById('personNo').value;
+            var name = document.getElementById('personName').value;
+            var password = document.getElementById('personPassword').value;
+            var department = document.getElementById('personDepartment').value;
+            var position = document.getElementById('personPosition').value;
 
-            if (!name || !department || !position || !baseSalary || !performanceSalary || !socialSecurity) {
-                alert('请填写所有必填字段');
+            // 必填字段验证
+            if (!name) {
+                alert('请填写姓名');
                 return;
+            }
+            if (!password) {
+                alert('请设置密码（用于小程序打卡登录）');
+                return;
+            }
+            // 密码格式验证
+            if (password.length < 6 || password.length > 16) {
+                alert('密码长度必须为6-16位');
+                return;
+            }
+            if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/.test(password)) {
+                alert('密码必须包含数字和字母');
+                return;
+            }
+            if (!department || !position) {
+                alert('请填写部门和职位');
+                return;
+            }
+            
+            // 如果工号为空，自动生成
+            if (!personNo || personNo.trim() === '') {
+                generatePersonNo();
+                personNo = document.getElementById('personNo').value;
             }
 
             // 这里可以添加保存逻辑
-            console.log('保存人员:', { id, name, department, position, baseSalary, performanceSalary, socialSecurity });
+            console.log('保存人员:', { id, personNo, name, department, position });
             alert('保存成功！');
             closeModal();
+        }
+
+        // 重置密码
+        function resetPassword(id) {
+            if (confirm('确定要重置该人员的密码吗？重置后密码将恢复为默认值。')) {
+                // 这里可以添加重置密码逻辑
+                console.log('重置密码ID:', id);
+                alert('密码已重置！新密码为：123456');
+            }
         }
 
         // 打开导入模态框
@@ -998,17 +1067,21 @@
 
         // 导入数据
         function importData() {
-            const fileInput = document.getElementById('importFile');
-            const file = fileInput.files[0];
+            var fileInput = document.getElementById('importFile');
+            var file = fileInput.files[0];
             
             if (!file) {
                 alert('请选择要导入的Excel文件');
                 return;
             }
             
-            // 这里可以添加导入逻辑
+            // 模拟处理导入数据
+            // 实际应解析Excel文件并处理每一行数据
+            // 如果密码为空，默认设为 123456
+            // 如果工号为空，自动生成
+            
             console.log('导入文件:', file.name);
-            alert('导入成功！');
+            alert('导入成功！\n\n备注：\n- 工号留空则自动生成\n- 密码留空则默认设为 123456');
             closeImportModal();
         }
 

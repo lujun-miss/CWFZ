@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>职位管理 - 研知π</title>
+    <title>岗位管理 - 研知π</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -226,7 +226,7 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-depreciation-allocation.html')">
                                     <i class="fa fa-cogs w-6"></i>
-                                    <span>设备折旧归集</span>
+                                    <span>折旧与长期摊销费用</span>
                                 </a>
                             </li>
                             <li>
@@ -647,7 +647,7 @@
             <!-- 顶部信息栏 -->
             <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
                 <div class="flex items-center">
-                    <h2 id="page-title" class="text-lg font-medium text-gray-800">职位管理</h2>
+                    <h2 id="page-title" class="text-lg font-medium text-gray-800">岗位管理</h2>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button class="text-gray-500 hover:text-gray-700">
@@ -665,28 +665,15 @@
             <main class="flex-1 overflow-auto p-6">
                 <!-- 页面标题 -->
                 <div class="mb-6">
-                    <h1 class="text-2xl font-bold text-gray-800">职位管理</h1>
-                    <div class="flex space-x-4 mt-2">
-                        <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-md text-sm font-medium">首页</button>
-                        <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-md text-sm font-medium">人事管理</button>
-                        <button class="px-3 py-1 bg-blue-100 text-primary rounded-md text-sm font-medium">职位管理</button>
-                    </div>
+                    <h1 class="text-2xl font-bold text-gray-800">岗位管理</h1>
                 </div>
                 
                 <!-- 搜索和新增 -->
                 <div class="bg-white rounded-lg shadow p-4 mb-4">
                     <div class="flex flex-wrap items-center gap-4">
                         <div>
-                            <label class="text-sm font-medium text-gray-700 mr-2">职位名称</label>
-                            <input type="text" class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="请输入职位名称">
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 mr-2">职位类型</label>
-                            <select class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
-                                <option>请选择职位类型</option>
-                                <option>研发职位</option>
-                                <option>非研发职位</option>
-                            </select>
+                            <label class="text-sm font-medium text-gray-700 mr-2">岗位名称</label>
+                            <input type="text" class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="请输入岗位名称">
                         </div>
                         <button class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center">
                             <i class="fa fa-search mr-1"></i>
@@ -706,12 +693,12 @@
                         </button>
                         <button id="addPositionBtn" class="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600 transition-colors flex items-center">
                             <i class="fa fa-plus mr-1"></i>
-                            新增职位
+                            新增岗位
                         </button>
                     </div>
                 </div>
                 
-                <!-- 职位列表 -->
+                <!-- 岗位列表 -->
                 <div class="bg-white rounded-lg shadow">
                     <div class="overflow-x-auto">
                         <table class="min-w-full">
@@ -721,10 +708,8 @@
                                         <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
                                     </th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">序号</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">职位编码</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">职位名称</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">职位类型</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">所属部门</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">岗位编码</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">岗位名称</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                                 </tr>
                             </thead>
@@ -736,10 +721,6 @@
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">1</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">POS001</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">项目经理</td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">研发职位</span>
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPosition(1)">编辑</a>
                                         <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePosition(1)">删除</a>
@@ -752,10 +733,6 @@
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">POS002</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发工程师</td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">研发职位</span>
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPosition(2)">编辑</a>
                                         <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePosition(2)">删除</a>
@@ -768,10 +745,6 @@
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">3</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">POS003</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">测试工程师</td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">研发职位</span>
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">研发部</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPosition(3)">编辑</a>
                                         <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePosition(3)">删除</a>
@@ -784,10 +757,6 @@
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">4</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">POS004</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">产品经理</td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">非研发职位</span>
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">市场部</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPosition(4)">编辑</a>
                                         <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePosition(4)">删除</a>
@@ -800,10 +769,6 @@
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">5</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">POS005</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">财务专员</td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">非研发职位</span>
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">财务部</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                         <a href="javascript:void(0)" class="text-primary hover:text-blue-600 mr-2" onclick="editPosition(5)">编辑</a>
                                         <a href="javascript:void(0)" class="text-danger hover:text-red-600" onclick="deletePosition(5)">删除</a>
@@ -840,41 +805,24 @@
         </div>
     </div>
     
-    <!-- 新增职位模态框 -->
+    <!-- 新增岗位模态框 -->
     <div id="addPositionModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800">新增职位</h3>
+                <h3 class="text-lg font-semibold text-gray-800">新增岗位</h3>
                 <button id="closeAddPositionModal" class="text-gray-500 hover:text-gray-700">
                     <i class="fa fa-times"></i>
                 </button>
             </div>
             <div class="p-6">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">职位编码</label>
-                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入职位编码">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">岗位编码</label>
+                    <input type="text" id="positionCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="手动输入或留空自动生成">
+                    <p class="mt-1 text-xs text-gray-500">备注：手动输入则使用输入值，留空则自动生成。自动生成规则为 POS+3位序号（如：POS001）</p>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">职位名称</label>
-                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入职位名称">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">职位类型</label>
-                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <option>请选择职位类型</option>
-                        <option>研发职位</option>
-                        <option>非研发职位</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">所属部门</label>
-                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <option>请选择所属部门</option>
-                        <option>研发部</option>
-                        <option>市场部</option>
-                        <option>财务部</option>
-                        <option>行政部</option>
-                    </select>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">岗位名称 <span class="text-red-500">*</span></label>
+                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入岗位名称">
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
@@ -896,7 +844,7 @@
     <div id="importModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-medium text-gray-900">导入职位数据</h3>
+                <h3 class="text-lg font-medium text-gray-900">导入岗位数据</h3>
                 <button class="text-gray-400 hover:text-gray-500" onclick="closeImportModal()">
                     <i class="fa fa-times"></i>
                 </button>
@@ -908,7 +856,8 @@
                 </div>
                 <div class="text-sm text-gray-500">
                     <p>请按照模板格式填写数据，支持Excel文件导入</p>
-                    <p class="mt-1">模板字段：职位编码、职位名称、职位类型、所属部门、备注</p>
+                    <p class="mt-1">模板字段：岗位编码、岗位名称、备注</p>
+                    <p class="mt-1 text-xs text-gray-400">备注：岗位编码可留空自动生成，规则为 POS+3位序号（如：POS001）</p>
                 </div>
             </div>
             <div class="mt-6 flex justify-end space-x-3">
@@ -931,18 +880,18 @@
             arrow.classList.toggle('collapsed');
         }
         
-        // 职位操作函数
+        // 岗位操作函数
         function editPosition(positionId) {
-            alert('编辑职位: ' + positionId);
+            alert('编辑岗位: ' + positionId);
         }
-        
+
         function deletePosition(positionId) {
-            if (confirm('确认要删除职位 ' + positionId + ' 吗？')) {
-                alert('职位 ' + positionId + ' 已删除');
+            if (confirm('确认要删除岗位 ' + positionId + ' 吗？')) {
+                alert('岗位 ' + positionId + ' 已删除');
             }
         }
-        
-        // 添加职位按钮点击事件
+
+        // 添加岗位按钮点击事件
         document.getElementById('addPositionBtn').addEventListener('click', function() {
             document.getElementById('addPositionModal').classList.remove('hidden');
         });
