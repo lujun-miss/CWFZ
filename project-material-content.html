@@ -119,36 +119,78 @@
                                 <input type="text" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入物料名称">
                             </div>
                             
-                            <div class="flex items-center">
-                                <label class="text-gray-700 mr-2">审批状态：</label>
-                                <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                                    <option value="">全部</option>
-                                    <option value="pending">待审核</option>
-                                    <option value="approved">已通过</option>
-                                    <option value="rejected">已驳回</option>
-                                    <option value="issued">已出库</option>
-                                    <option value="returned">已退回</option>
+                            <div class="flex items-center space-x-2">
+                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('all')">全部</button>
+                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('today')">今日</button>
+                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('week')">本周</button>
+                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('month')">本月</button>
+                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('year')">本年</button>
+                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('custom')">自定义</button>
+                            </div>
+                            
+                            <div class="flex items-center space-x-2">
+                                <select id="yearSelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" onchange="onYearMonthChange()">
+                                    <option value="">选择年份</option>
                                 </select>
+                                <select id="monthSelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" onchange="onYearMonthChange()">
+                                    <option value="">选择月份</option>
+                                    <option value="01">1月</option>
+                                    <option value="02">2月</option>
+                                    <option value="03">3月</option>
+                                    <option value="04">4月</option>
+                                    <option value="05">5月</option>
+                                    <option value="06">6月</option>
+                                    <option value="07">7月</option>
+                                    <option value="08">8月</option>
+                                    <option value="09">9月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                                <button class="px-3 py-1 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors" onclick="applyYearMonthFilter()">
+                                    <i class="fa fa-search mr-1"></i>查询
+                                </button>
                             </div>
                             
                             <div class="flex items-center space-x-2">
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">全部</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">今日</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">本周</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">本月</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">自定义</button>
-                            </div>
-                            
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <input type="date" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" id="startDate">
                                 <span class="text-gray-500">至</span>
-                                <input type="date" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <input type="date" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" id="endDate">
+                            </div>
+                            
+                            <!-- 导出选项 -->
+                            <div class="flex items-center space-x-2">
+                                <span class="text-gray-600 text-sm">导出:</span>
+                                <button class="bg-gray-200 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm" onclick="exportDetail()">
+                                    <i class="fa fa-file-text-o mr-1"></i>明细
+                                </button>
+                                <button class="bg-gray-200 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm" onclick="exportMonthly()">
+                                    <i class="fa fa-calendar mr-1"></i>按月
+                                </button>
+                                <!-- 按月导出的年月选择器 -->
+                                <div id="monthlyExportSelect" class="flex items-center space-x-2 hidden">
+                                    <select id="exportYear" class="border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                        <option value="">选择年份</option>
+                                    </select>
+                                    <select id="exportMonth" class="border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                        <option value="">选择月份</option>
+                                        <option value="01">1月</option>
+                                        <option value="02">2月</option>
+                                        <option value="03">3月</option>
+                                        <option value="04">4月</option>
+                                        <option value="05">5月</option>
+                                        <option value="06">6月</option>
+                                        <option value="07">7月</option>
+                                        <option value="08">8月</option>
+                                        <option value="09">9月</option>
+                                        <option value="10">10月</option>
+                                        <option value="11">11月</option>
+                                        <option value="12">12月</option>
+                                    </select>
+                                </div>
                             </div>
                             
                             <div class="ml-auto flex items-center space-x-2">
-                                <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors" onclick="exportRequisitions()">
-                                    <i class="fa fa-download mr-1"></i>导出
-                                </button>
                                 <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors" onclick="queryRecords()">查询</button>
                                 <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors" onclick="resetFilters()">重置</button>
                                 <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors" onclick="createRequisition()">新建领料单</button>
@@ -156,10 +198,23 @@
                         </div>
                     </div>
                     
-                    <!-- 审核列表 -->
+                    <!-- 成功提示弹窗 -->
+                    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-80 text-center">
+                            <div class="text-4xl mb-4">
+                                <i class="fa fa-check-circle text-green-500"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800 mb-2">导出成功！</h3>
+                            <p id="exportInfo" class="text-gray-600 text-sm mb-4"></p>
+                            <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors" onclick="closeSuccessModal()">确定</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 领料单列表 -->
                     <div class="bg-white rounded-lg shadow-sm">
                         <div class="p-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-800">审核列表</h3>
+                            <h3 class="text-lg font-medium text-gray-800">领料单列表</h3>
+                            <p class="text-sm text-gray-500 mt-1">同一个领料单可包含多个物料</p>
                         </div>
                         
                         <div class="overflow-x-auto">
@@ -169,124 +224,199 @@
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                                             <input type="checkbox" class="rounded text-primary focus:ring-primary">
                                         </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料单号</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">所属项目</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料部门</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料时间</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料人</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">用途说明</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">备注说明</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">物料编码/名称</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">规格</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">申领数量</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">库存单位</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">预计单价</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">单价</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">金额（元）</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">审批状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">归集状态</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
-                                    <tr class="table-row-hover">
-                                        <td class="px-4 py-3 border-b">
+                                    <!-- 领料单 LD-2025-0001 - 智能AI系统A -->
+                                    <tr class="table-row-hover bg-gray-50">
+                                        <td class="px-4 py-3 border-b" rowspan="3">
                                             <input type="checkbox" class="rounded text-primary focus:ring-primary">
                                         </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统A</td>
-                                        <td class="px-4 py-3 border-b">生产部门</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">张三</td>
-                                        <td class="px-4 py-3 border-b">用于研发使用</td>
+                                        <td class="px-4 py-3 border-b font-medium" rowspan="3">LD-2025-0001</td>
+                                        <td class="px-4 py-3 border-b font-medium" rowspan="3">智能AI系统A</td>
+                                        <td class="px-4 py-3 border-b" rowspan="3">生产部门</td>
+                                        <td class="px-4 py-3 border-b" rowspan="3">2025-10-05</td>
+                                        <td class="px-4 py-3 border-b" rowspan="3">张三</td>
+                                        <td class="px-4 py-3 border-b" rowspan="3">用于研发使用</td>
                                         <td class="px-4 py-3 border-b">BM001 物料A</td>
                                         <td class="px-4 py-3 border-b">ml</td>
                                         <td class="px-4 py-3 border-b">1000</td>
                                         <td class="px-4 py-3 border-b">件</td>
                                         <td class="px-4 py-3 border-b">10</td>
                                         <td class="px-4 py-3 border-b">10000</td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">待审核</span>
+                                        <td class="px-4 py-3 border-b" rowspan="3">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已归集</span>
                                         </td>
-                                        <td class="px-4 py-3 border-b">
+                                        <td class="px-4 py-3 border-b" rowspan="3">
                                             <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
                                                 <button class="text-blue-500 hover:text-blue-700" title="详情">
                                                     <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-gray-400 cursor-not-allowed" title="已归集，无法编辑" disabled>
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <button class="text-gray-400 cursor-not-allowed" title="已归集，无法删除" disabled>
+                                                    <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr class="table-row-hover">
-                                        <td class="px-4 py-3 border-b">
+                                        <td class="px-4 py-3 border-b">BM002 物料B</td>
+                                        <td class="px-4 py-3 border-b">ml</td>
+                                        <td class="px-4 py-3 border-b">500</td>
+                                        <td class="px-4 py-3 border-b">件</td>
+                                        <td class="px-4 py-3 border-b">20</td>
+                                        <td class="px-4 py-3 border-b">10000</td>
+                                    </tr>
+                                    <tr class="table-row-hover">
+                                        <td class="px-4 py-3 border-b">BM003 物料C</td>
+                                        <td class="px-4 py-3 border-b">kg</td>
+                                        <td class="px-4 py-3 border-b">200</td>
+                                        <td class="px-4 py-3 border-b">千克</td>
+                                        <td class="px-4 py-3 border-b">50</td>
+                                        <td class="px-4 py-3 border-b">10000</td>
+                                    </tr>
+                                    <!-- 领料单 LD-2025-0002 - 智能AI系统B -->
+                                    <tr class="table-row-hover bg-gray-50">
+                                        <td class="px-4 py-3 border-b" rowspan="2">
                                             <input type="checkbox" class="rounded text-primary focus:ring-primary">
                                         </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统B</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
+                                        <td class="px-4 py-3 border-b font-medium" rowspan="2">LD-2025-0002</td>
+                                        <td class="px-4 py-3 border-b font-medium" rowspan="2">智能AI系统B</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">研发部门</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">2025-10-08</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">李四</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">项目测试使用</td>
+                                        <td class="px-4 py-3 border-b">BM005 设备配件A</td>
+                                        <td class="px-4 py-3 border-b">个</td>
                                         <td class="px-4 py-3 border-b">1</td>
-                                        <td class="px-4 py-3 border-b"></td>
+                                        <td class="px-4 py-3 border-b">个</td>
                                         <td class="px-4 py-3 border-b">10000</td>
                                         <td class="px-4 py-3 border-b">10000</td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已出库</span>
+                                        <td class="px-4 py-3 border-b" rowspan="2">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
                                         </td>
-                                        <td class="px-4 py-3 border-b">
+                                        <td class="px-4 py-3 border-b" rowspan="2">
                                             <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
                                                 <button class="text-blue-500 hover:text-blue-700" title="详情">
                                                     <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-yellow-500 hover:text-yellow-700" title="编辑">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-700" title="删除">
+                                                    <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr class="table-row-hover">
+                                        <td class="px-4 py-3 border-b">BM006 设备配件B</td>
+                                        <td class="px-4 py-3 border-b">个</td>
+                                        <td class="px-4 py-3 border-b">2</td>
+                                        <td class="px-4 py-3 border-b">个</td>
+                                        <td class="px-4 py-3 border-b">5000</td>
+                                        <td class="px-4 py-3 border-b">10000</td>
+                                    </tr>
+                                    <!-- 领料单 LD-2025-0003 - 智能AI系统C -->
+                                    <tr class="table-row-hover bg-gray-50">
                                         <td class="px-4 py-3 border-b">
                                             <input type="checkbox" class="rounded text-primary focus:ring-primary">
                                         </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统C</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b"></td>
+                                        <td class="px-4 py-3 border-b font-medium">LD-2025-0003</td>
+                                        <td class="px-4 py-3 border-b font-medium">智能AI系统C</td>
+                                        <td class="px-4 py-3 border-b">研发部门</td>
+                                        <td class="px-4 py-3 border-b">2025-10-10</td>
+                                        <td class="px-4 py-3 border-b">王五</td>
+                                        <td class="px-4 py-3 border-b">批量采购备用</td>
+                                        <td class="px-4 py-3 border-b">BM005 设备配件A</td>
+                                        <td class="px-4 py-3 border-b">个</td>
                                         <td class="px-4 py-3 border-b">4</td>
-                                        <td class="px-4 py-3 border-b"></td>
+                                        <td class="px-4 py-3 border-b">个</td>
                                         <td class="px-4 py-3 border-b">10000</td>
                                         <td class="px-4 py-3 border-b">40000</td>
                                         <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">已返回</span>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
                                         </td>
                                         <td class="px-4 py-3 border-b">
                                             <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
                                                 <button class="text-blue-500 hover:text-blue-700" title="详情">
                                                     <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-yellow-500 hover:text-yellow-700" title="编辑">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-700" title="删除">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- 领料单 LD-2025-0004 - 智能AI系统D -->
+                                    <tr class="table-row-hover bg-gray-50">
+                                        <td class="px-4 py-3 border-b" rowspan="2">
+                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
+                                        </td>
+                                        <td class="px-4 py-3 border-b font-medium" rowspan="2">LD-2025-0004</td>
+                                        <td class="px-4 py-3 border-b font-medium" rowspan="2">智能AI系统D</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">生产部门</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">2025-09-09</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">张三</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">用于研发使用</td>
+                                        <td class="px-4 py-3 border-b">BM001 物料A</td>
+                                        <td class="px-4 py-3 border-b">ml</td>
+                                        <td class="px-4 py-3 border-b">1000</td>
+                                        <td class="px-4 py-3 border-b">件</td>
+                                        <td class="px-4 py-3 border-b">10</td>
+                                        <td class="px-4 py-3 border-b">10000</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
+                                        </td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">
+                                            <div class="flex space-x-1">
+                                                <button class="text-blue-500 hover:text-blue-700" title="详情">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-yellow-500 hover:text-yellow-700" title="编辑">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-700" title="删除">
+                                                    <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr class="table-row-hover">
+                                        <td class="px-4 py-3 border-b">BM004 物料D</td>
+                                        <td class="px-4 py-3 border-b">个</td>
+                                        <td class="px-4 py-3 border-b">50</td>
+                                        <td class="px-4 py-3 border-b">个</td>
+                                        <td class="px-4 py-3 border-b">100</td>
+                                        <td class="px-4 py-3 border-b">5000</td>
+                                    </tr>
+                                    <!-- 领料单 LD-2025-0005 - 智能AI系统E -->
+                                    <tr class="table-row-hover bg-gray-50">
                                         <td class="px-4 py-3 border-b">
                                             <input type="checkbox" class="rounded text-primary focus:ring-primary">
                                         </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统D</td>
-                                        <td class="px-4 py-3 border-b"></td>
+                                        <td class="px-4 py-3 border-b font-medium">LD-2025-0005</td>
+                                        <td class="px-4 py-3 border-b font-medium">智能AI系统E</td>
+                                        <td class="px-4 py-3 border-b">生产部门</td>
                                         <td class="px-4 py-3 border-b">2025-09-09</td>
                                         <td class="px-4 py-3 border-b">张三</td>
                                         <td class="px-4 py-3 border-b">用于研发使用</td>
@@ -297,60 +427,30 @@
                                         <td class="px-4 py-3 border-b">10</td>
                                         <td class="px-4 py-3 border-b">10000</td>
                                         <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">待审核</span>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已归集</span>
                                         </td>
                                         <td class="px-4 py-3 border-b">
                                             <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
                                                 <button class="text-blue-500 hover:text-blue-700" title="详情">
                                                     <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-gray-400 cursor-not-allowed" title="已归集，无法编辑" disabled>
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <button class="text-gray-400 cursor-not-allowed" title="已归集，无法删除" disabled>
+                                                    <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr class="table-row-hover">
+                                    <!-- 领料单 LD-2025-0006 - 智能AI系统F -->
+                                    <tr class="table-row-hover bg-gray-50">
                                         <td class="px-4 py-3 border-b">
                                             <input type="checkbox" class="rounded text-primary focus:ring-primary">
                                         </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统E</td>
-                                        <td class="px-4 py-3 border-b"></td>
-                                        <td class="px-4 py-3 border-b">2025-09-09</td>
-                                        <td class="px-4 py-3 border-b">张三</td>
-                                        <td class="px-4 py-3 border-b">用于研发使用</td>
-                                        <td class="px-4 py-3 border-b">BM001 物料A</td>
-                                        <td class="px-4 py-3 border-b">ml</td>
-                                        <td class="px-4 py-3 border-b">1000</td>
-                                        <td class="px-4 py-3 border-b">件</td>
-                                        <td class="px-4 py-3 border-b">10</td>
-                                        <td class="px-4 py-3 border-b">10000</td>
-                                        <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">待审核</span>
-                                        </td>
-                                        <td class="px-4 py-3 border-b">
-                                            <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                                <button class="text-blue-500 hover:text-blue-700" title="详情">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="table-row-hover">
-                                        <td class="px-4 py-3 border-b">
-                                            <input type="checkbox" class="rounded text-primary focus:ring-primary">
-                                        </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统F</td>
-                                        <td class="px-4 py-3 border-b"></td>
+                                        <td class="px-4 py-3 border-b font-medium">LD-2025-0006</td>
+                                        <td class="px-4 py-3 border-b font-medium">智能AI系统F</td>
+                                        <td class="px-4 py-3 border-b">研发部门</td>
                                         <td class="px-4 py-3 border-b">2025-09-09</td>
                                         <td class="px-4 py-3 border-b">李四</td>
                                         <td class="px-4 py-3 border-b">用于研发使用</td>
@@ -361,28 +461,30 @@
                                         <td class="px-4 py-3 border-b">20</td>
                                         <td class="px-4 py-3 border-b">10000</td>
                                         <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">待审核</span>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
                                         </td>
                                         <td class="px-4 py-3 border-b">
                                             <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
                                                 <button class="text-blue-500 hover:text-blue-700" title="详情">
                                                     <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-yellow-500 hover:text-yellow-700" title="编辑">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-700" title="删除">
+                                                    <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr class="table-row-hover">
+                                    <!-- 领料单 LD-2025-0007 - 智能AI系统G -->
+                                    <tr class="table-row-hover bg-gray-50">
                                         <td class="px-4 py-3 border-b">
                                             <input type="checkbox" class="rounded text-primary focus:ring-primary">
                                         </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统G</td>
-                                        <td class="px-4 py-3 border-b"></td>
+                                        <td class="px-4 py-3 border-b font-medium">LD-2025-0007</td>
+                                        <td class="px-4 py-3 border-b font-medium">智能AI系统G</td>
+                                        <td class="px-4 py-3 border-b">研发部门</td>
                                         <td class="px-4 py-3 border-b">2025-09-10</td>
                                         <td class="px-4 py-3 border-b">王五</td>
                                         <td class="px-4 py-3 border-b">用于研发使用</td>
@@ -393,28 +495,30 @@
                                         <td class="px-4 py-3 border-b">50</td>
                                         <td class="px-4 py-3 border-b">10000</td>
                                         <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已通过</span>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
                                         </td>
                                         <td class="px-4 py-3 border-b">
                                             <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
                                                 <button class="text-blue-500 hover:text-blue-700" title="详情">
                                                     <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-yellow-500 hover:text-yellow-700" title="编辑">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-700" title="删除">
+                                                    <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr class="table-row-hover">
+                                    <!-- 领料单 LD-2025-0008 - 智能AI系统H -->
+                                    <tr class="table-row-hover bg-gray-50">
                                         <td class="px-4 py-3 border-b">
                                             <input type="checkbox" class="rounded text-primary focus:ring-primary">
                                         </td>
-                                        <td class="px-4 py-3 border-b">智能AI系统H</td>
-                                        <td class="px-4 py-3 border-b"></td>
+                                        <td class="px-4 py-3 border-b font-medium">LD-2025-0008</td>
+                                        <td class="px-4 py-3 border-b font-medium">智能AI系统H</td>
+                                        <td class="px-4 py-3 border-b">测试部门</td>
                                         <td class="px-4 py-3 border-b">2025-09-11</td>
                                         <td class="px-4 py-3 border-b">赵六</td>
                                         <td class="px-4 py-3 border-b">用于测试</td>
@@ -425,18 +529,18 @@
                                         <td class="px-4 py-3 border-b">100</td>
                                         <td class="px-4 py-3 border-b">5000</td>
                                         <td class="px-4 py-3 border-b">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">待审核</span>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
                                         </td>
                                         <td class="px-4 py-3 border-b">
                                             <div class="flex space-x-1">
-                                                <button class="text-green-500 hover:text-green-700" title="通过">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button class="text-red-500 hover:text-red-700" title="驳回">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
                                                 <button class="text-blue-500 hover:text-blue-700" title="详情">
                                                     <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button class="text-yellow-500 hover:text-yellow-700" title="编辑">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-700" title="删除">
+                                                    <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -493,27 +597,274 @@
             if (resourceSubmenu) {
                 resourceSubmenu.classList.remove('collapsed');
             }
+            initYearSelect();
         });
 
+        function initYearSelect() {
+            const yearSelect = document.getElementById('yearSelect');
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            
+            for (let i = currentYear - 5; i <= currentYear + 1; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i + '年';
+                if (i === currentYear) {
+                    option.selected = true;
+                }
+                yearSelect.appendChild(option);
+            }
+        }
+
+        function setDateRange(type) {
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+            const today = new Date();
+            
+            switch(type) {
+                case 'all':
+                    startDate.value = '';
+                    endDate.value = '';
+                    document.getElementById('yearSelect').selectedIndex = 0;
+                    document.getElementById('monthSelect').selectedIndex = 0;
+                    break;
+                case 'today':
+                    startDate.value = today.toISOString().split('T')[0];
+                    endDate.value = today.toISOString().split('T')[0];
+                    document.getElementById('yearSelect').selectedIndex = 0;
+                    document.getElementById('monthSelect').selectedIndex = 0;
+                    break;
+                case 'week':
+                    const weekStart = new Date(today);
+                    weekStart.setDate(today.getDate() - today.getDay());
+                    startDate.value = weekStart.toISOString().split('T')[0];
+                    endDate.value = today.toISOString().split('T')[0];
+                    document.getElementById('yearSelect').selectedIndex = 0;
+                    document.getElementById('monthSelect').selectedIndex = 0;
+                    break;
+                case 'month':
+                    startDate.value = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-01';
+                    endDate.value = today.toISOString().split('T')[0];
+                    document.getElementById('yearSelect').value = today.getFullYear();
+                    document.getElementById('monthSelect').value = String(today.getMonth() + 1).padStart(2, '0');
+                    break;
+                case 'year':
+                    startDate.value = today.getFullYear() + '-01-01';
+                    endDate.value = today.toISOString().split('T')[0];
+                    document.getElementById('yearSelect').value = today.getFullYear();
+                    document.getElementById('monthSelect').selectedIndex = 0;
+                    break;
+                case 'custom':
+                    // 用户自行选择日期
+                    document.getElementById('yearSelect').selectedIndex = 0;
+                    document.getElementById('monthSelect').selectedIndex = 0;
+                    break;
+            }
+            queryRecords();
+        }
+
+        function onYearMonthChange() {
+            const yearSelect = document.getElementById('yearSelect');
+            const monthSelect = document.getElementById('monthSelect');
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+            
+            if (yearSelect.value && monthSelect.value) {
+                startDate.value = yearSelect.value + '-' + monthSelect.value + '-01';
+                const lastDay = new Date(yearSelect.value, monthSelect.value, 0).getDate();
+                endDate.value = yearSelect.value + '-' + monthSelect.value + '-' + lastDay;
+            } else if (yearSelect.value && !monthSelect.value) {
+                startDate.value = yearSelect.value + '-01-01';
+                endDate.value = yearSelect.value + '-12-31';
+            }
+        }
+
+        function applyYearMonthFilter() {
+            const yearSelect = document.getElementById('yearSelect');
+            const monthSelect = document.getElementById('monthSelect');
+            
+            if (!yearSelect.value) {
+                alert('请选择年份');
+                return;
+            }
+            
+            queryRecords();
+        }
+
         function queryRecords() {
-            alert('查询功能开发中');
+            // 查询逻辑，无需弹窗提示
         }
 
         function resetFilters() {
-            alert('重置功能开发中');
+            document.querySelectorAll('input, select').forEach(el => {
+                if (el.type === 'text' || el.type === 'date') el.value = '';
+                if (el.tagName === 'SELECT') el.selectedIndex = 0;
+            });
         }
 
         function createRequisition() {
             window.location.href = 'material-requisition.html';
         }
 
-        function exportRequisitions() {
-            alert('导出领料单功能开发中');
+        function initExportYear() {
+            const exportYear = document.getElementById('exportYear');
+            if (exportYear && exportYear.options.length <= 1) {
+                const today = new Date();
+                const currentYear = today.getFullYear();
+                for (let i = currentYear - 5; i <= currentYear; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i + '年';
+                    if (i === currentYear) {
+                        option.selected = true;
+                    }
+                    exportYear.appendChild(option);
+                }
+            }
         }
 
-        function batchAudit() {
-            alert('批量审核功能开发中');
+        function exportDetail() {
+            const period = '全部';
+            const title = '领料单_全部明细';
+            performExport(title, period, 'detail');
         }
+
+        function exportMonthly() {
+            const monthlySelect = document.getElementById('monthlyExportSelect');
+            if (monthlySelect.classList.contains('hidden')) {
+                initExportYear();
+                monthlySelect.classList.remove('hidden');
+            } else {
+                const year = document.getElementById('exportYear').value;
+                const month = document.getElementById('exportMonth').value;
+                
+                if (!year) {
+                    alert('请选择年份');
+                    return;
+                }
+                if (!month) {
+                    alert('请选择月份');
+                    return;
+                }
+                
+                const period = `${year}年${parseInt(month)}月`;
+                const title = `领料单_${period}`;
+                performExport(title, period, 'monthly');
+            }
+        }
+
+        // 页面加载时初始化导出年份选择框
+        document.addEventListener('DOMContentLoaded', initExportYear);
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.add('hidden');
+        }
+
+        function performExport(title, period, type) {
+            const monthlySelect = document.getElementById('monthlyExportSelect');
+            monthlySelect.classList.add('hidden');
+            document.getElementById('exportMonth').selectedIndex = 0;
+            
+            const data = [
+                { name: '物料A', spec: 'ml', unit: '件', quantity: 3000, price: 10, amount: 30000, remark: '用于研发使用' },
+                { name: '物料B', spec: 'ml', unit: '件', quantity: 500, price: 20, amount: 10000, remark: '用于研发使用' },
+                { name: '物料C', spec: 'kg', unit: '千克', quantity: 200, price: 50, amount: 10000, remark: '用于研发使用' },
+                { name: '物料D', spec: '个', unit: '个', quantity: 50, price: 100, amount: 5000, remark: '用于测试' },
+                { name: '设备配件A', spec: '个', unit: '个', quantity: 5, price: 10000, amount: 50000, remark: '项目测试使用/批量采购备用' }
+            ];
+            
+            let totalQty = 0, totalAmt = 0;
+            data.forEach(item => {
+                totalQty += item.quantity;
+                totalAmt += item.amount;
+            });
+            
+            let html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>${title}</title>
+    <style>
+        body { font-family: SimSun, serif; margin: 0; padding: 20px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .info { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px; }
+        th { background-color: #f5f5f5; }
+        .total-row { font-weight: bold; }
+        .footer { margin-top: 30px; font-size: 12px; }
+        .page-info { text-align: center; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">领 料 单</div>
+        <div class="info">
+            <span>领用部门：研发部</span>
+            <span>${period}</span>
+            <span>项目：RD01</span>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>品名</th>
+                <th>规格</th>
+                <th>单位</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>金额</th>
+                <th>备注</th>
+            </tr>
+        </thead>
+        <tbody>`;
+            
+            data.forEach((item, index) => {
+                html += `
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.spec}</td>
+                <td>${item.unit}</td>
+                <td>${item.quantity}</td>
+                <td>${item.price}</td>
+                <td>${item.amount}</td>
+                <td>${item.remark}</td>
+            </tr>`;
+            });
+            
+            html += `
+            <tr class="total-row">
+                <td colspan="3">合计</td>
+                <td>${totalQty}</td>
+                <td></td>
+                <td>${totalAmt}</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="footer">
+        <div>领料人：____________________</div>
+    </div>
+</body>
+</html>`;
+            
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${title}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            document.getElementById('exportInfo').textContent = `期间：${period}\n物料种类：${data.length}种\n总数量：${totalQty}\n总金额：¥${totalAmt}`;
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+
+
     </script>
 </body>
 </html>

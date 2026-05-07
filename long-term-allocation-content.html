@@ -519,11 +519,9 @@
         }
 
         function viewAllocationDetail(id) {
-            if (parent && parent.loadTabContent) {
-                parent.loadTabContent('long-term-allocation-detail-content.html', 'tabLongTermDetail');
-            } else {
-                window.location.href = 'long-term-allocation-detail.html?ruleId=' + id;
-            }
+            event.preventDefault();
+            
+            window.location.href = 'long-term-allocation-detail.html?ruleId=' + id;
         }
 
         function editRule(id) {

@@ -813,7 +813,11 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">物料编码 <span class="text-red-500">*</span></label>
-                            <input type="text" id="materialCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入物料编码">
+                            <input type="text" id="materialCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入物料编码，不填则自动生成">
+                            <p class="mt-1 text-xs text-gray-500 flex items-center">
+                                <i class="fa fa-info-circle mr-1"></i>
+                                编码规则：MAT-年份-流水号（如 MAT-2024-001），不填写则自动生成唯一编码
+                            </p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">物料名称 <span class="text-red-500">*</span></label>
@@ -906,14 +910,24 @@
             document.getElementById('materialPrice').value = '';
         }
 
+        function generateMaterialCode() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const maxSerial = localStorage.getItem('materialMaxSerial') || '000';
+            const newSerial = String(parseInt(maxSerial) + 1).padStart(3, '0');
+            localStorage.setItem('materialMaxSerial', newSerial);
+            return `MAT-${year}-${newSerial}`;
+        }
+
         function saveMaterial() {
-            const code = document.getElementById('materialCode').value;
+            let code = document.getElementById('materialCode').value;
             const name = document.getElementById('materialName').value;
             const price = document.getElementById('materialPrice').value;
 
-            if (!code) {
-                alert('请输入物料编码！');
-                return;
+            // 如果没有填写物料编码，自动生成
+            if (!code.trim()) {
+                code = generateMaterialCode();
+                document.getElementById('materialCode').value = code;
             }
 
             if (!name) {
@@ -926,7 +940,7 @@
                 return;
             }
 
-            alert('物料新增成功！');
+            alert(`物料新增成功！\n物料编码：${code}`);
             closeAddMaterialModal();
         }
 
