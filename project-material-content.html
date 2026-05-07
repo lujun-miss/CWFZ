@@ -164,30 +164,9 @@
                                 <button class="bg-gray-200 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm" onclick="exportDetail()">
                                     <i class="fa fa-file-text-o mr-1"></i>明细
                                 </button>
-                                <button class="bg-gray-200 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm" onclick="exportMonthly()">
-                                    <i class="fa fa-calendar mr-1"></i>按月
+                                <button class="bg-gray-200 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm" onclick="exportSummary()">
+                                    <i class="fa fa-bar-chart mr-1"></i>按月汇总
                                 </button>
-                                <!-- 按月导出的年月选择器 -->
-                                <div id="monthlyExportSelect" class="flex items-center space-x-2 hidden">
-                                    <select id="exportYear" class="border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                                        <option value="">选择年份</option>
-                                    </select>
-                                    <select id="exportMonth" class="border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                                        <option value="">选择月份</option>
-                                        <option value="01">1月</option>
-                                        <option value="02">2月</option>
-                                        <option value="03">3月</option>
-                                        <option value="04">4月</option>
-                                        <option value="05">5月</option>
-                                        <option value="06">6月</option>
-                                        <option value="07">7月</option>
-                                        <option value="08">8月</option>
-                                        <option value="09">9月</option>
-                                        <option value="10">10月</option>
-                                        <option value="11">11月</option>
-                                        <option value="12">12月</option>
-                                    </select>
-                                </div>
                             </div>
                             
                             <div class="ml-auto flex items-center space-x-2">
@@ -706,78 +685,97 @@
             window.location.href = 'material-requisition.html';
         }
 
-        function initExportYear() {
-            const exportYear = document.getElementById('exportYear');
-            if (exportYear && exportYear.options.length <= 1) {
-                const today = new Date();
-                const currentYear = today.getFullYear();
-                for (let i = currentYear - 5; i <= currentYear; i++) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = i + '年';
-                    if (i === currentYear) {
-                        option.selected = true;
-                    }
-                    exportYear.appendChild(option);
-                }
-            }
-        }
-
         function exportDetail() {
-            const period = '全部';
-            const title = '领料单_全部明细';
-            performExport(title, period, 'detail');
-        }
-
-        function exportMonthly() {
-            const monthlySelect = document.getElementById('monthlyExportSelect');
-            if (monthlySelect.classList.contains('hidden')) {
-                initExportYear();
-                monthlySelect.classList.remove('hidden');
-            } else {
-                const year = document.getElementById('exportYear').value;
-                const month = document.getElementById('exportMonth').value;
-                
-                if (!year) {
-                    alert('请选择年份');
-                    return;
-                }
-                if (!month) {
-                    alert('请选择月份');
-                    return;
-                }
-                
-                const period = `${year}年${parseInt(month)}月`;
-                const title = `领料单_${period}`;
-                performExport(title, period, 'monthly');
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            let period = '全部';
+            if (startDate && endDate) {
+                period = `${startDate} 至 ${endDate}`;
+            } else if (startDate) {
+                period = `从 ${startDate} 开始`;
+            } else if (endDate) {
+                period = `到 ${endDate} 结束`;
             }
+            performExport('领料单_明细', period, 'detail');
         }
 
-        // 页面加载时初始化导出年份选择框
-        document.addEventListener('DOMContentLoaded', initExportYear);
+        function exportSummary() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            let period = '全部';
+            if (startDate && endDate) {
+                period = `${startDate} 至 ${endDate}`;
+            } else if (startDate) {
+                period = `从 ${startDate} 开始`;
+            } else if (endDate) {
+                period = `到 ${endDate} 结束`;
+            }
+            performExport('领料单_按月汇总', period, 'monthly_summary');
+        }
 
         function closeSuccessModal() {
             document.getElementById('successModal').classList.add('hidden');
         }
 
         function performExport(title, period, type) {
-            const monthlySelect = document.getElementById('monthlyExportSelect');
-            monthlySelect.classList.add('hidden');
-            document.getElementById('exportMonth').selectedIndex = 0;
-            
-            const data = [
-                { name: '物料A', spec: 'ml', unit: '件', quantity: 3000, price: 10, amount: 30000, remark: '用于研发使用' },
-                { name: '物料B', spec: 'ml', unit: '件', quantity: 500, price: 20, amount: 10000, remark: '用于研发使用' },
-                { name: '物料C', spec: 'kg', unit: '千克', quantity: 200, price: 50, amount: 10000, remark: '用于研发使用' },
-                { name: '物料D', spec: '个', unit: '个', quantity: 50, price: 100, amount: 5000, remark: '用于测试' },
-                { name: '设备配件A', spec: '个', unit: '个', quantity: 5, price: 10000, amount: 50000, remark: '项目测试使用/批量采购备用' }
+            // 模拟数据（包含日期信息，实际应从查询结果获取）
+            const detailData = [
+                { date: '2026-04-15', name: '物料A', spec: 'SMD-0805', unit: '个', quantity: 1000, price: 120, amount: 120000, remark: '智能AI系统A研发' },
+                { date: '2026-04-18', name: '物料B', spec: '10kΩ', unit: '个', quantity: 500, price: 85, amount: 42500, remark: '智能AI系统A研发' },
+                { date: '2026-05-02', name: '物料A', spec: 'SMD-0805', unit: '个', quantity: 2000, price: 120, amount: 240000, remark: '智能AI系统B研发' },
+                { date: '2026-05-05', name: '物料C', spec: '10μF', unit: '个', quantity: 200, price: 230, amount: 46000, remark: '智能AI系统C测试' },
+                { date: '2026-05-10', name: '设备配件A', spec: 'PCB-200', unit: '块', quantity: 5, price: 80, amount: 400, remark: '设备维护' },
+                { date: '2026-05-12', name: '物料A', spec: 'SMD-0805', unit: '个', quantity: 500, price: 120, amount: 60000, remark: '智能AI系统D研发' },
+                { date: '2026-05-15', name: '物料D', spec: '0.8mm', unit: '卷', quantity: 10, price: 15, amount: 150, remark: '焊接材料' }
             ];
             
+            // 根据导出类型处理数据
+            let data = detailData;
+            let monthlyData = null;
+            
+            if (type === 'monthly_summary') {
+                // 按月汇总：先按月份分组，再按物料名称汇总
+                monthlyData = {};
+                detailData.forEach(item => {
+                    const month = item.date.substring(0, 7); // 获取 YYYY-MM
+                    if (!monthlyData[month]) {
+                        monthlyData[month] = {};
+                    }
+                    if (!monthlyData[month][item.name]) {
+                        monthlyData[month][item.name] = { ...item, month };
+                    } else {
+                        monthlyData[month][item.name].quantity += item.quantity;
+                        monthlyData[month][item.name].amount += item.amount;
+                    }
+                });
+            } else if (type === 'summary') {
+                // 普通汇总：按物料名称汇总
+                const summaryMap = {};
+                detailData.forEach(item => {
+                    if (!summaryMap[item.name]) {
+                        summaryMap[item.name] = { ...item };
+                    } else {
+                        summaryMap[item.name].quantity += item.quantity;
+                        summaryMap[item.name].amount += item.amount;
+                    }
+                });
+                data = Object.values(summaryMap);
+            }
+            
             let totalQty = 0, totalAmt = 0;
-            data.forEach(item => {
-                totalQty += item.quantity;
-                totalAmt += item.amount;
-            });
+            if (monthlyData) {
+                Object.values(monthlyData).forEach(monthData => {
+                    Object.values(monthData).forEach(item => {
+                        totalQty += item.quantity;
+                        totalAmt += item.amount;
+                    });
+                });
+            } else {
+                data.forEach(item => {
+                    totalQty += item.quantity;
+                    totalAmt += item.amount;
+                });
+            }
             
             let html = `
 <!DOCTYPE html>
@@ -796,17 +794,77 @@
         .total-row { font-weight: bold; }
         .footer { margin-top: 30px; font-size: 12px; }
         .page-info { text-align: center; margin-top: 10px; }
+        .month-section { margin-top: 30px; page-break-inside: avoid; }
+        .month-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; text-align: center; }
     </style>
 </head>
-<body>
-    <div class="header">
-        <div class="title">领 料 单</div>
-        <div class="info">
-            <span>领用部门：研发部</span>
-            <span>${period}</span>
-            <span>项目：RD01</span>
+<body>`;
+            
+            let recordCount = 0;
+            if (monthlyData) {
+                // 按月汇总导出
+                const months = Object.keys(monthlyData).sort();
+                months.forEach(month => {
+                    const monthItems = Object.values(monthlyData[month]);
+                    const monthTotalQty = monthItems.reduce((sum, item) => sum + item.quantity, 0);
+                    const monthTotalAmt = monthItems.reduce((sum, item) => sum + item.amount, 0);
+                    recordCount += monthItems.length;
+                    
+                    html += `
+    <div class="month-section">
+        <div class="header">
+            <div class="title">领 料 单</div>
+            <div class="info">
+                <span>领用部门：研发部</span>
+                <span>${month}月 领料汇总</span>
+                <span>项目：RD01</span>
+            </div>
         </div>
-    </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>品名</th>
+                    <th>规格</th>
+                    <th>单位</th>
+                    <th>数量</th>
+                    <th>单价</th>
+                    <th>金额</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>`;
+                    
+                    monthItems.forEach(item => {
+                        html += `
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.spec}</td>
+                <td>${item.unit}</td>
+                <td>${item.quantity}</td>
+                <td>${item.price}</td>
+                <td>${item.amount}</td>
+                <td>${item.remark}</td>
+            </tr>`;
+                    });
+                    
+                    html += `
+            <tr class="total-row">
+                <td colspan="3">${month}月合计</td>
+                <td>${monthTotalQty}</td>
+                <td></td>
+                <td>${monthTotalAmt}</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="footer">
+            <div>领料人：____________________</div>
+        </div>
+    </div>`;
+                });
+            } else {
+                // 明细或普通汇总导出
+                html += `
     <table>
         <thead>
             <tr>
@@ -820,9 +878,9 @@
             </tr>
         </thead>
         <tbody>`;
-            
-            data.forEach((item, index) => {
-                html += `
+                
+                data.forEach((item, index) => {
+                    html += `
             <tr>
                 <td>${item.name}</td>
                 <td>${item.spec}</td>
@@ -832,9 +890,9 @@
                 <td>${item.amount}</td>
                 <td>${item.remark}</td>
             </tr>`;
-            });
-            
-            html += `
+                });
+                
+                html += `
             <tr class="total-row">
                 <td colspan="3">合计</td>
                 <td>${totalQty}</td>
@@ -843,7 +901,11 @@
                 <td></td>
             </tr>
         </tbody>
-    </table>
+    </table>`;
+                recordCount = data.length;
+            }
+            
+            html += `
     <div class="footer">
         <div>领料人：____________________</div>
     </div>
@@ -860,7 +922,8 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            document.getElementById('exportInfo').textContent = `期间：${period}\n物料种类：${data.length}种\n总数量：${totalQty}\n总金额：¥${totalAmt}`;
+            const exportType = type === 'monthly_summary' ? '按月汇总' : (type === 'summary' ? '汇总' : '明细');
+            document.getElementById('exportInfo').textContent = `期间：${period}\n${exportType}记录数：${recordCount}条\n总数量：${totalQty}\n总金额：¥${totalAmt}`;
             document.getElementById('successModal').classList.remove('hidden');
         }
 

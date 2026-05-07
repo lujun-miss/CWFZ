@@ -537,18 +537,6 @@
                 <!-- 设备组类型筛选 -->
                 <div class="bg-white rounded-lg shadow p-4 mb-6">
                     <div class="flex flex-wrap gap-4 items-center">
-                        <div class="flex space-x-2">
-                            <button class="px-4 py-2 bg-primary text-white rounded-md" id="viewAll">
-                                全部设备组
-                            </button>
-                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300" id="viewProduction">
-                                生产线
-                            </button>
-                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300" id="viewStandalone">
-                                单设备
-                            </button>
-                        </div>
-                        <div class="flex-1"></div>
                         <div class="flex flex-wrap gap-2">
                             <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="">全部状态</option>
@@ -559,54 +547,6 @@
                             <button class="btn-primary">
                                 <i class="fa fa-search mr-2"></i>查询
                             </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 统计卡片 -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
-                                <i class="fa fa-th-large text-blue-500 text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">设备组总数</p>
-                                <p class="text-2xl font-semibold text-gray-800">3</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4">
-                                <i class="fa fa-cogs text-green-500 text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">生产线</p>
-                                <p class="text-2xl font-semibold text-gray-800">2</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mr-4">
-                                <i class="fa fa-cog text-yellow-500 text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">单设备</p>
-                                <p class="text-2xl font-semibold text-gray-800">4</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
-                                <i class="fa fa-link text-purple-500 text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">已关联设备</p>
-                                <p class="text-2xl font-semibold text-gray-800">6</p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -622,9 +562,6 @@
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         设备组名称
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        类型
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         关联设备
@@ -720,80 +657,7 @@
                     </div>
                 </div>
 
-                <!-- 设备列表（单设备模式） -->
-                <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="p-4 border-b border-gray-200">
-                        <h3 class="font-medium text-gray-800">单设备列表（离散型企业直接使用）</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        设备编号
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        设备名称
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        设备类型
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        所属资产
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        状态
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        操作
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr class="table-row-hover">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">EQ-001</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">数控机床</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-500">数控设备</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-500">固定资产-机器设备</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">正常</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <button class="text-primary hover:text-blue-700">选择设备组</button>
-                                    </td>
-                                </tr>
-                                <tr class="table-row-hover">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">EQ-015</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">3D打印机</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-500">加工设备</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-500">固定资产-机器设备</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">正常</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <button class="text-primary hover:text-blue-700">选择设备组</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
             </div>
         </main>
     </div>
@@ -812,42 +676,20 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">设备组名称 <span class="text-red-500">*</span></label>
                     <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入设备组名称">
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">设备组类型 <span class="text-red-500">*</span></label>
-                    <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <option value="production">生产线（流程型制造）</option>
-                        <option value="standalone">单设备（离散型制造）</option>
-                    </select>
-                </div>
+
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         关联设备
                         <span class="text-xs text-gray-500 ml-1">（从资产信息中选择设备）</span>
                     </label>
-                    <div class="border border-gray-300 rounded-md p-3 max-h-48 overflow-y-auto">
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="mr-2">
-                                <span class="text-sm">数控机床 (EQ-001) - 固定资产编号: ZC-2024-001</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="mr-2">
-                                <span class="text-sm">3D打印机 (EQ-015) - 固定资产编号: ZC-2024-015</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="mr-2">
-                                <span class="text-sm">光谱分析仪 (EQ-028) - 固定资产编号: ZC-2024-028</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="mr-2">
-                                <span class="text-sm">激光切割机 (EQ-010) - 固定资产编号: ZC-2024-010</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="mr-2">
-                                <span class="text-sm">万能材料试验机 (EQ-030) - 固定资产编号: ZC-2024-030</span>
-                            </label>
+                    <div class="border border-gray-300 rounded-md p-3 min-h-[60px]">
+                        <div id="selectedDevices" class="flex flex-wrap gap-2">
+                            <span class="text-sm text-gray-500">点击下方按钮选择设备</span>
                         </div>
                     </div>
+                    <button class="mt-2 w-full py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors" onclick="openDeviceSelector()">
+                        <i class="fa fa-plus mr-2"></i>选择设备
+                    </button>
                     <p class="text-xs text-gray-500 mt-1">可选择多台设备组成生产线，或保留为空创建单设备类型</p>
                 </div>
                 <div class="mb-4">
@@ -871,6 +713,89 @@
             <div class="p-4 border-t border-gray-200 flex justify-end space-x-2">
                 <button class="btn-outline" onclick="closeModal()">取消</button>
                 <button class="btn-primary" onclick="saveGroup()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设备选择器弹窗 -->
+    <div id="deviceSelectorModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[80vh] flex flex-col">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-medium text-gray-800">选择设备</h3>
+                <button class="text-gray-400 hover:text-gray-600" onclick="closeDeviceSelector()">
+                    <i class="fa fa-times text-lg"></i>
+                </button>
+            </div>
+            <div class="p-4 border-b border-gray-200">
+                <div class="relative">
+                    <input type="text" id="deviceSearchInput" placeholder="搜索设备名称、编号或资产编号..." 
+                           class="w-full border border-gray-300 rounded-md px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4">
+                <div class="space-y-2">
+                    <label class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" class="mr-3 device-checkbox" value="EQ-001">
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-900">数控机床</div>
+                            <div class="text-sm text-gray-500">设备编号: EQ-001 | 资产编号: ZC-2024-001</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" class="mr-3 device-checkbox" value="EQ-015">
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-900">3D打印机</div>
+                            <div class="text-sm text-gray-500">设备编号: EQ-015 | 资产编号: ZC-2024-015</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" class="mr-3 device-checkbox" value="EQ-028">
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-900">光谱分析仪</div>
+                            <div class="text-sm text-gray-500">设备编号: EQ-028 | 资产编号: ZC-2024-028</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" class="mr-3 device-checkbox" value="EQ-010">
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-900">激光切割机</div>
+                            <div class="text-sm text-gray-500">设备编号: EQ-010 | 资产编号: ZC-2024-010</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" class="mr-3 device-checkbox" value="EQ-030">
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-900">万能材料试验机</div>
+                            <div class="text-sm text-gray-500">设备编号: EQ-030 | 资产编号: ZC-2024-030</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" class="mr-3 device-checkbox" value="EQ-035">
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-900">电子显微镜</div>
+                            <div class="text-sm text-gray-500">设备编号: EQ-035 | 资产编号: ZC-2024-035</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" class="mr-3 device-checkbox" value="EQ-042">
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-900">真空镀膜机</div>
+                            <div class="text-sm text-gray-500">设备编号: EQ-042 | 资产编号: ZC-2024-042</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" class="mr-3 device-checkbox" value="EQ-050">
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-900">超声波清洗机</div>
+                            <div class="text-sm text-gray-500">设备编号: EQ-050 | 资产编号: ZC-2024-050</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-2">
+                <button class="btn-outline" onclick="closeDeviceSelector()">取消</button>
+                <button class="btn-primary" onclick="confirmDeviceSelection()">确认选择</button>
             </div>
         </div>
     </div>
@@ -920,6 +845,67 @@
             closeModal();
             location.reload();
         }
+
+        function openDeviceSelector() {
+            document.getElementById('deviceSelectorModal').classList.remove('hidden');
+        }
+
+        function closeDeviceSelector() {
+            document.getElementById('deviceSelectorModal').classList.add('hidden');
+        }
+
+        function confirmDeviceSelection() {
+            const checkboxes = document.querySelectorAll('.device-checkbox:checked');
+            const selectedDevices = [];
+            
+            checkboxes.forEach(checkbox => {
+                const label = checkbox.closest('label');
+                const deviceName = label.querySelector('.font-medium').textContent;
+                const info = label.querySelector('.text-sm').textContent;
+                selectedDevices.push({
+                    id: checkbox.value,
+                    name: deviceName,
+                    info: info
+                });
+            });
+
+            const selectedDevicesDiv = document.getElementById('selectedDevices');
+            selectedDevicesDiv.innerHTML = '';
+
+            if (selectedDevices.length === 0) {
+                selectedDevicesDiv.innerHTML = '<span class="text-sm text-gray-500">点击下方按钮选择设备</span>';
+            } else {
+                selectedDevices.forEach((device, index) => {
+                    const tag = document.createElement('span');
+                    tag.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800';
+                    tag.innerHTML = `${device.name} (${device.id}) <button onclick="removeSelectedDevice(this)" class="ml-1 hover:text-blue-600"><i class="fa fa-times"></i></button>`;
+                    selectedDevicesDiv.appendChild(tag);
+                });
+            }
+
+            closeDeviceSelector();
+        }
+
+        function removeSelectedDevice(button) {
+            const tag = button.parentElement;
+            tag.remove();
+            
+            const selectedDevicesDiv = document.getElementById('selectedDevices');
+            if (selectedDevicesDiv.children.length === 0) {
+                selectedDevicesDiv.innerHTML = '<span class="text-sm text-gray-500">点击下方按钮选择设备</span>';
+            }
+        }
+
+        document.getElementById('deviceSearchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const labels = document.querySelectorAll('.device-checkbox');
+            
+            labels.forEach(label => {
+                const parentLabel = label.closest('label');
+                const text = parentLabel.textContent.toLowerCase();
+                parentLabel.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+            });
+        });
     </script>
 </body>
 </html>
