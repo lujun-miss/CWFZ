@@ -518,11 +518,11 @@
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-semibold text-gray-800">工时提报补录</h2>
                 <div class="flex space-x-2">
-                    <button class="btn-primary flex items-center" onclick="saveWorkHourEntry()">
+                    <button class="btn-primary flex items-center" onclick="saveAndGoBack()">
                         <i class="fa fa-save mr-2"></i>
                         保存
                     </button>
-                    <button class="btn-outline flex items-center" onclick="loadPage('project-work-hour-record.html')">
+                    <button class="btn-outline flex items-center" onclick="goBack()">
                         <i class="fa fa-arrow-left mr-2"></i>
                         返回
                     </button>
@@ -621,9 +621,23 @@
             window.location.href = page;
         }
 
+        // 返回上一页
+        function goBack() {
+            if (document.referrer) {
+                window.location.href = document.referrer;
+            } else {
+                window.location.href = 'project-work-hour-record.html';
+            }
+        }
+
+        // 保存并返回上一页
+        function saveAndGoBack() {
+            alert('工时提报已保存');
+            goBack();
+        }
+
         // 保存工时提报
         function saveWorkHourEntry() {
-            // 这里可以添加表单验证和保存逻辑
             alert('工时提报已保存');
             loadPage('project-work-hour-record.html');
         }

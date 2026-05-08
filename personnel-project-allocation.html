@@ -1204,9 +1204,8 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">折旧方法</label>
                                 <select id="depreciationMethod" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                    <option value="straight_line">直线法</option>
-                                    <option value="double_declining">双倍余额递减法</option>
-                                    <option value="sum_of_years">年数总和法</option>
+                                    <option value="straight_line">直线法（年限平均法）</option>
+                                    <option value="production">产量法（工作量法）</option>
                                 </select>
                             </div>
                         </div>
@@ -1264,7 +1263,7 @@
                 message += '归集月份: ' + month + '\n';
                 message += '归集项目: ' + project + '\n';
                 message += '设备组: ' + (equipmentGroup ? equipmentGroup : '全部设备组') + '\n';
-                message += '折旧方法: ' + (depreciationMethod === 'straight_line' ? '直线法' : depreciationMethod === 'double_declining' ? '双倍余额递减法' : '年数总和法');
+                message += '折旧方法: ' + (depreciationMethod === 'straight_line' ? '直线法（年限平均法）' : depreciationMethod === 'production' ? '产量法（工作量法）' : '直线法（年限平均法）');
                 
                 alert(message);
                 closeEquipmentCostAllocationModal();

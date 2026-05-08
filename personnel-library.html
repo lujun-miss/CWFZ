@@ -809,7 +809,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">工号</label>
                         <input type="text" id="personNo" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="手动输入或留空自动生成">
-                        <p class="mt-1 text-xs text-gray-500">备注：手动输入则使用输入值，留空则自动生成。自动生成规则为 DEPT+YYYYMM+3位序号。部门前缀：研发部=RD，市场部=MK，财务部=FN，行政部=AD</p>
+                        <p class="mt-1 text-xs text-gray-500">备注：手动输入则使用输入值，留空则自动生成。自动生成规则为 YG+13位时间戳（如：YG1704726400000），确保全球唯一</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">姓名 <span class="text-red-500">*</span></label>
@@ -890,7 +890,7 @@
                 <div class="text-sm text-gray-500">
                     <p>请按照模板格式填写数据，支持Excel文件导入</p>
                     <p class="mt-1">模板字段：工号、姓名、密码、部门、职位、学历、状态、入职时间</p>
-                    <p class="mt-1 text-xs text-gray-400">备注：工号和密码均可留空自动生成。工号自动生成规则为 DEPT+YYYYMM+3位序号；密码留空则默认设为 123456</p>
+                    <p class="mt-1 text-xs text-gray-400">备注：工号和密码均可留空自动生成。工号自动生成规则为 YG+13位时间戳（如：YG1704726400000）；密码留空则默认设为 123456</p>
                 </div>
             </div>
             <div class="mt-6 flex justify-end space-x-3">

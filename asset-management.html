@@ -129,6 +129,46 @@
                 alert('资产已删除');
             }
         }
+
+        function toggleProductionMethodFields(selectElement) {
+            const productionFields = document.getElementById('productionFields');
+            const usefulLifeField = document.getElementById('usefulLifeField');
+            const residualRateField = document.getElementById('residualRateField');
+            const monthlyAmortizationField = document.getElementById('monthlyAmortizationField');
+            
+            if (selectElement.value === 'production') {
+                productionFields.style.display = 'block';
+                usefulLifeField.style.display = 'none';
+                residualRateField.style.display = 'none';
+                monthlyAmortizationField.style.display = 'none';
+            } else {
+                productionFields.style.display = 'none';
+                usefulLifeField.style.display = 'block';
+                residualRateField.style.display = 'block';
+                monthlyAmortizationField.style.display = 'block';
+            }
+        }
+
+        function addMonthRow() {
+            const container = document.getElementById('amortizationMonthsContainer');
+            const newRow = document.createElement('div');
+            newRow.className = 'flex items-center space-x-2 mb-2';
+            newRow.innerHTML = `
+                <input type="month" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="选择月份">
+                <input type="number" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="本月摊销额（元）" min="0" step="0.01">
+                <button type="button" class="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onclick="removeMonthRow(this)">删除</button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        function removeMonthRow(button) {
+            const row = button.parentElement;
+            const container = document.getElementById('amortizationMonthsContainer');
+            // 至少保留一行
+            if (container.children.length > 1) {
+                container.removeChild(row);
+            }
+        }
     </script>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -806,9 +846,40 @@
                                 <button class="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors">
                                     <i class="fa fa-search mr-2"></i> 搜索
                                 </button>
+                                <button class="flex-1 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
+                                    <i class="fa fa-download mr-2"></i> 导出
+                                </button>
+                                <button class="flex-1 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors">
+                                    <i class="fa fa-upload mr-2"></i> 导入
+                                </button>
                                 <button class="flex-1 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors" onclick="openAddModal()">
                                     <i class="fa fa-plus mr-2"></i> 添加固定资产
                                 </button>
+                            </div>
+                            <div class="mt-3">
+                                <button type="button" class="text-sm text-blue-600 hover:text-blue-800 flex items-center" onclick="toggleImportTemplate()">
+                                    <i class="fa fa-chevron-down mr-1" id="importTemplateIcon"></i>
+                                    导入模板字段说明
+                                </button>
+                                <div id="importTemplateDetails" class="hidden mt-2 p-3 bg-gray-50 rounded-md border border-gray-200">
+                                    <p class="text-xs text-gray-600 mb-2"><strong>导入模板字段顺序（CSV格式）：</strong></p>
+                                    <div class="text-xs text-gray-500 space-y-1">
+                                        <p><strong>A. 资产编号</strong>（选填）：留空自动生成，格式为GD+13位时间戳</p>
+                                        <p><strong>B. 资产名称</strong>（必填）：如：研发服务器</p>
+                                        <p><strong>C. 购置日期</strong>（必填）：格式YYYY-MM，如：2026-01</p>
+                                        <p><strong>D. 资产原值</strong>（必填）：数字，如：20000</p>
+                                        <p><strong>E. 摊销方法</strong>（必填）：可选值：直线法 / 其他</p>
+                                        <p><strong>F. 预计使用年限（年）</strong>（直线法必填）：整数，如：3</p>
+                                        <p><strong>G. 预计残值率（%）</strong>（直线法必填）：0-100，如：5</p>
+                                        <p><strong>H. 摊销月份1</strong>（其他方法选填）：格式YYYY-MM</p>
+                                        <p><strong>I. 摊销额1</strong>（其他方法选填）：对应月份的摊销金额</p>
+                                        <p><strong>J. 资产状态</strong>（必填）：可选值：正常摊销中 / 已摊销完毕</p>
+                                        <p><strong>K. 设备属性</strong>（必填）：可选值：研发专用 / 生产设备（生产+研发共用）</p>
+                                        <p><strong>L. 项目属性</strong>（必填）：可选值：多项目共用 / 单项目专用</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2"><strong>示例：</strong></p>
+                                    <p class="text-xs text-gray-400 mt-1">,研发服务器,2026-01,20000,直线法,3,5,,正常摊销中,研发专用,多项目共用</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -816,7 +887,7 @@
                     <!-- 资产列表 -->
                     <div class="bg-white rounded-lg shadow overflow-hidden">
                         <div class="px-6 py-3 bg-blue-50 border-b border-blue-100">
-                            <p class="text-sm text-blue-800">提示：资产若已被其他项目使用中，将不允许删除和编辑操作</p>
+                            <p class="text-sm text-blue-800">提示：资产若已被其他项目使用中，将不允许删除</p>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
@@ -826,7 +897,6 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">资产名称</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">购置日期</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">原值</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">累计折旧</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">资产状态</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目属性</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
@@ -838,7 +908,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发服务器</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥20,000</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥12,000</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常折旧中</span></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">多项目共用</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -852,7 +921,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发电脑</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥8,000</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥4,800</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常折旧中</span></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">多项目共用</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -866,7 +934,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发实验室设备</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-02</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥50,000</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥15,000</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常折旧中</span></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">单项目专用</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -880,7 +947,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发办公家具</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-03</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥6,000</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥3,600</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常折旧中</span></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">多项目共用</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -894,7 +960,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">研发网络设备</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-03</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥12,000</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥7,200</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">已折旧完毕</span></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">单项目专用</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -1031,8 +1096,6 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">折旧期间</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">折旧方法</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">月折旧额</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">累计折旧</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">资产净值</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -1040,29 +1103,21 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直线法</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥19,500</td>
                                     </tr>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-02</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直线法</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥1,000</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥19,000</td>
                                     </tr>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-03</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直线法</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥1,500</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥18,500</td>
                                     </tr>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">直线法</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥500</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥2,000</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥18,000</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1095,7 +1150,7 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">资产编号 <span class="text-red-500">*</span></label>
                                     <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="手动输入或留空自动生成">
-                                    <p class="mt-1 text-xs text-gray-500">备注：手动输入则使用输入值，留空则自动生成。自动生成规则为 GD+年份+4位序号，总长度10位（如：GD20260001）</p>
+                                    <p class="mt-1 text-xs text-gray-500">备注：手动输入则使用输入值，留空则自动生成。自动生成规则为 GD+13位时间戳（如：GD1704726400000），确保全球唯一</p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">资产名称 <span class="text-red-500">*</span></label>
@@ -1109,7 +1164,7 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">资产原值 <span class="text-red-500">*</span></label>
                                     <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入资产原值" min="0">
                                 </div>
-                                <div>
+                                <div id="monthlyAmortizationField">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">月摊销额</label>
                                     <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="自动计算" min="0" readonly>
                                     <p class="text-xs text-gray-500 mt-1">自动计算: 月摊销额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
@@ -1123,24 +1178,34 @@
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">摊销方法 <span class="text-red-500">*</span></label>
-                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                        <option value="straight">直线法</option>
-                                        <option value="sum_of_years">年数总和法</option>
-                                        <option value="double_declining">双倍余额递减法</option>
+                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="toggleProductionMethodFields(this)">
+                                        <option value="straight">直线法（年限平均法）</option>
+                                        <option value="production">其他</option>
                                     </select>
                                     <p class="text-xs text-gray-500 mt-2">
                                         直线法: 月摊销额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)<br>
-                                        年数总和法: 年摊销率 = 剩余使用年限 / 年数总和, 年摊销额 = (资产原值 - 预计残值) × 年摊销率<br>
-                                        双倍余额递减法: 年摊销率 = 2 / 预计使用年限 × 100%, 年摊销额 = 年初无形资产净值 × 年摊销率
+                                        其他: 直接输入本月摊销额
                                     </p>
                                 </div>
-                                <div>
+                                <div id="usefulLifeField">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">预计使用年限（年） <span class="text-red-500">*</span></label>
                                     <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3" min="1">
                                 </div>
-                                <div>
+                                <div id="residualRateField">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">预计残值率（%） <span class="text-red-500">*</span></label>
                                     <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="5" min="0" max="100">
+                                </div>
+                                <div id="productionFields" style="display: none;">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">摊销额录入</label>
+                                    <div id="amortizationMonthsContainer">
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <input type="month" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="选择月份">
+                                            <input type="number" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="本月摊销额（元）" min="0" step="0.01">
+                                            <button type="button" class="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onclick="removeMonthRow(this)">删除</button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="mt-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200" onclick="addMonthRow()">+ 添加月份</button>
+                                    <p class="text-xs text-gray-500 mt-2">提示：选择"其他"方法时，需录入各月实际摊销额，费用归集时将按月份提取</p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">摊销截止日期</label>
@@ -1202,6 +1267,36 @@
         function closeAddModal() {
             document.getElementById('addAssetModal').classList.add('hidden');
         }
+
+        function toggleImportTemplate() {
+            const details = document.getElementById('importTemplateDetails');
+            const icon = document.getElementById('importTemplateIcon');
+            if (details.classList.contains('hidden')) {
+                details.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                details.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+
+        // Tooltip functions
+        function showTooltip(tooltipId) {
+            const tooltip = document.getElementById(tooltipId);
+            if (tooltip) {
+                tooltip.classList.remove('hidden');
+            }
+        }
+
+        function hideTooltip(tooltipId) {
+            const tooltip = document.getElementById(tooltipId);
+            if (tooltip) {
+                tooltip.classList.add('hidden');
+            }
+        }
     </script>
+
 </body>
 </html>

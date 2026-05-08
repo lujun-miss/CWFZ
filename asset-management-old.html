@@ -1225,15 +1225,12 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">折旧方法 <span class="text-red-500">*</span></label>
                                     <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                        <option value="straight">直线法</option>
-                                        <option value="accelerated">加速折旧法</option>
-                                        <option value="sum_of_years">年数总和法</option>
-                                        <option value="double_declining">双倍余额递减法</option>
+                                        <option value="straight">直线法（年限平均法）</option>
+                                        <option value="production">产量法（工作量法）</option>
                                     </select>
                                     <div class="mt-2 text-xs text-gray-500 space-y-1">
                                         <p><strong>直线法：</strong>月折旧额 = (资产原值 - 资产原值 × 预计残值率) / (预计使用年限 × 12)</p>
-                                        <p><strong>年数总和法：</strong>年折旧率 = 剩余使用年限 / 年数总和，年折旧额 = (资产原值 - 预计残值) × 年折旧率，月折旧额 = 年折旧额 / 12</p>
-                                        <p><strong>双倍余额递减法：</strong>年折旧率 = 2 / 预计使用年限 × 100%，年折旧额 = 年初固定资产净值 × 年折旧率，月折旧额 = 年折旧额 / 12（最后两年改为直线法）</p>
+                                        <p><strong>产量法：</strong>单位产量折旧额 = (资产原值 - 预计净残值) / 预计总产量，月折旧额 = 单位产量折旧额 × 本月实际产量</p>
                                     </div>
                                 </div>
                                 <div>
