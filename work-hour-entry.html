@@ -60,6 +60,56 @@
         body {
             font-family: 'Inter', system-ui, sans-serif;
         }
+        /* 资产卡片样式 - 参照小程序风格 */
+        .device-card-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: #f8fafc;
+            border-radius: 9999px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            user-select: none;
+        }
+        .device-card-item:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+        .device-card-item.selected {
+            background: #eef2ff;
+            border-color: #4f46e5;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.1);
+        }
+        .device-card-item.detail.selected {
+            background: #eff6ff;
+            border-color: #3b82f6;
+        }
+        .device-card-item .icon {
+            font-size: 1.1rem;
+        }
+        .device-card-item .name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #475569;
+        }
+        .device-card-item.selected .name {
+            color: #1e293b;
+        }
+        .device-card-item .check-icon {
+            display: none;
+            color: #4f46e5;
+            font-size: 0.875rem;
+        }
+        .device-card-item.selected .check-icon {
+            display: block;
+        }
+        .device-card-item.detail.selected .check-icon {
+            color: #3b82f6;
+        }
+        
         .nav-item {
             transition: all 0.2s ease;
         }
@@ -563,41 +613,72 @@
                         <textarea class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="4" placeholder="请描述工作内容"></textarea>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">使用设备</label>
-                        <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" multiple>
-                            <option value="eq1">研发设备1</option>
-                            <option value="eq2">研发设备2</option>
-                            <option value="eq3">研发设备3</option>
-                            <option value="eq4">研发设备4</option>
-                        </select>
-                        <p class="text-xs text-gray-500 mt-1">按住Ctrl键可多选</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <label class="block text-sm font-medium text-gray-700">资产使用提报 (选择并配置时长)</label>
+                            <button type="button" class="text-xs text-danger font-medium hover:underline" onclick="clearAllSelections()">清空全部资产选择</button>
+                        </div>
+                        
+                        <div class="space-y-8">
+                            <!-- 1. 设备组选择与就地配置 -->
+                            <div class="p-6 bg-indigo-50/30 border border-indigo-100 rounded-2xl">
+                                <label class="block text-xs font-bold text-indigo-600 mb-4 flex items-center">
+                                    <i class="fa fa-th-large mr-2"></i>1. 设备组整体提报 (选定后直接在下方设置时长)
+                                </label>
+                                <select id="groupDropdown" class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white mb-4 shadow-sm" onchange="handleGroupDropdownChange(this.value)">
+                                    <option value="">--- 点击下拉选择生产组 ---</option>
+                                    <option value="group1">传感器测试组</option>
+                                    <option value="group2">机器人组装组</option>
+                                    <option value="group3">材料分析组</option>
+                                </select>
+                                
+                                <!-- 就地配置容器：选中的设备组时长输入 -->
+                                <div id="groupDurationList" class="space-y-3">
+                                    <!-- 选中的组将在这里生成配置卡片 -->
+                                </div>
+                            </div>
+
+                            <!-- 2. 明细设备选择与就地配置 -->
+                            <div class="p-6 bg-blue-50/30 border border-blue-100 rounded-2xl">
+                                <label class="block text-xs font-bold text-blue-600 mb-4 flex items-center">
+                                    <i class="fa fa-cog mr-2"></i>2. 明细设备个体提报 (选定后直接在下方设置时长)
+                                </label>
+                                <select id="equipmentDropdown" class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white mb-4 shadow-sm" onchange="handleEquipmentDropdownChange(this.value)">
+                                    <option value="">--- 点击下拉选择单台设备 ---</option>
+                                    <option value="eq1">研发设备1 (传感器组设备)</option>
+                                    <option value="eq2">研发设备2 (传感器组设备)</option>
+                                    <option value="eq3">研发设备3 (机器人组设备)</option>
+                                    <option value="eq4">研发设备4 (机器人组设备)</option>
+                                    <option value="eq5">研发设备5 (材料组设备)</option>
+                                    <option value="eq6">通用测试仪 (独立设备)</option>
+                                    <option value="eq7">高倍显微镜 (独立设备)</option>
+                                </select>
+
+                                <!-- 就地配置容器：选中的明细设备时长输入 -->
+                                <div id="equipmentDurationList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <!-- 选中的设备将在这里生成配置卡片 -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">设备使用时长 (小时)</label>
-                        <input type="number" step="0.5" min="0" max="24" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">设备使用情况</label>
-                        <textarea class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="2" placeholder="请描述设备使用情况"></textarea>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">使用无形资产</label>
-                        <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" multiple>
+                    <!-- 3. 无形资产选择与就地配置 -->
+                    <div class="md:col-span-2 p-6 bg-teal-50/30 border border-teal-100 rounded-2xl">
+                        <label class="block text-xs font-bold text-teal-600 mb-4 flex items-center">
+                            <i class="fa fa-diamond mr-2"></i>3. 使用无形资产 (选定后直接在下方设置时长)
+                        </label>
+                        <select id="intangibleDropdown" class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white mb-4 shadow-sm" onchange="handleIntangibleDropdownChange(this.value)">
+                            <option value="">--- 点击下拉选择无形资产 ---</option>
                             <option value="ia1">研发设计软件A</option>
                             <option value="ia2">专利技术B</option>
                             <option value="ia3">数据库软件C</option>
                             <option value="ia4">软件著作权D</option>
                         </select>
-                        <p class="text-xs text-gray-500 mt-1">按住Ctrl键可多选</p>
+
+                        <!-- 就地配置容器：选中的无形资产时长输入 -->
+                        <div id="intangibleDurationList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- 选中的无形资产将在这里生成配置卡片 -->
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">无形资产使用时长 (小时)</label>
-                        <input type="number" step="0.5" min="0" max="24" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">无形资产使用情况</label>
-                        <textarea class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="2" placeholder="请描述无形资产使用情况"></textarea>
-                    </div>
+
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
                         <textarea class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="2" placeholder="请输入备注信息"></textarea>
@@ -619,6 +700,184 @@
         // 页面加载功能
         function loadPage(page) {
             window.location.href = page;
+        }
+
+        // 切换选择状态 (参照小程序逻辑)
+        let selectedData = {
+            groups: new Map(), // 使用Map存储，方便存取时长
+            equipments: new Map(),
+            intangibles: new Map()
+        };
+
+        // 模拟设备组与设备的对应关系
+        const groupEquipments = {
+            'group1': ['研发设备1', '研发设备2'],
+            'group2': ['研发设备3', '研发设备4'],
+            'group3': ['研发设备5']
+        };
+
+        // 处理无形资产下拉变更
+        function handleIntangibleDropdownChange(iaId) {
+            const dropdown = document.getElementById('intangibleDropdown');
+            if (!iaId) return;
+            const iaName = dropdown.options[dropdown.selectedIndex].text;
+            selectedData.intangibles.set(iaId, { id: iaId, name: iaName, duration: 8 });
+            updateSelectionSummary();
+        }
+
+        function toggleSelection(element, type, id) {
+            const isSelected = element.classList.toggle('selected');
+            const collection = type === 'group' ? selectedData.groups : selectedData.equipments;
+            
+            if (isSelected) {
+                collection.set(id, {
+                    id: id,
+                    name: element.querySelector('.name').textContent,
+                    duration: 8 // 默认时长
+                });
+            } else {
+                collection.delete(id);
+            }
+            updateSelectionSummary();
+        }
+
+        // 处理设备组下拉变更
+        function handleGroupDropdownChange(groupId) {
+            const dropdown = document.getElementById('groupDropdown');
+            if (!groupId) return;
+            const groupName = dropdown.options[dropdown.selectedIndex].text;
+            selectedData.groups.set(groupId, { id: groupId, name: groupName, duration: 8 });
+            updateSelectionSummary();
+        }
+
+        // 处理明细设备下拉变更
+        function handleEquipmentDropdownChange(eqId) {
+            const dropdown = document.getElementById('equipmentDropdown');
+            if (!eqId) return;
+            const eqName = dropdown.options[dropdown.selectedIndex].text;
+            selectedData.equipments.set(eqId, { id: eqId, name: eqName, duration: 8 });
+            updateSelectionSummary();
+        }
+
+        // 清空所有选择
+        function clearAllSelections() {
+            selectedData.groups.clear();
+            selectedData.equipments.clear();
+            selectedData.intangibles.clear();
+            document.getElementById('groupDropdown').value = '';
+            document.getElementById('equipmentDropdown').value = '';
+            document.getElementById('intangibleDropdown').value = '';
+            updateSelectionSummary();
+        }
+
+        // 更新汇总展示
+        function updateSelectionSummary() {
+            const groupList = document.getElementById('groupDurationList');
+            const equipmentList = document.getElementById('equipmentDurationList');
+            const intangibleList = document.getElementById('intangibleDurationList');
+            
+            // 1. 更新设备组就地配置
+            if (selectedData.groups.size === 0) {
+                groupList.innerHTML = '';
+            } else {
+                groupList.innerHTML = Array.from(selectedData.groups.values()).map(group => `
+                    <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm animate-fade-in">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-bold text-gray-800 flex items-center">
+                                <i class="fa fa-folder-open text-indigo-500 mr-2"></i>${group.name}
+                                <button onclick="removeGroup('${group.id}')" class="ml-2 text-gray-300 hover:text-danger"><i class="fa fa-times-circle"></i></button>
+                            </span>
+                            <div class="flex items-center bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100">
+                                <span class="text-[10px] text-indigo-400 font-bold mr-2 uppercase">时长</span>
+                                <input type="number" step="0.5" value="${group.duration}" 
+                                    class="w-12 bg-transparent border-none text-sm font-bold text-indigo-700 focus:ring-0 p-0 text-center"
+                                    onchange="updateDuration('group', '${group.id}', this.value)">
+                                <span class="text-[10px] text-indigo-400 font-bold ml-1">H</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            ${(groupEquipments[group.id] || []).map(eq => `
+                                <span class="text-[10px] px-2 py-0.5 bg-gray-50 text-gray-500 rounded-md border border-gray-100 flex items-center">
+                                    <i class="fa fa-cog mr-1 opacity-50"></i>${eq}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // 2. 更新明细设备就地配置
+            if (selectedData.equipments.size === 0) {
+                equipmentList.innerHTML = '';
+            } else {
+                equipmentList.innerHTML = Array.from(selectedData.equipments.values()).map(eq => `
+                    <div class="bg-white p-4 rounded-xl border border-blue-100 shadow-sm flex items-center justify-between animate-fade-in">
+                        <span class="text-sm font-bold text-gray-800 flex items-center">
+                            <i class="fa fa-cog text-blue-500 mr-2"></i>${eq.name}
+                            <button onclick="removeEquipment('${eq.id}')" class="ml-2 text-gray-300 hover:text-danger"><i class="fa fa-times-circle"></i></button>
+                        </span>
+                        <div class="flex items-center bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">
+                            <input type="number" step="0.5" value="${eq.duration}" 
+                                class="w-12 bg-transparent border-none text-sm font-bold text-blue-700 focus:ring-0 p-0 text-center"
+                                onchange="updateDuration('equipment', '${eq.id}', this.value)">
+                            <span class="text-[10px] text-blue-400 font-bold ml-1">H</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // 3. 更新无形资产就地配置
+            if (selectedData.intangibles.size === 0) {
+                intangibleList.innerHTML = '';
+            } else {
+                intangibleList.innerHTML = Array.from(selectedData.intangibles.values()).map(ia => `
+                    <div class="bg-white p-4 rounded-xl border border-teal-100 shadow-sm flex items-center justify-between animate-fade-in">
+                        <span class="text-sm font-bold text-gray-800 flex items-center">
+                            <i class="fa fa-diamond text-teal-500 mr-2"></i>${ia.name}
+                            <button onclick="removeIntangible('${ia.id}')" class="ml-2 text-gray-300 hover:text-danger"><i class="fa fa-times-circle"></i></button>
+                        </span>
+                        <div class="flex items-center bg-teal-50 px-3 py-1.5 rounded-lg border border-teal-100">
+                            <input type="number" step="0.5" value="${ia.duration}" 
+                                class="w-12 bg-transparent border-none text-sm font-bold text-teal-700 focus:ring-0 p-0 text-center"
+                                onchange="updateDuration('intangible', '${ia.id}', this.value)">
+                            <span class="text-[10px] text-teal-400 font-bold ml-1">H</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 移除设备选择
+        function removeEquipment(eqId) {
+            selectedData.equipments.delete(eqId);
+            const dropdown = document.getElementById('equipmentDropdown');
+            if (dropdown.value === eqId) dropdown.value = '';
+            updateSelectionSummary();
+        }
+
+        // 移除组选择
+        function removeGroup(groupId) {
+            selectedData.groups.delete(groupId);
+            const dropdown = document.getElementById('groupDropdown');
+            if (dropdown.value === groupId) dropdown.value = '';
+            updateSelectionSummary();
+        }
+
+        // 移除无形资产选择
+        function removeIntangible(iaId) {
+            selectedData.intangibles.delete(iaId);
+            const dropdown = document.getElementById('intangibleDropdown');
+            if (dropdown.value === iaId) dropdown.value = '';
+            updateSelectionSummary();
+        }
+
+        // 更新时长数据
+        function updateDuration(type, id, value) {
+            const collection = type === 'group' ? selectedData.groups : 
+                             (type === 'equipment' ? selectedData.equipments : selectedData.intangibles);
+            if (collection.has(id)) {
+                collection.get(id).duration = parseFloat(value) || 0;
+            }
         }
 
         // 返回上一页
