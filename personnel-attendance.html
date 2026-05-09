@@ -551,14 +551,32 @@
             <!-- 页面标题 -->
             <div class="flex justify-end items-center mb-6">
                 <div class="flex space-x-2">
+                    <button class="btn-primary flex items-center" onclick="openBatchAddModal()">
+                        <i class="fa fa-users mr-2"></i>
+                        批量添加考勤
+                    </button>
                     <button class="btn-primary flex items-center" onclick="openImportModal('attendance')">
                         <i class="fa fa-upload mr-2"></i>
                         导入考勤数据
+                    </button>
+                    <button class="btn-outline flex items-center" onclick="openWorkTimeConfigModal()">
+                        <i class="fa fa-clock-o mr-2"></i>
+                        考勤时间配置
                     </button>
                     <button class="btn-outline flex items-center">
                         <i class="fa fa-download mr-2"></i>
                         导出
                     </button>
+                </div>
+            </div>
+
+            <!-- 备注提示 -->
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <div class="flex items-start">
+                    <i class="fa fa-info-circle text-yellow-600 mt-0.5 mr-2"></i>
+                    <p class="text-sm text-yellow-800">
+                        <strong>注意：</strong>若该时间段的费用已完成归集，则不允许对考勤信息进行编辑或删除操作。
+                    </p>
                 </div>
             </div>
 
@@ -610,6 +628,9 @@
                                     工时
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    归集状态
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     操作
                                 </th>
                             </tr>
@@ -634,9 +655,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">8.0</div>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已归集</span>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <button class="text-primary hover:text-blue-700 mr-3">编辑</button>
-                                    <button class="text-danger hover:text-red-700">删除</button>
+                                    <button class="text-gray-400 cursor-not-allowed mr-3" disabled>编辑</button>
+                                    <button class="text-gray-400 cursor-not-allowed" disabled>删除</button>
                                 </td>
                             </tr>
                             <tr>
@@ -657,6 +681,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">7.5</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">未归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     <button class="text-primary hover:text-blue-700 mr-3">编辑</button>
@@ -682,6 +709,9 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">7.5</div>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">未归集</span>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     <button class="text-primary hover:text-blue-700 mr-3">编辑</button>
                                     <button class="text-danger hover:text-red-700">删除</button>
@@ -706,9 +736,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">0</div>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已归集</span>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <button class="text-primary hover:text-blue-700 mr-3">编辑</button>
-                                    <button class="text-danger hover:text-red-700">删除</button>
+                                    <button class="text-gray-400 cursor-not-allowed mr-3" disabled>编辑</button>
+                                    <button class="text-gray-400 cursor-not-allowed" disabled>删除</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -857,7 +890,301 @@
             location.reload();
         }
 
+        // 打开时间配置弹窗
+        function openWorkTimeConfigModal() {
+            document.getElementById('workTimeConfigModal').classList.remove('hidden');
+        }
+
+        // 关闭时间配置弹窗
+        function closeWorkTimeConfigModal() {
+            document.getElementById('workTimeConfigModal').classList.add('hidden');
+        }
+
+        // 保存时间配置
+        function saveWorkTimeConfig() {
+            alert('上下班时间配置已保存！');
+            closeWorkTimeConfigModal();
+        }
+
+        // 打开批量添加考勤弹窗
+        function openBatchAddModal() {
+            document.getElementById('batchAddModal').classList.remove('hidden');
+        }
+
+        // 关闭批量添加考勤弹窗
+        function closeBatchAddModal() {
+            document.getElementById('batchAddModal').classList.add('hidden');
+            // 重置表单
+            document.getElementById('batchAttendanceDate').value = '';
+            document.getElementById('employeeSearch').value = '';
+            // 取消所有选中
+            document.querySelectorAll('#batchEmployeeList input[type="checkbox"]').forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+            // 更新选中人数显示
+            updateSelectedCount();
+        }
+
+        // 全选/取消全选
+        function toggleSelectAll() {
+            var selectAll = document.getElementById('selectAll');
+            var checkboxes = document.querySelectorAll('#batchEmployeeList input[type="checkbox"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAll.checked;
+            });
+            updateSelectedCount();
+        }
+
+        // 更新选中人数
+        function updateSelectedCount() {
+            var selectedCount = document.querySelectorAll('#batchEmployeeList input[type="checkbox"]:checked').length;
+            document.getElementById('selectedCount').textContent = '已选择 ' + selectedCount + ' 人';
+        }
+
+        // 搜索员工
+        function searchEmployees() {
+            var searchText = document.getElementById('employeeSearch').value.toLowerCase();
+            var employeeItems = document.querySelectorAll('#batchEmployeeList > div');
+            
+            employeeItems.forEach(function(item) {
+                var name = item.querySelector('span').textContent.toLowerCase();
+                if (name.includes(searchText)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // 批量应用时间到选中员工
+        function applyTimeToSelected() {
+            var startTime = document.getElementById('batchSetStartTime').value;
+            var endTime = document.getElementById('batchSetEndTime').value;
+            var selectedItems = document.querySelectorAll('#batchEmployeeList input[type="checkbox"]:checked');
+            
+            selectedItems.forEach(function(checkbox) {
+                var parentDiv = checkbox.parentElement;
+                var startTimeInput = parentDiv.querySelector('.employee-start-time');
+                var endTimeInput = parentDiv.querySelector('.employee-end-time');
+                if (startTimeInput) startTimeInput.value = startTime;
+                if (endTimeInput) endTimeInput.value = endTime;
+            });
+            
+            alert('已将时间应用到选中的员工！');
+        }
+
+        // 监听复选框变化
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('employee-checkbox')) {
+                updateSelectedCount();
+            }
+        });
+
+        // 批量添加考勤
+        function batchAddAttendance() {
+            var date = document.getElementById('batchAttendanceDate').value;
+            var selectedEmployees = document.querySelectorAll('#batchEmployeeList input[type="checkbox"]:checked');
+            
+            if (!date) {
+                alert('请选择考勤日期！');
+                return;
+            }
+            
+            if (selectedEmployees.length === 0) {
+                alert('请至少选择一个员工！');
+                return;
+            }
+            
+            // 收集选中员工的考勤信息
+            var attendanceData = [];
+            selectedEmployees.forEach(function(checkbox) {
+                var parentDiv = checkbox.parentElement;
+                var name = parentDiv.querySelector('span').textContent;
+                var startTime = parentDiv.querySelector('.employee-start-time').value;
+                var endTime = parentDiv.querySelector('.employee-end-time').value;
+                
+                attendanceData.push({
+                    name: name,
+                    startTime: startTime,
+                    endTime: endTime
+                });
+            });
+            
+            alert('已为 ' + attendanceData.length + ' 位员工添加 ' + date + ' 的考勤记录！');
+            closeBatchAddModal();
+            location.reload();
+        }
+
 
     </script>
+    
+    <!-- 时间配置弹窗 -->
+    <div id="workTimeConfigModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-medium text-gray-900">上下班时间配置</h3>
+                <button onclick="closeWorkTimeConfigModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- 上班打卡时间 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">上班打卡时间</label>
+                    <input type="time" id="workStartTime" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="09:00">
+                </div>
+                
+                <!-- 下班打卡时间 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">下班打卡时间</label>
+                    <input type="time" id="workEndTime" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="18:00">
+                </div>
+                
+                <!-- 中午午休时间 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">中午午休时间</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="time" id="lunchStartTime" class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="12:00">
+                        <span class="text-gray-400">至</span>
+                        <input type="time" id="lunchEndTime" class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="13:00">
+                    </div>
+                </div>
+                
+                <!-- 计算说明 -->
+                <div class="bg-gray-50 rounded-md p-3">
+                    <p class="text-sm text-gray-600">
+                        <strong>工时计算公式：</strong><br>
+                        工时 = 下班时间 - 上班时间 - (午休结束时间 - 午休开始时间)<br>
+                        <strong>小数处理：</strong>保留一位小数，不做四舍五入（直接截断）
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
+                <button class="btn-outline" onclick="closeWorkTimeConfigModal()">
+                    取消
+                </button>
+                <button class="btn-primary" onclick="saveWorkTimeConfig()">
+                    保存配置
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 批量添加考勤弹窗 -->
+    <div id="batchAddModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-medium text-gray-900">批量添加考勤</h3>
+                <button onclick="closeBatchAddModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto">
+                <!-- 考勤日期 -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">考勤日期 <span class="text-red-500">*</span></label>
+                    <input type="date" id="batchAttendanceDate" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                </div>
+                
+                <!-- 员工列表 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">选择员工（可单独设置每人的上下班时间）</label>
+                    
+                    <!-- 员工搜索 -->
+                <div class="mb-3">
+                    <input type="text" id="employeeSearch" placeholder="搜索员工姓名..." class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onkeyup="searchEmployees()">
+                </div>
+                
+                <!-- 批量设置时间 -->
+                <div class="flex items-center space-x-2 mb-4 p-3 bg-blue-50 rounded-md">
+                    <span class="text-sm text-gray-600">批量设置时间：</span>
+                    <input type="time" id="batchSetStartTime" class="w-20 text-xs border border-gray-300 rounded px-2 py-1" value="09:00">
+                    <span class="text-gray-400">-</span>
+                    <input type="time" id="batchSetEndTime" class="w-20 text-xs border border-gray-300 rounded px-2 py-1" value="18:00">
+                    <button class="text-xs btn-primary px-3 py-1" onclick="applyTimeToSelected()">应用到选中</button>
+                </div>
+                
+                <!-- 全选 -->
+                <div class="flex items-center mb-3 px-3 py-2 bg-gray-50 rounded-md">
+                    <input type="checkbox" id="selectAll" class="rounded text-primary focus:ring-primary" onclick="toggleSelectAll()">
+                    <label for="selectAll" class="ml-2 text-sm text-gray-700">全选</label>
+                    <span id="selectedCount" class="ml-auto text-xs text-gray-500">已选择 0 人</span>
+                </div>
+                    
+                    <!-- 员工列表 -->
+                    <div id="batchEmployeeList" class="space-y-2">
+                        <div class="flex items-center px-3 py-2 border border-gray-200 rounded-md">
+                            <input type="checkbox" value="1" class="rounded text-primary focus:ring-primary employee-checkbox">
+                            <span class="ml-2 text-sm text-gray-700 w-16">张三</span>
+                            <input type="time" class="ml-auto w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-start-time" value="09:00">
+                            <span class="mx-1 text-gray-400">-</span>
+                            <input type="time" class="w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-end-time" value="18:00">
+                        </div>
+                        <div class="flex items-center px-3 py-2 border border-gray-200 rounded-md">
+                            <input type="checkbox" value="2" class="rounded text-primary focus:ring-primary employee-checkbox">
+                            <span class="ml-2 text-sm text-gray-700 w-16">李四</span>
+                            <input type="time" class="ml-auto w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-start-time" value="09:00">
+                            <span class="mx-1 text-gray-400">-</span>
+                            <input type="time" class="w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-end-time" value="18:00">
+                        </div>
+                        <div class="flex items-center px-3 py-2 border border-gray-200 rounded-md">
+                            <input type="checkbox" value="3" class="rounded text-primary focus:ring-primary employee-checkbox">
+                            <span class="ml-2 text-sm text-gray-700 w-16">王五</span>
+                            <input type="time" class="ml-auto w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-start-time" value="09:00">
+                            <span class="mx-1 text-gray-400">-</span>
+                            <input type="time" class="w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-end-time" value="18:00">
+                        </div>
+                        <div class="flex items-center px-3 py-2 border border-gray-200 rounded-md">
+                            <input type="checkbox" value="4" class="rounded text-primary focus:ring-primary employee-checkbox">
+                            <span class="ml-2 text-sm text-gray-700 w-16">赵六</span>
+                            <input type="time" class="ml-auto w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-start-time" value="08:30">
+                            <span class="mx-1 text-gray-400">-</span>
+                            <input type="time" class="w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-end-time" value="17:30">
+                        </div>
+                        <div class="flex items-center px-3 py-2 border border-gray-200 rounded-md">
+                            <input type="checkbox" value="5" class="rounded text-primary focus:ring-primary employee-checkbox">
+                            <span class="ml-2 text-sm text-gray-700 w-16">钱七</span>
+                            <input type="time" class="ml-auto w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-start-time" value="09:00">
+                            <span class="mx-1 text-gray-400">-</span>
+                            <input type="time" class="w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-end-time" value="18:00">
+                        </div>
+                        <div class="flex items-center px-3 py-2 border border-gray-200 rounded-md">
+                            <input type="checkbox" value="6" class="rounded text-primary focus:ring-primary employee-checkbox">
+                            <span class="ml-2 text-sm text-gray-700 w-16">孙八</span>
+                            <input type="time" class="ml-auto w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-start-time" value="10:00">
+                            <span class="mx-1 text-gray-400">-</span>
+                            <input type="time" class="w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-end-time" value="19:00">
+                        </div>
+                        <div class="flex items-center px-3 py-2 border border-gray-200 rounded-md">
+                            <input type="checkbox" value="7" class="rounded text-primary focus:ring-primary employee-checkbox">
+                            <span class="ml-2 text-sm text-gray-700 w-16">周九</span>
+                            <input type="time" class="ml-auto w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-start-time" value="09:00">
+                            <span class="mx-1 text-gray-400">-</span>
+                            <input type="time" class="w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-end-time" value="18:00">
+                        </div>
+                        <div class="flex items-center px-3 py-2 border border-gray-200 rounded-md">
+                            <input type="checkbox" value="8" class="rounded text-primary focus:ring-primary employee-checkbox">
+                            <span class="ml-2 text-sm text-gray-700 w-16">吴十</span>
+                            <input type="time" class="ml-auto w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-start-time" value="09:30">
+                            <span class="mx-1 text-gray-400">-</span>
+                            <input type="time" class="w-20 text-xs border border-gray-300 rounded px-2 py-1 employee-end-time" value="18:30">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
+                <button class="btn-outline" onclick="closeBatchAddModal()">
+                    取消
+                </button>
+                <button class="btn-primary" onclick="batchAddAttendance()">
+                    批量添加
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
