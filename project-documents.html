@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目过程文档 - 研知π</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        accent: '#6366f1',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        info: '#3b82f6',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .nav-item-active {
+                @apply bg-primary text-white;
+            }
+            .nav-item-hover {
+                @apply hover:bg-blue-100 transition-colors duration-200;
+            }
+        }
+    </style>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover {
+            transform: translateX(4px);
+        }
+        .menu-toggle {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-toggle:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        .sub-menu {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .sub-menu.collapsed {
+            max-height: 0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .file-item:hover {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="flex">
+        <div id="sidebar" class="w-64 bg-white shadow-lg h-screen fixed left-0 top-0 overflow-y-auto transition-transform duration-300 z-50">
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fa fa-graduation-cap text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-800">研知π</h1>
+                        <p class="text-xs text-gray-500">研发费用管理系统</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="mt-4">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item flex items-center px-4 py-2 text-gray-600" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目要素</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
+                                    <i class="fa fa-check-circle w-6"></i>
+                                    <span>阶段审核</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('progress-tracking.html')">
+                                    <i class="fa fa-line-chart w-6"></i>
+                                    <span>阶段跟踪</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-template.html')">
+                                    <i class="fa fa-list-alt w-6"></i>
+                                    <span>阶段模板</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-documents.html')">
+                                    <i class="fa fa-file w-6"></i>
+                                    <span>项目过程文档</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-database w-6"></i>
+                                <span>基础数据维护</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
+                                    <i class="fa fa-users w-6"></i>
+                                    <span>人员库</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-library.html')">
+                                    <i class="fa fa-laptop w-6"></i>
+                                    <span>设备库</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
+                                    <i class="fa fa-cubes w-6"></i>
+                                    <span>资产管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-asset.html')">
+                                    <i class="fa fa-file-o w-6"></i>
+                                    <span>无形资产</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('lease-contract.html')">
+                                    <i class="fa fa-handshake-o w-6"></i>
+                                    <span>租赁合同管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('maintenance-cost.html')">
+                                    <i class="fa fa-wrench w-6"></i>
+                                    <span>维修费用管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-rmb w-6"></i>
+                                <span>费用归集</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('direct-investment.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>直接投入归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('design-cost-allocation.html')">
+                                    <i class="fa fa-paint-brush w-6"></i>
+                                    <span>设计费归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-test-cost-allocation.html')">
+                                    <i class="fa fa-flask w-6"></i>
+                                    <span>设备试制费归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('outsourced-rd-allocation.html')">
+                                    <i class="fa fa-external-link w-6"></i>
+                                    <span>委托研发归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-cost-allocation.html')">
+                                    <i class="fa fa-ellipsis-h w-6"></i>
+                                    <span>其他费用归集</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-area-chart w-6"></i>
+                                <span>成本分摊</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('long-term-asset.html')">
+                                    <i class="fa fa-building w-6"></i>
+                                    <span>长期资产分摊</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
+                                    <i class="fa fa-bolt w-6"></i>
+                                    <span>设备能耗分摊</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item flex items-center px-4 py-2 text-gray-600" onclick="loadPage('cost-summary.html')">
+                            <i class="fa fa-bar-chart w-6"></i>
+                            <span>费用汇总</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div id="mainContent" class="flex-1 ml-64">
+            <div class="flex h-screen">
+                <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
+                    <div class="p-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                            <i class="fa fa-sitemap text-blue-500 mr-2"></i>
+                            项目列表
+                        </h2>
+                    </div>
+                    <div class="p-4 border-b border-gray-200">
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="projectSearch" 
+                                placeholder="搜索项目名称..." 
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                onkeyup="filterProjects()"
+                            >
+                            <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div id="projectTree" class="flex-1 overflow-y-auto p-4">
+                    </div>
+                    <div class="p-4 border-t border-gray-200 bg-gray-50">
+                        <button onclick="openUploadModal()" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                            <i class="fa fa-upload mr-2"></i>
+                            上传文档
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 p-8 overflow-y-auto">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-gray-800">项目过程文档</h1>
+                        <p class="text-gray-600 mt-1">统一管理项目全生命周期内的过程文档，支持按项目、阶段分类</p>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md mb-6">
+                        <div class="flex items-center border-b border-gray-200 overflow-x-auto">
+                            <button onclick="switchStageTab('all')" id="stageTab-all" class="px-6 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50">全部阶段</button>
+                            <button onclick="switchStageTab('research')" id="stageTab-research" class="px-6 py-3 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50">调研阶段</button>
+                            <button onclick="switchStageTab('development')" id="stageTab-development" class="px-6 py-3 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50">开发阶段</button>
+                            <button onclick="switchStageTab('testing')" id="stageTab-testing" class="px-6 py-3 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50">测试阶段</button>
+                            <button onclick="switchStageTab('other')" id="stageTab-other" class="px-6 py-3 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50">变更文档</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800 flex items-center">
+                                <i class="fa fa-list-check text-blue-500 mr-2"></i>
+                                阶段文档清单
+                            </h3>
+                        </div>
+                        <div id="stageDocumentsContainer" class="space-y-4">
+                        </div>
+                    </div>
+
+                    <div id="documentListViewContainer" class="bg-white rounded-lg shadow-md p-6 hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" class="w-4 h-4 text-blue-600">
+                                <span class="ml-2 text-sm text-gray-600">全选</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="batchDownload()" class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 flex items-center">
+                                    <i class="fa fa-download mr-1"></i>批量下载
+                                </button>
+                                <button onclick="batchDelete()" class="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 flex items-center">
+                                    <i class="fa fa-trash mr-1"></i>批量删除
+                                </button>
+                                <button onclick="openAssistModal()" class="px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 flex items-center">
+                                    <i class="fa fa-pencil mr-1"></i>辅助撰写
+                                </button>
+                            </div>
+                        </div>
+                        <div id="documentListView" class="space-y-3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div id="uploadModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">上传文档</h2>
+                <button onclick="closeUploadModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="uploadForm" onsubmit="handleUpload(event)">
+                <div id="uploadFields" class="space-y-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">文档名称 <span class="text-red-500">*</span></label>
+                        <input type="text" id="uploadName" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入文档名称" required>
+                    </div>
+                </div>
+                <div id="simpleUploadFields" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">关联项目 <span class="text-red-500">*</span></label>
+                        <select id="uploadProject" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <option value="">请选择项目</option>
+                            <option value="proj001">智能机器人研发项目</option>
+                            <option value="proj002">新能源汽车电池管理系统</option>
+                            <option value="proj003">工业互联网平台开发</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">关联阶段 <span class="text-red-500">*</span></label>
+                        <select id="uploadStage" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <option value="">请选择阶段</option>
+                            <option value="research">研究阶段</option>
+                            <option value="development">开发阶段</option>
+                            <option value="testing">测试阶段</option>
+                            <option value="other">变更文档</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">文档类型</label>
+                        <select id="uploadType" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="">请选择类型</option>
+                            <option value="report">阶段报告</option>
+                            <option value="application">申报材料</option>
+                            <option value="technical">技术文档</option>
+                            <option value="meeting">会议纪要</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">上传文件 <span class="text-red-500">*</span></label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors">
+                        <input type="file" id="uploadFile" class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" onchange="handleFileSelect(this)" required>
+                        <div id="fileDropZone" onclick="document.getElementById('uploadFile').click()">
+                            <i class="fa fa-cloud-upload text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-600">点击或拖拽文件到此处上传</p>
+                            <p class="text-xs text-gray-500 mt-1">支持 PDF、Word、Excel、PPT、TXT、ZIP 格式</p>
+                        </div>
+                        <div id="selectedFile" class="hidden mt-4 p-3 bg-gray-50 rounded-md">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fa fa-file text-primary mr-2"></i>
+                                    <span id="fileName" class="text-sm text-gray-700"></span>
+                                </div>
+                                <button type="button" onclick="removeSelectedFile()" class="text-red-500 hover:text-red-700">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeUploadModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
+                        取消
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors">
+                        上传
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="assistModal" class="modal">
+        <div class="modal-content p-6 max-w-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">辅助撰写</h3>
+                <button onclick="closeAssistModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">选择一个文档模板开始撰写：</p>
+            <div class="grid grid-cols-2 gap-3">
+                <div onclick="selectTemplate('立项申请书')" class="p-4 bg-blue-50 rounded-lg border border-blue-100 cursor-pointer hover:border-blue-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-blue-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">立项申请书</span>
+                    </div>
+                    <p class="text-xs text-gray-600">项目立项申请材料</p>
+                </div>
+                <div onclick="selectTemplate('立项决议书')" class="p-4 bg-green-50 rounded-lg border border-green-100 cursor-pointer hover:border-green-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-green-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">立项决议书</span>
+                    </div>
+                    <p class="text-xs text-gray-600">立项审批决议文件</p>
+                </div>
+                <div onclick="selectTemplate('立项报告')" class="p-4 bg-purple-50 rounded-lg border border-purple-100 cursor-pointer hover:border-purple-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-purple-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">立项报告</span>
+                    </div>
+                    <p class="text-xs text-gray-600">项目立项分析报告</p>
+                </div>
+                <div onclick="selectTemplate('立项计划书')" class="p-4 bg-orange-50 rounded-lg border border-orange-100 cursor-pointer hover:border-orange-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-orange-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">立项计划书</span>
+                    </div>
+                    <p class="text-xs text-gray-600">项目实施计划</p>
+                </div>
+                <div onclick="selectTemplate('阶段性报告')" class="p-4 bg-blue-50 rounded-lg border border-blue-100 cursor-pointer hover:border-blue-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-blue-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">阶段性报告</span>
+                    </div>
+                    <p class="text-xs text-gray-600">各阶段进展报告</p>
+                </div>
+                <div onclick="selectTemplate('月度进展报告')" class="p-4 bg-green-50 rounded-lg border border-green-100 cursor-pointer hover:border-green-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-green-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">月度进展报告</span>
+                    </div>
+                    <p class="text-xs text-gray-600">每月项目进展</p>
+                </div>
+                <div onclick="selectTemplate('季度进展报告')" class="p-4 bg-purple-50 rounded-lg border border-purple-100 cursor-pointer hover:border-purple-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-purple-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">季度进展报告</span>
+                    </div>
+                    <p class="text-xs text-gray-600">每季度项目进展</p>
+                </div>
+                <div onclick="selectTemplate('年度进展报告')" class="p-4 bg-orange-50 rounded-lg border border-orange-100 cursor-pointer hover:border-orange-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-orange-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">年度进展报告</span>
+                    </div>
+                    <p class="text-xs text-gray-600">年度项目总结</p>
+                </div>
+                <div onclick="selectTemplate('项目变更表')" class="p-4 bg-red-50 rounded-lg border border-red-100 cursor-pointer hover:border-red-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-red-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">项目变更表</span>
+                    </div>
+                    <p class="text-xs text-gray-600">项目变更申请</p>
+                </div>
+                <div onclick="selectTemplate('结题验收报告')" class="p-4 bg-indigo-50 rounded-lg border border-indigo-100 cursor-pointer hover:border-indigo-300 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="fa fa-file-text text-indigo-500 mr-2"></i>
+                        <span class="font-medium text-gray-800">结题验收报告</span>
+                    </div>
+                    <p class="text-xs text-gray-600">项目结题材料</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projectData = {
+            proj001: {
+                name: '智能机器人研发项目',
+                stages: [
+                    {
+                        id: 'research',
+                        name: '研究阶段',
+                        status: 'in_progress',
+                        documents: [
+                            { name: '立项申请书', required: true, uploaded: true },
+                            { name: '技术可行性报告', required: true, uploaded: true },
+                            { name: '阶段总结报告', required: true, uploaded: false }
+                        ]
+                    },
+                    {
+                        id: 'development',
+                        name: '开发阶段',
+                        status: 'pending',
+                        documents: [
+                            { name: '设计方案文档', required: true, uploaded: true },
+                            { name: '技术规格说明书', required: false, uploaded: false }
+                        ]
+                    },
+                    {
+                        id: 'testing',
+                        name: '测试阶段',
+                        status: 'locked',
+                        documents: [
+                            { name: '测试报告', required: true, uploaded: false },
+                            { name: '验收报告', required: false, uploaded: false }
+                        ]
+                    },
+                    {
+                        id: 'other',
+                        name: '变更文档',
+                        status: 'pending',
+                        documents: [
+                            { name: '技术方案变更说明.pdf', required: false, uploaded: true, uploadTime: '2024-03-15' },
+                            { name: '项目预算调整申请.docx', required: false, uploaded: true, uploadTime: '2024-04-20' }
+                        ]
+                    }
+                ],
+                uploadedDocs: 7,
+                completedStages: 0,
+                pendingDocs: 3
+            },
+            proj002: {
+                name: '新能源汽车电池管理系统',
+                stages: [
+                    {
+                        id: 'research',
+                        name: '研究阶段',
+                        status: 'completed',
+                        documents: [
+                            { name: '立项申请书', required: true, uploaded: true },
+                            { name: '技术可行性报告', required: true, uploaded: true },
+                            { name: '阶段总结报告', required: true, uploaded: true }
+                        ]
+                    },
+                    {
+                        id: 'development',
+                        name: '开发阶段',
+                        status: 'in_progress',
+                        documents: [
+                            { name: '设计方案文档', required: true, uploaded: true },
+                            { name: '技术规格说明书', required: true, uploaded: true },
+                            { name: '原型验证报告', required: false, uploaded: false }
+                        ]
+                    },
+                    {
+                        id: 'testing',
+                        name: '测试阶段',
+                        status: 'pending',
+                        documents: [
+                            { name: '测试报告', required: true, uploaded: false },
+                            { name: '验收报告', required: false, uploaded: false }
+                        ]
+                    },
+                    {
+                        id: 'other',
+                        name: '变更文档',
+                        status: 'pending',
+                        documents: [
+                            { name: '进度延期说明.pdf', required: false, uploaded: true, uploadTime: '2024-02-28' },
+                            { name: '资源调配申请.docx', required: false, uploaded: true, uploadTime: '2024-03-10' },
+                            { name: '需求变更评审记录.xlsx', required: false, uploaded: true, uploadTime: '2024-05-05' }
+                        ]
+                    }
+                ],
+                uploadedDocs: 9,
+                completedStages: 1,
+                pendingDocs: 2
+            },
+            proj003: {
+                name: '工业互联网平台开发',
+                stages: [
+                    {
+                        id: 'research',
+                        name: '研究阶段',
+                        status: 'in_progress',
+                        documents: [
+                            { name: '立项申请书', required: true, uploaded: true },
+                            { name: '技术可行性报告', required: true, uploaded: false },
+                            { name: '市场调研报告', required: false, uploaded: true }
+                        ]
+                    },
+                    {
+                        id: 'development',
+                        name: '开发阶段',
+                        status: 'pending',
+                        documents: [
+                            { name: '系统架构设计', required: true, uploaded: false },
+                            { name: '详细设计文档', required: true, uploaded: false }
+                        ]
+                    },
+                    {
+                        id: 'testing',
+                        name: '测试阶段',
+                        status: 'locked',
+                        documents: [
+                            { name: '测试报告', required: true, uploaded: false },
+                            { name: '用户手册', required: false, uploaded: false }
+                        ]
+                    },
+                    {
+                        id: 'other',
+                        name: '变更文档',
+                        status: 'pending',
+                        documents: [
+                            { name: '技术选型变更报告.pdf', required: false, uploaded: true, uploadTime: '2024-04-15' }
+                        ]
+                    }
+                ],
+                uploadedDocs: 4,
+                completedStages: 0,
+                pendingDocs: 5
+            }
+        };
+
+        let currentProject = 'proj001';
+
+        let documents = [
+            {
+                id: 1,
+                name: '智能机器人研究阶段总结报告.pdf',
+                project: 'proj001',
+                projectName: '智能机器人研发项目',
+                stage: 'research',
+                stageName: '研究阶段',
+                type: 'report',
+                typeName: '阶段报告',
+                size: '2.5MB',
+                uploadTime: '2025-06-15',
+                uploader: '张三'
+            },
+            {
+                id: 2,
+                name: '立项申请书.docx',
+                project: 'proj001',
+                projectName: '智能机器人研发项目',
+                stage: 'research',
+                stageName: '研究阶段',
+                type: 'application',
+                typeName: '申报材料',
+                size: '1.2MB',
+                uploadTime: '2025-05-20',
+                uploader: '李四'
+            },
+            {
+                id: 3,
+                name: '技术可行性报告.pdf',
+                project: 'proj002',
+                projectName: '新能源汽车电池管理系统',
+                stage: 'development',
+                stageName: '开发阶段',
+                type: 'application',
+                typeName: '申报材料',
+                size: '3.8MB',
+                uploadTime: '2025-07-01',
+                uploader: '王五'
+            },
+            {
+                id: 4,
+                name: '项目启动会纪要.docx',
+                project: 'proj001',
+                projectName: '智能机器人研发项目',
+                stage: 'research',
+                stageName: '研究阶段',
+                type: 'meeting',
+                typeName: '会议纪要',
+                size: '0.5MB',
+                uploadTime: '2025-05-10',
+                uploader: '赵六'
+            },
+            {
+                id: 5,
+                name: '系统设计方案_v2.docx',
+                project: 'proj003',
+                projectName: '工业互联网平台开发',
+                stage: 'development',
+                stageName: '开发阶段',
+                type: 'technical',
+                typeName: '技术文档',
+                size: '5.2MB',
+                uploadTime: '2025-06-28',
+                uploader: '张三'
+            },
+            {
+                id: 6,
+                name: '市场调研报告.pdf',
+                project: 'proj003',
+                projectName: '工业互联网平台开发',
+                stage: 'research',
+                stageName: '研究阶段',
+                type: 'report',
+                typeName: '阶段报告',
+                size: '2.1MB',
+                uploadTime: '2025-05-25',
+                uploader: '李四'
+            },
+            {
+                id: 7,
+                name: '设计方案文档.pdf',
+                project: 'proj002',
+                projectName: '新能源汽车电池管理系统',
+                stage: 'development',
+                stageName: '开发阶段',
+                type: 'technical',
+                typeName: '技术文档',
+                size: '4.5MB',
+                uploadTime: '2025-07-15',
+                uploader: '王五'
+            },
+            {
+                id: 8,
+                name: '技术规格说明书.docx',
+                project: 'proj002',
+                projectName: '新能源汽车电池管理系统',
+                stage: 'development',
+                stageName: '开发阶段',
+                type: 'technical',
+                typeName: '技术文档',
+                size: '3.2MB',
+                uploadTime: '2025-07-20',
+                uploader: '赵六'
+            },
+            {
+                id: 9,
+                name: '立项申请书.pdf',
+                project: 'proj002',
+                projectName: '新能源汽车电池管理系统',
+                stage: 'research',
+                stageName: '研究阶段',
+                type: 'application',
+                typeName: '申报材料',
+                size: '1.8MB',
+                uploadTime: '2025-06-01',
+                uploader: '张三'
+            },
+            {
+                id: 10,
+                name: '立项申请书.pdf',
+                project: 'proj003',
+                projectName: '工业互联网平台开发',
+                stage: 'research',
+                stageName: '研究阶段',
+                type: 'application',
+                typeName: '申报材料',
+                size: '1.5MB',
+                uploadTime: '2025-06-10',
+                uploader: '李四'
+            }
+        ];
+
+        function updateStats() {
+            const project = projectData[currentProject];
+            document.getElementById('statsUploaded').textContent = project.uploadedDocs;
+            document.getElementById('statsCompleted').textContent = project.completedStages;
+            document.getElementById('statsPending').textContent = project.pendingDocs;
+        }
+
+        function openUploadModal() {
+            document.getElementById('uploadModal').classList.add('show');
+            document.getElementById('uploadForm').reset();
+            document.getElementById('selectedFile').classList.add('hidden');
+            document.getElementById('fileDropZone').classList.remove('hidden');
+            document.getElementById('uploadProject').value = currentProject;
+        }
+
+        function openUploadModalWithType(type, stage) {
+            document.getElementById('uploadModal').classList.add('show');
+            document.getElementById('uploadForm').reset();
+            document.getElementById('selectedFile').classList.add('hidden');
+            document.getElementById('fileDropZone').classList.remove('hidden');
+            
+            if (stage === 'other') {
+                document.getElementById('uploadFields').classList.remove('hidden');
+                document.getElementById('simpleUploadFields').classList.add('hidden');
+            } else {
+                document.getElementById('uploadFields').classList.add('hidden');
+                document.getElementById('simpleUploadFields').classList.remove('hidden');
+                document.getElementById('uploadType').value = type;
+                document.getElementById('uploadStage').value = stage;
+                document.getElementById('uploadProject').value = currentProject;
+            }
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.remove('show');
+        }
+
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('selectedFile').classList.remove('hidden');
+                document.getElementById('fileDropZone').classList.add('hidden');
+            }
+        }
+
+        function removeSelectedFile() {
+            document.getElementById('uploadFile').value = '';
+            document.getElementById('selectedFile').classList.add('hidden');
+            document.getElementById('fileDropZone').classList.remove('hidden');
+        }
+
+        function handleUpload(event) {
+            event.preventDefault();
+            const project = document.getElementById('uploadProject');
+            const projectName = project.options[project.selectedIndex].text;
+            const stage = document.getElementById('uploadStage');
+            const stageName = stage.options[stage.selectedIndex].text;
+            const type = document.getElementById('uploadType');
+            const typeName = type.options[type.selectedIndex].text;
+            const name = document.getElementById('uploadName').value;
+            const file = document.getElementById('uploadFile').files[0];
+            
+            if (!file) {
+                alert('请选择要上传的文件');
+                return;
+            }
+            
+            const newDoc = {
+                id: documents.length + 1,
+                name: name + '.' + file.name.split('.').pop(),
+                project: project.value,
+                projectName: projectName,
+                stage: stage.value,
+                stageName: stageName,
+                type: type.value,
+                typeName: typeName,
+                size: (file.size / (1024 * 1024)).toFixed(1) + 'MB',
+                uploadTime: new Date().toISOString().split('T')[0],
+                uploader: '当前用户'
+            };
+            
+            documents.unshift(newDoc);
+            renderDocuments();
+            closeUploadModal();
+            alert('文档上传成功！');
+        }
+
+        function filterProjects() {
+            const searchTerm = document.getElementById('projectSearch').value.toLowerCase();
+            const projectItems = document.querySelectorAll('#projectTree > div');
+            
+            projectItems.forEach(item => {
+                const projectName = item.querySelector('.font-medium').textContent.toLowerCase();
+                if (projectName.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function renderProjectTree() {
+            const container = document.getElementById('projectTree');
+            let html = '';
+            
+            for (const projectId in projectData) {
+                const project = projectData[projectId];
+                const isActive = projectId === currentProject;
+                const completedCount = project.stages.filter(s => s.status === 'completed').length;
+                const totalCount = project.stages.length;
+                
+                html += `
+                    <div class="mb-2">
+                        <div onclick="switchProject('${projectId}')" class="cursor-pointer rounded-lg p-3 transition-all ${isActive ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-transparent hover:border-gray-200'}">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fa fa-folder ${isActive ? 'text-blue-500' : 'text-gray-400'} mr-2"></i>
+                                    <span class="font-medium ${isActive ? 'text-blue-700' : 'text-gray-700'}">${project.name}</span>
+                                </div>
+                                <span class="text-xs ${isActive ? 'text-blue-600' : 'text-gray-500'}">${completedCount}/${totalCount}</span>
+                            </div>
+                            ${isActive ? `
+                                <div class="mt-3 pl-6 space-y-2">
+                                    ${project.stages.map(stage => {
+                                        const uploadedCount = stage.documents.filter(d => d.uploaded).length;
+                                        const totalDocs = stage.documents.length;
+                                        let statusIcon = '';
+                                        let statusColor = 'text-gray-400';
+                                        
+                                        if (stage.status === 'completed') {
+                                            statusIcon = 'fa-check-circle';
+                                            statusColor = 'text-green-500';
+                                        } else if (stage.status === 'in_progress') {
+                                            statusIcon = 'fa-clock-o';
+                                            statusColor = 'text-yellow-500';
+                                        } else if (stage.status === 'locked') {
+                                            statusIcon = 'fa-lock';
+                                            statusColor = 'text-gray-400';
+                                        } else {
+                                            statusIcon = 'fa-circle-o';
+                                            statusColor = 'text-gray-400';
+                                        }
+                                        
+                                        return `
+                                            <div class="flex items-center text-sm">
+                                                <i class="fa ${statusIcon} ${statusColor} mr-2 w-4"></i>
+                                                <span class="${isActive ? 'text-gray-700' : 'text-gray-600'}">${stage.name}</span>
+                                                <span class="ml-auto text-xs ${isActive ? 'text-gray-500' : 'text-gray-400'}">${uploadedCount}/${totalDocs}</span>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        let currentStageTab = 'all';
+        let currentView = 'checklist';
+
+        function switchProject(projectId) {
+            currentProject = projectId;
+            currentStageTab = 'all';
+            renderProjectTree();
+            renderStageDocuments();
+            renderDocumentListView();
+            updateStageTabs();
+        }
+
+        function switchStageTab(stageId) {
+            currentStageTab = stageId;
+            updateStageTabs();
+            renderStageDocuments();
+            renderDocumentListView();
+        }
+
+        function updateStageTabs() {
+            const tabs = document.querySelectorAll('[id^="stageTab-"]');
+            tabs.forEach(tab => {
+                const tabId = tab.id.replace('stageTab-', '');
+                if (tabId === currentStageTab) {
+                    tab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                    tab.classList.remove('text-gray-600', 'hover:text-gray-800', 'hover:bg-gray-50');
+                } else {
+                    tab.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                    tab.classList.add('text-gray-600', 'hover:text-gray-800', 'hover:bg-gray-50');
+                }
+            });
+        }
+
+        function switchView(view) {
+            currentView = view;
+            const checklistBtn = document.getElementById('viewBtn-checklist');
+            const listBtn = document.getElementById('viewBtn-list');
+            const checklistContainer = document.querySelector('.bg-white.rounded-lg.shadow-md.p-6.mb-6');
+            const listContainer = document.getElementById('documentListViewContainer');
+            
+            if (view === 'checklist') {
+                checklistBtn.classList.add('text-blue-600', 'bg-blue-50');
+                checklistBtn.classList.remove('text-gray-500', 'hover:bg-gray-100');
+                listBtn.classList.remove('text-blue-600', 'bg-blue-50');
+                listBtn.classList.add('text-gray-500', 'hover:bg-gray-100');
+                checklistContainer.classList.remove('hidden');
+                listContainer.classList.add('hidden');
+            } else {
+                listBtn.classList.add('text-blue-600', 'bg-blue-50');
+                listBtn.classList.remove('text-gray-500', 'hover:bg-gray-100');
+                checklistBtn.classList.remove('text-blue-600', 'bg-blue-50');
+                checklistBtn.classList.add('text-gray-500', 'hover:bg-gray-100');
+                checklistContainer.classList.add('hidden');
+                listContainer.classList.remove('hidden');
+            }
+        }
+
+        function applyFilters() {
+            const dateStart = document.getElementById('dateStart').value;
+            const dateEnd = document.getElementById('dateEnd').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            alert(`筛选条件:\n开始日期: ${dateStart}\n结束日期: ${dateEnd}\n文件类型: ${typeFilter}`);
+            renderStageDocuments();
+            renderDocumentListView();
+        }
+
+        function toggleSelectAll() {
+            const checkboxes = document.querySelectorAll('.doc-checkbox');
+            const selectAll = document.getElementById('selectAll');
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        }
+
+        function batchDownload() {
+            const selectedDocs = document.querySelectorAll('.doc-checkbox:checked');
+            if (selectedDocs.length === 0) {
+                alert('请先选择要下载的文档');
+                return;
+            }
+            alert(`即将下载 ${selectedDocs.length} 个文档`);
+        }
+
+        function batchDelete() {
+            const selectedDocs = document.querySelectorAll('.doc-checkbox:checked');
+            if (selectedDocs.length === 0) {
+                alert('请先选择要删除的文档');
+                return;
+            }
+            if (confirm(`确定要删除选中的 ${selectedDocs.length} 个文档吗？`)) {
+                alert(`已删除 ${selectedDocs.length} 个文档`);
+                document.getElementById('selectAll').checked = false;
+                renderDocumentListView();
+            }
+        }
+
+        function openAssistModal() {
+            document.getElementById('assistModal').classList.add('show');
+        }
+
+        function closeAssistModal() {
+            document.getElementById('assistModal').classList.remove('show');
+        }
+
+        function selectTemplate(templateName) {
+            alert(`正在创建 "${templateName}" 模板文档...`);
+            closeAssistModal();
+        }
+
+        function updateStats() {
+            const project = projectData[currentProject];
+            document.getElementById('statsUploaded').textContent = project.uploadedDocs;
+            document.getElementById('statsCompleted').textContent = project.completedStages;
+            document.getElementById('statsPending').textContent = project.pendingDocs;
+        }
+
+        function renderStageDocuments() {
+            const project = projectData[currentProject];
+            const container = document.getElementById('stageDocumentsContainer');
+            
+            let filteredStages;
+            if (currentStageTab === 'all') {
+                filteredStages = project.stages.filter(s => s.id !== 'other');
+            } else {
+                filteredStages = project.stages.filter(s => s.id === currentStageTab);
+            }
+            
+            container.innerHTML = filteredStages.map(stage => {
+                const completedCount = stage.documents.filter(d => d.uploaded).length;
+                const totalCount = stage.documents.length;
+                
+                let statusBadge = '';
+                let borderClass = 'border-gray-200';
+                let headerBg = 'bg-gray-50';
+                let opacityClass = '';
+                
+                if (stage.status === 'completed') {
+                    statusBadge = `<span class="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full flex items-center"><i class="fa fa-check-circle mr-1"></i> ${completedCount}/${totalCount}</span>`;
+                    borderClass = 'border-green-200';
+                    headerBg = 'bg-green-50';
+                } else if (stage.status === 'in_progress') {
+                    statusBadge = `<span class="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full flex items-center"><i class="fa fa-clock-o mr-1"></i> ${completedCount}/${totalCount}</span>`;
+                    borderClass = 'border-yellow-200';
+                    headerBg = 'bg-yellow-50';
+                } else {
+                    statusBadge = `<span class="ml-2 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full flex items-center"><i class="fa fa-minus-circle mr-1"></i> ${completedCount}/${totalCount}</span>`;
+                    borderClass = 'border-gray-200';
+                    headerBg = 'bg-gray-50';
+                    opacityClass = stage.status === 'locked' ? 'opacity-60' : '';
+                }
+                
+                const docsHtml = stage.documents.map(doc => {
+                    const isLocked = stage.status === 'locked';
+                    const isUploaded = doc.uploaded;
+                    
+                    if (isUploaded) {
+                        return `
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fa fa-check text-white text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center">
+                                            <span class="text-sm text-gray-700">${doc.name}</span>
+                                            <span class="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">${doc.required ? '必填' : '选填'}</span>
+                                        </div>
+                                        <div class="text-xs text-gray-500 mt-1 flex items-center">
+                                            <i class="fa fa-calendar-o mr-1"></i>
+                                            ${doc.uploadTime || '2024-01-15'}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="previewDocByStage('${stage.id}', '${doc.name}')" class="p-2 text-blue-500 hover:bg-blue-50 rounded-md" title="预览">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                    <button onclick="downloadDocByStage('${stage.id}', '${doc.name}')" class="p-2 text-green-500 hover:bg-green-50 rounded-md" title="下载">
+                                        <i class="fa fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } else if (isLocked) {
+                        return `
+                            <div class="flex items-center justify-between p-3 bg-gray-100 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fa fa-circle-o text-white text-xs"></i>
+                                    </div>
+                                    <span class="text-sm text-gray-600">${doc.name}</span>
+                                    <span class="ml-2 px-2 py-0.5 ${doc.required ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'} text-xs rounded">${doc.required ? '必填' : '选填'}</span>
+                                </div>
+                                <button class="px-3 py-1 bg-gray-400 text-white text-xs rounded-md opacity-50 cursor-not-allowed" disabled>
+                                    <i class="fa fa-lock mr-1"></i>未开放
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="flex items-center justify-between p-3 ${doc.required ? 'bg-red-50 rounded-lg border border-red-200' : 'bg-yellow-50 rounded-lg border border-yellow-200'}">
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 ${doc.required ? 'bg-red-500' : 'bg-yellow-500'} rounded-full flex items-center justify-center mr-3">
+                                        <i class="fa ${doc.required ? 'fa-exclamation' : 'fa-circle-o'} text-white text-xs"></i>
+                                    </div>
+                                    <span class="text-sm text-gray-700">${doc.name}</span>
+                                    <span class="ml-2 px-2 py-0.5 ${doc.required ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'} text-xs rounded">${doc.required ? '必填' : '选填'}</span>
+                                </div>
+                                <button onclick="openUploadModalWithType('${doc.required ? 'report' : 'technical'}', '${stage.id}')" class="px-3 py-1 ${doc.required ? 'bg-red-500 hover:bg-red-600' : 'bg-yellow-500 hover:bg-yellow-600'} text-white text-xs rounded-md transition-colors">
+                                    <i class="fa fa-upload mr-1"></i>${doc.required ? '立即上传' : '上传'}
+                                </button>
+                            </div>
+                        `;
+                    }
+                }).join('');
+
+                if (stage.id === 'other') {
+                    const uploadedCount = stage.documents.filter(d => d.uploaded).length;
+                    return `
+                        <div class="border-2 ${borderClass} rounded-lg overflow-hidden ${opacityClass}">
+                            <div class="${headerBg} px-4 py-3 border-b border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <span class="font-medium text-gray-800">${stage.name}</span>
+                                        <span class="ml-2 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full flex items-center"><i class="fa fa-upload mr-1"></i> 自由上传</span>
+                                    </div>
+                                    <span class="text-xs text-gray-500">${uploadedCount}个已上传</span>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                ${stage.documents.length === 0 ? `
+                                    <div class="text-center py-8">
+                                        <i class="fa fa-cloud-upload text-4xl text-gray-300 mb-3"></i>
+                                        <p class="text-gray-500 mb-4">点击下方按钮上传变更相关文档</p>
+                                        <button onclick="openUploadModalWithType('other', 'other')" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors">
+                                            <i class="fa fa-upload mr-2"></i>上传变更文档
+                                        </button>
+                                    </div>
+                                ` : `
+                                    <div class="space-y-3">
+                                        ${stage.documents.map(doc => doc.uploaded ? `
+                                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                                                <div class="flex items-center">
+                                                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                                        <i class="fa fa-check text-white text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="flex items-center">
+                                                            <span class="text-sm text-gray-700">${doc.name}</span>
+                                                        </div>
+                                                        <div class="text-xs text-gray-500 mt-1 flex items-center">
+                                                            <i class="fa fa-calendar-o mr-1"></i>
+                                                            ${doc.uploadTime || '2024-01-15'}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center space-x-2">
+                                                    <button onclick="previewDocByStage('${stage.id}', '${doc.name}')" class="p-2 text-blue-500 hover:bg-blue-50 rounded-md" title="预览">
+                                                        <i class="fa fa-eye"></i>
+                                                    </button>
+                                                    <button onclick="downloadDocByStage('${stage.id}', '${doc.name}')" class="p-2 text-green-500 hover:bg-green-50 rounded-md" title="下载">
+                                                        <i class="fa fa-download"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ` : '').join('')}
+                                        <button onclick="openUploadModalWithType('other', 'other')" class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors">
+                                            <i class="fa fa-plus mr-2"></i>继续上传文档
+                                        </button>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="border-2 ${borderClass} rounded-lg overflow-hidden ${opacityClass}">
+                        <div class="${headerBg} px-4 py-3 border-b border-gray-200">
+                            <div class="flex items-center">
+                                <span class="font-medium text-gray-800">${stage.name}</span>
+                                ${statusBadge}
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-2">${docsHtml}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderDocumentListView() {
+            const project = projectData[currentProject];
+            const container = document.getElementById('documentListView');
+            
+            let allDocs = [];
+            project.stages.forEach(stage => {
+                if (currentStageTab === 'all' || stage.id === currentStageTab) {
+                    stage.documents.forEach(doc => {
+                        if (doc.uploaded) {
+                            allDocs.push({
+                                id: `${stage.id}-${doc.name}`,
+                                name: doc.name,
+                                stageId: stage.id,
+                                stageName: stage.name,
+                                type: doc.required ? 'report' : 'technical',
+                                typeName: doc.required ? '阶段报告' : '技术文档',
+                                size: '2.3 MB',
+                                uploadTime: '2024-01-15 14:30',
+                                uploader: '张三'
+                            });
+                        }
+                    });
+                }
+            });
+            
+            if (allDocs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fa fa-folder-open text-6xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500">暂无已上传文档</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600 w-10">
+                                <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" class="w-4 h-4 text-blue-600">
+                            </th>
+                            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">文件主题</th>
+                            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">成文日期</th>
+                            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">文件类型</th>
+                            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${allDocs.map(doc => `
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="doc-checkbox w-4 h-4 text-blue-600" data-id="${doc.id}">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center">
+                                        <i class="fa fa-file-text text-blue-500 mr-2"></i>
+                                        <span class="text-sm text-gray-800">${doc.name}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <span class="text-sm text-gray-600">${doc.uploadTime}</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <span class="text-sm text-gray-600">${doc.typeName}</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center space-x-2">
+                                        <button onclick="previewDocByStage('${doc.stageId}', '${doc.name}')" class="p-1.5 text-blue-500 hover:bg-blue-50 rounded" title="预览">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                        <button onclick="downloadDocByStage('${doc.stageId}', '${doc.name}')" class="p-1.5 text-green-500 hover:bg-green-50 rounded" title="下载">
+                                            <i class="fa fa-download"></i>
+                                        </button>
+                                        <button onclick="deleteDocByStage('${doc.stageId}', '${doc.name}')" class="p-1.5 text-red-500 hover:bg-red-50 rounded" title="删除">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function deleteDocByStage(stageId, docName) {
+            if (confirm(`确定要删除 "${docName}" 吗？`)) {
+                alert(`已删除文档: ${docName}`);
+                renderStageDocuments();
+                renderDocumentListView();
+            }
+        }
+
+        function downloadDoc(id) {
+            alert('下载文档 ID: ' + id);
+        }
+
+        function downloadDocByStage(stageId, docName) {
+            alert('下载文档: ' + docName + ' (阶段: ' + stageId + ')');
+        }
+
+        function previewDoc(id) {
+            alert('预览文档 ID: ' + id);
+        }
+
+        function previewDocByStage(stageId, docName) {
+            alert('预览文档: ' + docName + ' (阶段: ' + stageId + ')');
+        }
+
+        function deleteDoc(id) {
+            if (confirm('确定要删除这个文档吗？')) {
+                documents = documents.filter(doc => doc.id !== id);
+                renderDocuments();
+            }
+        }
+
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('fa-chevron-down');
+            arrow.classList.toggle('fa-chevron-right');
+        }
+
+        function loadPage(page) {
+            window.location.href = page;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProjectTree();
+            renderStageDocuments();
+            renderDocumentListView();
+            updateStageTabs();
+        });
+    </script>
+</body>
+</html>

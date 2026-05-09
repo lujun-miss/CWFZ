@@ -740,20 +740,9 @@
                                     <div class="form-note">注：负责项目的整体规划、进度把控和资源协调</div>
                                 </div>
 
-                                <!-- 执行负责人 -->
-                                <div>
-                                    <label class="form-label">执行负责人</label>
-                                    <select class="form-select">
-                                        <option value="">请选择</option>
-                                        <option value="user1">张三</option>
-                                        <option value="user2">李四</option>
-                                        <option value="user3">王五</option>
-                                    </select>
-                                    <div class="form-note">注：负责项目具体执行、任务分配和日常管理</div>
-                                </div>
                             </div>
                         </div>
-                        
+
                         <!-- 项目预算与类型信息 -->
                         <div class="mb-8">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -823,8 +812,6 @@
                                     <thead class="bg-gray-50">
                                         <tr>
                                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">姓名工号</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">部门</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">项目角色</th>
                                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
                                         </tr>
                                     </thead>
@@ -837,21 +824,6 @@
                                                     <option value="user1">张三 (EMP001)</option>
                                                     <option value="user2">李四 (EMP002)</option>
                                                     <option value="user3">王五 (EMP003)</option>
-                                                </select>
-                                            </td>
-                                            <td class="px-4 py-3 border-b">
-                                                <select class="form-select">
-                                                    <option value="">请选择</option>
-                                                    <option value="rd">研发部</option>
-                                                    <option value="it">IT部</option>
-                                                    <option value="qa">质量部</option>
-                                                </select>
-                                            </td>
-                                            <td class="px-4 py-3 border-b">
-                                                <select class="form-select">
-                                                    <option value="projectManager">项目负责人</option>
-                                                    <option value="rdEngineer">研发工程师</option>
-                                                    <option value="qaEngineer">测试工程师</option>
                                                 </select>
                                             </td>
                                             <td class="px-4 py-3 border-b">
@@ -1202,26 +1174,7 @@
                     <input type="text" class="form-input" placeholder="设备型号">
                 </td>
                 <td class="px-4 py-3 border-b">
-                    <div class="flex items-center space-x-4">
-                        <label class="flex items-center">
-                            <input type="radio" name="useType_${rowIndex}" value="exclusive" class="mr-2">
-                            <span>专用</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="useType_${rowIndex}" value="shared" class="mr-2">
-                            <span>共享</span>
-                        </label>
-                    </div>
-                    <div class="form-note">注：占用方式是关键字段："专用"设备的折旧100%计入本项目；"共享"需按工时等方法分摊</div>
-                </td>
-                <td class="px-4 py-3 border-b">
-                    <input type="date" class="form-input">
-                </td>
-                <td class="px-4 py-3 border-b">
-                    <input type="date" class="form-input">
-                </td>
-                <td class="px-4 py-3 border-b">
-                    <input type="number" class="form-input" placeholder="0-100" min="0" max="100">
+                    <span class="text-gray-400">-</span>
                 </td>
                 <td class="px-4 py-3 border-b">
                     <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
