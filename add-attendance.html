@@ -7,7 +7,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Tailwind 配置 -->
     <script>
         tailwind.config = {
@@ -71,11 +71,11 @@
                 </div>
             </div>
 
-            <!-- 导航菜单 -->
+                                                                                                                                                                                                            <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
-                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3" onclick="loadPage('dashboard.html')">
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
                             <i class="fa fa-home w-6"></i>
                             <span>首页</span>
                         </a>
@@ -88,7 +88,7 @@
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
-                        <ul class="ml-6 sub-menu" id="project-submenu">
+                        <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
                                     <i class="fa fa-file-text-o w-6"></i>
@@ -104,24 +104,24 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-audit.html')">
                                     <i class="fa fa-check-circle w-6"></i>
-                                    <span>阶段评审</span>
+                                    <span>阶段审核</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('progress-tracking.html')">
                                     <i class="fa fa-line-chart w-6"></i>
-                                    <span>进度跟踪</span>
+                                    <span>阶段跟踪</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-template.html')">
-                                    <i class="fa fa-file-text w-6"></i>
+                                    <i class="fa fa-list-alt w-6"></i>
                                     <span>阶段模板</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-documents.html')">
-                                    <i class="fa fa-file-text w-6"></i>
+                                    <i class="fa fa-file-word-o w-6"></i>
                                     <span>项目过程文档</span>
                                 </a>
                             </li>
@@ -144,31 +144,25 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('department.html')">
-                                    <i class="fa fa-building w-6"></i>
+                                    <i class="fa fa-sitemap w-6"></i>
                                     <span>部门管理</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-type.html')">
-                                    <i class="fa fa-users w-6"></i>
+                                    <i class="fa fa-tags w-6"></i>
                                     <span>人员类型管理</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('amortization-type.html')">
-                                    <i class="fa fa-money w-6"></i>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('amortization-fee-type.html')">
+                                    <i class="fa fa-calendar w-6"></i>
                                     <span>待摊费用类型</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-box w-6"></i>
-                                    <span>物料信息管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('research-staff.html')">
-                                    <i class="fa fa-user-circle w-6"></i>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
+                                    <i class="fa fa-user-o w-6"></i>
                                     <span>研发人员档案</span>
                                 </a>
                             </li>
@@ -177,7 +171,7 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-wrench w-6"></i>
+                                <i class="fa fa-cubes w-6"></i>
                                 <span>资产管理</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
@@ -185,37 +179,25 @@
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
-                                    <i class="fa fa-desktop w-6"></i>
+                                    <i class="fa fa-cubes w-6"></i>
                                     <span>固定资产管理</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-asset.html')">
-                                    <i class="fa fa-copyright w-6"></i>
+                                    <i class="fa fa-lightbulb-o w-6"></i>
                                     <span>无形资产管理</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('long-term-amortization.html')">
-                                    <i class="fa fa-clock-o w-6"></i>
-                                    <span>长期待摊管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-archive.html')">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
                                     <span>设备能源消耗档案</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-usage-record.html')">
-                                    <i class="fa fa-file-text w-6"></i>
-                                    <span>无形资产使用记录</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-group.html')">
-                                    <i class="fa fa-server w-6"></i>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-group-management.html')">
+                                    <i class="fa fa-th-large w-6"></i>
                                     <span>设备组管理</span>
                                 </a>
                             </li>
@@ -224,39 +206,33 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-money w-6"></i>
+                                <i class="fa fa-cogs w-6"></i>
                                 <span>费用归集</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-attendance.html')">
-                                    <i class="fa fa-calendar w-6"></i>
-                                    <span>人员考勤</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-salary.html')">
-                                    <i class="fa fa-credit-card w-6"></i>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('labor-cost-allocation.html')">
+                                    <i class="fa fa-users w-6"></i>
                                     <span>人工费归集</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-depreciation-allocation.html')">
-                                    <i class="fa fa-calculator w-6"></i>
+                                    <i class="fa fa-cogs w-6"></i>
                                     <span>折旧与长期摊销费用</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('direct-input-allocation.html')">
-                                    <i class="fa fa-truck w-6"></i>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-cost-allocation.html')">
+                                    <i class="fa fa-cubes w-6"></i>
                                     <span>直接投入归集</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-amortization.html')">
-                                    <i class="fa fa-copyright w-6"></i>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-cost-allocation.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
                                     <span>无形资产摊销</span>
                                 </a>
                             </li>
@@ -268,7 +244,7 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-test-cost-allocation.html')">
-                                    <i class="fa fa-flask w-6"></i>
+                                    <i class="fa fa-wrench w-6"></i>
                                     <span>装备调试费用与试验费用归集</span>
                                 </a>
                             </li>
@@ -279,8 +255,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('external-research-cost.html')">
-                                    <i class="fa fa-external-link w-6"></i>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('outsourced-rd-allocation.html')">
+                                    <i class="fa fa-handshake-o w-6"></i>
                                     <span>委托外部研究开发费用归集</span>
                                 </a>
                             </li>
@@ -289,34 +265,16 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-box w-6"></i>
-                                <span>物料管理</span>
+                                <i class="fa fa-cube w-6"></i>
+                                <span>特殊收入管理</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-info w-6"></i>
-                                    <span>物料信息管理</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
                                     <i class="fa fa-trash w-6"></i>
                                     <span>物料报废管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material-request.html')">
-                                    <i class="fa fa-shopping-cart w-6"></i>
-                                    <span>项目领料管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-usage-statistics.html')">
-                                    <i class="fa fa-bar-chart w-6"></i>
-                                    <span>物料使用量统计</span>
                                 </a>
                             </li>
                         </ul>
@@ -324,45 +282,45 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-bar-chart w-6"></i>
+                                <i class="fa fa-file-text-o w-6"></i>
                                 <span>多口径报表</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('finance-deduction.html')">
-                                    <i class="fa fa-file-text w-6"></i>
+                                <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-calculator w-6"></i>
                                     <span>财务加计扣除</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('hi-tech-cert-report.html')">
+                                <a href="hi-tech-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-certificate w-6"></i>
                                     <span>高企认定</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('accounting-report.html')">
+                                <a href="accounting-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-book w-6"></i>
                                     <span>会计口径</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('rd-statistics.html')">
-                                    <i class="fa fa-bar-chart w-6"></i>
+                                <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-flask w-6"></i>
                                     <span>R&D统计</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('ipo-review.html')">
-                                    <i class="fa fa-file-text w-6"></i>
+                                <a href="ipo-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-line-chart w-6"></i>
                                     <span>IPO审查</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('ledger-generate.html')">
-                                    <i class="fa fa-file-excel-o w-6"></i>
+                                <a href="generate-account-table.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-magic w-6"></i>
                                     <span>账套表生成</span>
                                 </a>
                             </li>
@@ -378,27 +336,39 @@
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-template.html')">
-                                    <i class="fa fa-file-text-o w-6"></i>
-                                    <span>凭证模板管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-generate.html')">
-                                    <i class="fa fa-magic w-6"></i>
-                                    <span>凭证生成</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-review.html')">
-                                    <i class="fa fa-check-square-o w-6"></i>
-                                    <span>凭证审核</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-export.html')">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-import.html')">
                                     <i class="fa fa-upload w-6"></i>
-                                    <span>凭证导出</span>
+                                    <span>凭证导入</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('import-history.html')">
+                                    <i class="fa fa-history w-6"></i>
+                                    <span>导入历史</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('simple-mapping.html')">
+                                    <i class="fa fa-exchange w-6"></i>
+                                    <span>科目映射配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-settings.html')">
+                                    <i class="fa fa-wrench w-6"></i>
+                                    <span>项目匹配配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-matching.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>凭证自动匹配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-list.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>序时记账凭证一览表</span>
                                 </a>
                             </li>
                         </ul>
@@ -406,63 +376,28 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-gavel w-6"></i>
-                                <span>合规性检查</span>
+                                <i class="fa fa-building w-6"></i>
+                                <span>企业档案</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('compliance-check.html')">
-                                    <i class="fa fa-check-circle w-6"></i>
-                                    <span>合规性检查</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('enterprise-info.html')">
+                                    <i class="fa fa-info-circle w-6"></i>
+                                    <span>企业基础信息维护</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('tax-deduction.html')">
-                                    <i class="fa fa-calculator w-6"></i>
-                                    <span>税收减免</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('user.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>用户管理</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('high-tech-cert.html')">
-                                    <i class="fa fa-certificate w-6"></i>
-                                    <span>高科技认证</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-600" onclick="loadPage('data-analysis.html')">
-                            <i class="fa fa-bar-chart w-6"></i>
-                            <span>数据分析</span>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
-                            <div class="flex items-center">
-                                <i class="fa fa-cubes w-6"></i>
-                                <span>资源管理</span>
-                            </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
-                        <ul class="ml-6 sub-menu">
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour.html')">
-                                    <i class="fa fa-clock-o w-6"></i>
-                                    <span>工时费用归集</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intellectual-property.html')">
-                                    <i class="fa fa-lightbulb-o w-6"></i>
-                                    <span>知识产权维护</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('software-license.html')">
-                                    <i class="fa fa-key w-6"></i>
-                                    <span>软件许可证管理</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('role.html')">
+                                    <i class="fa fa-shield w-6"></i>
+                                    <span>角色管理</span>
                                 </a>
                             </li>
                         </ul>
@@ -470,37 +405,25 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-sliders w-6"></i>
-                                <span>系统配置</span>
+                                <i class="fa fa-database w-6"></i>
+                                <span>系统设置</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('finance-policy.html')">
-                                    <i class="fa fa-money w-6"></i>
-                                    <span>财务核算口径配置</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-type.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>费用类型管理</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('hi-tech-policy.html')">
-                                    <i class="fa fa-star w-6"></i>
-                                    <span>高新认定口径配置</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('allocation-rule.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>分摊规则配置</span>
                                 </a>
                             </li>
                         </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('settings.html')">
-                            <i class="fa fa-cog w-6"></i>
-                            <span>设置</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('profile.html')">
-                            <i class="fa fa-user w-6"></i>
-                            <span>个人资料</span>
-                        </a>
                     </li>
                 </ul>
             </nav>

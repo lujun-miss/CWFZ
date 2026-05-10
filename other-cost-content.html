@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>其他费用管理 - 研发费用管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        danger: '#ef4444',
+                        success: '#22c55e',
+                        warning: '#f59e0b',
+                        purple: '#8b5cf6',
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .table-row-hover:hover { background-color: #f9fafb; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- 操作栏 -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-700">关联项目：</span>
+                    <select id="filterProject" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm">
+                        <option value="">全部项目</option>
+                        <option value="智能传感器研发">智能传感器研发</option>
+                        <option value="工业机器人控制系统">工业机器人控制系统</option>
+                        <option value="新能源材料研究">新能源材料研究</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-700">是否启用：</span>
+                    <select id="filterStatus" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm">
+                        <option value="">全部状态</option>
+                        <option value="1">启用</option>
+                        <option value="0">禁用</option>
+                    </select>
+                </div>
+                <button onclick="searchRecords()" class="bg-primary text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600">
+                    <i class="fa fa-search mr-1"></i>查询
+                </button>
+                <button onclick="resetFilter()" class="bg-gray-300 text-gray-700 px-4 py-1.5 rounded-md text-sm hover:bg-gray-400">
+                    <i class="fa fa-refresh mr-1"></i>重置
+                </button>
+                <button onclick="openAddModal()" class="bg-blue-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600">
+                    <i class="fa fa-plus mr-1"></i>新增其他费用
+                </button>
+            </div>
+        </div>
+
+        <!-- 列表 -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800">其他费用项目列表</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">费用项目</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">关联项目</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">发生日期</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">费用金额</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">是否启用</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">备注</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="costTableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                <div class="text-sm text-gray-700">显示 1 到 <span id="displayCount">0</span> 条，共 <span id="totalCount">0</span> 条记录</div>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50" disabled>上一页</button>
+                    <button class="px-3 py-1 bg-primary text-white rounded-md text-sm">1</button>
+                    <button class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="addModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-900">新增其他费用</h3>
+                <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <input type="hidden" id="editId">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">关联项目 <span class="text-red-500">*</span></label>
+                    <select id="addProject" class="w-full px-4 py-2 border border-gray-300 rounded-md">
+                        <option value="">请选择项目</option>
+                        <option value="智能传感器研发">智能传感器研发</option>
+                        <option value="工业机器人控制系统">工业机器人控制系统</option>
+                        <option value="新能源材料研究">新能源材料研究</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">发生日期 <span class="text-red-500">*</span></label>
+                    <input type="date" id="addDate" class="w-full px-4 py-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">费用项目 <span class="text-red-500">*</span></label>
+                    <select id="addName" class="w-full px-4 py-2 border border-gray-300 rounded-md">
+                        <option value="">请选择费用项目</option>
+                        <option value="资料翻译费">资料翻译费</option>
+                        <option value="专家咨询费">专家咨询费</option>
+                        <option value="知识产权申请费">知识产权申请费</option>
+                        <option value="会议费">会议费</option>
+                        <option value="差旅费">差旅费</option>
+                        <option value="通讯费">通讯费</option>
+                        <option value="技术图书资料费">技术图书资料费</option>
+                        <option value="研发保险费">研发保险费</option>
+                        <option value="其他杂费">其他杂费</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">费用金额 <span class="text-red-500">*</span></label>
+                    <input type="number" id="addAmount" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="请输入费用金额" min="0" step="0.01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">是否启用</label>
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="status" value="1" checked class="mr-2">
+                            <span>启用</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="status" value="0" class="mr-2">
+                            <span>禁用</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">备注说明</label>
+                    <textarea id="addRemark" class="w-full px-4 py-2 border border-gray-300 rounded-md" rows="3" placeholder="请输入备注说明"></textarea>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-3">
+                <button onclick="closeAddModal()" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">取消</button>
+                <button onclick="saveCostItem()" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-600">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let costItems = [
+            { id: 15, project: '智能传感器研发', name: '技术图书资料费', date: '2024-05-10', amount: '3000.00', status: 1, remark: '技术书籍和资料采购' },
+            { id: 16, project: '工业机器人控制系统', name: '资料翻译费', date: '2024-05-15', amount: '2000.00', status: 1, remark: '外文资料翻译' },
+            { id: 17, project: '新能源材料研究', name: '专家咨询费', date: '2024-06-01', amount: '15000.00', status: 1, remark: '外聘专家咨询' },
+            { id: 18, project: '智能传感器研发', name: '研发保险费', date: '2024-06-05', amount: '10000.00', status: 1, remark: '高新科技研发保险' },
+            { id: 19, project: '工业机器人控制系统', name: '知识产权费用', date: '2024-06-10', amount: '8000.00', status: 1, remark: '专利申请、注册等' },
+            { id: 20, project: '新能源材料研究', name: '会议费', date: '2024-06-15', amount: '5000.00', status: 1, remark: '技术研讨会费用' },
+            { id: 21, project: '智能传感器研发', name: '差旅费', date: '2024-06-20', amount: '6000.00', status: 1, remark: '研发人员出差' },
+            { id: 22, project: '工业机器人控制系统', name: '通讯费', date: '2024-06-25', amount: '2500.00', status: 1, remark: '技术咨询通讯' },
+            { id: 23, project: '新能源材料研究', name: '其他杂费', date: '2024-07-01', amount: '1500.00', status: 0, remark: '其他小额费用' },
+        ];
+
+        function renderTable(data = costItems) {
+            const tbody = document.getElementById('costTableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'table-row-hover';
+                row.innerHTML = `
+                    <td class="px-6 py-4 text-sm text-gray-900">${item.name}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${item.project}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${item.date}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">¥${parseFloat(item.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="${item.status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'} px-2 py-1 rounded-full text-xs">
+                            ${item.status ? '启用' : '禁用'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${item.remark || '-'}</td>
+                    <td class="px-6 py-4 text-sm">
+                        <button onclick="editItem(${item.id})" class="text-primary hover:text-blue-700 mr-2">编辑</button>
+                        <button onclick="toggleStatus(${item.id})" class="text-warning hover:text-yellow-700">
+                            ${item.status ? '禁用' : '启用'}
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('totalCount').textContent = data.length;
+            document.getElementById('displayCount').textContent = data.length;
+        }
+
+        function searchRecords() {
+            const project = document.getElementById('filterProject').value;
+            const status = document.getElementById('filterStatus').value;
+            let filtered = costItems;
+            if (project) filtered = filtered.filter(r => r.project === project);
+            if (status !== '') filtered = filtered.filter(r => r.status == status);
+            renderTable(filtered);
+        }
+
+        function resetFilter() {
+            document.getElementById('filterProject').value = '';
+            document.getElementById('filterStatus').value = '';
+            renderTable();
+        }
+
+        function openAddModal() {
+            document.getElementById('addModal').classList.remove('hidden');
+            document.getElementById('addModal').classList.add('flex');
+            document.getElementById('editId').value = '';
+            document.getElementById('addProject').value = '';
+            document.getElementById('addDate').value = '';
+            document.getElementById('addName').value = '';
+            document.getElementById('addAmount').value = '';
+            document.getElementById('addRemark').value = '';
+            document.querySelector('input[name="status"][value="1"]').checked = true;
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.add('hidden');
+            document.getElementById('addModal').classList.remove('flex');
+        }
+
+        function editItem(id) {
+            const item = costItems.find(i => i.id === id);
+            if (item) {
+                document.getElementById('editId').value = item.id;
+                document.getElementById('addProject').value = item.project;
+                document.getElementById('addDate').value = item.date;
+                document.getElementById('addName').value = item.name;
+                document.getElementById('addAmount').value = item.amount;
+                document.getElementById('addRemark').value = item.remark;
+                document.querySelector(`input[name="status"][value="${item.status}"]`).checked = true;
+                document.getElementById('addModal').classList.remove('hidden');
+                document.getElementById('addModal').classList.add('flex');
+            }
+        }
+
+        function toggleStatus(id) {
+            const item = costItems.find(i => i.id === id);
+            if (item) {
+                item.status = item.status ? 0 : 1;
+                renderTable();
+            }
+        }
+
+        function saveCostItem() {
+            const id = document.getElementById('editId').value;
+            const project = document.getElementById('addProject').value;
+            const date = document.getElementById('addDate').value;
+            const name = document.getElementById('addName').value;
+            const amount = document.getElementById('addAmount').value;
+            
+            if (!project) {
+                alert('请选择关联项目');
+                return;
+            }
+            if (!date) {
+                alert('请选择发生日期');
+                return;
+            }
+            if (!name) {
+                alert('请输入费用项目名称');
+                return;
+            }
+            if (!amount || parseFloat(amount) <= 0) {
+                alert('请输入有效的费用金额');
+                return;
+            }
+
+            if (id) {
+                const item = costItems.find(i => i.id === parseInt(id));
+                if (item) {
+                    item.project = project;
+                    item.date = date;
+                    item.name = name;
+                    item.amount = amount;
+                    item.remark = document.getElementById('addRemark').value;
+                    item.status = parseInt(document.querySelector('input[name="status"]:checked').value);
+                }
+            } else {
+                const newId = Math.max(...costItems.map(i => i.id)) + 1;
+                costItems.push({
+                    id: newId,
+                    project: project,
+                    date: date,
+                    name: name,
+                    amount: amount,
+                    remark: document.getElementById('addRemark').value,
+                    status: parseInt(document.querySelector('input[name="status"]:checked').value)
+                });
+            }
+
+            closeAddModal();
+            renderTable();
+        }
+
+        renderTable();
+    </script>
+</body>
+</html>

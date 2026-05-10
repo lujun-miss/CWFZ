@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>序时记账凭证一览表 - 研知π</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -109,11 +109,11 @@
                 </h1>
             </div>
             
-            <!-- 导航菜单 -->
+                                                                                                                                                                                                <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
-                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3" onclick="loadPage('dashboard.html')">
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
                             <i class="fa fa-home w-6"></i>
                             <span>首页</span>
                         </a>
@@ -126,7 +126,7 @@
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
-                        <ul class="ml-6 sub-menu" id="project-submenu">
+                        <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
                                     <i class="fa fa-file-text-o w-6"></i>
@@ -152,15 +152,15 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-personnel.html')">
-                                    <i class="fa fa-users w-6"></i>
-                                    <span>项目人员</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('stage-template.html')">
+                                    <i class="fa fa-list-alt w-6"></i>
+                                    <span>阶段模板</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-equipment.html')">
-                                    <i class="fa fa-cogs w-6"></i>
-                                    <span>研发设备</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-documents.html')">
+                                    <i class="fa fa-file-word-o w-6"></i>
+                                    <span>项目过程文档</span>
                                 </a>
                             </li>
                         </ul>
@@ -168,18 +168,12 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-users w-6"></i>
-                                <span>人事管理</span>
+                                <i class="fa fa-database w-6"></i>
+                                <span>基础数据维护</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
-                                    <i class="fa fa-user-o w-6"></i>
-                                    <span>人员管理</span>
-                                </a>
-                            </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
                                     <i class="fa fa-briefcase w-6"></i>
@@ -193,9 +187,21 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-salary.html')">
-                                    <i class="fa fa-money w-6"></i>
-                                    <span>人员工资管理</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-type.html')">
+                                    <i class="fa fa-tags w-6"></i>
+                                    <span>人员类型管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('amortization-fee-type.html')">
+                                    <i class="fa fa-calendar w-6"></i>
+                                    <span>待摊费用类型</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>研发人员档案</span>
                                 </a>
                             </li>
                         </ul>
@@ -211,19 +217,30 @@
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
-                                    <i class="fa fa-cog w-6"></i>
-                                    <span>资产信息管理</span>
+                                    <i class="fa fa-cubes w-6"></i>
+                                    <span>固定资产管理</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-depreciation.html')">
-                                    <i class="fa fa-calculator w-6"></i>
-                                    <span>资产折旧管理</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-asset.html')">
+                                    <i class="fa fa-lightbulb-o w-6"></i>
+                                    <span>无形资产管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
+                                    <i class="fa fa-bolt w-6"></i>
+                                    <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-group-management.html')">
+                                    <i class="fa fa-th-large w-6"></i>
+                                    <span>设备组管理</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
-
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
@@ -233,12 +250,6 @@
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('cost-allocation.html')">
-                                    <i class="fa fa-list w-6"></i>
-                                    <span>费用归集管理</span>
-                                </a>
-                            </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('labor-cost-allocation.html')">
                                     <i class="fa fa-users w-6"></i>
@@ -258,26 +269,21 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('test-cost-allocation.html')">
-                                    <i class="fa fa-flask w-6"></i>
-                                    <span>试验费用归集</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intangible-cost-allocation.html')">
                                     <i class="fa fa-lightbulb-o w-6"></i>
                                     <span>无形资产摊销</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('consult-cost-allocation.html')">
-                                    <i class="fa fa-comments w-6"></i>
-                                    <span>咨询费用归集</span>
-                                </a>
-                            </li>                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('design-cost-allocation.html')">
                                     <i class="fa fa-pencil w-6"></i>
                                     <span>设计费用归集</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-test-cost-allocation.html')">
+                                    <i class="fa fa-wrench w-6"></i>
+                                    <span>装备调试费用与试验费用归集</span>
                                 </a>
                             </li>
                             <li>
@@ -286,64 +292,10 @@
                                     <span>其他费用归集</span>
                                 </a>
                             </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
-                            <div class="flex items-center">
-                                <i class="fa fa-clock-o w-6"></i>
-                                <span>研发工时</span>
-                            </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
-                        <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-log.html')">
-                                    <i class="fa fa-calendar-check-o w-6"></i>
-                                    <span>工时日志填报</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-attendance.html')">
-                                    <i class="fa fa-user-o w-6"></i>
-                                    <span>人员考勤表</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-work-hour-record.html')">
-                                    <i class="fa fa-file-text-o w-6"></i>
-                                    <span>人员工时记录</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-work-hour-record.html')">
-                                    <i class="fa fa-cog w-6"></i>
-                                    <span>设备工时记录</span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-project-allocation.html')">
-                                    <i class="fa fa-share-alt w-6"></i>
-                                    <span>人员工时分配</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-project-allocation.html')">
-                                    <i class="fa fa-cogs w-6"></i>
-                                    <span>设备工时分配</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour-allocation.html')">
-                                    <i class="fa fa-tasks w-6"></i>
-                                    <span>工时分配管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-group-management.html')">
-                                    <i class="fa fa-th-large w-6"></i>
-                                    <span>设备组管理</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('outsourced-rd-allocation.html')">
+                                    <i class="fa fa-handshake-o w-6"></i>
+                                    <span>委托外部研究开发费用归集</span>
                                 </a>
                             </li>
                         </ul>
@@ -352,71 +304,18 @@
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-cube w-6"></i>
-                                <span>物料管理</span>
+                                <span>特殊收入管理</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-list w-6"></i>
-                                    <span>物料信息管理</span>
-                                </a>
-                            </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
                                     <i class="fa fa-trash w-6"></i>
                                     <span>物料报废管理</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
-                                    <i class="fa fa-shopping-cart w-6"></i>
-                                    <span>项目领料管理</span>
-                                </a>
-                            </li>
                         </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-600" onclick="loadPage('pilot-production.html')">
-                            <i class="fa fa-industry w-6"></i>
-                            <span>试生产管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
-                            <div class="flex items-center">
-                                <i class="fa fa-shield w-6"></i>
-                                <span>合规管理</span>
-                            </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
-                        <ul class="ml-6 sub-menu">
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('compliance-check.html')">
-                                    <i class="fa fa-check-square-o w-6"></i>
-                                    <span>合规检查</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('tax-deduction.html')">
-                                    <i class="fa fa-calculator w-6"></i>
-                                    <span>税收减免</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('high-tech-cert.html')">
-                                    <i class="fa fa-certificate w-6"></i>
-                                    <span>高科技认证</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-600" onclick="loadPage('data-analysis.html')">
-                            <i class="fa fa-bar-chart w-6"></i>
-                            <span>数据分析</span>
-                        </a>
                     </li>
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
@@ -468,53 +367,6 @@
                     <li>
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-cubes w-6"></i>
-                                <span>资源管理</span>
-                            </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
-                        <ul class="ml-6 sub-menu">
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('work-hour.html')">
-                                    <i class="fa fa-clock-o w-6"></i>
-                                    <span>工时费用归集</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('intellectual-property.html')">
-                                    <i class="fa fa-lightbulb-o w-6"></i>
-                                    <span>知识产权维护</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
-                                    <i class="fa fa-bar-chart w-6"></i>
-                                    <span>多口径报表</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('reference-materials.html')">
-                                    <i class="fa fa-folder-o w-6"></i>
-                                    <span>备查资料</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('policy.html')">
-                                    <i class="fa fa-book w-6"></i>
-                                    <span>政策查询</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('intangible.html')">
-                            <i class="fa fa-lightbulb-o w-6"></i>
-                            <span>无形资产管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
-                            <div class="flex items-center">
                                 <i class="fa fa-file-text w-6"></i>
                                 <span>凭证管理</span>
                             </div>
@@ -528,25 +380,31 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-matching.html')">
-                                    <i class="fa fa-random w-6"></i>
-                                    <span>凭证匹配</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('import-history.html')">
                                     <i class="fa fa-history w-6"></i>
                                     <span>导入历史</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('matching-rules.html')">
-                                    <i class="fa fa-cogs w-6"></i>
-                                    <span>匹配规则设置</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('simple-mapping.html')">
+                                    <i class="fa fa-exchange w-6"></i>
+                                    <span>科目映射配置</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-list.html')">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-settings.html')">
+                                    <i class="fa fa-wrench w-6"></i>
+                                    <span>项目匹配配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-matching.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>凭证自动匹配</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-list.html')">
                                     <i class="fa fa-list w-6"></i>
                                     <span>序时记账凭证一览表</span>
                                 </a>
@@ -568,7 +426,6 @@
                                     <span>企业基础信息维护</span>
                                 </a>
                             </li>
-
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('user.html')">
                                     <i class="fa fa-user-o w-6"></i>
@@ -604,37 +461,7 @@
                                     <span>分摊规则配置</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('deduction-policy.html')">
-                                    <i class="fa fa-calculator w-6"></i>
-                                    <span>加计扣除政策配置</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('finance-policy.html')">
-                                    <i class="fa fa-money w-6"></i>
-                                    <span>财务核算口径配置</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('hi-tech-policy.html')">
-                                    <i class="fa fa-star w-6"></i>
-                                    <span>高新认定口径配置</span>
-                                </a>
-                            </li>
                         </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('settings.html')">
-                            <i class="fa fa-cog w-6"></i>
-                            <span>设置</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('profile.html')">
-                            <i class="fa fa-user w-6"></i>
-                            <span>个人资料</span>
-                        </a>
                     </li>
                 </ul>
             </nav>
@@ -703,12 +530,11 @@
                         <input type="text" class="w-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="请输入">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">同步状态</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">报表状态</label>
                         <select class="w-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="all">全部</option>
-                            <option value="synced">已同步</option>
-                            <option value="unsynced">未同步</option>
-                            <option value="matching">待匹配</option>
+                            <option value="generated">已生成报表</option>
+                            <option value="not_generated">未生成报表</option>
                         </select>
                     </div>
                     <div class="flex items-end">
@@ -736,10 +562,9 @@
                                     <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">凭证信息</th>
                                     <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider">会计凭证记载金额</th>
                                     <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider">税法规定的归集金额</th>
-                                    <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目编号</th>
                                     <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
                                     <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">费用类别</th>
-                                    <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">同步状态</th>
+                                    <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">报表状态</th>
                                     <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                                 </tr>
                             </thead>
@@ -756,20 +581,43 @@
                                     </td>
                                     <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
                                     <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
-                                    <td class="px-4 py-3 border-b">RD02</td>
-                                    <td class="px-4 py-3 border-b">新能源</td>
-                                    <td class="px-4 py-3 border-b">人员人工费用</td>
-                                    <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">已同步</span></td>
                                     <td class="px-4 py-3 border-b">
-                                        <button class="text-blue-500 hover:text-blue-700 mr-2">
-                                            <i class="fa fa-eye"></i> 查看
-                                        </button>
-                                        <button class="text-blue-500 hover:text-blue-700 mr-2">
-                                            <i class="fa fa-edit"></i> 编辑
-                                        </button>
-                                        <button class="text-red-500 hover:text-red-700">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </button>
+                                        <div class="space-y-3">
+                                            <div class="border-l-2 border-blue-400 pl-2 py-1">
+                                                <div class="text-xs font-bold text-gray-800">RD02 - 新能源</div>
+                                            </div>
+                                            <div class="border-l-2 border-indigo-400 pl-2 py-1">
+                                                <div class="text-xs font-bold text-gray-800">RD01 - 人工智能</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="space-y-3">
+                                            <div class="py-1">
+                                                <div class="text-xs text-gray-600">人员人工费用</div>
+                                            </div>
+                                            <div class="py-1">
+                                                <div class="text-xs text-gray-600">人员人工费用</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full whitespace-nowrap">
+                                            未生成报表
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="flex items-center space-x-2">
+                                            <button class="text-blue-500 hover:text-blue-700" onclick="openViewModal('0001', '研发人员工资')">
+                                                <i class="fa fa-eye"></i> 查看
+                                            </button>
+                                            <button class="text-blue-500 hover:text-blue-700" onclick="openEditModal('0001')">
+                                                <i class="fa fa-edit"></i> 编辑
+                                            </button>
+                                            <button class="text-red-500 hover:text-red-700">
+                                                <i class="fa fa-trash"></i> 删除
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -784,20 +632,33 @@
                                     </td>
                                     <td class="px-4 py-3 border-b text-right">¥3,750.00</td>
                                     <td class="px-4 py-3 border-b text-right">¥3,750.00</td>
-                                    <td class="px-4 py-3 border-b">RD02</td>
-                                    <td class="px-4 py-3 border-b">新能源</td>
-                                    <td class="px-4 py-3 border-b">直接投入费用</td>
-                                    <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">已同步</span></td>
                                     <td class="px-4 py-3 border-b">
-                                        <button class="text-blue-500 hover:text-blue-700 mr-2">
-                                            <i class="fa fa-eye"></i> 查看
-                                        </button>
-                                        <button class="text-blue-500 hover:text-blue-700 mr-2">
-                                            <i class="fa fa-edit"></i> 编辑
-                                        </button>
-                                        <button class="text-red-500 hover:text-red-700">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </button>
+                                        <div class="border-l-2 border-blue-400 pl-2 py-1">
+                                            <div class="text-xs font-bold text-gray-800">RD02 - 新能源</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="py-1">
+                                            <div class="text-xs text-gray-600">直接投入费用</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full whitespace-nowrap">
+                                            未生成报表
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="flex items-center space-x-2">
+                                            <button class="text-blue-500 hover:text-blue-700" onclick="openViewModal('0002', '研发材料采购')">
+                                                <i class="fa fa-eye"></i> 查看
+                                            </button>
+                                            <button class="text-blue-500 hover:text-blue-700" onclick="openEditModal('0002')">
+                                                <i class="fa fa-edit"></i> 编辑
+                                            </button>
+                                            <button class="text-red-500 hover:text-red-700">
+                                                <i class="fa fa-trash"></i> 删除
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -812,25 +673,38 @@
                                     </td>
                                     <td class="px-4 py-3 border-b text-right">¥1,250.00</td>
                                     <td class="px-4 py-3 border-b text-right">¥1,250.00</td>
-                                    <td class="px-4 py-3 border-b">RD02</td>
-                                    <td class="px-4 py-3 border-b">新能源</td>
-                                    <td class="px-4 py-3 border-b">折旧费用</td>
-                                    <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">已同步</span></td>
                                     <td class="px-4 py-3 border-b">
-                                        <button class="text-blue-500 hover:text-blue-700 mr-2">
-                                            <i class="fa fa-eye"></i> 查看
-                                        </button>
-                                        <button class="text-blue-500 hover:text-blue-700 mr-2">
-                                            <i class="fa fa-edit"></i> 编辑
-                                        </button>
-                                        <button class="text-red-500 hover:text-red-700">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </button>
+                                        <div class="border-l-2 border-blue-400 pl-2 py-1">
+                                            <div class="text-xs font-bold text-gray-800">RD02 - 新能源</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="py-1">
+                                            <div class="text-xs text-gray-600">折旧费用与长期待摊</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full whitespace-nowrap">
+                                            未生成报表
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="flex items-center space-x-2">
+                                            <button class="text-blue-500 hover:text-blue-700" onclick="openViewModal('0003', '研发设备折旧')">
+                                                <i class="fa fa-eye"></i> 查看
+                                            </button>
+                                            <button class="text-blue-500 hover:text-blue-700" onclick="openEditModal('0003')">
+                                                <i class="fa fa-edit"></i> 编辑
+                                            </button>
+                                            <button class="text-red-500 hover:text-red-700">
+                                                <i class="fa fa-trash"></i> 删除
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="px-4 py-3 border-b">4</td>
-                                    <td class="px-4 py-3 border-b">
+                                    <td class="px-4 py-3 border-b bg-gray-50">4</td>
+                                    <td class="px-4 py-3 border-b bg-gray-50">
                                         <div class="voucher-info">
                                             <div class="text-center">2026-04</div>
                                             <div class="text-center">记</div>
@@ -838,22 +712,35 @@
                                             <div>软件摊销</div>
                                         </div>
                                     </td>
-                                    <td class="px-4 py-3 border-b text-right">¥833.33</td>
-                                    <td class="px-4 py-3 border-b text-right">¥833.33</td>
-                                    <td class="px-4 py-3 border-b">RD01</td>
-                                    <td class="px-4 py-3 border-b">人工智能</td>
-                                    <td class="px-4 py-3 border-b">无形资产摊销</td>
-                                    <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">已同步</span></td>
-                                    <td class="px-4 py-3 border-b">
-                                        <button class="text-blue-500 hover:text-blue-700 mr-2">
-                                            <i class="fa fa-eye"></i> 查看
-                                        </button>
-                                        <button class="text-blue-500 hover:text-blue-700 mr-2">
-                                            <i class="fa fa-edit"></i> 编辑
-                                        </button>
-                                        <button class="text-red-500 hover:text-red-700">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </button>
+                                    <td class="px-4 py-3 border-b text-right bg-gray-50">¥833.33</td>
+                                    <td class="px-4 py-3 border-b text-right bg-gray-50">¥833.33</td>
+                                    <td class="px-4 py-3 border-b bg-gray-50">
+                                        <div class="border-l-2 border-indigo-400 pl-2 py-1">
+                                            <div class="text-xs font-bold text-gray-800">RD01 - 人工智能</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b bg-gray-50">
+                                        <div class="py-1">
+                                            <div class="text-xs text-gray-600">无形资产摊销费用</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b bg-gray-50">
+                                        <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full whitespace-nowrap font-medium">
+                                            已生成报表
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 border-b bg-gray-50">
+                                        <div class="flex items-center space-x-2">
+                                            <button class="text-blue-500 hover:text-blue-700" onclick="openViewModal('0004', '软件摊销')">
+                                                <i class="fa fa-eye"></i> 查看
+                                            </button>
+                                            <button class="text-gray-300 cursor-not-allowed" title="口径报表已生成，不可编辑">
+                                                <i class="fa fa-edit"></i> 编辑
+                                            </button>
+                                            <button class="text-gray-300 cursor-not-allowed" title="口径报表已生成，禁止删除">
+                                                <i class="fa fa-trash"></i> 删除
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -868,9 +755,16 @@
                                     </td>
                                     <td class="px-4 py-3 border-b text-right">¥1,000.00</td>
                                     <td class="px-4 py-3 border-b text-right">¥1,000.00</td>
-                                    <td class="px-4 py-3 border-b">RD03</td>
-                                    <td class="px-4 py-3 border-b">医疗科技</td>
-                                    <td class="px-4 py-3 border-b">新产品设计费等</td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="border-l-2 border-purple-400 pl-2 py-1">
+                                            <div class="text-xs font-bold text-gray-800">RD03 - 医疗科技</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="py-1">
+                                            <div class="text-xs text-gray-600">新产品设计费等</div>
+                                        </div>
+                                    </td>
                                     <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">已同步</span></td>
                                     <td class="px-4 py-3 border-b">
                                         <button class="text-blue-500 hover:text-blue-700 mr-2">
@@ -896,9 +790,26 @@
                                     </td>
                                     <td class="px-4 py-3 border-b text-right">¥500.00</td>
                                     <td class="px-4 py-3 border-b text-right">¥500.00</td>
-                                    <td class="px-4 py-3 border-b">RD03</td>
-                                    <td class="px-4 py-3 border-b">医疗科技</td>
-                                    <td class="px-4 py-3 border-b">新产品设计费等</td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="space-y-3">
+                                            <div class="border-l-2 border-purple-400 pl-2 py-1">
+                                                <div class="text-xs font-bold text-gray-800">RD03 - 医疗科技</div>
+                                            </div>
+                                            <div class="border-l-2 border-blue-400 pl-2 py-1">
+                                                <div class="text-xs font-bold text-gray-800">RD02 - 新能源</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="space-y-3">
+                                            <div class="py-1">
+                                                <div class="text-xs text-gray-600">新产品设计费等</div>
+                                            </div>
+                                            <div class="py-1">
+                                                <div class="text-xs text-gray-600">新产品设计费等</div>
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">已同步</span></td>
                                     <td class="px-4 py-3 border-b">
                                         <button class="text-blue-500 hover:text-blue-700 mr-2">
@@ -924,9 +835,16 @@
                                     </td>
                                     <td class="px-4 py-3 border-b text-right">¥2,000.00</td>
                                     <td class="px-4 py-3 border-b text-right">¥2,000.00</td>
-                                    <td class="px-4 py-3 border-b">RD01</td>
-                                    <td class="px-4 py-3 border-b">人工智能</td>
-                                    <td class="px-4 py-3 border-b">委托研发费用</td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="border-l-2 border-indigo-400 pl-2 py-1">
+                                            <div class="text-xs font-bold text-gray-800">RD01 - 人工智能</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="py-1">
+                                            <div class="text-xs text-gray-600">委托研发费用</div>
+                                        </div>
+                                    </td>
                                     <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">已同步</span></td>
                                     <td class="px-4 py-3 border-b">
                                         <button class="text-blue-500 hover:text-blue-700 mr-2">
@@ -952,9 +870,16 @@
                                     </td>
                                     <td class="px-4 py-3 border-b text-right">¥1,666.67</td>
                                     <td class="px-4 py-3 border-b text-right">¥1,666.67</td>
-                                    <td class="px-4 py-3 border-b">RD02</td>
-                                    <td class="px-4 py-3 border-b">新能源</td>
-                                    <td class="px-4 py-3 border-b">其他相关费用</td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="border-l-2 border-blue-400 pl-2 py-1">
+                                            <div class="text-xs font-bold text-gray-800">RD02 - 新能源</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 border-b">
+                                        <div class="py-1">
+                                            <div class="text-xs text-gray-600">其他相关费用</div>
+                                        </div>
+                                    </td>
                                     <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">已同步</span></td>
                                     <td class="px-4 py-3 border-b">
                                         <button class="text-blue-500 hover:text-blue-700 mr-2">
@@ -994,6 +919,125 @@
         </div>
     </div>
     
+    <!-- 凭证详情查看弹窗 -->
+    <div id="viewVoucherModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
+            <div class="flex items-center justify-between px-6 py-4 border-b">
+                <h2 class="text-lg font-semibold text-gray-800">凭证核算详情</h2>
+                <button onclick="closeModal('viewVoucherModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-6">
+                <!-- 锁定提示 (仅在锁定时显示) -->
+                <div id="viewLockNotice" class="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 flex items-center" style="display: none;">
+                    <i class="fa fa-lock mr-2 text-base"></i>
+                    <span>当前凭证已在“高企/加计扣除”报表中归集并生成申报底稿，数据已锁定。如需修改，请先撤回相关报表。</span>
+                </div>
+                <!-- 凭证基础信息（只读） -->
+                <div class="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase font-medium">凭证编号</p>
+                        <p class="text-sm font-bold text-gray-800" id="viewVoucherNo">-</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase font-medium">摘要</p>
+                        <p class="text-sm font-bold text-gray-800" id="viewSummary">-</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase font-medium">会计科目</p>
+                        <p class="text-sm text-gray-700">6602.01 研发费用-工资</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase font-medium">凭证记载金额</p>
+                        <p class="text-sm text-primary font-bold">¥10,000.00</p>
+                    </div>
+                </div>
+
+                <!-- 研发核算信息 -->
+                <div>
+                    <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+                        <i class="fa fa-flask mr-2 text-indigo-500"></i>研发归集明细
+                    </h3>
+                    <div class="border rounded-lg overflow-hidden">
+                        <table class="min-w-full divide-y divide-gray-200 text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left font-medium text-gray-500">关联研发项目</th>
+                                    <th class="px-4 py-2 text-left font-medium text-gray-500">研发费用类别</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200" id="viewMatchDetails">
+                                <tr>
+                                    <td class="px-4 py-3 text-gray-700">RD02 - 新能源研发项目</td>
+                                    <td class="px-4 py-3 text-gray-700">人员人工费用</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end px-6 py-4 border-t bg-gray-50">
+                <button onclick="closeModal('viewVoucherModal')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 凭证匹配编辑弹窗 -->
+    <div id="editVoucherModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
+            <div class="flex items-center justify-between px-6 py-4 border-b">
+                <h2 class="text-lg font-semibold text-gray-800">编辑凭证匹配</h2>
+                <button onclick="closeModal('editVoucherModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-6">
+                <!-- 提示信息 -->
+                <div class="p-3 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700">
+                    <i class="fa fa-info-circle mr-1"></i> 注意：修改匹配关系将实时影响研发辅助账及多口径报表的统计数据。
+                </div>
+
+                <!-- 匹配编辑区 -->
+                <div class="space-y-4">
+                    <div id="editRowsContainer" class="space-y-3">
+                        <div class="flex items-center gap-2 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                            <div class="flex-1 grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-indigo-600 mb-1">研发项目</label>
+                                    <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                                        <option value="RD01">RD01-人工智能项目</option>
+                                        <option value="RD02" selected>RD02-新能源研发项目</option>
+                                        <option value="RD03">RD03-医疗影像项目</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-indigo-600 mb-1">费用类别</label>
+                                    <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                                        <option value="1" selected>人员人工费用</option>
+                                        <option value="2">直接投入费用</option>
+                                        <option value="3">折旧费用与长期待摊</option>
+                                        <option value="4">无形资产摊销费用</option>
+                                        <option value="5">新产品设计费等</option>
+                                        <option value="8">其他相关费用</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="mt-4 text-gray-400 hover:text-red-500" onclick="removeEditRow(this)"><i class="fa fa-trash-o"></i></button>
+                        </div>
+                    </div>
+                    <button class="text-xs text-primary font-medium hover:underline" onclick="addEditRow()">
+                        <i class="fa fa-plus-circle mr-1"></i> 新增关联项目
+                    </button>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50">
+                <button onclick="closeModal('editVoucherModal')" class="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-md">取消</button>
+                <button onclick="saveEdit()" class="px-4 py-2 bg-primary text-white hover:bg-blue-600 rounded-md">保存修改</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 导航菜单折叠功能
         function toggleMenu(element) {
@@ -1011,7 +1055,197 @@
         
         // 加载页面功能
         function loadPage(page) {
-            window.location.href = page;
+            if (page) {
+                window.location.href = page;
+            }
+        }
+
+        // 打开查看弹窗
+        function openViewModal(no, summary) {
+            document.getElementById('viewVoucherNo').textContent = no;
+            document.getElementById('viewSummary').textContent = summary;
+            
+            // 锁定提示逻辑
+            const lockNotice = document.getElementById('viewLockNotice');
+            if (no === '0003' || no === '0004') {
+                lockNotice.style.display = 'flex';
+            } else {
+                lockNotice.style.display = 'none';
+            }
+            
+            const detailsContainer = document.getElementById('viewMatchDetails');
+            if (no === '0001') {
+                detailsContainer.innerHTML = `
+                    <tr>
+                        <td class="px-4 py-3 text-gray-700">RD02 - 新能源研发项目</td>
+                        <td class="px-4 py-3 text-gray-700">人员人工费用</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3 text-gray-700">RD01 - 人工智能项目</td>
+                        <td class="px-4 py-3 text-gray-700">人员人工费用</td>
+                    </tr>
+                `;
+            } else if (no === '0006') {
+                detailsContainer.innerHTML = `
+                    <tr>
+                        <td class="px-4 py-3 text-gray-700">RD03 - 医疗科技研发项目</td>
+                        <td class="px-4 py-3 text-gray-700">新产品设计费等</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3 text-gray-700">RD02 - 新能源研发项目</td>
+                        <td class="px-4 py-3 text-gray-700">新产品设计费等</td>
+                    </tr>
+                `;
+            } else {
+                detailsContainer.innerHTML = `
+                    <tr>
+                        <td class="px-4 py-3 text-gray-700">RD02 - 新能源研发项目</td>
+                        <td class="px-4 py-3 text-gray-700">研发相关费用</td>
+                    </tr>
+                `;
+            }
+            
+            document.getElementById('viewVoucherModal').style.display = 'flex';
+        }
+
+        // 打开编辑弹窗
+        function openEditModal(no) {
+            const container = document.getElementById('editRowsContainer');
+            if (no === '0001') {
+                container.innerHTML = `
+                    <div class="flex items-center gap-2 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                        <div class="flex-1 grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-indigo-600 mb-1">研发项目</label>
+                                <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                                    <option value="RD01">RD01-人工智能项目</option>
+                                    <option value="RD02" selected>RD02-新能源研发项目</option>
+                                    <option value="RD03">RD03-医疗影像项目</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-indigo-600 mb-1">费用类别</label>
+                                <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                                    <option value="1" selected>人员人工费用</option>
+                                    <option value="2">直接投入费用</option>
+                                    <option value="3">折旧费用与长期待摊</option>
+                                    <option value="4">无形资产摊销费用</option>
+                                    <option value="5">新产品设计费等</option>
+                                    <option value="8">其他相关费用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="mt-4 text-gray-400 hover:text-red-500" onclick="removeEditRow(this)"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                    <div class="flex items-center gap-2 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                        <div class="flex-1 grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-indigo-600 mb-1">研发项目</label>
+                                <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                                    <option value="RD01" selected>RD01-人工智能项目</option>
+                                    <option value="RD02">RD02-新能源研发项目</option>
+                                    <option value="RD03">RD03-医疗影像项目</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-indigo-600 mb-1">费用类别</label>
+                                <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                                    <option value="1" selected>人员人工费用</option>
+                                    <option value="2">直接投入费用</option>
+                                    <option value="3">折旧费用与长期待摊</option>
+                                    <option value="4">无形资产摊销费用</option>
+                                    <option value="5">新产品设计费等</option>
+                                    <option value="8">其他相关费用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="mt-4 text-gray-400 hover:text-red-500" onclick="removeEditRow(this)"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="flex items-center gap-2 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                        <div class="flex-1 grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-indigo-600 mb-1">研发项目</label>
+                                <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                                    <option value="RD01">RD01-人工智能项目</option>
+                                    <option value="RD02" selected>RD02-新能源研发项目</option>
+                                    <option value="RD03">RD03-医疗影像项目</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-indigo-600 mb-1">费用类别</label>
+                                <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                                    <option value="1">人员人工费用</option>
+                                    <option value="2" selected>直接投入费用</option>
+                                    <option value="3">折旧费用与长期待摊</option>
+                                    <option value="4">无形资产摊销费用</option>
+                                    <option value="5">新产品设计费等</option>
+                                    <option value="8">其他相关费用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="mt-4 text-gray-400 hover:text-red-500" onclick="removeEditRow(this)"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                `;
+            }
+            document.getElementById('editVoucherModal').style.display = 'flex';
+        }
+
+        // 关闭弹窗
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // 新增编辑行
+        function addEditRow() {
+            const container = document.getElementById('editRowsContainer');
+            const newRow = document.createElement('div');
+            newRow.className = 'flex items-center gap-2 p-3 bg-indigo-50 rounded-lg border border-indigo-100';
+            newRow.innerHTML = `
+                <div class="flex-1 grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-indigo-600 mb-1">研发项目</label>
+                        <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                            <option value="">请选择项目...</option>
+                            <option value="RD01">RD01-人工智能项目</option>
+                            <option value="RD02">RD02-新能源研发项目</option>
+                            <option value="RD03">RD03-医疗影像项目</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-indigo-600 mb-1">费用类别</label>
+                        <select class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm">
+                            <option value="">请选择类别...</option>
+                            <option value="1">人员人工费用</option>
+                            <option value="2">直接投入费用</option>
+                            <option value="3">折旧费用与长期待摊</option>
+                            <option value="4">无形资产摊销费用</option>
+                            <option value="5">新产品设计费等</option>
+                            <option value="8">其他相关费用</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="mt-4 text-gray-400 hover:text-red-500" onclick="removeEditRow(this)"><i class="fa fa-trash-o"></i></button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        // 移除编辑行
+        function removeEditRow(btn) {
+            const container = document.getElementById('editRowsContainer');
+            if (container.children.length > 1) {
+                btn.closest('.flex').remove();
+            } else {
+                alert('至少需要保留一个关联关系');
+            }
+        }
+
+        // 保存修改
+        function saveEdit() {
+            alert('修改已保存。研发辅助账已实时同步更新。');
+            closeModal('editVoucherModal');
         }
     </script>
 </body>

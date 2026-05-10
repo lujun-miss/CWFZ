@@ -48,6 +48,12 @@ navigation_template = """            <!-- 导航菜单 -->
                                     <span>阶段模板</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-documents.html')">
+                                    <i class="fa fa-file-word-o w-6"></i>
+                                    <span>项目过程文档</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -84,12 +90,6 @@ navigation_template = """            <!-- 导航菜单 -->
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-cube w-6"></i>
-                                    <span>物料信息管理</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
                                     <i class="fa fa-user-o w-6"></i>
                                     <span>研发人员档案</span>
@@ -106,30 +106,6 @@ navigation_template = """            <!-- 导航菜单 -->
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('testing-item-library.html')">
-                                    <i class="fa fa-flask w-6"></i>
-                                    <span>检验项目档案</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('rental-contract-library.html')">
-                                    <i class="fa fa-file-text w-6"></i>
-                                    <span>租赁合同档案</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('outsourced-rd-contract-management.html')">
-                                    <i class="fa fa-file-text-o w-6"></i>
-                                    <span>委托研发合同管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('repair-cost-management.html')">
-                                    <i class="fa fa-wrench w-6"></i>
-                                    <span>维修费用管理</span>
-                                </a>
-                            </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('comprehensive-cost-management.html')">
                                     <i class="fa fa-puzzle-piece w-6"></i>
@@ -248,33 +224,15 @@ navigation_template = """            <!-- 导航菜单 -->
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-cube w-6"></i>
-                                <span>物料管理</span>
+                                <span>特殊收入管理</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-list w-6"></i>
-                                    <span>物料信息管理</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
                                     <i class="fa fa-trash w-6"></i>
                                     <span>物料报废管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
-                                    <i class="fa fa-shopping-cart w-6"></i>
-                                    <span>项目领料管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-usage-statistics.html')">
-                                    <i class="fa fa-bar-chart w-6"></i>
-                                    <span>物料使用量统计</span>
                                 </a>
                             </li>
                         </ul>
@@ -422,19 +380,8 @@ navigation_template = """            <!-- 导航菜单 -->
                 </ul>
             </nav>"""
 
-files_to_fix = [
-    'project-management.html',
-    'task-management.html',
-    'stage-audit.html',
-    'progress-tracking.html',
-    'equipment-group-management.html',
-    'material-cost-allocation.html',
-    'intangible-cost-allocation.html',
-    'labor-cost-allocation.html',
-    'equipment-depreciation-allocation.html'
-]
-
-cwd = os.getcwd()
+# 获取当前目录下所有的 html 文件
+files_to_fix = [f for f in os.listdir(cwd) if f.endswith('.html')]
 
 for filename in files_to_fix:
     filepath = os.path.join(cwd, filename)

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>装备调试费用与试验费用归集 - 研发费用管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
         tailwind.config = {
             theme: {
@@ -116,18 +116,6 @@
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('testing-item-library.html')">
-                                    <i class="fa fa-flask w-6"></i>
-                                    <span>检验项目档案</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('repair-cost-management.html')">
-                                    <i class="fa fa-wrench w-6"></i>
-                                    <span>维修费用管理</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('comprehensive-cost-management.html')">
                                     <i class="fa fa-puzzle-piece w-6"></i>
                                     <span>综合费用管理</span>
@@ -166,12 +154,6 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('amortization-fee-type.html')">
                                     <i class="fa fa-calendar w-6"></i>
                                     <span>待摊费用类型</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-cube w-6"></i>
-                                    <span>物料信息管理</span>
                                 </a>
                             </li>
                             <li>
@@ -346,33 +328,15 @@
                         <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-cube w-6"></i>
-                                <span>物料管理</span>
+                                <span>特殊收入管理</span>
                             </div>
                             <i class="fa fa-chevron-right menu-arrow"></i>
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-list w-6"></i>
-                                    <span>物料信息管理</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
                                     <i class="fa fa-trash w-6"></i>
                                     <span>物料报废管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-material.html')">
-                                    <i class="fa fa-shopping-cart w-6"></i>
-                                    <span>项目领料管理</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-usage-statistics.html')">
-                                    <i class="fa fa-bar-chart w-6"></i>
-                                    <span>物料使用量统计</span>
                                 </a>
                             </li>
                         </ul>
@@ -681,53 +645,72 @@
             </header>
 
             <main class="flex-1 overflow-y-auto p-6">
-                <div class="bg-white rounded-lg shadow p-4 mb-6">
-                    <div class="flex flex-wrap items-center gap-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-700">时间范围：</span>
-                            <label class="flex items-center">
-                                <input type="radio" name="timeRange" value="month" class="mr-1" checked>
-                                <span class="text-sm">月</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="timeRange" value="year" class="mr-1">
-                                <span class="text-sm">年</span>
-                            </label>
-                            <input type="month" id="filterMonth" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                        </div>
-
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-700">项目名称：</span>
-                            <select id="filterProject" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
-                                <option value="">全部项目</option>
-                                <option value="智能传感器研发">智能传感器研发</option>
-                                <option value="工业机器人控制系统">工业机器人控制系统</option>
-                                <option value="新能源材料研究">新能源材料研究</option>
-                                <option value="高精度数控机床">高精度数控机床</option>
-                            </select>
-                        </div>
-
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-700">费用类型：</span>
-                            <select id="filterType" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                                <option value="">全部</option>
-                                <option value="equipment">装备调试费</option>
-                                <option value="test">试验费用</option>
-                            </select>
-                        </div>
-
-                        <div class="flex items-center space-x-2">
-                            <button onclick="searchRecords()" class="bg-primary text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition-colors">
-                                <i class="fa fa-search mr-1"></i>查询
-                            </button>
-                            <button onclick="resetFilter()" class="bg-gray-300 text-gray-700 px-4 py-1.5 rounded-md text-sm hover:bg-gray-400 transition-colors">
-                                <i class="fa fa-refresh mr-1"></i>重置
-                            </button>
-                            <button onclick="openAllocationModal()" class="bg-blue-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition-colors">
-                                <i class="fa fa-cogs mr-1"></i>开始归集
-                            </button>
-                    </div>
+                <!-- 选项卡区域 -->
+                <div class="flex border-b border-gray-200 mb-6">
+                    <button id="tabEquipment" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 border-b-2 border-transparent hover:border-primary transition-colors" onclick="switchTab('equipment')">
+                        <i class="fa fa-wrench mr-1"></i>
+                        装备调试费管理
+                    </button>
+                    <button id="tabTest" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 border-b-2 border-transparent hover:border-primary transition-colors" onclick="switchTab('test')">
+                        <i class="fa fa-flask mr-1"></i>
+                        试验费用管理
+                    </button>
+                    <button id="tabAllocation" class="px-4 py-2 text-sm font-medium text-primary border-b-2 border-primary bg-blue-50" onclick="switchTab('allocation')">
+                        <i class="fa fa-cogs mr-1"></i>
+                        装备调试与试验费归集
+                    </button>
                 </div>
+
+                <!-- 归集内容区域 -->
+                <div id="allocationContentSection">
+                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                        <div class="flex flex-wrap items-center gap-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-700">时间范围：</span>
+                                <label class="flex items-center">
+                                    <input type="radio" name="timeRange" value="month" class="mr-1" checked>
+                                    <span class="text-sm">月</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="timeRange" value="year" class="mr-1">
+                                    <span class="text-sm">年</span>
+                                </label>
+                                <input type="month" id="filterMonth" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-700">项目名称：</span>
+                                <select id="filterProject" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
+                                    <option value="">全部项目</option>
+                                    <option value="智能传感器研发">智能传感器研发</option>
+                                    <option value="工业机器人控制系统">工业机器人控制系统</option>
+                                    <option value="新能源材料研究">新能源材料研究</option>
+                                    <option value="高精度数控机床">高精度数控机床</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-700">费用类型：</span>
+                                <select id="filterType" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="">全部</option>
+                                    <option value="equipment">装备调试费</option>
+                                    <option value="test">试验费用</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <button onclick="searchRecords()" class="bg-primary text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition-colors">
+                                    <i class="fa fa-search mr-1"></i>查询
+                                </button>
+                                <button onclick="resetFilter()" class="bg-gray-300 text-gray-700 px-4 py-1.5 rounded-md text-sm hover:bg-gray-400 transition-colors">
+                                    <i class="fa fa-refresh mr-1"></i>重置
+                                </button>
+                                <button onclick="openAllocationModal()" class="bg-blue-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition-colors">
+                                    <i class="fa fa-cogs mr-1"></i>开始归集
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                 <div class="bg-white rounded-lg shadow overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200">
@@ -752,7 +735,7 @@
                             </tbody>
                             <tfoot class="bg-gray-50">
                                 <tr>
-                                    <td colspan="8" class="px-6 py-4">
+                                    <td colspan="9" class="px-6 py-4">
                                         <div class="flex items-center justify-between">
                                             <div class="text-sm text-gray-700">显示 1 到 <span id="displayCount">0</span> 条，共 <span id="totalCount">0</span> 条记录</div>
                                             <div class="flex items-center space-x-2">
@@ -766,6 +749,17 @@
                             </tfoot>
                         </table>
                     </div>
+                </div>
+                </div>
+
+                <!-- 装备调试费内容区域 -->
+                <div id="equipmentContentSection" class="hidden h-full">
+                    <iframe src="equipment-cost-content.html" class="w-full h-full border-0 rounded-lg shadow-sm min-h-[800px]"></iframe>
+                </div>
+
+                <!-- 试验费用内容区域 -->
+                <div id="testContentSection" class="hidden h-full">
+                    <iframe src="test-cost-content.html" class="w-full h-full border-0 rounded-lg shadow-sm min-h-[800px]"></iframe>
                 </div>
             </main>
         </div>
@@ -981,6 +975,41 @@
             if (sidebar) {
                 sidebar.classList.toggle('w-0');
                 sidebar.classList.toggle('w-64');
+            }
+        }
+
+        function switchTab(tab) {
+            const allocationBtn = document.getElementById('tabAllocation');
+            const equipmentBtn = document.getElementById('tabEquipment');
+            const testBtn = document.getElementById('tabTest');
+            const allocationSection = document.getElementById('allocationContentSection');
+            const equipmentSection = document.getElementById('equipmentContentSection');
+            const testSection = document.getElementById('testContentSection');
+
+            // 重置所有按钮样式
+            [allocationBtn, equipmentBtn, testBtn].forEach(btn => {
+                btn.classList.remove('text-primary', 'border-primary', 'bg-blue-50');
+                btn.classList.add('text-gray-500', 'border-transparent');
+            });
+
+            // 隐藏所有区域
+            [allocationSection, equipmentSection, testSection].forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // 激活当前选项卡
+            if (tab === 'allocation') {
+                allocationBtn.classList.add('text-primary', 'border-primary', 'bg-blue-50');
+                allocationBtn.classList.remove('text-gray-500', 'border-transparent');
+                allocationSection.classList.remove('hidden');
+            } else if (tab === 'equipment') {
+                equipmentBtn.classList.add('text-primary', 'border-primary', 'bg-blue-50');
+                equipmentBtn.classList.remove('text-gray-500', 'border-transparent');
+                equipmentSection.classList.remove('hidden');
+            } else if (tab === 'test') {
+                testBtn.classList.add('text-primary', 'border-primary', 'bg-blue-50');
+                testBtn.classList.remove('text-gray-500', 'border-transparent');
+                testSection.classList.remove('hidden');
             }
         }
 
