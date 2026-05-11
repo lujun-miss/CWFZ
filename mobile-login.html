@@ -54,6 +54,15 @@
         .login-btn:hover {
             background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
 <body>
@@ -75,7 +84,7 @@
             <div class="mb-6">
                 <div class="flex items-center justify-between mb-2">
                     <label class="block text-sm font-medium text-gray-700">租户ID</label>
-                    <button type="button" onclick="toggleTenantList()" class="text-sm text-primary hover:underline">
+                    <button type="button" onclick="toggleTenantList(event)" class="text-sm text-primary hover:underline">
                         <i class="fa fa-exchange mr-1"></i>切换租户
                     </button>
                 </div>
@@ -87,16 +96,26 @@
                         type="text"
                         id="tenantId"
                         name="tenantId"
+                        onclick="toggleTenantList(event)"
                         class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="请输入或选择租户ID"
                         required
                     >
-                </div>
-                <!-- 租户列表下拉 -->
-                <div id="tenantList" class="hidden mt-2 border border-gray-200 rounded-lg max-h-48 overflow-y-auto">
-                    <div class="p-2 hover:bg-gray-50 cursor-pointer text-sm" onclick="selectTenant('T001')">T001 - 好品易链</div>
-                    <div class="p-2 hover:bg-gray-50 cursor-pointer text-sm" onclick="selectTenant('T002')">T002 - 测试租户</div>
-                    <div class="p-2 hover:bg-gray-50 cursor-pointer text-sm" onclick="selectTenant('T003')">T003 - 开发环境</div>
+                    <!-- 租户列表下拉 -->
+                    <div id="tenantList" class="hidden mt-1 border border-gray-200 rounded-lg max-h-48 overflow-y-auto bg-white shadow-lg z-20 absolute w-full left-0 top-full">
+                        <div class="p-3 hover:bg-blue-50 cursor-pointer text-sm border-b border-gray-50 flex items-center justify-between group" onclick="selectTenant('T001', '好品易链')">
+                            <span class="text-gray-700 group-hover:text-primary font-medium">T001 - 好品易链</span>
+                            <i class="fa fa-chevron-right text-gray-300 text-xs group-hover:text-primary"></i>
+                        </div>
+                        <div class="p-3 hover:bg-blue-50 cursor-pointer text-sm border-b border-gray-50 flex items-center justify-between group" onclick="selectTenant('T002', '测试租户')">
+                            <span class="text-gray-700 group-hover:text-primary font-medium">T002 - 测试租户</span>
+                            <i class="fa fa-chevron-right text-gray-300 text-xs group-hover:text-primary"></i>
+                        </div>
+                        <div class="p-3 hover:bg-blue-50 cursor-pointer text-sm flex items-center justify-between group" onclick="selectTenant('T003', '开发环境')">
+                            <span class="text-gray-700 group-hover:text-primary font-medium">T003 - 开发环境</span>
+                            <i class="fa fa-chevron-right text-gray-300 text-xs group-hover:text-primary"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -154,15 +173,34 @@
 
     <script>
         // 切换租户列表显示
-        function toggleTenantList() {
+        function toggleTenantList(e) {
+            if (e) e.stopPropagation();
             const tenantList = document.getElementById('tenantList');
-            tenantList.classList.toggle('hidden');
+            const isHidden = tenantList.classList.contains('hidden');
+            
+            if (isHidden) {
+                tenantList.classList.remove('hidden');
+                tenantList.classList.add('animate-fadeIn');
+            } else {
+                tenantList.classList.add('hidden');
+            }
         }
 
         // 选择租户
-        function selectTenant(tenantId) {
-            document.getElementById('tenantId').value = tenantId;
+        function selectTenant(tenantId, tenantName) {
+            const input = document.getElementById('tenantId');
+            input.value = tenantId;
+            
+            // 增加选中动画效果
+            input.classList.add('ring-2', 'ring-primary', 'border-transparent');
+            setTimeout(() => {
+                input.classList.remove('ring-2', 'ring-primary', 'border-transparent');
+            }, 500);
+
             document.getElementById('tenantList').classList.add('hidden');
+            
+            // 如果有提示信息，可以在这里显示
+            console.log('已选择租户:', tenantName);
         }
 
         // 点击其他地方关闭租户列表
