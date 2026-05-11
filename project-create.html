@@ -668,14 +668,22 @@
                                 
                                 <!-- 项目状态 -->
                                 <div>
-                                    <label class="form-label">项目状态 <span class="text-red-500">*</span></label>
-                                    <select class="form-select">
-                                        <option value="planning">规划中</option>
-                                        <option value="in_progress" selected>进行中</option>
-                                        <option value="paused">已暂停</option>
-                                        <option value="completed">已完成</option>
+                                    <div class="flex items-center mb-2">
+                                        <label class="form-label mb-0">项目状态 <span class="text-red-500">*</span></label>
+                                        <button class="ml-2 text-gray-400 hover:text-gray-600 transition-colors" onclick="openStatusTooltip()" title="查看状态流转规则">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </div>
+                                    <select class="form-select bg-gray-50" id="projectStatus">
+                                        <option value="planning" selected>规划中 (初始状态)</option>
+                                        <option value="in_progress">进行中 (执行中)</option>
+                                        <option value="paused">已暂停 (手动挂起)</option>
+                                        <option value="completed">已完成 (由阶段审核触发)</option>
                                     </select>
-                                    <div class="form-note">注：新创建项目默认默认为"进行中"</div>
+                                    <div class="form-note">
+                                        <i class="fa fa-info-circle mr-1 text-primary"></i> 
+                                        提示：系统将根据项目时间及执行情况辅助更新状态。
+                                    </div>
                                 </div>
                                 
                             </div>
@@ -745,37 +753,6 @@
                                 </button>
                             </div>
 
-                            
-                            <!-- 浮窗提示 -->
-                            <div id="equipmentTooltip" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" onclick="closeEquipmentTooltip()">
-                                <div class="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4" onclick="event.stopPropagation()">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <h4 class="font-medium text-gray-800">设备选择说明</h4>
-                                        <button class="text-gray-400 hover:text-gray-600" onclick="closeEquipmentTooltip()">
-                                            <i class="fa fa-times"></i>
-                                        </button>
-                                    </div>
-                                    <div class="space-y-4">
-                                        <div>
-                                            <h5 class="text-sm font-bold text-gray-700 mb-1">选择逻辑</h5>
-                                            <p class="text-sm text-gray-600">
-                                                系统根据资产属性自动分类：选择“设备组”将加载该组绑定的所有设备；“单台设备”仅支持选择未划分到任何设备组的独立资产。
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h5 class="text-sm font-bold text-gray-700 mb-1">专用判定规则</h5>
-                                            <p class="text-sm text-gray-600 italic bg-blue-50 p-2 rounded border-l-4 border-blue-400">
-                                                如果一个设备组（如一条生产线）中包含任何一台“专用”设备，那么该项目通常需要独占该生产线资源。因此，只要组内有一台设备是“专用”，该设备组整体将标记为“整组专用”。
-                                            </p>
-                                        </div>
-
-                                    </div>
-                                    <button class="mt-6 w-full bg-primary text-white py-2 rounded-md hover:bg-blue-600 transition-colors" onclick="closeEquipmentTooltip()">
-                                        我知道了
-                                    </button>
-                                </div>
-                            </div>
-                            
                             <div class="overflow-x-auto">
                                 <table class="min-w-full bg-white border border-gray-200">
                                     <thead class="bg-gray-50">
@@ -1019,6 +996,85 @@
                     </div>
                 </div>
             </main>
+        </div>
+    </div>
+
+    <!-- 全局浮窗提示容器 -->
+    <div id="globalTooltips">
+        <!-- 设备选择说明浮窗 -->
+        <div id="equipmentTooltip" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" onclick="closeEquipmentTooltip()">
+            <div class="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="font-medium text-gray-800">设备选择说明</h4>
+                    <button class="text-gray-400 hover:text-gray-600" onclick="closeEquipmentTooltip()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h5 class="text-sm font-bold text-gray-700 mb-1">选择逻辑</h5>
+                        <p class="text-sm text-gray-600">
+                            系统根据资产属性自动分类：选择“设备组”将加载该组绑定的所有设备；“单台设备”仅支持选择未划分到任何设备组的独立资产。
+                        </p>
+                    </div>
+                    <div>
+                        <h5 class="text-sm font-bold text-gray-700 mb-1">专用判定规则</h5>
+                        <p class="text-sm text-gray-600 italic bg-blue-50 p-2 rounded border-l-4 border-blue-400">
+                            如果一个设备组（如一条生产线）中包含任何一台“专用”设备，那么该项目通常需要独占该生产线资源。因此，只要组内有一台设备是“专用”，该设备组整体将标记为“整组专用”。
+                        </p>
+                    </div>
+                </div>
+                <button class="mt-6 w-full bg-primary text-white py-2 rounded-md hover:bg-blue-600 transition-colors" onclick="closeEquipmentTooltip()">
+                    我知道了
+                </button>
+            </div>
+        </div>
+
+        <!-- 项目状态说明浮窗 -->
+        <div id="statusTooltip" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" onclick="closeStatusTooltip()">
+            <div class="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="font-medium text-gray-800 flex items-center">
+                        <i class="fa fa-info-circle text-primary mr-2"></i>项目状态流转规则
+                    </h4>
+                    <button class="text-gray-400 hover:text-gray-600" onclick="closeStatusTooltip()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="w-2 h-2 rounded-full bg-blue-400 mt-1.5 mr-3"></div>
+                        <div>
+                            <h5 class="text-sm font-bold text-gray-700">规划中 (Planning)</h5>
+                            <p class="text-xs text-gray-500">项目初始默认状态，此时正在进行资源分配与团队组建。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-2 h-2 rounded-full bg-green-500 mt-1.5 mr-3"></div>
+                        <div>
+                            <h5 class="text-sm font-bold text-gray-700">进行中 (In Progress)</h5>
+                            <p class="text-xs text-gray-500 italic text-primary">自动切换逻辑：当当前日期处于项目的“开始时间”与“结束时间”范围内时，系统将自动从规划中转为进行中。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                                            <div class="w-2 h-2 rounded-full bg-yellow-500 mt-1.5 mr-3"></div>
+                                            <div>
+                                                <h5 class="text-sm font-bold text-gray-700">已暂停 (Paused)</h5>
+                                                <p class="text-xs text-gray-500">此状态由手动切换。用于处理外部因素导致的研发中断，确保暂停期间不产生合规性风险。<strong>若需补录暂停前的工时或领料，需先手动切回“进行中”后方可操作。</strong></p>
+                                            </div>
+                                        </div>
+                    <div class="flex items-start">
+                        <div class="w-2 h-2 rounded-full bg-gray-800 mt-1.5 mr-3"></div>
+                        <div>
+                            <h5 class="text-sm font-bold text-gray-700">已完成 (Completed)</h5>
+                            <p class="text-xs text-gray-500 italic text-secondary">自动切换逻辑：当项目所有研发阶段的任务均达到100%并审核通过后，状态将自动更新为已完成。</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="mt-6 w-full bg-primary text-white py-2 rounded-md hover:bg-blue-600 transition-colors" onclick="closeStatusTooltip()">
+                    我知道了
+                </button>
+            </div>
         </div>
     </div>
     
@@ -1270,6 +1326,24 @@
         
         function closeEquipmentTooltip() {
             const tooltip = document.getElementById('equipmentTooltip');
+            if (tooltip) {
+                tooltip.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // 打开项目状态帮助浮窗
+        function openStatusTooltip() {
+            const tooltip = document.getElementById('statusTooltip');
+            if (tooltip) {
+                tooltip.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // 关闭项目状态帮助浮窗
+        function closeStatusTooltip() {
+            const tooltip = document.getElementById('statusTooltip');
             if (tooltip) {
                 tooltip.classList.add('hidden');
                 document.body.style.overflow = '';
