@@ -331,8 +331,8 @@
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">岗位</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">应发工资</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">五险一金</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">个税</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">实发工资</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">工时占比</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">归集费用</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200" id="detailTableBody">
@@ -358,9 +358,9 @@
                 amount: '¥ 450,000',
                 operator: '张三',
                 items: [
-                    { name: '张三', position: '高级工程师', salary: 30000, insurance: 6000, tax: 1500, netSalary: 22500 },
-                    { name: '李四', position: '工程师', salary: 20000, insurance: 4000, tax: 800, netSalary: 15200 },
-                    { name: '王五', position: '技术员', salary: 15000, insurance: 3000, tax: 500, netSalary: 11500 }
+                    { name: '张三', position: '高级工程师', salary: 30000, insurance: 6000, hourRatio: 0.4, allocationCost: 180000 },
+                    { name: '李四', position: '工程师', salary: 20000, insurance: 4000, hourRatio: 0.35, allocationCost: 157500 },
+                    { name: '王五', position: '技术员', salary: 15000, insurance: 3000, hourRatio: 0.25, allocationCost: 112500 }
                 ]
             },
             2: {
@@ -371,9 +371,9 @@
                 amount: '¥ 135,000',
                 operator: '李四',
                 items: [
-                    { name: '张三', position: '高级工程师', salary: 30000, insurance: 6000, tax: 1500, netSalary: 22500 },
-                    { name: '李四', position: '工程师', salary: 20000, insurance: 4000, tax: 800, netSalary: 15200 },
-                    { name: '王五', position: '技术员', salary: 15000, insurance: 3000, tax: 500, netSalary: 11500 }
+                    { name: '张三', position: '高级工程师', salary: 30000, insurance: 6000, hourRatio: 0.4, allocationCost: 54000 },
+                    { name: '李四', position: '工程师', salary: 20000, insurance: 4000, hourRatio: 0.35, allocationCost: 47250 },
+                    { name: '王五', position: '技术员', salary: 15000, insurance: 3000, hourRatio: 0.25, allocationCost: 33750 }
                 ]
             },
             3: {
@@ -384,7 +384,7 @@
                 amount: '¥ 45,000',
                 operator: '王五',
                 items: [
-                    { name: '赵六', position: '外部专家', salary: 45000, insurance: 0, tax: 5000, netSalary: 40000 }
+                    { name: '赵六', position: '外部专家', salary: 45000, insurance: 0, hourRatio: 1.0, allocationCost: 45000 }
                 ]
             },
             4: {
@@ -395,8 +395,8 @@
                 amount: '¥ 380,000',
                 operator: '张三',
                 items: [
-                    { name: '陈七', position: '高级工程师', salary: 25000, insurance: 5000, tax: 1200, netSalary: 18800 },
-                    { name: '周八', position: '工程师', salary: 18000, insurance: 3600, tax: 700, netSalary: 13700 }
+                    { name: '陈七', position: '高级工程师', salary: 25000, insurance: 5000, hourRatio: 0.6, allocationCost: 228000 },
+                    { name: '周八', position: '工程师', salary: 18000, insurance: 3600, hourRatio: 0.4, allocationCost: 152000 }
                 ]
             },
             5: {
@@ -407,8 +407,8 @@
                 amount: '¥ 114,000',
                 operator: '李四',
                 items: [
-                    { name: '陈七', position: '高级工程师', salary: 25000, insurance: 5000, tax: 1200, netSalary: 18800 },
-                    { name: '周八', position: '工程师', salary: 18000, insurance: 3600, tax: 700, netSalary: 13700 }
+                    { name: '陈七', position: '高级工程师', salary: 25000, insurance: 5000, hourRatio: 0.6, allocationCost: 68400 },
+                    { name: '周八', position: '工程师', salary: 18000, insurance: 3600, hourRatio: 0.4, allocationCost: 45600 }
                 ]
             }
         };
@@ -464,8 +464,8 @@
                         '<td class="px-4 py-2 whitespace-nowrap">' + item.position + '</td>' +
                         '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.salary.toLocaleString() + '</td>' +
                         '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.insurance.toLocaleString() + '</td>' +
-                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.tax.toLocaleString() + '</td>' +
-                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.netSalary.toLocaleString() + '</td>';
+                        '<td class="px-4 py-2 whitespace-nowrap">' + (item.hourRatio * 100).toFixed(1) + '%</td>' +
+                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.allocationCost.toLocaleString() + '</td>';
                     tableBody.appendChild(row);
                 }
                 

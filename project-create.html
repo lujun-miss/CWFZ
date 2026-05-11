@@ -666,18 +666,6 @@
                                     <input type="date" class="form-input">
                                 </div>
                                 
-                                <!-- 项目负责人 -->
-                                <div>
-                                    <label class="form-label">项目负责人 <span class="text-red-500">*</span></label>
-                                    <select class="form-select">
-                                        <option value="">请选择</option>
-                                        <option value="user1">张三</option>
-                                        <option value="user2">李四</option>
-                                        <option value="user3">王五</option>
-                                    </select>
-                                    <div class="form-note">注：负责项目的整体规划、进度把控和资源协调</div>
-                                </div>
-
                             </div>
                         </div>
 
@@ -744,12 +732,17 @@
                                     <i class="fa fa-plus mr-1"></i> 添加研发人员
                                 </button>
                             </div>
+                            <div class="text-sm text-gray-500 mb-3">
+                                <i class="fa fa-info-circle mr-1"></i>
+                                <strong>说明：</strong>设备组与单独设备为互斥关系。选择设备组后，该组内设备自动添加至列表，单独添加设备时仅可选择组外设备。生产线/研发组等属于设备组，组外独立设备可单独添加。
+                            </div>
                             
                             <div class="overflow-x-auto">
                                 <table class="min-w-full bg-white border border-gray-200">
                                     <thead class="bg-gray-50">
                                         <tr>
                                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">姓名工号</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">是否负责人</th>
                                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
                                         </tr>
                                     </thead>
@@ -765,6 +758,12 @@
                                                 </select>
                                             </td>
                                             <td class="px-4 py-3 border-b">
+                                                <label class="flex items-center cursor-pointer">
+                                                    <input type="radio" name="projectLeader" value="" class="form-radio" onchange="handleLeaderSelection(this)">
+                                                    <span class="ml-2 text-sm">设为负责人</span>
+                                                </label>
+                                            </td>
+                                            <td class="px-4 py-3 border-b">
                                                 <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
                                                     <i class="fa fa-trash"></i> 删除
                                                 </button>
@@ -778,7 +777,12 @@
                         <!-- 占用仪器与设备 -->
                         <div class="mb-8">
                             <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-lg font-medium text-gray-800">占用仪器与设备</h3>
+                                <div class="flex items-center">
+                                    <h3 class="text-lg font-medium text-gray-800">占用仪器与设备</h3>
+                                    <button class="ml-2 text-gray-400 hover:text-gray-600 transition-colors" onclick="openEquipmentTooltip()" title="点击查看说明">
+                                        <i class="fa fa-question-circle"></i>
+                                    </button>
+                                </div>
                                 <div class="flex items-center space-x-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">选择设备组</label>
@@ -791,6 +795,27 @@
                                     </div>
                                     <button class="px-3 py-1 bg-primary text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center" onclick="addEquipment()">
                                         <i class="fa fa-plus mr-1"></i> 添加设备
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- 浮窗提示 -->
+                            <div id="equipmentTooltip" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" onclick="closeEquipmentTooltip()">
+                                <div class="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4" onclick="event.stopPropagation()">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="font-medium text-gray-800">设备选择说明</h4>
+                                        <button class="text-gray-400 hover:text-gray-600" onclick="closeEquipmentTooltip()">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <p class="text-sm text-gray-600">
+                                        设备组与单独设备为互斥关系。选择设备组后，该组内所有设备将自动添加至列表；单独添加设备时，仅可选择未被设备组包含的设备。
+                                    </p>
+                                    <p class="text-sm text-gray-600 mt-2">
+                                        <strong>删除规则：</strong>若删除设备组中的任意设备，将导致整个设备组及其所有设备被移除。如需保留部分设备，请先清空设备组选择，再单独添加所需设备。
+                                    </p>
+                                    <button class="mt-4 w-full bg-primary text-white py-2 rounded-md hover:bg-blue-600 transition-colors" onclick="closeEquipmentTooltip()">
+                                        我知道了
                                     </button>
                                 </div>
                             </div>
@@ -967,6 +992,9 @@
     </div>
     
     <script>
+        // 已选择的设备组设备ID列表（用于过滤单独选择）
+        let selectedGroupEquipment = [];
+        
         function loadPage(pageUrl) {
             window.location.href = pageUrl;
         }
@@ -1039,6 +1067,21 @@
             });
         }
         
+        // 处理负责人选择
+        function handleLeaderSelection(radio) {
+            const row = radio.closest('tr');
+            const select = row.querySelector('select');
+            const selectedValue = select.value;
+            
+            radio.value = selectedValue;
+            
+            document.querySelectorAll('input[name="projectLeader"]').forEach(r => {
+                if (r !== radio) {
+                    r.value = '';
+                }
+            });
+        }
+        
         // 添加研发人员
         function addResearcher() {
             const table = document.getElementById('researcherTable');
@@ -1054,35 +1097,10 @@
                     </select>
                 </td>
                 <td class="px-4 py-3 border-b">
-                    <select class="form-select">
-                        <option value="">请选择</option>
-                        <option value="rd">研发部</option>
-                        <option value="it">IT部</option>
-                        <option value="qa">质量部</option>
-                    </select>
-                </td>
-                <td class="px-4 py-3 border-b">
-                    <select class="form-select">
-                        <option value="projectManager">项目负责人</option>
-                        <option value="rdEngineer">研发工程师</option>
-                        <option value="qaEngineer">测试工程师</option>
-                    </select>
-                </td>
-                <td class="px-4 py-3 border-b">
-                    <select class="form-select">
-                        <option value="rdPersonnel">研发人员</option>
-                        <option value="techPersonnel">科技人员</option>
-                    </select>
-                    <div class="form-note">系统自动带出不可修改，研发人员或科技人员</div>
-                </td>
-                <td class="px-4 py-3 border-b">
-                    <input type="date" class="form-input">
-                </td>
-                <td class="px-4 py-3 border-b">
-                    <input type="date" class="form-input">
-                </td>
-                <td class="px-4 py-3 border-b">
-                    <input type="number" class="form-input" placeholder="0-100" min="0" max="100">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="radio" name="projectLeader" value="" class="form-radio" onchange="handleLeaderSelection(this)">
+                        <span class="ml-2 text-sm">设为负责人</span>
+                    </label>
                 </td>
                 <td class="px-4 py-3 border-b">
                     <button class="text-red-500 hover:text-red-700" onclick="removeRow(this)">
@@ -1093,19 +1111,57 @@
             table.appendChild(newRow);
         }
         
+        // 打开设备帮助浮窗
+        function openEquipmentTooltip() {
+            const tooltip = document.getElementById('equipmentTooltip');
+            if (tooltip) {
+                tooltip.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // 关闭设备帮助浮窗
+        function closeEquipmentTooltip() {
+            const tooltip = document.getElementById('equipmentTooltip');
+            if (tooltip) {
+                tooltip.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+        
         // 添加设备
         function addEquipment() {
             const table = document.getElementById('equipmentTable');
             const newRow = document.createElement('tr');
             newRow.className = 'table-row-hover';
             const rowIndex = table.children.length;
+            
+            // 所有可选设备（包含设备组内的设备，但标记为已选择）
+            const allEquipment = [
+                { id: 'eq001', name: '研发设备001' },
+                { id: 'eq002', name: '研发设备002' },
+                { id: 'eq003', name: '研发设备003' },
+                { id: 'eq004', name: '研发设备004' },
+                { id: 'eq005', name: '研发设备005' },
+                { id: 'eq006', name: '研发设备006' },
+                { id: 'eq007', name: '研发设备007' }
+            ];
+            
+            // 生成设备选项（显示所有设备，已在设备组中的设备标记为禁用并显示提示）
+            let options = '<option value="">从资产管理同步</option>';
+            allEquipment.forEach(eq => {
+                const isInGroup = selectedGroupEquipment.includes(eq.id);
+                if (isInGroup) {
+                    options += `<option value="${eq.id}" disabled class="text-gray-400">${eq.name} (已在设备组中)</option>`;
+                } else {
+                    options += `<option value="${eq.id}">${eq.name}</option>`;
+                }
+            });
+            
             newRow.innerHTML = `
                 <td class="px-4 py-3 border-b">
-                    <select class="form-select">
-                        <option value="">从资产管理同步</option>
-                        <option value="eq001">研发设备001</option>
-                        <option value="eq002">研发设备002</option>
-                        <option value="eq003">研发设备003</option>
+                    <select class="form-select" onchange="checkEquipmentSelection(this)">
+                        ${options}
                     </select>
                 </td>
                 <td class="px-4 py-3 border-b">
@@ -1121,6 +1177,15 @@
                 </td>
             `;
             table.appendChild(newRow);
+        }
+        
+        // 检查设备选择（已在设备组中的设备给出提示）
+        function checkEquipmentSelection(selectElement) {
+            const equipmentId = selectElement.value;
+            if (equipmentId && selectedGroupEquipment.includes(equipmentId)) {
+                alert('该设备已在所选设备组中，无需重复添加！');
+                selectElement.value = '';
+            }
         }
         
         // 添加无形资产
@@ -1234,7 +1299,25 @@
         // 删除行
         function removeRow(button) {
             const row = button.closest('tr');
-            row.remove();
+            const table = document.getElementById('equipmentTable');
+            
+            // 检查是否为设备组添加的设备（有 group-equipment 类）
+            if (row.classList.contains('group-equipment')) {
+                // 删除整个设备组的所有行
+                while (table.rows.length > 1) {
+                    table.deleteRow(1);
+                }
+                // 清空设备组选择
+                const groupSelect = document.querySelector('select[onchange="selectEquipmentGroup(this.value)"]');
+                if (groupSelect) {
+                    groupSelect.value = '';
+                }
+                // 清空已选择的设备组设备列表
+                selectedGroupEquipment = [];
+            } else {
+                // 单独添加的设备，只删除当前行
+                row.remove();
+            }
         }
         
         // 加载无形资产信息
@@ -1306,7 +1389,10 @@
         
         // 选择设备组，加载该组下的所有设备
         function selectEquipmentGroup(groupId) {
-            if (!groupId) return;
+            if (!groupId) {
+                selectedGroupEquipment = [];
+                return;
+            }
             
             // 设备组与设备的映射关系
             const equipmentGroups = {
@@ -1328,6 +1414,9 @@
             const equipmentTable = document.getElementById('equipmentTable');
             const groupEquipment = equipmentGroups[groupId];
             
+            // 更新已选择的设备组设备列表
+            selectedGroupEquipment = groupEquipment.map(eq => eq.id);
+            
             // 清空现有设备行（保留表头）
             while (equipmentTable.rows.length > 1) {
                 equipmentTable.deleteRow(1);
@@ -1336,7 +1425,7 @@
             // 添加设备组下的所有设备
             groupEquipment.forEach((equipment, index) => {
                 const row = equipmentTable.insertRow();
-                row.className = 'table-row-hover';
+                row.className = 'table-row-hover group-equipment';
                 
                 // 设备名称/编号
                 const nameCell = row.insertCell(0);

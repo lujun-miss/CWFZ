@@ -464,35 +464,9 @@
 
         <!-- 主内容 -->
         <main class="flex-1 p-6">
-            <!-- 页面标题 -->
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-semibold text-gray-800">人员项目工时分配表</h2>
-                <div class="flex space-x-2">
-                    <button class="btn-primary flex items-center" onclick="openIntegrateModal()">
-                        <i class="fa fa-database mr-2"></i>
-                        数据整合
-                    </button>
-                    <button class="btn-outline flex items-center">
-                        <i class="fa fa-refresh mr-2"></i>
-                        刷新数据
-                    </button>
-                    <button class="btn-outline flex items-center">
-                        <i class="fa fa-download mr-2"></i>
-                        导出
-                    </button>
-                </div>
-            </div>
-
             <!-- 视图切换和筛选器 -->
             <div class="bg-white rounded-lg shadow p-4 mb-6">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <!-- 视图切换 -->
-                    <div class="flex space-x-2">
-                        <button class="px-4 py-2 bg-primary text-white rounded-md" id="viewByPerson">
-                            <i class="fa fa-user mr-2"></i>按人员查看
-                        </button>
-                    </div>
-
                     <!-- 筛选条件 -->
                     <div class="flex flex-wrap gap-2">
                         <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="projectFilter">
@@ -516,54 +490,12 @@
                         <button class="btn-primary">
                             <i class="fa fa-search mr-2"></i>查询
                         </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 统计卡片 -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
-                            <i class="fa fa-folder-open text-blue-500 text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">项目总数</p>
-                            <p class="text-2xl font-semibold text-gray-800">12</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4">
-                            <i class="fa fa-users text-green-500 text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">参与人员</p>
-                            <p class="text-2xl font-semibold text-gray-800">48</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mr-4">
-                            <i class="fa fa-clock-o text-yellow-500 text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">总工时</p>
-                            <p class="text-2xl font-semibold text-gray-800">3,680</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
-                            <i class="fa fa-calculator text-purple-500 text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">人均工时</p>
-                            <p class="text-2xl font-semibold text-gray-800">76.7</p>
-                        </div>
+                        <button class="btn-primary flex items-center" onclick="openIntegrateModal()">
+                            <i class="fa fa-database mr-2"></i>月度工时分配整合
+                        </button>
+                        <button class="btn-outline flex items-center">
+                            <i class="fa fa-download mr-2"></i>导出
+                        </button>
                     </div>
                 </div>
             </div>
@@ -599,6 +531,9 @@
                                     占比
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    归集状态
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     操作
                                 </th>
                             </tr>
@@ -627,6 +562,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">33.3%</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
+                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
                                     <button class="text-primary hover:text-blue-700" onclick="viewPersonDetail('张三', '2026.04')">查看明细</button>
@@ -685,6 +623,9 @@
                                     <div class="text-sm text-gray-900">54.5%</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
+                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已归集</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
                                     <button class="text-primary hover:text-blue-700" onclick="viewPersonDetail('张三', '2026.04')">查看明细</button>
                                 </td>
                             </tr>
@@ -725,6 +666,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">50.0%</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
+                                    <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">未归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
                                     <button class="text-primary hover:text-blue-700" onclick="viewPersonDetail('张三', '2026.04')">查看明细</button>
@@ -792,6 +736,9 @@
                                     占比
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    归集状态
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     操作
                                 </th>
                             </tr>
@@ -819,6 +766,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">53.3%</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
+                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
                                     <button class="text-primary hover:text-blue-700" onclick="viewPersonDetail('张三', '2026.04')">查看明细</button>
@@ -859,6 +809,9 @@
                                     <div class="text-sm text-gray-900">55.6%</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
+                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已归集</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
                                     <button class="text-primary hover:text-blue-700" onclick="viewPersonDetail('李四', '2026.04')">查看明细</button>
                                 </td>
                             </tr>
@@ -895,6 +848,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap" rowspan="1">
                                     <div class="text-sm text-gray-900">100%</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap" rowspan="1">
+                                    <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">未归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap" rowspan="1">
                                     <button class="text-primary hover:text-blue-700" onclick="viewPersonDetail('赵六', '2026.04')">查看明细</button>
@@ -943,11 +899,11 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">选择数据源</label>
                     <div class="space-y-2">
                         <div class="flex items-center">
-                            <input type="checkbox" id="includeAttendance" class="mr-2" checked>
+                            <input type="checkbox" id="includeAttendance" class="mr-2" checked disabled>
                             <label for="includeAttendance">人员考勤表 (personnel-attendance.html)</label>
                         </div>
                         <div class="flex items-center">
-                            <input type="checkbox" id="includeWorkHourRecord" class="mr-2" checked>
+                            <input type="checkbox" id="includeWorkHourRecord" class="mr-2" checked disabled>
                             <label for="includeWorkHourRecord">人员工时记录 (project-work-hour-record.html)</label>
                         </div>
                     </div>
@@ -957,12 +913,13 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">整合选项</label>
                     <div class="space-y-2">
                         <div class="flex items-center">
-                            <input type="checkbox" id="calculateRatio" class="mr-2" checked>
+                            <input type="checkbox" id="calculateRatio" class="mr-2" checked disabled>
                             <label for="calculateRatio">自动计算工时占比</label>
                         </div>
                         <div class="flex items-center">
                             <input type="checkbox" id="updateExisting" class="mr-2" checked>
                             <label for="updateExisting">更新现有数据</label>
+                            <span class="text-xs text-gray-500 ml-2">(已归集数据不可更新)</span>
                         </div>
                     </div>
                 </div>
@@ -1455,7 +1412,7 @@
                                                 填报工时
                                             </th>
                                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                备注
+                                                工作内容
                                             </th>
                                         </tr>
                                     </thead>

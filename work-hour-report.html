@@ -152,31 +152,26 @@
                                     <label class="block text-xs font-medium text-gray-600 mb-2">工时分配</label>
                                     <div class="space-y-2">
                                         <div>
-                                            <label class="block text-xs text-gray-500 mb-1">生产工时</label>
-                                            <input type="range" id="groupProductionTime" min="0" max="24" step="0.5" value="0" class="w-full" oninput="updateGroupSplit()">
+                                            <label class="block text-xs text-gray-500 mb-1">研发时长</label>
+                                            <input type="range" id="groupRDTime" min="0" max="24" step="0.5" value="0" class="w-full" oninput="updateGroupSplit()">
                                             <div class="flex justify-between text-xs text-gray-500 mt-1">
                                                 <span>0小时</span>
-                                                <span id="groupProductionHoursDisplay">0小时</span>
-                                                <span>24小时</span>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs text-gray-500 mb-1">研发工时</label>
-                                            <input type="range" id="groupRDTime" min="0" max="24" step="0.5" value="2" class="w-full" oninput="updateGroupSplit()">
-                                            <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                                <span>0小时</span>
-                                                <span id="groupRDHoursDisplay">2小时</span>
+                                                <span id="groupRDHoursDisplay">0小时</span>
                                                 <span>24小时</span>
                                             </div>
                                         </div>
                                         <div class="mt-2 p-2 bg-gray-50 rounded-md">
                                             <div class="flex justify-between text-xs text-gray-700">
-                                                <span>年度累计工时:</span>
-                                                <span id="groupTotalHoursDisplay">2小时</span>
+                                                <span>设备运行时长:</span>
+                                                <span id="groupTotalHoursDisplay">0小时</span>
                                             </div>
                                             <div class="flex justify-between text-xs text-gray-700">
-                                                <span>研发占比:</span>
-                                                <span id="groupRDPctDisplay">100%</span>
+                                                <span>研发时长:</span>
+                                                <span id="groupRDPctDisplay">0小时</span>
+                                            </div>
+                                            <div class="flex justify-between text-xs text-gray-700">
+                                                <span>生产工时:</span>
+                                                <span id="groupProductionHoursDisplay">0小时</span>
                                             </div>
                                         </div>
                                     </div>
@@ -215,31 +210,26 @@
                                 <label class="block text-xs font-medium text-gray-600 mb-2">工时分配</label>
                                 <div class="space-y-2">
                                     <div>
-                                        <label class="block text-xs text-gray-500 mb-1">生产工时</label>
-                                        <input type="range" id="singleProductionTime" min="0" max="24" step="0.5" value="0" class="w-full" oninput="updateSingleSplit()">
+                                        <label class="block text-xs text-gray-500 mb-1">研发时长</label>
+                                        <input type="range" id="singleRDTime" min="0" max="24" step="0.5" value="0" class="w-full" oninput="updateSingleSplit()">
                                         <div class="flex justify-between text-xs text-gray-500 mt-1">
                                             <span>0小时</span>
-                                            <span id="singleProductionHoursDisplay">0小时</span>
-                                            <span>24小时</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs text-gray-500 mb-1">研发工时</label>
-                                        <input type="range" id="singleRDTime" min="0" max="24" step="0.5" value="2" class="w-full" oninput="updateSingleSplit()">
-                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                            <span>0小时</span>
-                                            <span id="singleRDHoursDisplay">2小时</span>
+                                            <span id="singleRDHoursDisplay">0小时</span>
                                             <span>24小时</span>
                                         </div>
                                     </div>
                                     <div class="mt-2 p-2 bg-gray-50 rounded-md">
                                         <div class="flex justify-between text-xs text-gray-700">
-                                            <span>年度累计工时:</span>
-                                            <span id="singleTotalHoursDisplay">2小时</span>
+                                            <span>设备运行时长:</span>
+                                            <span id="singleTotalHoursDisplay">0小时</span>
                                         </div>
                                         <div class="flex justify-between text-xs text-gray-700">
-                                            <span>研发占比:</span>
-                                            <span id="singleRDPctDisplay">100%</span>
+                                            <span>研发时长:</span>
+                                            <span id="singleRDPctDisplay">0小时</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs text-gray-700">
+                                            <span>生产工时:</span>
+                                            <span id="singleProductionHoursDisplay">0小时</span>
                                         </div>
                                     </div>
                                 </div>
@@ -319,8 +309,9 @@
                     <div class="p-2 bg-blue-50 border border-blue-200 rounded-md">
                         <h4 class="text-sm font-medium text-blue-800 mb-1">设备类型说明</h4>
                         <p class="text-xs text-blue-700">
-                            - 生产+研发共用设备：需要分别填写生产工时和研发工时<br>
-                            - 研发专用设备：只需要填写总工时
+                            - 生产+研发共用设备：填写设备运行时长和研发时长，生产工时自动计算<br>
+                            - 研发专用设备：填写设备运行时长和研发时长<br>
+                            - 设备工时上限：同一设备当日累计工时不可超过24小时，超出将提示并阻止提交
                         </p>
                     </div>
                 </div>
@@ -410,13 +401,14 @@
                 
                 // 根据设备类型显示不同的工时输入方式
                 if (group.type === '生产+研发共用') {
-                    totalTime.style.display = 'none';
+                    totalTime.style.display = 'block';
                     timeSplit.style.display = 'block';
                     updateGroupSplit();
                     showWarning('该设备组为生产+研发共用设备，研发工时占比不能超过年度总工时的15%（当前为100%）');
                 } else {
                     totalTime.style.display = 'block';
-                    timeSplit.style.display = 'none';
+                    timeSplit.style.display = 'block';
+                    updateGroupSplit();
                     warning.style.display = 'none';
                 }
             } else {
@@ -430,22 +422,33 @@
         function updateGroupHours() {
             const hours = document.getElementById('groupDeviceUsageTime').value;
             document.getElementById('groupHoursDisplay').textContent = hours + '小时';
+            updateGroupSplit();
         }
 
         // 更新设备组工时分配
         function updateGroupSplit() {
-            const production = parseFloat(document.getElementById('groupProductionTime').value) || 0;
+            const total = parseFloat(document.getElementById('groupDeviceUsageTime').value) || 0;
             const rd = parseFloat(document.getElementById('groupRDTime').value) || 0;
-            const total = production + rd;
+            const production = total - rd;
             const pct = total > 0 ? (rd / total * 100).toFixed(0) : 0;
-            
-            document.getElementById('groupProductionHoursDisplay').textContent = production + '小时';
+
             document.getElementById('groupRDHoursDisplay').textContent = rd + '小时';
             document.getElementById('groupTotalHoursDisplay').textContent = total + '小时';
-            document.getElementById('groupRDPctDisplay').textContent = pct + '%';
+            document.getElementById('groupRDPctDisplay').textContent = rd + '小时';
+            document.getElementById('groupProductionHoursDisplay').textContent = production + '小时';
+
+            const warning = document.getElementById('equipmentWarning');
+            const groupId = document.getElementById('deviceGroupSelect').value;
+            const group = deviceGroups[groupId];
             
-            if (pct > 15) {
-                showWarning('该设备组为生产+研发共用设备，研发工时占比不能超过年度总工时的15%（当前为' + pct + '%）');
+            if (group && group.type === '生产+研发共用') {
+                if (pct > 15) {
+                    showWarning('该设备组为生产+研发共用设备，研发工时占比不能超过年度总工时的15%（当前为' + pct + '%）');
+                } else {
+                    warning.style.display = 'none';
+                }
+            } else {
+                warning.style.display = 'none';
             }
         }
 
@@ -481,20 +484,21 @@
         function updateSingleHours() {
             const hours = document.getElementById('singleDeviceUsageTime').value;
             document.getElementById('singleHoursDisplay').textContent = hours + '小时';
+            updateSingleSplit();
         }
 
         // 更新单独设备工时分配
         function updateSingleSplit() {
-            const production = parseFloat(document.getElementById('singleProductionTime').value) || 0;
+            const total = parseFloat(document.getElementById('singleDeviceUsageTime').value) || 0;
             const rd = parseFloat(document.getElementById('singleRDTime').value) || 0;
-            const total = production + rd;
+            const production = total - rd;
             const pct = total > 0 ? (rd / total * 100).toFixed(0) : 0;
-            
-            document.getElementById('singleProductionHoursDisplay').textContent = production + '小时';
+
             document.getElementById('singleRDHoursDisplay').textContent = rd + '小时';
             document.getElementById('singleTotalHoursDisplay').textContent = total + '小时';
-            document.getElementById('singleRDPctDisplay').textContent = pct + '%';
-            
+            document.getElementById('singleRDPctDisplay').textContent = rd + '小时';
+            document.getElementById('singleProductionHoursDisplay').textContent = production + '小时';
+
             if (pct > 15) {
                 showWarning('该设备为生产+研发共用设备，研发工时占比不能超过年度总工时的15%（当前为' + pct + '%）');
             }
