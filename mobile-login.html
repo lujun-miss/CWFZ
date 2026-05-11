@@ -212,13 +212,13 @@
             }, 1500);
         }
 
-        // 检查是否已登录
+        // 检查是否已登录 - 已登录则跳转，未登录则显示登录页面
         window.onload = function() {
-            const isLoggedIn = localStorage.getItem('miniprogram_logged_in');
-            if (isLoggedIn === 'true') {
-                // 已登录，直接跳转
-                window.location.href = 'mobile-checkin.html';
-            }
+            // 进入登录页面时，清除之前的登录状态，强制用户重新登录
+            localStorage.removeItem('miniprogram_logged_in');
+            localStorage.removeItem('miniprogram_user_tenant');
+            localStorage.removeItem('miniprogram_user_account');
+            // 未登录时，什么都不做，显示登录页面让用户输入密码
         };
     </script>
 </body>
