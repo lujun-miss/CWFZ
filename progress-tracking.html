@@ -94,7 +94,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                            <!-- 导航菜单 -->
+                                                                                                                                                                                                                        <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -216,6 +216,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
                                     <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -476,11 +482,6 @@
                 <!-- 页面标题 -->
                 <div class="mb-6">
                     <h1 class="text-2xl font-bold text-gray-800">进度跟踪</h1>
-                    <div class="flex space-x-4 mt-2">
-                        <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-md text-sm font-medium">首页</button>
-                        <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-md text-sm font-medium">项目管理</button>
-                        <button class="px-3 py-1 bg-blue-100 text-primary rounded-md text-sm font-medium">进度跟踪</button>
-                    </div>
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -574,12 +575,36 @@
                             </div>
                             <div class="p-4">
                                 <div class="mb-6">
-                                    <h4 class="text-sm font-medium text-gray-700 mb-2">项目阶段</h4>
+                                    <div class="flex items-center mb-2">
+                                        <h4 class="text-sm font-medium text-gray-700">项目阶段</h4>
+                                        <span class="relative group cursor-pointer ml-1 inline-block align-middle">
+                                            <i class="fa fa-question-circle text-gray-400 hover:text-gray-600 text-xs"></i>
+                                            <div class="hidden group-hover:block absolute z-50 left-0 top-full mt-1 w-72 bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-xs text-gray-600 normal-case tracking-normal font-normal">
+                                                <div class="font-medium text-gray-700 mb-2">阶段状态计算逻辑说明</div>
+                                                <div class="space-y-2">
+                                                    <div>
+                                                        <span class="font-bold text-green-600">● 已完成：</span>
+                                                        当（已完成任务数 + 已取消任务数）= 总任务数时，阶段自动判定为“已完成”。
+                                                    </div>
+                                                    <div>
+                                                        <span class="font-bold text-blue-600">● 进行中：</span>
+                                                        只要有 1 个任务处于“进行中”，或任何任务进度 > 0% 且 < 100%，阶段即为“进行中”。
+                                                    </div>
+                                                    <div>
+                                                        <span class="font-bold text-gray-600">● 未开始：</span>
+                                                        只有当除“已取消”外的所有任务均处于“待开始”且进度为 0% 时。
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 pt-2 border-t border-gray-200 text-[10px] italic text-gray-400">
+                                                    注：系统会自动排除“已取消”的任务量，不影响阶段结项。
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </div>
                                     <div class="space-y-4">
                                         <div>
                                             <div class="flex justify-between text-xs text-gray-600 mb-1">
                                                 <span>立项申请 (1/1)</span>
-                                                <span>100%</span>
                                             </div>
                                             <div class="flex space-x-1">
                                                 <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded cursor-not-allowed">未开始(0)</span>
@@ -592,7 +617,6 @@
                                         <div>
                                             <div class="flex justify-between text-xs text-gray-600 mb-1">
                                                 <span>研发设计 (1/1)</span>
-                                                <span>100%</span>
                                             </div>
                                             <div class="flex space-x-1">
                                                 <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded cursor-not-allowed">未开始(0)</span>
@@ -605,7 +629,6 @@
                                         <div>
                                             <div class="flex justify-between text-xs text-gray-600 mb-1">
                                                 <span>小试阶段 (0/1)</span>
-                                                <span>0%</span>
                                             </div>
                                             <div class="flex space-x-1">
                                                 <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded cursor-not-allowed">未开始(0)</span>
@@ -618,7 +641,6 @@
                                         <div>
                                             <div class="flex justify-between text-xs text-gray-600 mb-1">
                                                 <span>中试阶段 (0/1)</span>
-                                                <span>0%</span>
                                             </div>
                                             <div class="flex space-x-1">
                                                 <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded cursor-pointer hover:bg-gray-200" onclick="showTasks('RD01', '中试阶段', 'not_started')">未开始(1)</span>
@@ -631,7 +653,6 @@
                                         <div>
                                             <div class="flex justify-between text-xs text-gray-600 mb-1">
                                                 <span>产品评审 (0/1)</span>
-                                                <span>0%</span>
                                             </div>
                                             <div class="flex space-x-1">
                                                 <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded cursor-pointer hover:bg-gray-200" onclick="showTasks('RD01', '产品评审', 'not_started')">未开始(1)</span>
@@ -644,7 +665,6 @@
                                         <div>
                                             <div class="flex justify-between text-xs text-gray-600 mb-1">
                                                 <span>项目结项 (0/1)</span>
-                                                <span>0%</span>
                                             </div>
                                             <div class="flex space-x-1">
                                                 <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded cursor-pointer hover:bg-gray-200" onclick="showTasks('RD01', '项目结项', 'not_started')">未开始(1)</span>
@@ -656,8 +676,26 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-
+                                <div class="mt-6">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-2">项目交付物</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center text-sm">
+                                            <i class="fa fa-check-circle text-green-500 mr-2 w-4"></i>
+                                            <span class="text-gray-700">立项报告</span>
+                                            <span class="ml-auto text-xs text-gray-500">1/1</span>
+                                        </div>
+                                        <div class="flex items-center text-sm">
+                                            <i class="fa fa-check-circle text-green-500 mr-2 w-4"></i>
+                                            <span class="text-gray-700">技术规格书</span>
+                                            <span class="ml-auto text-xs text-gray-500">1/1</span>
+                                        </div>
+                                        <div class="flex items-center text-sm">
+                                            <i class="fa fa-circle-o text-gray-400 mr-2 w-4"></i>
+                                            <span class="text-gray-700">测试报告</span>
+                                            <span class="ml-auto text-xs text-gray-500">0/1</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

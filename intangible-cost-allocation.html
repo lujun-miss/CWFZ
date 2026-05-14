@@ -74,7 +74,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                            <!-- 导航菜单 -->
+                                                                                                                                                                                                                        <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -196,6 +196,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
                                     <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -451,7 +457,7 @@
                             <i class="fa fa-bar-chart mr-2"></i>无形资产工时分配
                         </button>
                         <button id="tab-allocation" class="tab-button px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300" onclick="switchTab('allocation')">
-                            <i class="fa fa-calculator mr-2"></i>无形资产摊销归集
+                            <i class="fa fa-calculator mr-2"></i>费用归集
                         </button>
                     </nav>
                 </div>
@@ -460,13 +466,8 @@
                 
                 <!-- 无形资产工时记录 -->
                 <div id="content-work-hour" class="p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-semibold text-gray-800">无形资产工时记录</h2>
+                    <div class="flex justify-end items-center mb-6">
                         <div class="flex space-x-2">
-                            <button class="btn-primary flex items-center" onclick="receiveIntangibleWorkHour()">
-                                <i class="fa fa-download mr-2"></i>
-                                接收小程序数据
-                            </button>
                             <button class="btn-primary flex items-center" onclick="window.location.href='mobile-login.html'">
                                 <i class="fa fa-mobile mr-2"></i>
                                 小程序填报
@@ -489,8 +490,12 @@
                     <div class="bg-white rounded-lg shadow p-4 mb-6">
                         <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                             <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">月份</label>
+                                <input type="month" id="filterMonthWorkHour" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            </div>
+                            <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">无形资产</label>
-                                <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <select id="filterAssetWorkHour" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                     <option value="all">全部无形资产</option>
                                     <option value="ia1">研发设计软件A</option>
                                     <option value="ia2">专利技术B</option>
@@ -507,12 +512,11 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">归集状态</label>
                                 <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                     <option value="all">全部状态</option>
-                                    <option value="pending">待审核</option>
-                                    <option value="approved">已审核</option>
-                                    <option value="rejected">已拒绝</option>
+                                    <option value="allocated">已归集</option>
+                                    <option value="unallocated">未归集</option>
                                 </select>
                             </div>
                             <div class="flex items-end">
@@ -526,7 +530,7 @@
 
                     <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
                         <div class="p-4 border-b border-gray-200">
-                            <h3 class="font-medium text-gray-800">无形资产工时记录列表</h3>
+                            <h3 class="font-medium text-gray-800">工时记录明细列表</h3>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
@@ -540,7 +544,7 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">提交时间</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">使用时长(小时)</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工作内容</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">审核状态</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集状态</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                                     </tr>
                                 </thead>
@@ -571,10 +575,9 @@
                                             <div class="text-sm text-gray-900">传感器结构设计</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">待审核</span>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button class="text-primary hover:text-blue-700 mr-3" onclick="auditIntangibleWorkHour(this)">审核</button>
                                             <button class="text-primary hover:text-blue-700 mr-3">编辑</button>
                                             <button class="text-danger hover:text-red-700">删除</button>
                                         </td>
@@ -605,11 +608,11 @@
                                             <div class="text-sm text-gray-900">控制系统算法研究</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已审核</span>
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已归集</span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button class="text-primary hover:text-blue-700 mr-3">编辑</button>
-                                            <button class="text-danger hover:text-red-700">删除</button>
+                                            <button class="text-gray-400 cursor-not-allowed mr-3" disabled title="已归集费用不允许编辑">编辑</button>
+                                            <button class="text-gray-400 cursor-not-allowed" disabled title="已归集费用不允许删除">删除</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -620,11 +623,10 @@
 
                 <!-- 无形资产工时分配 -->
                 <div id="content-work-hour-allocation" class="p-6 hidden">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-semibold text-gray-800">无形资产工时分配</h2>
+                    <div class="flex justify-end items-center mb-6">
                         <div class="flex space-x-2">
-                            <button class="btn-primary flex items-center">
-                                <i class="fa fa-refresh mr-2"></i>同步数据
+                            <button class="btn-primary flex items-center" onclick="openIntegrateModal()">
+                                <i class="fa fa-database mr-2"></i>月度工时分配整合
                             </button>
                             <button class="btn-outline flex items-center">
                                 <i class="fa fa-download mr-2"></i>导出
@@ -667,6 +669,7 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">研发工时</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">无形资产总工时</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">研发占比</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集状态</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                                     </tr>
                                 </thead>
@@ -692,6 +695,9 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-bold text-gray-600">75.0%</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已归集</span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
                                             <button class="text-primary hover:text-blue-700" onclick="openDetailModal('设计软件A', 'IA-001')">查看明细</button>
@@ -731,6 +737,9 @@
                                             <div class="text-sm font-bold text-gray-600">75.0%</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
                                             <button class="text-primary hover:text-blue-700" onclick="openDetailModal('专利技术B', 'IA-002')">查看明细</button>
                                         </td>
                                     </tr>
@@ -755,6 +764,9 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-bold text-gray-600">75.0%</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
                                             <button class="text-primary hover:text-blue-700" onclick="openDetailModal('数据库C', 'IA-003')">查看明细</button>
@@ -858,6 +870,7 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集项目</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集金额</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集时间</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集状态</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作人</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                                     </tr>
@@ -902,14 +915,6 @@
             </div>
             
             <div class="space-y-4">
-                <!-- 归集类型 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">归集类型</label>
-                    <select id="allocationType" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option value="intangible">无形资产</option>
-                    </select>
-                </div>
-
                 <!-- 选择归集项目 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">选择归集项目</label>
@@ -930,9 +935,8 @@
                 <!-- 归集方式 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">归集方式</label>
-                    <select id="allocationMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option value="auto">自动分配（按无形资产工时）</option>
-                        <option value="manual">手动分配</option>
+                    <select id="allocationMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed" disabled>
+                        <option value="auto" selected>自动分配（按无形资产工时）</option>
                     </select>
                 </div>
             </div>
@@ -1100,6 +1104,22 @@
 
                 const row = document.createElement('tr');
                 row.className = 'table-row-hover';
+                
+                // 模拟第1条记录已被年度账锁定
+                const isLockedByYear = item.id === 1;
+                const statusHtml = isLockedByYear ? 
+                    `<div class="flex flex-col space-y-1">
+                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 w-fit">已锁定</span>
+                        <span class="px-2 py-1 text-[10px] leading-3 rounded-full bg-blue-100 text-blue-800 w-fit">已关联年度辅助账</span>
+                    </div>` :
+                    `<span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已归集</span>`;
+
+                const actionHtml = isLockedByYear ?
+                    `<a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-2" onclick="viewDetail(${item.id})">查看</a>
+                     <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="请先撤回年度辅助账后再操作" onclick="reallocate(${item.id})">撤回重算</a>` :
+                    `<a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-2" onclick="viewDetail(${item.id})">查看</a>
+                     <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="reallocate(${item.id})">撤回重算</a>`;
+
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-900">${item.assetType}</div>
@@ -1110,9 +1130,12 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">¥ ${item.amount.toLocaleString()}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.allocationTime}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        ${statusHtml}
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.operator}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(${item.id})">查看详情</a>
+                        ${actionHtml}
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -1139,6 +1162,52 @@
             document.getElementById('filterProject').value = '';
             document.getElementById('filterAsset').value = '';
             calculateAllocation('2026-04');
+        }
+
+        // 撤回重算
+        function reallocate(id) {
+            const item = allocationRecords.find(r => r.id === id);
+            if (!item) return;
+
+            // 模拟年度锁定校验
+            if (id === 1) {
+                const lockMsg = `【操作拦截：年度数据已锁定】\n\n` +
+                              `检测到 [${item.month}] 属于已结账年度。\n\n` +
+                              `原因：\n` +
+                              `该年度已生成“年度研发费用辅助账套表”，为了保证年度总账与月度明细的一致性，系统已对该年度数据执行了“强锁定”。\n\n` +
+                              `如何撤回：\n` +
+                              `若确实需要修改，请先前往 [多口径报表 -> 账套表生成] 模块，点击“查看生成记录”，撤回对应的年度账套表。年度表撤回后，月度数据将自动解锁。`;
+                alert(lockMsg);
+                return;
+            }
+
+            if (confirm(`确定要撤回 ${item.month} 的 [${item.project}] 无形资产摊销归集记录吗？\n撤回后，该月份的相关费用将返回待归集状态。`)) {
+                // 模拟撤回交互效果
+                const rows = document.querySelectorAll('#allocationTableBody tr');
+                rows.forEach(row => {
+                    // 这里需要一个唯一标识，简单模拟：检查归集金额和项目是否匹配
+                    const projectCell = row.querySelector('td:nth-child(3)');
+                    const amountCell = row.querySelector('td:nth-child(4)');
+                    if (projectCell && projectCell.textContent.trim() === item.project && 
+                        amountCell && amountCell.textContent.includes(item.amount.toLocaleString())) {
+                        
+                        // 1. 修改状态显示
+                        const statusCell = row.querySelector('td:nth-last-child(3)');
+                        statusCell.innerHTML = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">已撤回</span>';
+                        
+                        // 2. 弱化整行显示
+                        row.classList.add('opacity-50');
+                        
+                        // 3. 修改操作按钮
+                        const actionCell = row.querySelector('td:last-child');
+                        actionCell.innerHTML = `
+                            <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed mr-2" title="记录已撤回">查看</a>
+                            <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700 font-medium" onclick="openAllocationModal()">重新归集</a>
+                        `;
+                    }
+                });
+                alert('已成功撤回。相关费用已解锁，您现在可以修正原始数据后通过“开始归集”重新执行。');
+            }
         }
 
         // 打开归集模态框
@@ -1248,6 +1317,44 @@
             document.getElementById('intangibleDetailModal').classList.add('hidden');
         }
 
+        // 打开数据整合模态框
+        function openIntegrateModal() {
+            // 设置默认月份为当前月份
+            const now = new Date();
+            const currentMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+            document.getElementById('integrateStartMonth').value = currentMonth;
+            
+            // 显示模态框
+            document.getElementById('integrateModal').classList.remove('hidden');
+        }
+        
+        // 关闭数据整合模态框
+        function closeIntegrateModal() {
+            document.getElementById('integrateModal').classList.add('hidden');
+        }
+        
+        // 执行数据整合
+        function executeIntegration() {
+            const month = document.getElementById('integrateStartMonth').value;
+            const updateExisting = document.getElementById('updateExisting').checked;
+            
+            if (!month) {
+                alert('请选择日期范围');
+                return;
+            }
+            
+            // 显示整合过程提示
+            alert('正在从“无形资产摊销表”和“无形资产工时记录”整合数据...');
+            
+            // 模拟整合过程
+            setTimeout(() => {
+                alert(`数据整合完成！\n\n整合月份: ${month}\n计算逻辑: 按工时记录占比分摊月摊销额\n更新现有数据: ${updateExisting ? '是' : '否'}`);
+                closeIntegrateModal();
+                // 模拟刷新数据
+                calculateAllocation(month);
+            }, 1500);
+        }
+
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             calculateAllocation('2026-04');
@@ -1295,6 +1402,68 @@
                         <span class="text-sm text-gray-500" id="paginationInfo">显示 1 至 10 条，共 16 条记录</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据整合模态框 -->
+    <div id="integrateModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
+            <!-- 模态框标题 -->
+            <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+                <h3 class="text-lg font-medium text-gray-900">数据整合</h3>
+                <button onclick="closeIntegrateModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 模态框内容 -->
+            <div class="px-6 py-4">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">选择日期范围</label>
+                    <div class="flex space-x-2">
+                        <input type="month" id="integrateStartMonth" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">选择数据源</label>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="includeAmortization" class="mr-2" checked disabled>
+                            <label for="includeAmortization">无形资产摊销表 (intangible-amortization.html)</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="includeWorkHourRecord" class="mr-2" checked disabled>
+                            <label for="includeWorkHourRecord">无形资产工时记录 (intangible-cost-allocation.html)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">整合选项</label>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="calculateRatio" class="mr-2" checked disabled>
+                            <label for="calculateRatio">自动计算工时占比</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="updateExisting" class="mr-2" checked>
+                            <label for="updateExisting">更新现有数据</label>
+                            <span class="text-xs text-gray-500 ml-2">(已归集数据不可更新)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 模态框底部 -->
+            <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-2 border-t border-gray-200">
+                <button onclick="closeIntegrateModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    取消
+                </button>
+                <button onclick="executeIntegration()" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600">
+                    执行整合
+                </button>
             </div>
         </div>
     </div>

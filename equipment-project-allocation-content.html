@@ -51,12 +51,41 @@
                         <option value="proj2">工业机器人控制系统</option>
                         <option value="proj3">新能源材料研究</option>
                     </select>
-                    <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="equipmentGroupFilter">
-                        <option value="all">全部设备组</option>
-                        <option value="line1">传感器生产线</option>
-                        <option value="line2">机器人装配线</option>
-                        <option value="line3">材料检测线</option>
-                    </select>
+                    <div class="relative" id="equipmentFilterContainer">
+                        <div id="equipmentDropdown" class="w-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer bg-white flex items-center justify-between" onclick="toggleEquipmentDropdown()">
+                            <span id="equipmentSelectedText" class="text-gray-500 text-sm">选择设备</span>
+                            <i class="fa fa-chevron-down text-gray-400"></i>
+                        </div>
+                        <div id="equipmentDropdownMenu" class="hidden absolute z-50 w-40 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                            <div class="p-2">
+                                <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" id="selectAllEquipment" class="mr-2 rounded border-gray-300 text-primary focus:ring-primary" onchange="selectAllEquipment()">
+                                    <span class="text-sm text-gray-700">全选</span>
+                                </label>
+                                <div class="border-t border-gray-200 my-2"></div>
+                                <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" value="eq1" class="equipment-checkbox mr-2 rounded border-gray-300 text-primary focus:ring-primary" onchange="onEquipmentSelectionChange()">
+                                    <span class="text-sm text-gray-700">数控机床</span>
+                                </label>
+                                <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" value="eq2" class="equipment-checkbox mr-2 rounded border-gray-300 text-primary focus:ring-primary" onchange="onEquipmentSelectionChange()">
+                                    <span class="text-sm text-gray-700">3D打印机</span>
+                                </label>
+                                <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" value="eq3" class="equipment-checkbox mr-2 rounded border-gray-300 text-primary focus:ring-primary" onchange="onEquipmentSelectionChange()">
+                                    <span class="text-sm text-gray-700">光谱分析仪</span>
+                                </label>
+                                <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" value="eq4" class="equipment-checkbox mr-2 rounded border-gray-300 text-primary focus:ring-primary" onchange="onEquipmentSelectionChange()">
+                                    <span class="text-sm text-gray-700">测试设备</span>
+                                </label>
+                                <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" value="eq5" class="equipment-checkbox mr-2 rounded border-gray-300 text-primary focus:ring-primary" onchange="onEquipmentSelectionChange()">
+                                    <span class="text-sm text-gray-700">服务器</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
                     <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="timeRangeType">
                         <option value="month">按月</option>
@@ -67,8 +96,8 @@
                     <button class="btn-primary">
                         <i class="fa fa-search mr-2"></i>查询
                     </button>
-                    <button class="btn-primary flex items-center">
-                        <i class="fa fa-refresh mr-2"></i>同步数据
+                    <button class="btn-primary flex items-center" onclick="openEquipmentIntegrateModal()">
+                        <i class="fa fa-database mr-2"></i>月度设备工时分配整合
                     </button>
                     <button class="btn-outline flex items-center">
                         <i class="fa fa-download mr-2"></i>导出
@@ -101,6 +130,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">研发工时</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">设备总工时</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">研发占比</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集状态</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                         </tr>
                     </thead>
@@ -126,6 +156,9 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-bold text-red-600">14.3%</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已归集</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
                                         <button class="text-primary hover:text-blue-700" onclick="viewDetail()">查看明细</button>
@@ -168,6 +201,9 @@
                                         <div class="text-sm font-bold text-red-600">20.0%</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已归集</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         <button class="text-primary hover:text-blue-700" onclick="viewDetail()">查看明细</button>
                                     </td>
                                 </tr>
@@ -192,6 +228,9 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-bold text-red-600">11.7%</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
                                         <button class="text-primary hover:text-blue-700" onclick="viewDetail()">查看明细</button>
@@ -261,46 +300,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
-                    <div class="space-y-2">
-                        <h5 class="text-sm font-medium text-gray-700">基本信息</h5>
-                        <div class="flex justify-between">
-                            <span class="text-sm text-gray-500">设备类型:</span>
-                            <span class="text-sm text-gray-900">数控设备</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-sm text-gray-500">所属设备组:</span>
-                            <span class="text-sm text-gray-900">传感器生产线</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-sm text-gray-500">购买日期:</span>
-                            <span class="text-sm text-gray-900">2025-06-15</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-sm text-gray-500">设备状态:</span>
-                            <span class="text-sm text-green-600 font-medium">正常运行</span>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <h5 class="text-sm font-medium text-gray-700">技术参数</h5>
-                        <div class="flex justify-between">
-                            <span class="text-sm text-gray-500">型号:</span>
-                            <span class="text-sm text-gray-900">CNC-2000</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-sm text-gray-500">制造商:</span>
-                            <span class="text-sm text-gray-900">西门子</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-sm text-gray-500">功率:</span>
-                            <span class="text-sm text-gray-900">15kW</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-sm text-gray-500">精度:</span>
-                            <span class="text-sm text-gray-900">+0.01mm</span>
-                        </div>
-                    </div>
-                </div>
+
 
                 <div>
                     <h5 class="text-lg font-medium text-gray-800 mb-4">项目使用记录</h5>
@@ -309,32 +309,32 @@
                             <tr>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">日期</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">项目名称</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">使用工时</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">研发工时</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">生产工时</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">操作人</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">状态</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <tr>
                                 <td class="px-4 py-2 text-sm text-gray-900">2026-04-20</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">智能传感器研发</td>
-                                <td class="px-4 py-2 text-sm text-gray-900">8h</td>
+                                <td class="px-4 py-2 text-sm text-gray-900">6h</td>
+                                <td class="px-4 py-2 text-sm text-gray-900">2h</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">张三</td>
-                                <td class="px-4 py-2 text-sm text-green-600">已完成</td>
                             </tr>
                             <tr>
                                 <td class="px-4 py-2 text-sm text-gray-900">2026-04-20</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">智能传感器研发</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">8h</td>
+                                <td class="px-4 py-2 text-sm text-gray-900">0h</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">张三</td>
-                                <td class="px-4 py-2 text-sm text-green-600">已完成</td>
                             </tr>
                             <tr>
                                 <td class="px-4 py-2 text-sm text-gray-900">2026-04-19</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">智能传感器研发</td>
-                                <td class="px-4 py-2 text-sm text-gray-900">10h</td>
+                                <td class="px-4 py-2 text-sm text-gray-900">7h</td>
+                                <td class="px-4 py-2 text-sm text-gray-900">3h</td>
                                 <td class="px-4 py-2 text-sm text-gray-900">李四</td>
-                                <td class="px-4 py-2 text-sm text-green-600">已完成</td>
                             </tr>
                         </tbody>
                     </table>
@@ -353,6 +353,68 @@
             </div>
             <div class="p-4 border-t border-gray-200 flex justify-end">
                 <button onclick="closeDetailModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设备工时数据整合弹窗 -->
+    <div id="equipmentIntegrateModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
+            <!-- 模态框标题 -->
+            <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+                <h3 class="text-lg font-medium text-gray-900">数据整合</h3>
+                <button onclick="closeEquipmentIntegrateModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- 模态框内容 -->
+            <div class="px-6 py-4">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">选择日期范围</label>
+                    <div class="flex space-x-2">
+                        <input type="month" id="equipmentIntegrateMonth" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">选择数据源</label>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="includeEquipmentAttendance" class="mr-2" checked disabled>
+                            <label for="includeEquipmentAttendance">设备打卡记录 (equipment-attendance.html)</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="includeEquipmentWorkHour" class="mr-2" checked disabled>
+                            <label for="includeEquipmentWorkHour">设备工时记录 (equipment-work-hour-record.html)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">整合选项</label>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="equipmentCalculateRatio" class="mr-2" checked disabled>
+                            <label for="equipmentCalculateRatio">自动计算设备工时占比</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="equipmentUpdateExisting" class="mr-2" checked>
+                            <label for="equipmentUpdateExisting">更新现有数据</label>
+                            <span class="text-xs text-gray-500 ml-2">(已归集数据不可更新)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 模态框底部 -->
+            <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-2 border-t border-gray-200">
+                <button onclick="closeEquipmentIntegrateModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    取消
+                </button>
+                <button onclick="executeEquipmentIntegration()" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600">
+                    执行整合
+                </button>
             </div>
         </div>
     </div>
@@ -379,6 +441,89 @@
             document.getElementById('detailModal').classList.add('hidden');
             document.getElementById('detailModal').classList.remove('flex');
         }
+
+        // 打开设备工时整合弹窗
+        function openEquipmentIntegrateModal() {
+            // 设置默认月份为当前月份
+            const now = new Date();
+            const currentMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+            document.getElementById('equipmentIntegrateMonth').value = currentMonth;
+            
+            // 显示模态框
+            document.getElementById('equipmentIntegrateModal').classList.remove('hidden');
+        }
+
+        // 关闭设备工时整合弹窗
+        function closeEquipmentIntegrateModal() {
+            document.getElementById('equipmentIntegrateModal').classList.add('hidden');
+        }
+
+        // 执行设备工时数据整合
+        function executeEquipmentIntegration() {
+            const month = document.getElementById('equipmentIntegrateMonth').value;
+            const updateExisting = document.getElementById('equipmentUpdateExisting').checked;
+            
+            if (!month) {
+                alert('请选择日期范围');
+                return;
+            }
+            
+            // 模拟整合过程
+            alert(`已成功整合 ${month} 月份的设备工时数据！\n\n数据源：\n- 设备打卡记录\n- 设备工时记录\n\n更新现有数据：${updateExisting ? '是' : '否'}`);
+            
+            // 关闭弹窗
+            closeEquipmentIntegrateModal();
+            
+            // 刷新页面数据
+            location.reload();
+        }
+
+        // 切换设备下拉框显示/隐藏
+        function toggleEquipmentDropdown() {
+            const dropdownMenu = document.getElementById('equipmentDropdownMenu');
+            dropdownMenu.classList.toggle('hidden');
+        }
+
+        // 全选/取消全选设备
+        function selectAllEquipment() {
+            const checkboxes = document.querySelectorAll('.equipment-checkbox');
+            const selectAll = document.getElementById('selectAllEquipment');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+            updateEquipmentSelectionText();
+        }
+
+        // 更新设备选择文本
+        function onEquipmentSelectionChange() {
+            updateEquipmentSelectionText();
+        }
+
+        // 更新选择文本显示
+        function updateEquipmentSelectionText() {
+            const checkboxes = document.querySelectorAll('.equipment-checkbox:checked');
+            const selectedText = document.getElementById('equipmentSelectedText');
+            
+            if (checkboxes.length === 0) {
+                selectedText.textContent = '选择设备';
+                selectedText.className = 'text-gray-500 text-sm';
+            } else if (checkboxes.length === 5) {
+                selectedText.textContent = '全部设备';
+                selectedText.className = 'text-gray-700 text-sm';
+            } else {
+                selectedText.textContent = `已选 ${checkboxes.length} 项`;
+                selectedText.className = 'text-gray-700 text-sm';
+            }
+        }
+
+        // 点击外部关闭下拉框
+        document.addEventListener('click', function(event) {
+            const container = document.getElementById('equipmentFilterContainer');
+            if (container && !container.contains(event.target)) {
+                const dropdownMenu = document.getElementById('equipmentDropdownMenu');
+                dropdownMenu.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>

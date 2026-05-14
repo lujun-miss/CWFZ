@@ -123,6 +123,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>能源单价管理</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-group-management.html')">
                                     <i class="fa fa-th-large w-6"></i>
                                     <span>设备组管理</span>

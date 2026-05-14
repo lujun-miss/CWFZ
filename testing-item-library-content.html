@@ -97,27 +97,36 @@
             background-color: rgba(59, 130, 246, 0.1);
         }
         .parent-iframe .left-sidebar,
-        .parent-iframe .page-header {
+        .parent-iframe .page-header,
+        .parent-iframe .page-header-section {
             display: none !important;
         }
         .parent-iframe main,
         .parent-iframe .flex-1 {
             margin-left: 0 !important;
-            padding: 1rem !important;
+            padding: 0 !important;
+        }
+        .parent-iframe .content-wrapper {
+            padding: 1.5rem !important;
+        }
+        .parent-iframe .max-w-7xl {
+            max-width: 100% !important;
+            width: 100% !important;
         }
     </style>
 </head>
 <body class="bg-gray-50">
     <div class="flex h-screen overflow-hidden">
         <!-- 主内容区 -->
-        <main class="flex-1 overflow-y-auto p-6">
+        <main class="flex-1 overflow-y-auto">
             <!-- 页面标题 -->
-            <div class="mb-6">
+            <div class="page-header-section p-6 border-b border-gray-200 bg-white mb-6">
                 <h1 class="text-2xl font-bold text-gray-800">检验项目档案管理</h1>
                 <p class="text-gray-500 text-sm mt-1">维护检验项目信息，包括检验项目名称、收费标准、检测机构等</p>
             </div>
 
-            <!-- 操作按钮区 -->
+            <div class="content-wrapper px-6 pb-6">
+                <!-- 操作按钮区 -->
             <div class="flex justify-between items-center mb-4">
                 <div class="flex space-x-2">
                     <button onclick="openAddModal()" class="bg-primary text-white px-4 py-2 rounded-md text-sm hover:bg-blue-600 transition-colors">
@@ -125,11 +134,6 @@
                     </button>
                     <button onclick="openImportModal()" class="bg-green-500 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600 transition-colors">
                         <i class="fa fa-upload mr-1"></i>批量导入
-                    </button>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="exportTemplate()" class="bg-gray-500 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-600 transition-colors">
-                        <i class="fa fa-download mr-1"></i>下载导入模板
                     </button>
                 </div>
             </div>
@@ -141,19 +145,6 @@
                     <div class="flex items-center space-x-2">
                         <span class="text-sm text-gray-700">检验项目名称：</span>
                         <input type="text" id="filterName" placeholder="请输入检验项目名称" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary w-48">
-                    </div>
-
-
-
-                    <!-- 状态 -->
-                    <div class="flex items-center space-x-2">
-                        <span class="text-sm text-gray-700">状态：</span>
-                        <select id="filterStatus" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="">全部</option>
-                            <option value="待审核">待审核</option>
-                            <option value="已通过">已通过</option>
-                            <option value="已驳回">已驳回</option>
-                        </select>
                     </div>
 
                     <!-- 操作按钮 -->
@@ -190,7 +181,7 @@
                                     总金额
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    状态
+                                    归集状态
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     操作
@@ -205,12 +196,12 @@
                                 <td class="px-6 py-4 text-sm text-gray-900">¥ 333.33<br>¥ 333.33<br>¥ 333.34</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 1,000.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已通过</span>
+                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('JY001')">查看</a>
-                                    <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="editRecord('JY001')">编辑</a>
-                                    <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="deleteRecord('JY001')">删除</a>
+                                    <span class="text-gray-400 mr-3 cursor-not-allowed" title="费用已归集，不允许编辑">编辑</span>
+                                    <span class="text-gray-400 cursor-not-allowed" title="费用已归集，不允许删除">删除</span>
                                 </td>
                             </tr>
                             <tr class="table-row-hover">
@@ -220,12 +211,12 @@
                                 <td class="px-6 py-4 text-sm text-gray-900">¥ 500.00<br>¥ 500.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 1,000.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">待审核</span>
+                                    <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">未归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('JY002')">查看</a>
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="editRecord('JY002')">编辑</a>
-                                    <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="auditRecord('JY002')">审核</a>
+                                    <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="deleteRecord('JY002')">删除</a>
                                 </td>
                             </tr>
                             <tr class="table-row-hover">
@@ -235,12 +226,12 @@
                                 <td class="px-6 py-4 text-sm text-gray-900">¥ 4,000.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 4,000.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已通过</span>
+                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('JY003')">查看</a>
-                                    <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="editRecord('JY003')">编辑</a>
-                                    <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="deleteRecord('JY003')">删除</a>
+                                    <span class="text-gray-400 mr-3 cursor-not-allowed" title="费用已归集，不允许编辑">编辑</span>
+                                    <span class="text-gray-400 cursor-not-allowed" title="费用已归集，不允许删除">删除</span>
                                 </td>
                             </tr>
                             <tr class="table-row-hover">
@@ -250,12 +241,12 @@
                                 <td class="px-6 py-4 text-sm text-gray-900">¥ 1,050.00<br>¥ 1,050.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 2,100.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已通过</span>
+                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">已归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('JY004')">查看</a>
-                                    <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="editRecord('JY004')">编辑</a>
-                                    <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="deleteRecord('JY004')">删除</a>
+                                    <span class="text-gray-400 mr-3 cursor-not-allowed" title="费用已归集，不允许编辑">编辑</span>
+                                    <span class="text-gray-400 cursor-not-allowed" title="费用已归集，不允许删除">删除</span>
                                 </td>
                             </tr>
                             <tr class="table-row-hover">
@@ -265,7 +256,7 @@
                                 <td class="px-6 py-4 text-sm text-gray-900">¥ 666.67<br>¥ 666.67<br>¥ 666.66</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 2,000.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">已驳回</span>
+                                    <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">未归集</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="javascript:void(0)" class="text-primary hover:text-blue-700 mr-3" onclick="viewDetail('JY005')">查看</a>
@@ -847,6 +838,11 @@
 
         function exportTemplate() {
             alert('下载导入模板功能开发中');
+        }
+
+        // 检测是否在 iframe 中
+        if (window.self !== window.parent) {
+            document.body.classList.add('parent-iframe');
         }
     </script>
 </body>

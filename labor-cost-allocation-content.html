@@ -37,10 +37,10 @@
                             <span class="text-sm text-gray-700">项目名称：</span>
                             <select id="filterProject" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
                                 <option value="">全部项目</option>
-                                <option value="智能传感器研发">智能传感器研发</option>
-                                <option value="工业机器人控制系统">工业机器人控制系统</option>
-                                <option value="新能源材料研究">新能源材料研究</option>
-                                <option value="高精度数控机床">高精度数控机床</option>
+                                <option value="智能传感器研发">智能传感器研发 (进行中)</option>
+                                <option value="工业机器人控制系统">工业机器人控制系统 (已暂停)</option>
+                                <option value="新能源材料研究">新能源材料研究 (进行中)</option>
+                                <option value="高精度数控机床">高精度数控机床 (已完成)</option>
                             </select>
                         </div>
 
@@ -102,6 +102,9 @@
                                         操作人
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        归集状态
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         操作
                                     </th>
                                 </tr>
@@ -110,33 +113,67 @@
                                 <tr class="table-row-hover">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">人工费归集</div>
+                                        <div class="text-sm font-medium text-blue-600">人工费-应发工资</div>
+                                        <div class="text-[10px] text-gray-400">(含奖金、劳务费)</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">研发部</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 630,000</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 450,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col space-y-1">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 w-fit">已锁定</span>
+                                            <span class="px-2 inline-flex text-[10px] leading-4 font-medium rounded-full bg-blue-100 text-blue-800 w-fit" title="该记录已生成年度辅助账，无法直接撤回">已关联年度辅助账</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                                         <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewLaborDetail(1)">查看详情</a>
+                                        <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="请先撤回年度辅助账后再操作" onclick="withdrawAllocation(1)">撤回重算</a>
                                     </td>
                                 </tr>
                                 <tr class="table-row-hover">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">人工费归集</div>
+                                        <div class="text-sm font-medium text-purple-600">人工费-社保</div>
+                                        <div class="text-[10px] text-gray-400">(单位缴纳部分)</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">技术部</div>
+                                        <div class="text-sm text-gray-900">研发部</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 494,000</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewLaborDetail(4)">查看详情</a>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 120,000</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:35</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
+                                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewLaborDetail(2)">查看详情</a>
+                                        <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(2)">撤回重算</a>
+                                    </td>
+                                </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-orange-600">人工费-公积金</div>
+                                        <div class="text-[10px] text-gray-400">(单位缴纳部分)</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-04</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">研发部</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 60,000</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:40</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
+                                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewLaborDetail(3)">查看详情</a>
+                                        <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(3)">撤回重算</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -165,8 +202,8 @@
                     </div>
                 </div>
 <!-- 归集模态框 -->
-    <div id="allocationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="z-index: 1000;">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl" style="max-height: 60vh;">
+    <div id="allocationModal" class="absolute inset-0 bg-black bg-opacity-50 hidden items-start justify-center z-50" style="padding-top: 50px;">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl sticky top-10">
             <div class="flex justify-between items-center p-4 border-b">
                 <h3 class="text-xl font-semibold text-gray-900">人工费归集</h3>
                 <button onclick="closeAllocationModal()" class="text-gray-400 hover:text-gray-500">
@@ -180,10 +217,10 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">选择归集项目</label>
                         <select id="allocationProject" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                             <option value="">请选择项目</option>
-                            <option value="智能传感器研发">智能传感器研发</option>
-                            <option value="工业机器人控制系统">工业机器人控制系统</option>
-                            <option value="新能源材料研究">新能源材料研究</option>
-                            <option value="高精度数控机床">高精度数控机床</option>
+                            <option value="智能传感器研发">智能传感器研发 (进行中)</option>
+                            <option value="工业机器人控制系统">工业机器人控制系统 (已暂停)</option>
+                            <option value="新能源材料研究">新能源材料研究 (进行中)</option>
+                            <option value="高精度数控机床">高精度数控机床 (已完成)</option>
                         </select>
                     </div>
                     <div>
@@ -200,34 +237,38 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">选择月份</label>
                         <input type="month" id="allocationMonth" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                     </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">归集类型</label>
+                        <div class="flex flex-wrap gap-4 bg-gray-50 p-3 rounded-md border border-gray-200">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" name="allocationType" value="salary" checked class="rounded text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-700">人工费-应发工资 (含奖金、劳务费)</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" name="allocationType" value="insurance" checked class="rounded text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-700">人工费-社保 (单位部分)</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" name="allocationType" value="fund" checked class="rounded text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-700">人工费-公积金 (单位部分)</span>
+                            </label>
+                        </div>
+                    </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">归集方式</label>
                         <select id="allocationMethod" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-50 cursor-not-allowed" disabled>
                             <option value="auto" selected>自动分配</option>
                         </select>
-                        <div class="form-note">注：系统将根据研发工时自动计算分配</div>
                     </div>
-                    <div class="col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">费用类型</label>
-                        <div class="flex flex-wrap gap-6">
-                            <label class="flex items-center cursor-not-allowed">
-                                <input type="checkbox" name="costType" value="salary" checked disabled class="mr-2 rounded text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-700">应发工资</span>
-                            </label>
-                            <label class="flex items-center cursor-not-allowed">
-                                <input type="checkbox" name="costType" value="insurance" checked disabled class="mr-2 rounded text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-700">五险一金（单位）</span>
-                            </label>
-                            <label class="flex items-center cursor-not-allowed">
-                                <input type="checkbox" name="costType" value="bonus" checked disabled class="mr-2 rounded text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-700">奖金</span>
-                            </label>
-                            <label class="flex items-center cursor-not-allowed">
-                                <input type="checkbox" name="costType" value="service" checked disabled class="mr-2 rounded text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-700">劳务费</span>
-                            </label>
-                        </div>
-                        <div class="form-note">注：系统将自动同步工资单中勾选的各科目明细进行归集</div>
+                    <div class="col-span-2 bg-blue-50 p-3 rounded-md border border-blue-100 space-y-2">
+                        <p class="text-[11px] text-blue-700 leading-relaxed">
+                            <i class="fa fa-info-circle mr-1"></i>
+                            <b>归集逻辑说明：</b> 系统将自动提取对应月份已审核的研发工时，计算“研发人工占比”，并同步工资单中对应的科目金额进行自动化分摊。归集后将自动生成审计备查底稿。
+                        </p>
+                        <p class="text-[11px] text-amber-600 leading-relaxed border-t border-blue-100 pt-2">
+                            <i class="fa fa-exclamation-triangle mr-1"></i>
+                            <b>重复性校验：</b> 系统严禁对同一维度的费用进行重复归集。若检测到 [2024-04] [研发部] 的 [人工费-应发工资] 等已存在归集记录且处于“已锁定”状态，系统将拦截操作。如需重算，请先执行“撤回”。
+                        </p>
                     </div>
                 </div>
             </div>
@@ -240,8 +281,8 @@
     </div>
 
     <!-- 归集详情模态框 -->
-    <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl">
+    <div id="detailModal" class="absolute inset-0 bg-black bg-opacity-50 hidden items-start justify-center z-50" style="padding-top: 50px;">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl sticky top-10">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-semibold text-gray-900">归集详情</h3>
                 <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-500">
@@ -278,21 +319,14 @@
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-4">人工费明细</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-4">归集计算明细</label>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">姓名</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">岗位</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">应发工资</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">五险一金</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">奖金</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">工时占比</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">归集费用</th>
-                                </tr>
+                            <thead class="bg-gray-50" id="detailTableHeader">
+                                <!-- 动态表头 -->
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200" id="detailTableBody">
+                                <!-- 动态内容 -->
                             </tbody>
                         </table>
                     </div>
@@ -305,31 +339,161 @@
         </div>
     </div>
 
+    <!-- 基础逻辑校验报告模态框 (原合规性诊断报告) -->
+    <div id="complianceReportModal" class="absolute inset-0 bg-black bg-opacity-50 hidden items-start justify-center z-50" style="padding-top: 50px;">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all sticky top-10">
+            <!-- 头部 -->
+            <div class="bg-gradient-to-r from-blue-700 to-blue-900 px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center text-white">
+                    <div class="bg-white bg-opacity-20 p-2 rounded-lg mr-3">
+                        <i class="fa fa-database text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">归集前基础逻辑校验报告</h3>
+                        <p class="text-xs text-blue-100 opacity-80" id="reportSubtitle">检测月份：2024-04 | 检测部门：研发部</p>
+                    </div>
+                </div>
+                <button onclick="closeComplianceReport()" class="text-white hover:text-blue-100 transition-colors">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- 内容区 -->
+            <div class="p-6 space-y-5">
+                <!-- 1. 维度唯一性校验 -->
+                <div class="flex items-start space-x-4 p-4 bg-green-50 rounded-lg border border-green-100">
+                    <div class="bg-green-100 p-2 rounded-full text-green-600">
+                        <i class="fa fa-check-circle"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-green-800">维度唯一性校验 (防重)</h4>
+                        <p class="text-xs text-green-700 mt-1">未检测到已存在的归集记录。本次操作符合会计核算的唯一性原则。</p>
+                    </div>
+                    <span class="text-xs font-bold text-green-600">通过</span>
+                </div>
+
+                <!-- 2. 工时物理上限校验 -->
+                <div class="flex items-start space-x-4 p-4 bg-amber-50 rounded-lg border border-amber-100">
+                    <div class="bg-amber-100 p-2 rounded-full text-amber-600">
+                        <i class="fa fa-clock-o"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-sm font-bold text-amber-800">工时分摊物理上限校验</h4>
+                            <span class="text-[10px] bg-amber-200 text-amber-800 px-2 py-0.5 rounded">异常风险</span>
+                        </div>
+                        <p class="text-xs text-amber-700 mt-1">检测到 2 名人员在本月度的研发工时分摊总比例超过 100%：</p>
+                        <ul class="mt-2 space-y-1">
+                            <li class="text-[11px] text-amber-900 flex items-center">
+                                <span class="w-1.5 h-1.5 bg-amber-400 rounded-full mr-2"></span>
+                                李华：当前项目(60%) + 其他已归集项目(50%) = 110% (超标)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 3. 真实性勾稽校验 (考勤) -->
+                <div class="flex items-start space-x-4 p-4 bg-amber-50 rounded-lg border border-amber-100">
+                    <div class="bg-amber-100 p-2 rounded-full text-amber-600">
+                        <i class="fa fa-vcard-o"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-amber-800">真实性“三位一体”勾稽校验</h4>
+                        <p class="text-xs text-amber-700 mt-1">检测到人员研发活动与考勤/请假记录不匹配：</p>
+                        <p class="text-[11px] text-amber-900 mt-1">
+                            王强：在 4月12日 (全天请假) 期间存在 8h 研发工时录入。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 4. 政策预判提示 (非拦截) -->
+                <div class="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                    <div class="bg-blue-100 p-2 rounded-full text-blue-600">
+                        <i class="fa fa-info-circle"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-blue-800">政策口径预判 (信息项)</h4>
+                        <p class="text-xs text-blue-700 mt-1">
+                            检测到参与分摊的人员中包含 1 名“非研发岗”人员。
+                        </p>
+                        <p class="text-[10px] text-gray-500 mt-1 italic">
+                            提示：根据合规配置，该数据将在生成“加计扣除”报表时被自动过滤，但不影响本次基础数据归集。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部操作 -->
+            <div class="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-100">
+                <p class="text-[10px] text-gray-500 max-w-[60%]">
+                    注：本次仅校验数据真实性与逻辑性。具体的政策口径（加计/高企）过滤将在报表生成环节执行。
+                </p>
+                <div class="flex space-x-3">
+                    <button onclick="closeComplianceReport()" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"> 
+                        返回修正
+                    </button>
+                    <button onclick="confirmAndLock()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 shadow-md">
+                        确认无误并锁定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        function openComplianceReport(month, dept) {
+            document.getElementById('reportSubtitle').textContent = `检测月份：${month || '2024-04'} | 检测部门：${dept || '研发部'}`;
+            const modal = document.getElementById('complianceReportModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeComplianceReport() {
+            const modal = document.getElementById('complianceReportModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function confirmAndLock() {
+            alert('合规性确认成功！归集数据已正式锁定并生成审计底稿快照。');
+            closeComplianceReport();
+        }
+
         var laborCostDetails = {
             1: {
-                type: '人工费归集',
+                type: '人工费-应发工资',
                 month: '2024-04',
                 project: '智能传感器研发',
                 department: '研发部',
-                amount: '¥ 630,000',
+                amount: '¥ 450,000',
                 operator: '张三',
                 items: [
-                    { name: '张三', position: '高级工程师', salary: 30000, insurance: 6000, bonus: 5000, hourRatio: 0.4, allocationCost: 252000 },
-                    { name: '李四', position: '工程师', salary: 20000, insurance: 4000, bonus: 3000, hourRatio: 0.35, allocationCost: 220500 },
-                    { name: '王五', position: '技术员', salary: 15000, insurance: 3000, bonus: 2000, hourRatio: 0.25, allocationCost: 157500 }
+                    { name: '张三', position: '高级工程师', baseAmount: 22000, hourRatio: 0.6, allocationCost: 13200 },
+                    { name: '李四', position: '工程师', baseAmount: 16000, hourRatio: 1.0, allocationCost: 16000 }
                 ]
             },
-            4: {
-                type: '人工费归集',
+            2: {
+                type: '人工费-社保',
                 month: '2024-04',
-                project: '工业机器人控制系统',
-                department: '技术部',
-                amount: '¥ 494,000',
-                operator: '李四',
+                project: '智能传感器研发',
+                department: '研发部',
+                amount: '¥ 120,000',
+                operator: '张三',
                 items: [
-                    { name: '陈七', position: '高级工程师', salary: 25000, insurance: 5000, bonus: 4000, hourRatio: 0.6, allocationCost: 296400 },
-                    { name: '周八', position: '工程师', salary: 18000, insurance: 3600, bonus: 2000, hourRatio: 0.4, allocationCost: 197600 }
+                    { name: '张三', position: '高级工程师', baseAmount: 4500, hourRatio: 0.6, allocationCost: 2700 },
+                    { name: '李四', position: '工程师', baseAmount: 3200, hourRatio: 1.0, allocationCost: 3200 }
+                ]
+            },
+            3: {
+                type: '人工费-公积金',
+                month: '2024-04',
+                project: '智能传感器研发',
+                department: '研发部',
+                amount: '¥ 60,000',
+                operator: '张三',
+                items: [
+                    { name: '张三', position: '高级工程师', baseAmount: 1200, hourRatio: 0.6, allocationCost: 720 },
+                    { name: '李四', position: '工程师', baseAmount: 960, hourRatio: 1.0, allocationCost: 960 }
                 ]
             }
         };
@@ -345,29 +509,75 @@
         }
 
         function saveAllocation() {
-            var project = document.getElementById('allocationProject').value;
-            var department = document.getElementById('allocationDepartment').value;
-            var month = document.getElementById('allocationMonth').value;
-            
-            // 获取所有选中的费用类型
-            var costTypes = Array.from(document.querySelectorAll('input[name="costType"]:checked')).map(cb => cb.value);
+            try {
+                var projectSelect = document.getElementById('allocationProject');
+                var departmentSelect = document.getElementById('allocationDepartment');
+                var monthInput = document.getElementById('allocationMonth');
 
-            if (!project) {
-                alert('请选择归集项目');
-                return;
-            }
-            if (!month) {
-                alert('请选择月份');
-                return;
-            }
+                if (!projectSelect || !departmentSelect || !monthInput) {
+                    console.error('找不到必要的输入元素');
+                    return;
+                }
 
-            alert('人工费归集成功！已根据工时自动分配：' + 
-                (costTypes.includes('salary') ? '应发工资 ' : '') + 
-                (costTypes.includes('insurance') ? '五险一金 ' : '') +
-                (costTypes.includes('bonus') ? '奖金 ' : '') +
-                (costTypes.includes('service') ? '劳务费' : '')
-            );
-            closeAllocationModal();
+                var project = projectSelect.value;
+                var department = departmentSelect.value;
+                var month = monthInput.value;
+                
+                // 获取所有选中的归集类型
+                var selectedCheckboxes = Array.from(document.querySelectorAll('input[name="allocationType"]:checked'));
+                var allocationTypes = selectedCheckboxes.map(cb => {
+                    if (cb.value === 'salary') return '应发工资';
+                    if (cb.value === 'insurance') return '社保';
+                    if (cb.value === 'fund') return '公积金';
+                    return '';
+                });
+
+                if (!project) {
+                    alert('请选择归集项目');
+                    return;
+                }
+                if (!department) {
+                    alert('请选择归集部门');
+                    return;
+                }
+                if (!month) {
+                    alert('请选择月份');
+                    return;
+                }
+                if (allocationTypes.length === 0) {
+                    alert('请至少选择一种归集类型');
+                    return;
+                }
+
+                // --- 专家级审计校验逻辑：防止重复归集 ---
+                // 模拟检测冲突：假设 2024-04 研发部 的记录已经存在
+                if (month === '2024-04' && department === '研发部') {
+                    const conflictTypes = allocationTypes.filter(t => ['应发工资', '社保', '公积金'].includes(t));
+                    if (conflictTypes.length > 0) {
+                        const errorMsg = `【操作受阻：检测到归集冲突】\n\n` +
+                                       `检测到 [${month}] [${department}] 的 [人工费-${conflictTypes.join('/')}] 已存在归集记录且处于“已锁定”状态。\n\n` +
+                                       `研发合规要求：\n` +
+                                       `系统严禁对同一维度的费用进行重复分摊，以防止审计底稿金额重叠。\n\n` +
+                                       `处理建议：\n` +
+                                       `1. 如需修正数据，请先在记录列表中执行“撤回重算”；\n` +
+                                       `2. 撤回将解锁数据并废回旧快照，之后方可重新发起归集。`;
+                        alert(errorMsg);
+                        return;
+                    }
+                }
+
+                // --- 专家级合规预检流 ---
+                // 1. 关闭原始归集模态框
+                closeAllocationModal();
+                
+                // 2. 立即打开合规性诊断报告
+                openComplianceReport(month, department);
+                
+                // 此时不再直接 alert 成功，而是等待用户在报告中点击“确认无误并锁定”
+            } catch (e) {
+                console.error('归集保存失败:', e);
+                alert('系统繁忙，请稍后再试');
+            }
         }
 
         function viewLaborDetail(id) {
@@ -380,20 +590,35 @@
                 document.getElementById('detailAmount').textContent = detail.amount;
                 document.getElementById('detailOperator').textContent = detail.operator;
                 
+                var tableHeader = document.getElementById('detailTableHeader');
                 var tableBody = document.getElementById('detailTableBody');
-                tableBody.innerHTML = '';
                 
+                // 根据类型设置不同的表头
+                let baseLabel = '月工资';
+                if (detail.type.includes('社保')) baseLabel = '月社保';
+                if (detail.type.includes('公积金')) baseLabel = '月公积金';
+
+                tableHeader.innerHTML = `
+                    <tr>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">人员</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">岗位</th>
+                        <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">${baseLabel}</th>
+                        <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">研发工时占比</th>
+                        <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">研发分摊金额</th>
+                    </tr>
+                `;
+
+                tableBody.innerHTML = '';
                 for (var i = 0; i < detail.items.length; i++) {
                     var item = detail.items[i];
                     var row = document.createElement('tr');
-                    row.innerHTML = 
-                        '<td class="px-4 py-2 whitespace-nowrap">' + item.name + '</td>' +
-                        '<td class="px-4 py-2 whitespace-nowrap">' + item.position + '</td>' +
-                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.salary.toLocaleString() + '</td>' +
-                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.insurance.toLocaleString() + '</td>' +
-                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.bonus.toLocaleString() + '</td>' +
-                        '<td class="px-4 py-2 whitespace-nowrap">' + (item.hourRatio * 100).toFixed(1) + '%</td>' +
-                        '<td class="px-4 py-2 whitespace-nowrap">¥ ' + item.allocationCost.toLocaleString() + '</td>';
+                    row.innerHTML = `
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${item.name}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${item.position}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-right text-gray-900">¥ ${item.baseAmount.toLocaleString()}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-center font-medium text-blue-600">${(item.hourRatio * 100).toFixed(2)}%</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-right font-bold text-gray-900">¥ ${item.allocationCost.toLocaleString()}</td>
+                    `;
                     tableBody.appendChild(row);
                 }
                 
@@ -405,6 +630,50 @@
         function closeDetailModal() {
             document.getElementById('detailModal').classList.add('hidden');
             document.getElementById('detailModal').classList.remove('flex');
+        }
+
+        function withdrawAllocation(id) {
+            const detail = laborCostDetails[id];
+            
+            // --- 专家级校验：检测年度锁定状态 ---
+            // 只有当页面上明确显示“已关联年度辅助账”时才拦截
+            // 在实际系统中，这里会通过 API 检查后端状态
+            // 模拟逻辑：假设 ID 为 1 的记录是关联了年度账的（虽然 ID 1 的按钮在 HTML 里已经是置灰不可点击的）
+            if (id === 1) {
+                const lockMsg = `【操作拦截：年度数据已锁定】\n\n` +
+                              `检测到 [${detail.month}] 属于已结账年度。\n\n` +
+                              `原因：\n` +
+                              `该年度已生成“年度研发费用辅助账套表”，为了保证年度总账与月度明细的一致性，系统已对该年度数据执行了“强锁定”。\n\n` +
+                              `如何撤回：\n` +
+                              `若确实需要修改，请先前往 [多口径报表 -> 账套表生成] 模块，点击“查看生成记录”，撤回对应的年度账套表。年度表撤回后，月度数据将自动解锁。`;
+                alert(lockMsg);
+                return;
+            }
+
+            if (confirm(`确定要撤回 ${detail.month} ${detail.department} 的归集记录吗？\n撤回后，该月份的备备查底稿将同步失效，需修正数据后重新归集。`)) {
+                // 模拟撤回交互效果
+                const rows = document.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const firstCell = row.querySelector('td:first-child');
+                    if (firstCell && firstCell.textContent.trim() == id) {
+                        // 1. 修改状态显示
+                        const statusCell = row.querySelector('td:nth-last-child(2)');
+                        statusCell.innerHTML = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">已撤回</span>';
+                        
+                        // 2. 弱化整行显示
+                        row.classList.add('opacity-50');
+                        
+                        // 3. 修改操作按钮
+                        const actionCell = row.querySelector('td:last-child');
+                        actionCell.innerHTML = `
+                            <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="记录已撤回">查看详情</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700 font-medium" onclick="openLaborAllocationModal()">重新归集</a>
+                        `;
+                    }
+                });
+                alert('已撤回。该月份数据已解锁，您现在可以修正工时或薪资后重新执行“开始归集”。');
+            }
         }
     </script>
 </body>

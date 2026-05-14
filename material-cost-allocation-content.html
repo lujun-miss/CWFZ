@@ -30,31 +30,26 @@
         .parent-iframe .left-sidebar,
         .parent-iframe .page-header { display: none !important; }
         .parent-iframe main,
-        .parent-iframe .flex-1 { margin-left: 0 !important; padding: 1rem !important; }
+        .parent-iframe .flex-1 { margin-left: 0 !important; padding: 0 !important; }
+        .parent-iframe .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
     <div class="flex h-screen overflow-hidden">
         <main class="flex-1 overflow-y-auto">
-            <div class="container mx-auto px-4 py-6">
-                <div class="mb-6">
-                    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-                        <span>首页</span>
-                        <i class="fa fa-chevron-right text-xs"></i>
-                        <span>费用归集</span>
-                        <i class="fa fa-chevron-right text-xs"></i>
-                        <span class="text-primary font-medium">直接投入归集</span>
-                    </div>
-                    <h1 class="text-2xl font-bold text-gray-800">直接投入归集</h1>
-                </div>
-
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="container mx-auto">
+                <div class="px-4 py-6">
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="flex items-center space-x-2">
                             <span class="text-sm text-gray-700">时间范围：</span>
                             <label class="flex items-center"><input type="radio" name="timeRange" value="month" checked class="mr-1"><span class="text-sm">按月</span></label>
                             <label class="flex items-center"><input type="radio" name="timeRange" value="year" class="mr-1"><span class="text-sm">年</span></label>
                             <input type="month" id="filterMonth" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-700">归集月份：</span>
+                            <input type="month" id="filterMonth" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
                         </div>
                         <div class="flex items-center space-x-2">
                             <span class="text-sm text-gray-700">项目名称：</span>
@@ -70,10 +65,10 @@
                             <span class="text-sm text-gray-700">费用类型：</span>
                             <select id="filterCostType" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary flex-1">
                                 <option value="">全部类型</option>
-                                <option value="材料费用">材料费用</option>
-                                <option value="能源费用">能源费用</option>
-                                <option value="检验费">检验费</option>
-                                <option value="固定资产租赁费">固定资产租赁费</option>
+                                <option value="直接投入-材料费用">直接投入-材料费用</option>
+                                <option value="直接投入-能源费用">直接投入-能源费用</option>
+                                <option value="直接投入-检验费">直接投入-检验费</option>
+                                <option value="直接投入-固定资产租赁费">直接投入-固定资产租赁费</option>
                                 <option value="其他直接费用">其他直接费用</option>
                             </select>
                         </div>
@@ -97,6 +92,7 @@
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">归集项目</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">归集金额</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">归集时间</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">归集状态</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作人</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
                                 </tr>
@@ -104,53 +100,78 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr class="table-row-hover">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">材料费用 - 传感器芯片</div></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">直接投入-材料费用</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04</td>
                                     <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">智能传感器研发</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 60,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04-15 14:30</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col space-y-1">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 w-fit">已锁定</span>
+                                            <span class="px-2 inline-flex text-[10px] leading-4 font-medium rounded-full bg-blue-100 text-blue-800 w-fit" title="该记录已生成年度辅助账，无法直接撤回">已关联年度辅助账</span>
+                                        </div>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(1)">查看详情</a></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(1)">查看</a>
+                                        <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="请先撤回年度辅助账后再操作" onclick="reallocate(1)">撤回重算</a>
+                                    </td>
                                 </tr>
                                 <tr class="table-row-hover">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">能源费用 - 电力</div></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">直接投入-能源费用</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04</td>
                                     <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">工业机器人控制系统</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 2,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04-18 09:15</td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(2)">查看详情</a></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(2)">查看</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="reallocate(2)">撤回重算</a>
+                                    </td>
                                 </tr>
                                 <tr class="table-row-hover">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">检验费 - 材料检测</div></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">直接投入-检验费</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04</td>
                                     <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">智能传感器研发</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 8,500</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04-16 15:20</td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(6)">查看详情</a></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(6)">查看</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="reallocate(6)">撤回重算</a>
+                                    </td>
                                 </tr>
                                 <tr class="table-row-hover">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">4</td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">检验费 - 产品检验</div></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">直接投入-检验费</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04</td>
                                     <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">新能源材料研究</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 12,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04-19 10:00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">王五</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(7)">查看详情</a></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(7)">查看</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="reallocate(7)">撤回重算</a>
+                                    </td>
                                 </tr>
                                 <tr class="table-row-hover">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5</td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">固定资产租赁费 - 设备租赁</div></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">直接投入-固定资产租赁费</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04</td>
                                     <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">高精度数控机床</div></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 20,000</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04-10 09:00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">赵六</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(8)">查看详情</a></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(8)">查看</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="reallocate(8)">撤回重算</a>
+                                    </td>
                                 </tr>
                             </tbody>
                             <tfoot class="bg-gray-50">
@@ -200,18 +221,16 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">费用归集类型</label>
                     <div class="space-y-2 ml-4">
-                        <div class="flex items-center"><input type="checkbox" id="allocateMaterial" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"><label for="allocateMaterial" class="ml-2 text-sm text-gray-700">材料费用</label></div>
-                        <div class="flex items-center"><input type="checkbox" id="allocateEnergy" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"><label for="allocateEnergy" class="ml-2 text-sm text-gray-700">能源费用</label></div>
-                        <div class="flex items-center"><input type="checkbox" id="allocateTesting" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"><label for="allocateTesting" class="ml-2 text-sm text-gray-700">检验费</label></div>
-                        <div class="flex items-center"><input type="checkbox" id="allocateRental" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"><label for="allocateRental" class="ml-2 text-sm text-gray-700">固定资产租赁费</label></div>
+                        <div class="flex items-center"><input type="checkbox" id="allocateMaterial" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"><label for="allocateMaterial" class="ml-2 text-sm text-gray-700">材料费用</label></div>
+                        <div class="flex items-center"><input type="checkbox" id="allocateEnergy" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"><label for="allocateEnergy" class="ml-2 text-sm text-gray-700">能源费用</label></div>
+                        <div class="flex items-center"><input type="checkbox" id="allocateTesting" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"><label for="allocateTesting" class="ml-2 text-sm text-gray-700">检验费</label></div>
+                        <div class="flex items-center"><input type="checkbox" id="allocateRental" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"><label for="allocateRental" class="ml-2 text-sm text-gray-700">固定资产租赁费</label></div>
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">归集方式</label>
-                    <select id="allocationMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option value="manual">手动分配</option>
-                        <option value="auto">自动分配（按预设规则）</option>
-                        <option value="import">导入分配</option>
+                    <select id="allocationMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed" disabled>
+                        <option value="auto" selected>自动分配（按预设规则）</option>
                     </select>
                 </div>
             </div>
@@ -240,23 +259,31 @@
                 <div id="inspectionDetailSection" class="mt-6 hidden">
                     <h4 class="text-md font-semibold text-gray-800 mb-3">检验项目明细</h4>
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">检验项目</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">单价</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">次数</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">金额</th></tr></thead>
+                        <thead class="bg-gray-50"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">检验项目</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">金额</th></tr></thead>
                         <tbody id="inspectionDetailBody" class="bg-white divide-y divide-gray-200"></tbody>
-                        <tfoot class="bg-gray-50"><tr><td colspan="3" class="px-4 py-2 text-right text-sm font-medium text-gray-700">合计：</td><td id="inspectionDetailTotal" class="px-4 py-2 text-sm font-bold text-gray-900"></td></tr></tfoot>
+                        <tfoot class="bg-gray-50"><tr><td class="px-4 py-2 text-right text-sm font-medium text-gray-700">合计：</td><td id="inspectionDetailTotal" class="px-4 py-2 text-sm font-bold text-gray-900"></td></tr></tfoot>
                     </table>
                 </div>
                 <div id="rentalDetailSection" class="mt-6 hidden">
                     <h4 class="text-md font-semibold text-gray-800 mb-3">租赁明细</h4>
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">租赁资产</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">出租方</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">租赁类型</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">月租金</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">租期</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">金额</th></tr></thead>
+                        <thead class="bg-gray-50"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">租赁资产</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">金额</th></tr></thead>
                         <tbody id="rentalDetailBody" class="bg-white divide-y divide-gray-200"></tbody>
-                        <tfoot class="bg-gray-50"><tr><td colspan="5" class="px-4 py-2 text-right text-sm font-medium text-gray-700">合计：</td><td id="rentalDetailTotal" class="px-4 py-2 text-sm font-bold text-gray-900"></td></tr></tfoot>
+                        <tfoot class="bg-gray-50"><tr><td class="px-4 py-2 text-right text-sm font-medium text-gray-700">合计：</td><td id="rentalDetailTotal" class="px-4 py-2 text-sm font-bold text-gray-900"></td></tr></tfoot>
+                    </table>
+                </div>
+                <div id="energyDetailSection" class="mt-6 hidden">
+                    <h4 class="text-md font-semibold text-gray-800 mb-3">能源消耗明细</h4>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">设备名称</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">能源类型</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">消耗量</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">单位</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">单价</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">金额</th></tr></thead>
+                        <tbody id="energyDetailBody" class="bg-white divide-y divide-gray-200"></tbody>
+                        <tfoot class="bg-gray-50"><tr><td colspan="5" class="px-4 py-2 text-right text-sm font-medium text-gray-700">合计：</td><td id="energyDetailTotal" class="px-4 py-2 text-sm font-bold text-gray-900"></td></tr></tfoot>
                     </table>
                 </div>
                 <div id="materialDetailSection" class="mt-6">
-                    <h4 class="text-md font-semibold text-gray-800 mb-3">物料明细</h4>
+                    <h4 class="text-md font-semibold text-gray-800 mb-3">明细详情</h4>
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">物料名称</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">数量</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">单位</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">单价</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">金额</th></tr></thead>
+                        <thead class="bg-gray-50"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">名称</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">数量/规格</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">单位</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">单价/标准</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">金额</th></tr></thead>
                         <tbody id="materialDetailBody" class="bg-white divide-y divide-gray-200"></tbody>
                         <tfoot class="bg-gray-50"><tr><td colspan="4" class="px-4 py-2 text-right text-sm font-medium text-gray-700">合计：</td><td id="materialDetailTotal" class="px-4 py-2 text-sm font-bold text-gray-900"></td></tr></tfoot>
                     </table>
@@ -270,21 +297,62 @@
         if (window.self !== window.parent) { document.body.classList.add('parent-iframe'); }
 
         var materialCostDetails = {
-            1: { type: '材料费用 - 传感器芯片', month: '2026-04', project: '智能传感器研发', material: '传感器芯片', amount: '¥ 60,000', time: '2026-04-15 14:30', operator: '张三', items: [{ name: 'MEMS压力传感器芯片', supplier: '华东物资', quantity: 500, unit: '个', unitPrice: '¥ 80', amount: '¥ 40,000' }, { name: '温度传感器芯片', supplier: '华南供应', quantity: 1000, unit: '个', unitPrice: '¥ 15', amount: '¥ 15,000' }, { name: '湿度传感器芯片', supplier: '华东物资', quantity: 500, unit: '个', unitPrice: '¥ 10', amount: '¥ 5,000' }] },
-            2: { type: '能源费用 - 电力', month: '2026-04', project: '工业机器人控制系统', material: '电力', amount: '¥ 2,000', time: '2026-04-18 09:15', operator: '李四', items: [{ name: '研发车间用电', supplier: '国家电网', quantity: 2000, unit: '度', unitPrice: '¥ 0.8', amount: '¥ 1,600' }, { name: '实验室用电', supplier: '国家电网', quantity: 500, unit: '度', unitPrice: '¥ 0.8', amount: '¥ 400' }] },
-            3: { type: '设备折旧 - 数控机床', month: '2026-04', project: '新能源材料研究', material: '数控机床', amount: '¥ 8,500', time: '2026-04-20 16:45', operator: '王五', items: [{ name: 'CNC数控机床', supplier: 'DMG MORI', quantity: 1, unit: '台', unitPrice: '¥ 5,000', amount: '¥ 5,000' }, { name: '加工中心', supplier: 'HAAS', quantity: 1, unit: '台', unitPrice: '¥ 3,500', amount: '¥ 3,500' }] },
-            4: { type: '材料费用 - 电子元件', month: '2026-04', project: '智能传感器研发', material: '电子元件', amount: '¥ 45,000', time: '2026-04-22 10:20', operator: '张三', items: [{ name: 'PCB电路板', supplier: '深圳电子', quantity: 500, unit: '块', unitPrice: '¥ 30', amount: '¥ 15,000' }, { name: '电阻电容套件', supplier: '华南电子', quantity: 500, unit: '套', unitPrice: '¥ 20', amount: '¥ 10,000' }, { name: '接插件', supplier: 'JST代理', quantity: 2000, unit: '个', unitPrice: '¥ 10', amount: '¥ 20,000' }] },
-            5: { type: '材料费用 - 外壳材料', month: '2026-04', project: '工业机器人控制系统', material: '外壳材料', amount: '¥ 15,000', time: '2026-04-25 11:30', operator: '李四', items: [{ name: '铝合金外壳', supplier: '上海铝业', quantity: 100, unit: '件', unitPrice: '¥ 80', amount: '¥ 8,000' }, { name: '不锈钢支架', supplier: '无锡钢铁', quantity: 200, unit: '件', unitPrice: '¥ 35', amount: '¥ 7,000' }] },
-            6: { type: '检验费 - 材料检测', month: '2026-04', project: '智能传感器研发', material: '材料检测', amount: '¥ 8,500', time: '2026-04-16 15:20', operator: '张三', items: [{ name: '化学成分分析', supplier: '上海检测中心', type: '第三方检测', quantity: 10, unit: '次', unitPrice: '¥ 500', amount: '¥ 5,000' }, { name: '物理性能测试', supplier: '上海检测中心', type: '第三方检测', quantity: 5, unit: '次', unitPrice: '¥ 700', amount: '¥ 3,500' }] },
-            7: { type: '检验费 - 产品检验', month: '2026-04', project: '新能源材料研究', material: '产品检验', amount: '¥ 12,000', time: '2026-04-19 10:00', operator: '王五', items: [{ name: '性能可靠性测试', supplier: '国家检测中心', type: '第三方检测', quantity: 3, unit: '批', unitPrice: '¥ 4,000', amount: '¥ 12,000' }] },
-            8: { type: '固定资产租赁费 - 设备租赁', month: '2026-04', project: '高精度数控机床', material: '设备租赁', amount: '¥ 20,000', time: '2026-04-10 09:00', operator: '赵六', items: [{ name: '五轴加工中心', supplier: '德国DMG', type: '设备租赁', monthlyRent: '¥ 15,000', period: '1个月', amount: '¥ 15,000' }, { name: '激光切割机', supplier: '大族激光', type: '设备租赁', monthlyRent: '¥ 5,000', period: '1个月', amount: '¥ 5,000' }] },
-            9: { type: '固定资产租赁费 - 场地租赁', month: '2026-04', project: '智能传感器研发', material: '场地租赁', amount: '¥ 8,000', time: '2026-04-01 08:00', operator: '张三', items: [{ name: '研发实验室', supplier: '科技园物业', type: '场地租赁', monthlyRent: '¥ 8,000', period: '1个月', amount: '¥ 8,000' }] },
-            10: { type: '检验费 - 环境测试', month: '2026-04', project: '工业机器人控制系统', material: '环境测试', amount: '¥ 6,200', time: '2026-04-22 14:30', operator: '李四', items: [{ name: '高低温测试', supplier: '苏州检测中心', type: '第三方检测', quantity: 2, unit: '次', unitPrice: '¥ 2,100', amount: '¥ 4,200' }, { name: '振动测试', supplier: '苏州检测中心', type: '第三方检测', quantity: 1, unit: '次', unitPrice: '¥ 2,000', amount: '¥ 2,000' }] }
+            1: { type: '直接投入-材料费用', month: '2026-04', project: '智能传感器研发', material: '传感器芯片', amount: '¥ 60,000', time: '2026-04-15 14:30', operator: '张三', items: [{ name: 'MEMS压力传感器芯片', supplier: '华东物资', quantity: 500, unit: '个', unitPrice: '¥ 80', amount: '¥ 40,000' }, { name: '温度传感器芯片', supplier: '华南供应', quantity: 1000, unit: '个', unitPrice: '¥ 15', amount: '¥ 15,000' }, { name: '湿度传感器芯片', supplier: '华东物资', quantity: 500, unit: '个', unitPrice: '¥ 10', amount: '¥ 5,000' }] },
+            2: { type: '直接投入-能源费用', month: '2026-04', project: '工业机器人控制系统', material: '能源', amount: '¥ 2,000', time: '2026-04-18 09:15', operator: '李四', items: [{ device: '五轴加工中心', name: '电', supplier: '国家电网', quantity: 2000, unit: '度', unitPrice: '¥ 0.8', amount: '¥ 1,600' }, { device: '高低温试验箱', name: '电', supplier: '国家电网', quantity: 500, unit: '度', unitPrice: '¥ 0.8', amount: '¥ 400' }] },
+            3: { type: '直接投入-设备折旧', month: '2026-04', project: '新能源材料研究', material: '数控机床', amount: '¥ 8,500', time: '2026-04-20 16:45', operator: '王五', items: [{ name: 'CNC数控机床', supplier: 'DMG MORI', quantity: 1, unit: '台', unitPrice: '¥ 5,000', amount: '¥ 5,000' }, { name: '加工中心', supplier: 'HAAS', quantity: 1, unit: '台', unitPrice: '¥ 3,500', amount: '¥ 3,500' }] },
+            4: { type: '直接投入-材料费用', month: '2026-04', project: '智能传感器研发', material: '电子元件', amount: '¥ 45,000', time: '2026-04-22 10:20', operator: '张三', items: [{ name: 'PCB电路板', supplier: '深圳电子', quantity: 500, unit: '块', unitPrice: '¥ 30', amount: '¥ 15,000' }, { name: '电阻电容套件', supplier: '华南电子', quantity: 500, unit: '套', unitPrice: '¥ 20', amount: '¥ 10,000' }, { name: '接插件', supplier: 'JST代理', quantity: 2000, unit: '个', unitPrice: '¥ 10', amount: '¥ 20,000' }] },
+            5: { type: '直接投入-材料费用', month: '2026-04', project: '工业机器人控制系统', material: '外壳材料', amount: '¥ 15,000', time: '2026-04-25 11:30', operator: '李四', items: [{ name: '铝合金外壳', supplier: '上海铝业', quantity: 100, unit: '件', unitPrice: '¥ 80', amount: '¥ 8,000' }, { name: '不锈钢支架', supplier: '无锡钢铁', quantity: 200, unit: '件', unitPrice: '¥ 35', amount: '¥ 7,000' }] },
+            6: { type: '直接投入-检验费', month: '2026-04', project: '智能传感器研发', material: '材料检测', amount: '¥ 8,500', time: '2026-04-16 15:20', operator: '张三', items: [{ name: '化学成分分析', supplier: '上海检测中心', type: '第三方检测', quantity: 10, unit: '次', unitPrice: '¥ 500', amount: '¥ 5,000' }, { name: '物理性能测试', supplier: '上海检测中心', type: '第三方检测', quantity: 5, unit: '次', unitPrice: '¥ 700', amount: '¥ 3,500' }] },
+            7: { type: '直接投入-检验费', month: '2026-04', project: '新能源材料研究', material: '产品检验', amount: '¥ 12,000', time: '2026-04-19 10:00', operator: '王五', items: [{ name: '性能可靠性测试', supplier: '国家检测中心', type: '第三方检测', quantity: 3, unit: '批', unitPrice: '¥ 4,000', amount: '¥ 12,000' }] },
+            8: { type: '直接投入-固定资产租赁费', month: '2026-04', project: '高精度数控机床', material: '设备租赁', amount: '¥ 20,000', time: '2026-04-10 09:00', operator: '赵六', items: [{ name: '五轴加工中心', supplier: '德国DMG', type: '设备租赁', monthlyRent: '¥ 15,000', period: '1个月', amount: '¥ 15,000' }, { name: '激光切割机', supplier: '大族激光', type: '设备租赁', monthlyRent: '¥ 5,000', period: '1个月', amount: '¥ 5,000' }] },
+            9: { type: '直接投入-场地租赁', month: '2026-04', project: '智能传感器研发', material: '场地租赁', amount: '¥ 8,000', time: '2026-04-01 08:00', operator: '张三', items: [{ name: '研发实验室', supplier: '科技园物业', type: '场地租赁', monthlyRent: '¥ 8,000', period: '1个月', amount: '¥ 8,000' }] },
+            10: { type: '直接投入-检验费', month: '2026-04', project: '工业机器人控制系统', material: '环境测试', amount: '¥ 6,200', time: '2026-04-22 14:30', operator: '李四', items: [{ name: '高低温测试', supplier: '苏州检测中心', type: '第三方检测', quantity: 2, unit: '次', unitPrice: '¥ 2,100', amount: '¥ 4,200' }, { name: '振动测试', supplier: '苏州检测中心', type: '第三方检测', quantity: 1, unit: '次', unitPrice: '¥ 2,000', amount: '¥ 2,000' }] }
         };
 
         function openAllocationModal() { document.getElementById('allocationModal').classList.remove('hidden'); document.getElementById('allocationModal').classList.add('flex'); }
         function closeAllocationModal() { document.getElementById('allocationModal').classList.add('hidden'); document.getElementById('allocationModal').classList.remove('flex'); }
         function confirmAllocation() { alert('归集成功'); closeAllocationModal(); }
+
+        // 撤回重算
+        function reallocate(id) {
+            const detail = materialCostDetails[id];
+            
+            // 模拟年度锁定校验
+            if (id === 1) {
+                const lockMsg = `【操作拦截：年度数据已锁定】\n\n` +
+                              `检测到 [${detail.month}] 属于已结账年度。\n\n` +
+                              `原因：\n` +
+                              `该年度已生成“年度研发费用辅助账套表”，为了保证年度总账与月度明细的一致性，系统已对该年度数据执行了“强锁定”。\n\n` +
+                              `如何撤回：\n` +
+                              `若确实需要修改，请先前往 [多口径报表 -> 账套表生成] 模块，点击“查看生成记录”，撤回对应的年度账套表。年度表撤回后，月度数据将自动解锁。`;
+                alert(lockMsg);
+                return;
+            }
+
+            if (confirm(`确定要撤回 ${detail.month} 的 [${detail.type}] 归集记录吗？\n撤回后，该月份的审计备查底稿将同步失效，相关费用将返回待归集状态。`)) {
+                // 模拟撤回交互效果
+                const rows = document.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const firstCell = row.querySelector('td:first-child');
+                    if (firstCell && firstCell.textContent.trim() == id) {
+                        // 1. 修改状态显示
+                        const statusCell = row.querySelector('td:nth-last-child(3)');
+                        statusCell.innerHTML = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">已撤回</span>';
+                        
+                        // 2. 弱化整行显示
+                        row.classList.add('opacity-50');
+                        
+                        // 3. 修改操作按钮
+                        const actionCell = row.querySelector('td:last-child');
+                        actionCell.innerHTML = `
+                            <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="记录已撤回">查看</a>
+                            <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700 font-medium" onclick="openAllocationModal()">重新归集</a>
+                        `;
+                    }
+                });
+                alert('已成功撤回。该月份费用已解锁，您现在可以修正原始单据后通过“开始归集”重新执行。');
+            }
+        }
 
         function viewDetail(id) {
             var detail = materialCostDetails[id];
@@ -298,8 +366,9 @@
                 var type = detail.type;
                 var inspectionSection = document.getElementById('inspectionDetailSection');
                 var rentalSection = document.getElementById('rentalDetailSection');
+                var energySection = document.getElementById('energyDetailSection');
                 var materialSection = document.getElementById('materialDetailSection');
-                inspectionSection.classList.add('hidden'); rentalSection.classList.add('hidden'); materialSection.classList.add('hidden');
+                inspectionSection.classList.add('hidden'); rentalSection.classList.add('hidden'); energySection.classList.add('hidden'); materialSection.classList.add('hidden');
                 if (type.indexOf('检验费') !== -1) {
                     inspectionSection.classList.remove('hidden');
                     var tbody = document.getElementById('inspectionDetailBody');
@@ -309,7 +378,7 @@
                         var item = detail.items[i];
                         total += parseFloat(item.amount.replace(/[¥,]/g, ''));
                         var row = document.createElement('tr');
-                        row.innerHTML = '<td class="px-4 py-2 text-sm">' + item.name + '</td><td class="px-4 py-2 text-sm">' + item.unitPrice + '</td><td class="px-4 py-2 text-sm">' + item.quantity + '</td><td class="px-4 py-2 text-sm">' + item.amount + '</td>';
+                        row.innerHTML = '<td class="px-4 py-2 text-sm">' + item.name + '</td><td class="px-4 py-2 text-sm">' + item.amount + '</td>';
                         tbody.appendChild(row);
                     }
                     document.getElementById('inspectionDetailTotal').textContent = '¥ ' + total.toLocaleString();
@@ -322,10 +391,23 @@
                         var item = detail.items[i];
                         total += parseFloat(item.amount.replace(/[¥,]/g, ''));
                         var row = document.createElement('tr');
-                        row.innerHTML = '<td class="px-4 py-2 text-sm">' + item.name + '</td><td class="px-4 py-2 text-sm">' + item.supplier + '</td><td class="px-4 py-2 text-sm">' + item.type + '</td><td class="px-4 py-2 text-sm">' + item.monthlyRent + '</td><td class="px-4 py-2 text-sm">' + item.period + '</td><td class="px-4 py-2 text-sm">' + item.amount + '</td>';
+                        row.innerHTML = '<td class="px-4 py-2 text-sm">' + item.name + '</td><td class="px-4 py-2 text-sm">' + item.amount + '</td>';
                         tbody.appendChild(row);
                     }
                     document.getElementById('rentalDetailTotal').textContent = '¥ ' + total.toLocaleString();
+                } else if (type.indexOf('能源费用') !== -1) {
+                    energySection.classList.remove('hidden');
+                    var tbody = document.getElementById('energyDetailBody');
+                    tbody.innerHTML = '';
+                    var total = 0;
+                    for (var i = 0; i < detail.items.length; i++) {
+                        var item = detail.items[i];
+                        total += parseFloat(item.amount.replace(/[¥,]/g, ''));
+                        var row = document.createElement('tr');
+                        row.innerHTML = '<td class="px-4 py-2 text-sm">' + (item.device || '-') + '</td><td class="px-4 py-2 text-sm">' + item.name + '</td><td class="px-4 py-2 text-sm">' + item.quantity + '</td><td class="px-4 py-2 text-sm">' + item.unit + '</td><td class="px-4 py-2 text-sm">' + item.unitPrice + '</td><td class="px-4 py-2 text-sm">' + item.amount + '</td>';
+                        tbody.appendChild(row);
+                    }
+                    document.getElementById('energyDetailTotal').textContent = '¥ ' + total.toLocaleString();
                 } else {
                     materialSection.classList.remove('hidden');
                     var tbody = document.getElementById('materialDetailBody');

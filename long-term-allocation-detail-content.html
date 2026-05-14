@@ -237,7 +237,6 @@
     </style>
 </head>
 <body class="bg-gray-50 p-6">
-    <h2 class="text-xl font-bold text-gray-800 mb-6">长期待摊费用分摊明细</h2>
     <div class="card">
         <div class="search-bar">
             <button class="btn-back" onclick="goBack()"><i class="fa fa-arrow-left mr-1"></i>返回</button>
@@ -268,7 +267,7 @@
             </div>
             <button class="btn-search" onclick="searchDetails()"><i class="fa fa-search mr-1"></i>查询</button>
             <button class="btn-reset" onclick="resetSearch()"><i class="fa fa-refresh mr-1"></i>重置</button>
-            <button class="btn-generate" onclick="generateAllocation()"><i class="fa fa-plus mr-1"></i>生成分摊记录</button>
+            <button class="btn-generate" onclick="openLongTermIntegrateModal()"><i class="fa fa-database mr-1"></i>月度长期待摊整合</button>
         </div>
 
         <div>
@@ -282,7 +281,7 @@
                         <th>所属项目</th>
                         <th>分摊金额</th>
                         <th>分摊比例</th>
-                        <th>状态</th>
+                        <th>归集状态</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -295,23 +294,22 @@
                         <td>智能客服系统1</td>
                         <td>¥999.90</td>
                         <td>30%</td>
-                        <td><span class="status status-confirmed">已确认</span></td>
+                        <td><span class="status status-confirmed">已归集</span></td>
                         <td rowspan="3" class="action-links">
                             <a href="#" onclick="viewDetail('LTA-001-202604-001')">详情</a>
-                            <a href="#" onclick="editDetail('LTA-001-202604-001')">编辑</a>
                         </td>
                     </tr>
                     <tr>
                         <td>智能客服系统2</td>
                         <td>¥1,333.20</td>
                         <td>40%</td>
-                        <td><span class="status status-confirmed">已确认</span></td>
+                        <td><span class="status status-confirmed">已归集</span></td>
                     </tr>
                     <tr>
                         <td>智能客服系统3</td>
                         <td>¥333.30</td>
                         <td>10%</td>
-                        <td><span class="status status-confirmed">已确认</span></td>
+                        <td><span class="status status-confirmed">已归集</span></td>
                     </tr>
                     <tr>
                         <td rowspan="2">2026-04</td>
@@ -321,17 +319,16 @@
                         <td>智能客服系统1</td>
                         <td>¥833.50</td>
                         <td>50%</td>
-                        <td><span class="status status-confirmed">已确认</span></td>
+                        <td><span class="status status-confirmed">已归集</span></td>
                         <td rowspan="2" class="action-links">
                             <a href="#" onclick="viewDetail('LTA-002-202604-001')">详情</a>
-                            <a href="#" onclick="editDetail('LTA-002-202604-001')">编辑</a>
                         </td>
                     </tr>
                     <tr>
                         <td>智能客服系统3</td>
                         <td>¥833.50</td>
                         <td>50%</td>
-                        <td><span class="status status-confirmed">已确认</span></td>
+                        <td><span class="status status-confirmed">已归集</span></td>
                     </tr>
                     <tr>
                         <td rowspan="3">2026-04</td>
@@ -341,23 +338,22 @@
                         <td>智能客服系统1</td>
                         <td>¥3,333.60</td>
                         <td>60%</td>
-                        <td><span class="status status-pending">待确认</span></td>
+                        <td><span class="status status-pending">未归集</span></td>
                         <td rowspan="3" class="action-links">
                             <a href="#" onclick="viewDetail('LTA-004-202604-001')">详情</a>
-                            <a href="#" onclick="editDetail('LTA-004-202604-001')">编辑</a>
                         </td>
                     </tr>
                     <tr>
                         <td>智能客服系统2</td>
                         <td>¥1,111.20</td>
                         <td>20%</td>
-                        <td><span class="status status-pending">待确认</span></td>
+                        <td><span class="status status-pending">未归集</span></td>
                     </tr>
                     <tr>
                         <td>智能客服系统4</td>
                         <td>¥1,111.20</td>
                         <td>20%</td>
-                        <td><span class="status status-pending">待确认</span></td>
+                        <td><span class="status status-pending">未归集</span></td>
                     </tr>
                     <tr>
                         <td>2026-04</td>
@@ -367,10 +363,9 @@
                         <td>智能客服系统3</td>
                         <td>¥2,500.00</td>
                         <td>100%</td>
-                        <td><span class="status status-confirmed">已确认</span></td>
+                        <td><span class="status status-confirmed">已归集</span></td>
                         <td class="action-links">
                             <a href="#" onclick="viewDetail('LTA-005-202604-001')">详情</a>
-                            <a href="#" onclick="editDetail('LTA-005-202604-001')">编辑</a>
                         </td>
                     </tr>
                     <tr>
@@ -381,23 +376,22 @@
                         <td>智能客服系统1</td>
                         <td>¥999.90</td>
                         <td>30%</td>
-                        <td><span class="status status-confirmed">已确认</span></td>
+                        <td><span class="status status-confirmed">已归集</span></td>
                         <td rowspan="3" class="action-links">
                             <a href="#" onclick="viewDetail('LTA-001-202603-001')">详情</a>
-                            <a href="#" onclick="editDetail('LTA-001-202603-001')">编辑</a>
                         </td>
                     </tr>
                     <tr>
                         <td>智能客服系统2</td>
                         <td>¥1,333.20</td>
                         <td>40%</td>
-                        <td><span class="status status-confirmed">已确认</span></td>
+                        <td><span class="status status-confirmed">已归集</span></td>
                     </tr>
                     <tr>
                         <td>智能客服系统3</td>
                         <td>¥333.30</td>
                         <td>10%</td>
-                        <td><span class="status status-confirmed">已确认</span></td>
+                        <td><span class="status status-confirmed">已归集</span></td>
                     </tr>
                     <tr class="summary-row">
                         <td colspan="5" style="text-align: right;">合计金额</td>
@@ -451,6 +445,118 @@
         </div>
     </div>
 
+    <!-- 详情弹窗 -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>长期待摊费用分摊详情</h3>
+                <button onclick="closeDetailModal()"><i class="fa fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px;">
+                    <div>
+                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">费用编号</div>
+                        <div id="detailFeeCode" style="font-size: 14px; color: #374151; font-weight: 500;">-</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">费用名称</div>
+                        <div id="detailFeeName" style="font-size: 14px; color: #374151; font-weight: 500;">-</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">费用类型</div>
+                        <div id="detailFeeType" style="font-size: 14px; color: #374151;">-</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">总金额</div>
+                        <div id="detailTotalAmount" style="font-size: 14px; color: #374151; font-weight: 600;">-</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">摊销期限</div>
+                        <div id="detailAmortizationPeriod" style="font-size: 14px; color: #374151;">-</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">月摊销额</div>
+                        <div id="detailMonthlyAmortization" style="font-size: 14px; color: #374151; font-weight: 600;">-</div>
+                    </div>
+                    <div style="grid-column: span 2;">
+                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">分摊方式</div>
+                        <div id="detailAllocationMethod" style="font-size: 14px; color: #374151;">-</div>
+                    </div>
+                </div>
+                
+                <div style="border-top: 1px solid #e5e7eb; padding-top: 16px;">
+                    <h4 style="font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 12px;">项目分摊明细</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #f9fafb;">
+                                <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: left; font-size: 12px; font-weight: 600; color: #374151;">项目名称</th>
+                                <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: right; font-size: 12px; font-weight: 600; color: #374151;">分摊金额</th>
+                                <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: center; font-size: 12px; font-weight: 600; color: #374151;">分摊比例</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detailProjectTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeDetailModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 月度长期待摊整合弹窗 -->
+    <div id="longTermIntegrateModal" class="modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <div class="modal-header" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #333;">数据整合</h3>
+                <button onclick="closeLongTermIntegrateModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #999;">&times;</button>
+            </div>
+            <div style="padding: 16px;">
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 13px; color: #666; margin-bottom: 8px;">选择日期范围</div>
+                    <input type="month" id="longTermIntegrateMonth" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" value="2026-04">
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 13px; color: #666; margin-bottom: 8px;">选择数据源</div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="display: flex; align-items: center; font-size: 13px; color: #333;">
+                            <input type="checkbox" checked style="margin-right: 8px;">
+                            长期待摊费用维护
+                        </label>
+                        <label style="display: flex; align-items: center; font-size: 13px; color: #333;">
+                            <input type="checkbox" checked style="margin-right: 8px;">
+                            长期待摊分配
+                        </label>
+                        <label style="display: flex; align-items: center; font-size: 13px; color: #333;">
+                            <input type="checkbox" style="margin-right: 8px;">
+                            历史分摊记录 (long-term-allocation-content.html)
+                        </label>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 13px; color: #666; margin-bottom: 8px;">整合选项</div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="display: flex; align-items: center; font-size: 13px; color: #333;">
+                            <input type="checkbox" checked disabled style="margin-right: 8px;">
+                            自动计算摊销比例
+                        </label>
+                        <label style="display: flex; align-items: center; font-size: 13px; color: #333;">
+                            <input type="checkbox" checked style="margin-right: 8px;">
+                            更新现有数据 <span style="color: #999; font-size: 12px;">(已归集数据不可更新)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 12px 16px; background-color: #f8f9fa; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px;">
+                <button onclick="closeLongTermIntegrateModal()" style="padding: 6px 16px; border: 1px solid #ddd; border-radius: 4px; background: white; color: #333; cursor: pointer; font-size: 13px;">取消</button>
+                <button onclick="executeLongTermIntegrate()" style="padding: 6px 16px; border: none; border-radius: 4px; background: #3b82f6; color: white; cursor: pointer; font-size: 13px;">执行整合</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function goBack() {
             if (parent && parent.loadTabContent) {
@@ -474,12 +580,168 @@
             document.getElementById('projectSelect').value = '';
         }
 
-        function generateAllocation() {
-            alert('生成分摊记录功能已执行');
+        function openLongTermIntegrateModal() {
+            // 设置默认月份为当前月份
+            const now = new Date();
+            const currentMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+            document.getElementById('longTermIntegrateMonth').value = currentMonth;
+            
+            // 显示模态框
+            document.getElementById('longTermIntegrateModal').classList.add('active');
+        }
+
+        function closeLongTermIntegrateModal() {
+            document.getElementById('longTermIntegrateModal').classList.remove('active');
+        }
+
+        function executeLongTermIntegrate() {
+            const month = document.getElementById('longTermIntegrateMonth').value;
+            if (!month) {
+                alert('请选择月份！');
+                return;
+            }
+            
+            // 获取选中的数据源
+            const dataSources = [];
+            const dataSourceCheckboxes = document.querySelectorAll('#longTermIntegrateModal input[type="checkbox"]');
+            dataSourceCheckboxes.forEach(cb => {
+                if (cb.checked && cb.parentElement.textContent.includes('数据') && !cb.parentElement.textContent.includes('更新') && !cb.parentElement.textContent.includes('摊销')) {
+                    dataSources.push(cb.parentElement.textContent.trim().split(' (')[0]);
+                }
+            });
+            
+            if (dataSources.length === 0) {
+                alert('请至少选择一个数据源！');
+                return;
+            }
+            
+            // 获取整合选项
+            const integrateOptions = [];
+            if (document.querySelector('#longTermIntegrateModal input[type="checkbox"]:checked') !== null) {
+                document.querySelectorAll('#longTermIntegrateModal input[type="checkbox"]').forEach(cb => {
+                    if (cb.checked && (cb.parentElement.textContent.includes('摊销') || cb.parentElement.textContent.includes('更新'))) {
+                        integrateOptions.push(cb.parentElement.textContent.trim());
+                    }
+                });
+            }
+            
+            // 显示确认信息
+            alert(`开始整合月份：${month}\n数据源：${dataSources.join('、')}\n整合选项：${integrateOptions.join('、')}\n\n整合成功！`);
+            
+            // 关闭弹窗
+            closeLongTermIntegrateModal();
+            
+            // 刷新页面数据
+            location.reload();
         }
 
         function viewDetail(id) {
-            alert('查看详情: ' + id);
+            // 根据ID获取对应的数据
+            const detailData = getDetailData(id);
+            
+            // 填充详情弹窗内容
+            document.getElementById('detailFeeCode').textContent = detailData.feeCode;
+            document.getElementById('detailFeeName').textContent = detailData.feeName;
+            document.getElementById('detailFeeType').textContent = detailData.feeType;
+            document.getElementById('detailTotalAmount').textContent = detailData.totalAmount;
+            document.getElementById('detailAmortizationPeriod').textContent = detailData.amortizationPeriod;
+            document.getElementById('detailMonthlyAmortization').textContent = detailData.monthlyAmortization;
+            document.getElementById('detailAllocationMethod').textContent = detailData.allocationMethod;
+            
+            // 填充项目分摊明细表格
+            const projectTableBody = document.getElementById('detailProjectTableBody');
+            projectTableBody.innerHTML = '';
+            detailData.projects.forEach(project => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: left;">${project.projectName}</td>
+                    <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: right;">${project.allocationAmount}</td>
+                    <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">${project.allocationRatio}</td>
+                `;
+                projectTableBody.appendChild(row);
+            });
+            
+            // 显示详情弹窗
+            document.getElementById('detailModal').classList.add('active');
+        }
+        
+        function getDetailData(id) {
+            // 根据ID返回对应的详情数据
+            const dataMap = {
+                'LTA-001-202604-001': {
+                    feeCode: 'LTA-001',
+                    feeName: '研发实验室装修',
+                    feeType: '装修费',
+                    totalAmount: '¥120,000.00',
+                    amortizationPeriod: '120个月',
+                    monthlyAmortization: '¥1,000.00',
+                    allocationMethod: '按项目使用面积分摊',
+                    projects: [
+                        { projectName: '智能客服系统1', allocationAmount: '¥999.90', allocationRatio: '30%' },
+                        { projectName: '智能客服系统2', allocationAmount: '¥1,333.20', allocationRatio: '40%' },
+                        { projectName: '智能客服系统3', allocationAmount: '¥333.30', allocationRatio: '10%' }
+                    ]
+                },
+                'LTA-002-202604-001': {
+                    feeCode: 'LTA-002',
+                    feeName: '研发系统实施费',
+                    feeType: '软件实施费',
+                    totalAmount: '¥50,000.00',
+                    amortizationPeriod: '60个月',
+                    monthlyAmortization: '¥833.33',
+                    allocationMethod: '按项目参与人员比例分摊',
+                    projects: [
+                        { projectName: '智能客服系统1', allocationAmount: '¥833.50', allocationRatio: '50%' },
+                        { projectName: '智能客服系统3', allocationAmount: '¥833.50', allocationRatio: '50%' }
+                    ]
+                },
+                'LTA-004-202604-001': {
+                    feeCode: 'LTA-004',
+                    feeName: '办公楼装修',
+                    feeType: '装修费',
+                    totalAmount: '¥200,000.00',
+                    amortizationPeriod: '120个月',
+                    monthlyAmortization: '¥1,666.67',
+                    allocationMethod: '按实际使用面积分摊',
+                    projects: [
+                        { projectName: '智能客服系统1', allocationAmount: '¥3,333.60', allocationRatio: '60%' },
+                        { projectName: '智能客服系统2', allocationAmount: '¥1,111.20', allocationRatio: '20%' },
+                        { projectName: '智能客服系统4', allocationAmount: '¥1,111.20', allocationRatio: '20%' }
+                    ]
+                },
+                'LTA-005-202604-001': {
+                    feeCode: 'LTA-005',
+                    feeName: '技术许可费',
+                    feeType: '技术转让费',
+                    totalAmount: '¥150,000.00',
+                    amortizationPeriod: '60个月',
+                    monthlyAmortization: '¥2,500.00',
+                    allocationMethod: '专属项目使用',
+                    projects: [
+                        { projectName: '智能客服系统3', allocationAmount: '¥2,500.00', allocationRatio: '100%' }
+                    ]
+                },
+                'LTA-001-202603-001': {
+                    feeCode: 'LTA-001',
+                    feeName: '研发实验室装修',
+                    feeType: '装修费',
+                    totalAmount: '¥120,000.00',
+                    amortizationPeriod: '120个月',
+                    monthlyAmortization: '¥1,000.00',
+                    allocationMethod: '按项目使用面积分摊',
+                    projects: [
+                        { projectName: '智能客服系统1', allocationAmount: '¥999.90', allocationRatio: '30%' },
+                        { projectName: '智能客服系统2', allocationAmount: '¥1,333.20', allocationRatio: '40%' },
+                        { projectName: '智能客服系统3', allocationAmount: '¥333.30', allocationRatio: '10%' }
+                    ]
+                }
+            };
+            
+            return dataMap[id] || dataMap['LTA-001-202604-001'];
+        }
+        
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('active');
         }
 
         function editDetail(id) {

@@ -657,7 +657,7 @@
                     </button>
                     <button id="tabAllocation" class="px-4 py-2 text-sm font-medium text-primary border-b-2 border-primary bg-blue-50" onclick="switchTab('allocation')">
                         <i class="fa fa-cogs mr-1"></i>
-                        装备调试与试验费归集
+                        费用归集
                     </button>
                 </div>
 
@@ -725,8 +725,8 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">费用类型</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集月份</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集费用</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集方式</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集时间</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集状态</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作人</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                                 </tr>
@@ -802,10 +802,8 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">归集方式</label>
-                        <select id="allocationMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="manual">手动分配</option>
+                        <select id="allocationMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 cursor-not-allowed" disabled>
                             <option value="auto">自动分配（按预设规则）</option>
-                            <option value="import">导入分配</option>
                         </select>
                     </div>
                 </div>
@@ -884,10 +882,11 @@
                 costType: 'equipment',
                 costTypeName: '装备调试费',
                 month: '2024-03', 
-                method: '手动分配', 
+                method: '自动分配', 
                 allocationTime: '2024-03-15 10:30', 
                 operator: '管理员', 
                 totalAmount: 75000,
+                status: '已锁定',
                 items: [
                     { dateRange: '2024-03月1-10日', expenseName: '装备调试费', amount: 25000 },
                     { dateRange: '2024-03月11-20日', expenseName: '装备调试费', amount: 30000 },
@@ -900,10 +899,11 @@
                 costType: 'equipment',
                 costTypeName: '装备调试费',
                 month: '2024-03', 
-                method: '自动分配（按预设规则）', 
+                method: '自动分配', 
                 allocationTime: '2024-03-20 14:20', 
                 operator: '管理员', 
                 totalAmount: 45000,
+                status: '已归集',
                 items: [
                     { dateRange: '2024-03月1-10日', expenseName: '装备调试费', amount: 15000 },
                     { dateRange: '2024-03月11-20日', expenseName: '装备调试费', amount: 20000 },
@@ -916,10 +916,11 @@
                 costType: 'test',
                 costTypeName: '试验费用',
                 month: '2024-04', 
-                method: '手动分配', 
+                method: '自动分配', 
                 allocationTime: '2024-04-10 09:15', 
                 operator: '管理员', 
                 totalAmount: 115000,
+                status: '已归集',
                 items: [
                     { dateRange: '2024-04月1-10日', expenseName: '试验费用', amount: 80000 },
                     { dateRange: '2024-04月11-20日', expenseName: '试验费用', amount: 15000 },
@@ -932,10 +933,11 @@
                 costType: 'test',
                 costTypeName: '试验费用',
                 month: '2024-05', 
-                method: '导入分配', 
+                method: '自动分配', 
                 allocationTime: '2024-05-10 15:45', 
                 operator: '管理员', 
                 totalAmount: 16000,
+                status: '已归集',
                 items: [
                     { dateRange: '2024-05月1-10日', expenseName: '试验费用', amount: 4000 },
                     { dateRange: '2024-05月11-20日', expenseName: '试验费用', amount: 12000 }
@@ -947,10 +949,11 @@
                 costType: 'equipment',
                 costTypeName: '装备调试费',
                 month: '2024-04', 
-                method: '自动分配（按预设规则）', 
+                method: '自动分配', 
                 allocationTime: '2024-04-15 11:00', 
                 operator: '管理员', 
                 totalAmount: 71000,
+                status: '已归集',
                 items: [
                     { dateRange: '2024-04月1-10日', expenseName: '装备调试费', amount: 45000 },
                     { dateRange: '2024-04月11-20日', expenseName: '装备调试费', amount: 18000 },
@@ -1024,21 +1027,67 @@
             
             for (var i = 0; i < allocationRecords.length; i++) {
                 var record = allocationRecords[i];
+                
+                // 归集状态列样式
+                var statusHtml = '';
+                if (record.status === '已锁定') {
+                    statusHtml = `
+                        <div class="flex flex-col space-y-1">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 w-fit">已锁定</span>
+                            <span class="px-2 inline-flex text-[10px] leading-4 font-medium rounded-full bg-blue-100 text-blue-800 w-fit" title="该记录已生成年度辅助账，无法直接撤回">已关联年度辅助账</span>
+                        </div>
+                    `;
+                } else {
+                    statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已归集</span>';
+                }
+
+                // 操作列样式
+                var actionHtml = '';
+                if (record.status === '已锁定') {
+                    actionHtml = `
+                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewDetail(${record.id})">查看详情</a>
+                        <span class="text-gray-300 ml-2 mr-2">|</span>
+                        <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="请先撤回年度辅助账后再操作">撤回重算</a>
+                    `;
+                } else {
+                    actionHtml = `
+                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewDetail(${record.id})">查看详情</a>
+                        <span class="text-gray-300 ml-2 mr-2">|</span>
+                        <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(${record.id})">撤回重算</a>
+                    `;
+                }
+
                 tbody.innerHTML += '<tr class="table-row-hover">' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + (i + 1) + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.project + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + (i + 1) + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + record.project + '</td>' +
                     '<td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 rounded text-xs ' + (record.costType === 'equipment' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') + '">' + record.costTypeName + '</span></td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.month + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + (record.totalAmount ? '¥' + record.totalAmount.toLocaleString() : '-') + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.method + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.allocationTime + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.operator + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap"><button onclick="viewDetail(' + record.id + ')" class="text-primary hover:text-blue-600 mr-2">查看详情</button></td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + record.month + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + (record.totalAmount ? '¥' + record.totalAmount.toLocaleString() : '-') + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">' + record.allocationTime + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap">' + statusHtml + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + record.operator + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm">' + actionHtml + '</td>' +
                     '</tr>';
             }
             
             document.getElementById('displayCount').innerHTML = allocationRecords.length;
             document.getElementById('totalCount').innerHTML = allocationRecords.length;
+        }
+
+        function withdrawAllocation(id) {
+            // 模拟强锁定逻辑
+            const record = allocationRecords.find(r => r.id === id);
+            if (record && record.status === '已锁定') {
+                const lockMsg = `【操作拦截：年度数据已锁定】\n\n原因：该年度已生成“年度研发费用辅助账套表”，为了保证数据一致性，已锁定的月份记录不允许撤回。\n\n如需修改，请先前往“多口径报表 -> 账套表生成”中撤销对应年度的锁定。`;
+                alert(lockMsg);
+                return;
+            }
+
+            if (confirm('确定要撤回该笔归集记录吗？撤回后相关费用将恢复为“未归集”状态。')) {
+                allocationRecords = allocationRecords.filter(function(r) { return r.id !== id; });
+                renderTable();
+                alert('已成功撤回');
+            }
         }
 
         function searchRecords() {
@@ -1068,15 +1117,46 @@
             
             for (var i = 0; i < records.length; i++) {
                 var record = records[i];
+                
+                // 归集状态列样式
+                var statusHtml = '';
+                if (record.status === '已锁定') {
+                    statusHtml = `
+                        <div class="flex flex-col space-y-1">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 w-fit">已锁定</span>
+                            <span class="px-2 inline-flex text-[10px] leading-4 font-medium rounded-full bg-blue-100 text-blue-800 w-fit" title="该记录已生成年度辅助账，无法直接撤回">已关联年度辅助账</span>
+                        </div>
+                    `;
+                } else {
+                    statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已归集</span>';
+                }
+
+                // 操作列样式
+                var actionHtml = '';
+                if (record.status === '已锁定') {
+                    actionHtml = `
+                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewDetail(${record.id})">查看详情</a>
+                        <span class="text-gray-300 ml-2 mr-2">|</span>
+                        <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="请先撤回年度辅助账后再操作">撤回重算</a>
+                    `;
+                } else {
+                    actionHtml = `
+                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewDetail(${record.id})">查看详情</a>
+                        <span class="text-gray-300 ml-2 mr-2">|</span>
+                        <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(${record.id})">撤回重算</a>
+                    `;
+                }
+
                 tbody.innerHTML += '<tr class="table-row-hover">' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + (i + 1) + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.project + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + (i + 1) + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + record.project + '</td>' +
                     '<td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 rounded text-xs ' + (record.costType === 'equipment' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') + '">' + record.costTypeName + '</span></td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.month + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.method + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.allocationTime + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap">' + record.operator + '</td>' +
-                    '<td class="px-6 py-4 whitespace-nowrap"><button onclick="viewDetail(' + record.id + ')" class="text-primary hover:text-blue-600 mr-2">查看详情</button></td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + record.month + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + (record.totalAmount ? '¥' + record.totalAmount.toLocaleString() : '-') + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">' + record.allocationTime + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap">' + statusHtml + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + record.operator + '</td>' +
+                    '<td class="px-6 py-4 whitespace-nowrap text-sm">' + actionHtml + '</td>' +
                     '</tr>';
             }
             

@@ -118,7 +118,7 @@
                         <!-- 设备组选择 -->
                         <div class="mb-4">
                             <div class="flex justify-between items-center mb-1">
-                                <label class="block text-xs font-medium text-gray-600">设备组</label>
+                                <label class="block text-sm font-bold text-gray-700">设备组</label>
                                 <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">可选</span>
                             </div>
                             <select id="deviceGroupSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" onchange="onDeviceGroupChange()">
@@ -179,17 +179,26 @@
                             </div>
                         </div>
                         
-                        <!-- 单独设备选择 -->
+                        <!-- 单独设备选择 (多选) -->
                         <div class="mb-4">
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="block text-xs font-medium text-gray-600">单独设备</label>
-                                <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">可选</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2" id="singleDeviceButtons">
-                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center" onclick="selectSingleDevice('台式电脑')">台式电脑</button>
-                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center" onclick="selectSingleDevice('笔记本')">笔记本</button>
-                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center" onclick="selectSingleDevice('服务器')">服务器</button>
-                                <button class="py-2 border border-gray-300 rounded-lg text-sm text-center" onclick="selectSingleDevice('测试设备')">测试设备</button>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">选择设备 (支持多选)</label>
+                            <div class="grid grid-cols-2 gap-2" id="singleDeviceContainer">
+                                <label class="flex items-center p-2 border border-gray-300 rounded-lg bg-white cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <input type="checkbox" value="台式电脑" class="w-4 h-4 text-primary rounded focus:ring-primary mr-2" onchange="onDeviceSelectionChange()">
+                                    <span class="text-xs text-gray-700">台式电脑</span>
+                                </label>
+                                <label class="flex items-center p-2 border border-gray-300 rounded-lg bg-white cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <input type="checkbox" value="笔记本" class="w-4 h-4 text-primary rounded focus:ring-primary mr-2" onchange="onDeviceSelectionChange()">
+                                    <span class="text-xs text-gray-700">笔记本</span>
+                                </label>
+                                <label class="flex items-center p-2 border border-gray-300 rounded-lg bg-white cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <input type="checkbox" value="服务器" class="w-4 h-4 text-primary rounded focus:ring-primary mr-2" onchange="onDeviceSelectionChange()">
+                                    <span class="text-xs text-gray-700">服务器</span>
+                                </label>
+                                <label class="flex items-center p-2 border border-gray-300 rounded-lg bg-white cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <input type="checkbox" value="测试设备" class="w-4 h-4 text-primary rounded focus:ring-primary mr-2" onchange="onDeviceSelectionChange()">
+                                    <span class="text-xs text-gray-700">测试设备</span>
+                                </label>
                             </div>
                         </div>
                         
@@ -234,6 +243,17 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- 能源抄表区域（放到工时分配下方） -->
+                            <div id="meterReadingSection" class="hidden mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <h4 class="text-xs font-bold text-blue-700 mb-2 flex items-center">
+                                    <i class="fa fa-tachometer mr-1"></i>能源抄表录入
+                                </h4>
+                                <div id="meterReadingList" class="space-y-3">
+                                    <!-- 动态插入抄表行 -->
+                                </div>
+                            </div>
+
                             <p class="text-xs text-gray-500 mt-2">
                                 <i class="fa fa-info-circle mr-1"></i>同一条线的设备工时将保持一致
                             </p>
@@ -314,6 +334,7 @@
                             - 设备工时上限：同一设备当日累计工时不可超过24小时，超出将提示并阻止提交
                         </p>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -329,11 +350,13 @@
 
         // 单独设备数据
         const singleDevices = {
-            '台式电脑': { type: '生产+研发共用' },
-            '笔记本': { type: '研发专用' },
-            '服务器': { type: '生产+研发共用' },
-            '测试设备': { type: '研发专用' }
+            '台式电脑': { type: '生产+研发共用', energyConfigs: [{ type: 'electricity', label: '电力', mode: 'quota', unit: 'kW' }] },
+            '笔记本': { type: '研发专用', energyConfigs: [{ type: 'electricity', label: '电力', mode: 'quota', unit: 'kW' }] },
+            '服务器': { type: '生产+研发共用', energyConfigs: [{ type: 'electricity', label: '电力', mode: 'quota', unit: 'kW' }] },
+            '测试设备': { type: '研发专用', energyConfigs: [{ type: 'electricity', label: '电力', mode: 'quota', unit: 'kW' }, { type: 'water', label: '水', mode: 'quota', unit: 'm³' }] }
         };
+
+        let currentSelectedDevice = null;
 
         // 设置默认日期
         document.addEventListener('DOMContentLoaded', function() {
@@ -343,7 +366,7 @@
 
         // 加载页面
         function loadPage(page) {
-            window.location.href = './' + page;
+            window.location.href = page;
         }
 
         // 选择打卡类型
@@ -452,31 +475,98 @@
             }
         }
 
-        // 选择单独设备
-        function selectSingleDevice(deviceName) {
-            const buttons = document.querySelectorAll('#singleDeviceButtons button');
-            buttons.forEach(btn => {
-                btn.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
-                btn.classList.add('border-gray-300');
-            });
+        let selectedDeviceNames = [];
+
+        // 设备选择变更逻辑 (支持多选)
+        function onDeviceSelectionChange() {
+            const checkboxes = document.querySelectorAll('#singleDeviceContainer input[type="checkbox"]:checked');
+            selectedDeviceNames = Array.from(checkboxes).map(cb => cb.value);
             
-            event.target.classList.add('border-primary', 'bg-primary/10', 'text-primary');
-            event.target.classList.remove('border-gray-300');
-            
-            const device = singleDevices[deviceName];
+            const meterReadingSection = document.getElementById('meterReadingSection');
+            const meterReadingList = document.getElementById('meterReadingList');
             const totalTime = document.getElementById('singleTotalTime');
             const timeSplit = document.getElementById('singleTimeSplit');
             const warning = document.getElementById('equipmentWarning');
-            
-            if (device.type === '生产+研发共用') {
+
+            if (selectedDeviceNames.length === 0) {
+                meterReadingSection.classList.add('hidden');
+                totalTime.style.display = 'none';
+                timeSplit.style.display = 'none';
+                warning.classList.add('hidden');
+                return;
+            }
+
+            // 聚合所有选中设备的抄表配置 (按仪表编码聚合)
+            let meterMap = {};
+            let hasCommonDevice = false;
+            let hasDirectMetering = false;
+
+            selectedDeviceNames.forEach(name => {
+                const device = singleDevices[name];
+                if (device.type === '生产+研发共用') hasCommonDevice = true;
+
+                const directConfigs = device.energyConfigs.filter(conf => conf.mode === 'direct');
+                if (directConfigs.length > 0) {
+                    hasDirectMetering = true;
+                    directConfigs.forEach(conf => {
+                        const meterKey = `${conf.meterCode || name}_${conf.type}`;
+                        if (!meterMap[meterKey]) {
+                            meterMap[meterKey] = {
+                                meterCode: conf.meterCode || '独立仪表',
+                                label: conf.label,
+                                unit: conf.unit,
+                                devices: []
+                            };
+                        }
+                        meterMap[meterKey].devices.push(name);
+                    });
+                }
+            });
+
+            // 生成 HTML
+            let html = '';
+            Object.keys(meterMap).forEach(key => {
+                const meter = meterMap[key];
+                const deviceTags = meter.devices.map(d => `<span class="bg-blue-100 text-blue-600 px-1 rounded mr-1">${d}</span>`).join('');
+                const sharedTip = meter.devices.length > 1 ? `<p class="text-[9px] text-orange-600 mt-1"><i class="fa fa-info-circle"></i> 多机共用仪表，填报一次即可</p>` : '';
+                
+                html += `
+                    <div class="p-2 bg-white rounded border border-blue-100 space-y-1">
+                        <div class="flex justify-between items-start">
+                            <label class="block text-[10px] font-bold text-blue-700">仪表: ${meter.meterCode} (${meter.label})</label>
+                            <span class="text-[9px] text-gray-400">单位: ${meter.unit}</span>
+                        </div>
+                        <div class="flex flex-wrap mb-1">${deviceTags}</div>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" step="0.1" class="w-full border border-gray-200 rounded px-2 py-1 text-xs" placeholder="起始读数">
+                            <span class="text-blue-300 text-[10px]">→</span>
+                            <input type="number" step="0.1" class="w-full border border-gray-200 rounded px-2 py-1 text-xs" placeholder="结束读数">
+                        </div>
+                        ${sharedTip}
+                    </div>
+                `;
+            });
+
+            // 更新抄表区域
+            if (hasDirectMetering) {
+                meterReadingSection.classList.remove('hidden');
+                meterReadingList.innerHTML = html;
+            } else {
+                meterReadingSection.classList.add('hidden');
+                meterReadingList.innerHTML = '';
+            }
+
+            // 更新工时分配显示 (如果有一个是共用设备，就显示分配)
+            if (hasCommonDevice) {
                 totalTime.style.display = 'none';
                 timeSplit.style.display = 'block';
+                timeSplit.classList.remove('hidden');
                 updateSingleSplit();
-                showWarning('该设备为生产+研发共用设备，研发工时占比不能超过年度总工时的15%（当前为100%）');
+                showWarning('所选设备中包含生产+研发共用设备，研发工时占比受限');
             } else {
                 totalTime.style.display = 'block';
                 timeSplit.style.display = 'none';
-                warning.style.display = 'none';
+                warning.classList.add('hidden');
             }
         }
 

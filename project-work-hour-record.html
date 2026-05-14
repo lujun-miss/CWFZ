@@ -137,7 +137,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                            <!-- 导航菜单 -->
+                                                                                                                                                                                                                        <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -259,6 +259,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
                                     <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -501,10 +507,6 @@
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-semibold text-gray-800">人员工时记录</h2>
                 <div class="flex space-x-2">
-                    <button class="btn-primary flex items-center" onclick="receiveProjectWorkHour()">
-                        <i class="fa fa-download mr-2"></i>
-                        接收小程序数据
-                    </button>
                     <button class="btn-primary flex items-center" onclick="window.location.href='mobile-login.html'">
                         <i class="fa fa-mobile mr-2"></i>
                         小程序填报
@@ -903,10 +905,10 @@
                 
                 <!-- 工时填写精度 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">工时填写精度</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">工时单位</label>
                     <select id="workHoursPrecision" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <option value="1" selected>1小时</option>
-                        <option value="0.5">0.5小时（30分钟）</option>
+                        <option value="hour" selected>时</option>
+                        <option value="minute">分</option>
                     </select>
                 </div>
                 

@@ -4,40 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>设备能源消耗档案 - 研发费用管理系统</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
-        
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        accent: '#6366f1',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        info: '#3b82f6',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
         }
-        
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .nav-item-active {
+                @apply bg-primary text-white;
+            }
+            .nav-item-hover {
+                @apply hover:bg-blue-100 transition-colors duration-200;
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
         .nav-item {
-            @apply flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors duration-200;
             transition: all 0.2s ease;
         }
-        
         .nav-item:hover {
             transform: translateX(4px);
         }
-        
         .nav-item.active {
             border-left: 4px solid #3b82f6;
         }
-        
-        .nav-item-active {
-            @apply bg-blue-500 text-white;
-        }
-        
-        .nav-item:hover {
-            @apply bg-gray-100;
-        }
-        
-        .table-row-hover:hover {
-            @apply bg-gray-50;
-        }
-        
         .menu-toggle {
             cursor: pointer;
             transition: all 0.2s ease;
@@ -45,27 +69,25 @@
             justify-content: space-between;
             align-items: center;
         }
-        
         .menu-toggle:hover {
             background-color: rgba(59, 130, 246, 0.1);
         }
-        
         .sub-menu {
             max-height: 500px;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
-        
         .sub-menu.collapsed {
             max-height: 0;
         }
-        
         .menu-arrow {
             transition: transform 0.3s ease;
         }
-        
         .menu-arrow.collapsed {
             transform: rotate(-90deg);
+        }
+        .table-row-hover:hover {
+            @apply bg-gray-50;
         }
     </style>
 </head>
@@ -130,9 +152,15 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-documents.html')">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage(event, 'project-documents.html')">
                                     <i class="fa fa-file-word-o w-6"></i>
                                     <span>项目过程文档</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage(event, 'audit-documents.html')">
+                                    <i class="fa fa-archive w-6"></i>
+                                    <span>备案资料</span>
                                 </a>
                             </li>
                         </ul>
@@ -200,9 +228,15 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage(event, 'equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
-                                    <span>设备能源消耗档案</span>
+                                    <span>设备能源类型管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage(event, 'energy-price-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>设备能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -468,7 +502,7 @@
             <div class="flex-1 overflow-y-auto p-6">
                 <!-- 搜索和筛选 -->
                 <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">设备名称</label>
                             <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
@@ -477,14 +511,6 @@
                                 <option value="EQ-015">3D打印机 (EQ-015)</option>
                                 <option value="EQ-023">光谱分析仪 (EQ-023)</option>
                                 <option value="EQ-042">其他设备 (EQ-042)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">计量方式</label>
-                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">请选择计量方式</option>
-                                <option value="direct">直接计量</option>
-                                <option value="quota">定额分配</option>
                             </select>
                         </div>
                         <div class="flex items-end">
@@ -512,22 +538,7 @@
                                         设备编号
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        计量方式
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         能源类型
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        设备功率 (kW)
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        效率系数
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        计量表编号
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        状态
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         操作
@@ -543,27 +554,11 @@
                                         <div class="text-sm text-gray-900">EQ-001</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">直接计量</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">电力</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">15.0</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">0.95</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">EM-001</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已启用</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showEnergyConsumptionDetail('EQ-001')">查看</a>
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
-                                        <a href="#" class="text-danger hover:text-red-600" onclick="confirmDelete('EQ-001')">删除</a>
                                     </td>
                                 </tr>
                                 <tr class="table-row-hover">
@@ -574,27 +569,11 @@
                                         <div class="text-sm text-gray-900">EQ-015</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">定额分配</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">电力</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">5.5</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">0.92</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-400">-</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已启用</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showEnergyConsumptionDetail('EQ-015')">查看</a>
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
-                                        <a href="#" class="text-danger hover:text-red-600" onclick="confirmDelete('EQ-015')">删除</a>
                                     </td>
                                 </tr>
                                 <tr class="table-row-hover">
@@ -605,27 +584,11 @@
                                         <div class="text-sm text-gray-900">EQ-023</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">直接计量</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">电力、天然气</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">3.0</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">0.98</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">EM-003</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已启用</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2" onclick="showEnergyConsumptionDetail('EQ-023')">查看</a>
                                         <a href="#" class="text-primary hover:text-blue-600 mr-2">编辑</a>
-                                        <a href="#" class="text-danger hover:text-red-600" onclick="confirmDelete('EQ-023')">删除</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -650,16 +613,22 @@
                 <!-- 使用说明 -->
                 <div class="bg-blue-50 rounded-lg shadow p-6">
                     <h3 class="font-medium text-blue-800 mb-3 flex items-center">
-                        <i class="fa fa-info-circle mr-2"></i> 使用说明
+                        <i class="fa fa-info-circle mr-2"></i> 能源管理说明
                     </h3>
-                    <div class="text-sm text-blue-700 space-y-2">
-                        <p><strong>1. 档案用途：</strong>此页面用于配置设备的能源消耗基础参数，供设备工时记录模块调用自动计算能耗。</p>
-                        <p><strong>2. 计量方式：</strong></p>
-                        <ul class="list-disc ml-4">
-                            <li><strong>直接计量：</strong>设备装有独立电表等计量表，按实际抄表数计算能耗</li>
-                            <li><strong>定额分配：</strong>无法独立计量，按公式计算：能耗 = 功率 × 工时 × 效率系数</li>
-                        </ul>
-                        <p><strong>3. 数据流向：</strong>设备工时记录 → 自动读取本档案参数 → 计算能耗 → 归集到项目</p>
+                    <div class="text-sm text-blue-700 space-y-3">
+                        <div>
+                            <p class="font-bold">1. 能耗计算公式：</p>
+                            <p class="mt-1">设备能耗 = 额定功率 × 设备总工时</p>
+                            <p class="text-xs text-blue-600 mt-1">研发分摊能耗 = 设备能耗 × 研发工时占比（研发工时/总工时）</p>
+                        </div>
+                        <div>
+                            <p class="font-bold">2. 能源类型配置：</p>
+                            <p class="mt-1">每个设备可配置多种能源类型（如电力、天然气、水等），每种能源需设置对应的额定功率或流量参数。</p>
+                        </div>
+                        <div>
+                            <p class="font-bold">3. 数据应用：</p>
+                            <p class="mt-1">此配置供设备工时记录模块调用，自动计算能耗并归集到项目，确保每一笔能源费用都有精确的审计穿透链路。</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -698,25 +667,34 @@
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500 mb-3">能耗参数</h4>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">设备功率 (kW)</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="15.0" disabled>
+                    <div id="detailEnergyParamsSection">
+                        <h4 class="text-sm font-medium text-gray-500 mb-3">能耗参数详情</h4>
+                        <div id="detailEnergyParamsList" class="space-y-4">
+                            <!-- 动态显示各能源类型的参数 -->
+                            <div class="p-3 bg-gray-50 rounded-md border border-gray-200">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-bold text-primary">电力</span>
+                                    <span class="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded">kW</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs text-gray-500">功率/额度</label>
+                                        <div class="text-sm font-medium">15.0</div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-gray-500">效率系数</label>
+                                        <div class="text-sm font-medium">0.95</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">能源效率系数</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="0.95" disabled>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">计量表编号</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="EM-001" disabled>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
-                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已启用</span>
-                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">计量表编号</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50" value="EM-001" disabled>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已启用</span>
                         </div>
                     </div>
                 </div>
@@ -726,10 +704,10 @@
                         <i class="fa fa-info-circle mr-2"></i> 计算公式说明
                     </h4>
                     <p class="text-sm text-blue-700">
-                        <strong>定额分配模式：</strong>能耗 = 功率 × 工时 × 效率系数
+                        <strong>能耗计算公式：</strong>设备能耗 = 额定功率 × 设备总工时
                     </p>
                     <p class="text-sm text-blue-700 mt-1">
-                        <strong>直接计量模式：</strong>能耗根据实际抄表数据计算
+                        <strong>研发分摊：</strong>研发分摊能耗 = 设备能耗 × 研发工时占比
                     </p>
                 </div>
             </div>
@@ -754,65 +732,68 @@
                 <div class="p-6 max-h-[70vh] overflow-y-auto">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">设备名称 <span class="text-red-500">*</span></label>
-                            <select id="equipmentSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">请选择设备</option>
-                                <option value="EQ-001" data-power="15.0">数控机床 (EQ-001)</option>
-                                <option value="EQ-015" data-power="5.5">3D打印机 (EQ-015)</option>
-                                <option value="EQ-023" data-power="3.0">光谱分析仪 (EQ-023)</option>
-                                <option value="EQ-042" data-power="2.0">其他设备 (EQ-042)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">计量方式 <span class="text-red-500">*</span></label>
-                            <select id="measurementType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="onMeasurementTypeChange()">
-                                <option value="">请选择计量方式</option>
-                                <option value="direct">直接计量</option>
-                                <option value="quota">定额分配</option>
-                            </select>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">设备名称 <span class="text-red-500">*</span>（可多选）</label>
+                            <div class="relative">
+                                <div id="equipmentDropdown" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer bg-white" onclick="toggleEquipmentDropdown()">
+                                    <span id="equipmentSelectedText" class="text-gray-500">请选择设备</span>
+                                    <i class="fa fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                                <div id="equipmentDropdownMenu" class="hidden absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                    <div class="p-2">
+                                        <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" id="selectAllEquipment" class="mr-3 rounded border-gray-300 text-primary focus:ring-primary" onchange="selectAllEquipment()">
+                                            <span class="text-sm text-gray-700">全选</span>
+                                        </label>
+                                        <div class="border-t border-gray-200 my-1"></div>
+                                        <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" class="equipment-checkbox mr-3 rounded border-gray-300 text-primary focus:ring-primary" value="EQ-001" data-power="15.0">
+                                            <span class="text-sm text-gray-700">数控机床 (EQ-001)</span>
+                                        </label>
+                                        <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" class="equipment-checkbox mr-3 rounded border-gray-300 text-primary focus:ring-primary" value="EQ-015" data-power="5.5">
+                                            <span class="text-sm text-gray-700">3D打印机 (EQ-015)</span>
+                                        </label>
+                                        <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" class="equipment-checkbox mr-3 rounded border-gray-300 text-primary focus:ring-primary" value="EQ-023" data-power="3.0">
+                                            <span class="text-sm text-gray-700">光谱分析仪 (EQ-023)</span>
+                                        </label>
+                                        <label class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" class="equipment-checkbox mr-3 rounded border-gray-300 text-primary focus:ring-primary" value="EQ-042" data-power="2.0">
+                                            <span class="text-sm text-gray-700">其他设备 (EQ-042)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="selectedEquipmentIds">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">能源类型 <span class="text-red-500">*</span></label>
                             <div class="flex flex-wrap gap-3">
                                 <label class="flex items-center">
-                                    <input type="checkbox" name="energyType" value="electricity" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                                    <input type="checkbox" name="energyType" value="electricity" data-label="电力" data-unit="kW" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" onchange="onEnergyTypeChange()">
                                     <span class="ml-2 text-sm text-gray-700">电力</span>
                                 </label>
                                 <label class="flex items-center">
-                                    <input type="checkbox" name="energyType" value="water" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                                    <input type="checkbox" name="energyType" value="water" data-label="水" data-unit="m³/h" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" onchange="onEnergyTypeChange()">
                                     <span class="ml-2 text-sm text-gray-700">水</span>
                                 </label>
                                 <label class="flex items-center">
-                                    <input type="checkbox" name="energyType" value="gas" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                                    <input type="checkbox" name="energyType" value="gas" data-label="天然气" data-unit="m³/h" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" onchange="onEnergyTypeChange()">
                                     <span class="ml-2 text-sm text-gray-700">天然气</span>
                                 </label>
                                 <label class="flex items-center">
-                                    <input type="checkbox" name="energyType" value="steam" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                                    <input type="checkbox" name="energyType" value="steam" data-label="蒸汽" data-unit="t/h" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" onchange="onEnergyTypeChange()">
                                     <span class="ml-2 text-sm text-gray-700">蒸汽</span>
                                 </label>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">设备功率 (kW) <span class="text-red-500">*</span></label>
-                            <input type="number" step="0.1" id="equipmentPower" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入设备功率">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">能源效率系数</label>
-                            <input type="number" step="0.01" min="0.1" max="1" id="efficiencyFactor" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="0.95" placeholder="0.1-1.0">
-                        </div>
-                        <!-- 直接计量模式字段 -->
-                        <div id="directMeteringFields" class="hidden">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">计量表编号</label>
-                                <input type="text" id="meterNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入计量表编号">
+
+                        <!-- 动态能耗参数区域 -->
+                        <div id="energyParamsContainer" class="space-y-4 border-t border-b border-gray-100 py-4 hidden">
+                            <h4 id="energyParamsTitle" class="text-xs font-semibold text-gray-500 uppercase tracking-wider">能耗参数配置</h4>
+                            <div id="energyParamsList" class="space-y-3">
+                                <!-- 动态插入的参数行 -->
                             </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
-                            <select id="statusSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="enabled">已启用</option>
-                                <option value="disabled">已停用</option>
-                            </select>
                         </div>
                     </div>
 
@@ -820,15 +801,18 @@
                         <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
                             <i class="fa fa-info-circle mr-2"></i> 配置说明
                         </h4>
-                        <p class="text-sm text-blue-700">
-                            <strong>定额分配模式：</strong>能耗 = 功率 × 工时 × 效率系数
-                        </p>
-                        <p class="text-sm text-blue-700 mt-1">
-                            <strong>直接计量模式：</strong>能耗根据实际抄表数据计算
-                        </p>
-                        <p class="text-sm text-blue-700 mt-1">
-                            <strong>数据流向：</strong>此配置供设备工时记录模块调用，自动计算能耗并归集到项目
-                        </p>
+                        <div class="text-sm text-blue-700 space-y-2">
+                            <p>
+                                <strong>能耗计算公式：</strong>
+                            </p>
+                            <div class="ml-4 p-3 bg-white rounded-md border border-blue-200">
+                                <p class="font-bold text-blue-800">设备能耗 = 额定功率 × 设备总工时</p>
+                                <p class="text-xs text-gray-600 mt-1">研发分摊能耗 = 设备能耗 × 研发工时占比（研发工时/总工时）</p>
+                            </div>
+                            <p>
+                                <strong>数据流向：</strong>此配置供设备工时记录模块调用，自动计算能耗并归集到项目。
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
@@ -844,6 +828,12 @@
     </div>
 
     <script>
+        // 页面加载函数
+        function loadPage(e, pageUrl) {
+            if (e && e.preventDefault) e.preventDefault();
+            window.location.href = pageUrl;
+        }
+
         // 切换菜单
         function toggleMenu(element) {
             const subMenu = element.nextElementSibling;
@@ -853,6 +843,73 @@
             arrow.classList.toggle('collapsed');
         }
 
+        // 切换设备下拉多选菜单
+        function toggleEquipmentDropdown() {
+            const dropdownMenu = document.getElementById('equipmentDropdownMenu');
+            dropdownMenu.classList.toggle('hidden');
+        }
+
+        // 全选/取消全选设备
+        function selectAllEquipment() {
+            const selectAllCheckbox = document.getElementById('selectAllEquipment');
+            const checkboxes = document.querySelectorAll('.equipment-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            
+            updateSelectedEquipmentText();
+        }
+
+        // 更新选中设备显示文本
+        function updateSelectedEquipmentText() {
+            const selectedCheckboxes = document.querySelectorAll('.equipment-checkbox:checked');
+            const selectedText = document.getElementById('equipmentSelectedText');
+            const hiddenInput = document.getElementById('selectedEquipmentIds');
+            
+            if (selectedCheckboxes.length === 0) {
+                selectedText.textContent = '请选择设备';
+                selectedText.className = 'text-gray-500';
+                hiddenInput.value = '';
+            } else if (selectedCheckboxes.length === 1) {
+                const checkbox = selectedCheckboxes[0];
+                const label = checkbox.parentElement.querySelector('span');
+                selectedText.textContent = label.textContent;
+                selectedText.className = 'text-gray-800';
+                hiddenInput.value = checkbox.value;
+            } else {
+                selectedText.textContent = `已选择 ${selectedCheckboxes.length} 个设备`;
+                selectedText.className = 'text-gray-800';
+                const ids = Array.from(selectedCheckboxes).map(cb => cb.value).join(',');
+                hiddenInput.value = ids;
+            }
+        }
+
+        // 清空设备选择
+        function clearEquipmentSelection() {
+            const checkboxes = document.querySelectorAll('.equipment-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.getElementById('selectAllEquipment').checked = false;
+            updateSelectedEquipmentText();
+        }
+
+        // 设置设备选择状态
+        function setEquipmentSelection(equipmentIds) {
+            clearEquipmentSelection();
+            if (!equipmentIds) return;
+            
+            const idArray = equipmentIds.split(',');
+            idArray.forEach(id => {
+                const checkbox = document.querySelector(`.equipment-checkbox[value="${id.trim()}"]`);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            });
+            updateSelectedEquipmentText();
+        }
+
         // 加载页面
         function loadPage(page) {
             window.location.href = page;
@@ -860,7 +917,55 @@
 
         // 显示能源消耗详情
         function showEnergyConsumptionDetail(equipmentId) {
-            document.getElementById('energyConsumptionDetailModal').classList.remove('hidden');
+            const modal = document.getElementById('energyConsumptionDetailModal');
+            const paramsList = document.getElementById('detailEnergyParamsList');
+            
+            // 模拟根据不同设备展示不同详情
+            if (equipmentId === 'EQ-001') {
+                // 直接计量模式示例
+                paramsList.innerHTML = `
+                    <div class="p-3 bg-gray-50 rounded-md border border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-bold text-primary">电力</span>
+                            <span class="text-xs text-gray-500">仪表编号: EM-001</span>
+                        </div>
+                    </div>
+                `;
+            } else if (equipmentId === 'EQ-023') {
+                // 直接计量模式 - 多能源
+                paramsList.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="p-3 bg-gray-50 rounded-md border border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-bold text-primary">电力</span>
+                                <span class="text-xs text-gray-500">仪表编号: EM-003</span>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-md border border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-bold text-green-600">天然气</span>
+                                <span class="text-xs text-gray-500">仪表编号: GM-003</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // 定额分配模式示例
+                paramsList.innerHTML = `
+                    <div class="p-3 bg-gray-50 rounded-md border border-gray-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-bold text-primary">电力</span>
+                            <span class="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded">kW</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500">额定功率</label>
+                            <div class="text-sm font-medium">5.5</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            modal.classList.remove('hidden');
         }
 
         // 关闭详情模态框
@@ -887,56 +992,156 @@
 
         // 重置表单
         function resetForm() {
-            document.getElementById('equipmentSelect').value = '';
-            document.getElementById('measurementType').value = '';
+            clearEquipmentSelection();
             // 重置多选框
             document.querySelectorAll('input[name="energyType"]').forEach(checkbox => {
                 checkbox.checked = false;
             });
-            document.getElementById('equipmentPower').value = '';
-            document.getElementById('efficiencyFactor').value = '0.95';
-            document.getElementById('meterNumber').value = '';
-            document.getElementById('statusSelect').value = 'enabled';
-
-            document.getElementById('directMeteringFields').classList.add('hidden');
+            
+            // 清空动态参数区域
+            const container = document.getElementById('energyParamsContainer');
+            const list = document.getElementById('energyParamsList');
+            list.innerHTML = '';
+            container.classList.add('hidden');
         }
 
-        // 计量方式变更时触发
-        function onMeasurementTypeChange() {
-            const measurementType = document.getElementById('measurementType').value;
-            const directFields = document.getElementById('directMeteringFields');
-
-            directFields.classList.add('hidden');
-
-            if (measurementType === 'direct') {
-                directFields.classList.remove('hidden');
+        // 能源类型变更时动态生成参数输入框
+        function onEnergyTypeChange() {
+            const container = document.getElementById('energyParamsContainer');
+            const list = document.getElementById('energyParamsList');
+            const checkedBoxes = Array.from(document.querySelectorAll('input[name="energyType"]:checked'));
+            
+            if (checkedBoxes.length > 0) {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
             }
+
+            const currentEnergyTypes = checkedBoxes.map(cb => cb.value);
+            
+            // 移除不再勾选的行
+            const existingRows = list.querySelectorAll('[data-energy-type]');
+            existingRows.forEach(row => {
+                const type = row.getAttribute('data-energy-type');
+                if (!currentEnergyTypes.includes(type)) {
+                    row.remove();
+                }
+            });
+
+            // 添加新勾选的行
+            checkedBoxes.forEach(cb => {
+                const type = cb.value;
+                const label = cb.getAttribute('data-label');
+                const unit = cb.getAttribute('data-unit');
+                
+                if (!list.querySelector(`[data-energy-type="${type}"]`)) {
+                    const row = document.createElement('div');
+                    row.setAttribute('data-energy-type', type);
+                    row.className = 'p-4 bg-gray-50 rounded-md border border-gray-200 space-y-3';
+                    
+                    row.innerHTML = `
+                        <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                            <span class="font-bold text-primary">${label}配置</span>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <!-- 核心参数 -->
+                            <div id="quotaParams_${type}">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 mb-1">
+                                        额定功率/流量 (${unit}) <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="number" step="0.1" min="0.1" max="10000" class="energy-power-input w-full px-3 py-1.5 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary text-sm" placeholder="输入${label}参数" value="1.0">
+                                    <p class="text-[10px] text-gray-400 mt-1">范围：0.1 - 10000</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 能耗计算公式说明 -->
+                            <div id="quotaFields_${type}" class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                <div class="flex items-start">
+                                    <i class="fa fa-info-circle mt-0.5 mr-2 text-blue-600"></i>
+                                    <div class="text-xs text-blue-700">
+                                        <p class="font-bold">能耗计算公式：</p>
+                                        <p class="mt-1">设备能耗 = 额定功率 × 设备总工时</p>
+                                        <p class="mt-1">研发分摊能耗 = 设备能耗 × 研发工时占比（研发工时/总工时）</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    list.appendChild(row);
+
+                    // 如果是电力且是定额模式，尝试填充默认功率（虽然初始是直接计量，但先存着逻辑）
+                    if (type === 'electricity') {
+                        const selectedCheckbox = document.querySelector('.equipment-checkbox:checked');
+                        if (selectedCheckbox) {
+                            const power = selectedCheckbox.getAttribute('data-power');
+                            if (power) {
+                                row.querySelector('.energy-power-input').value = power;
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         // 设备变更时自动填充功率
         function onEquipmentChange() {
-            const equipmentSelect = document.getElementById('equipmentSelect');
-            const selectedOption = equipmentSelect.options[equipmentSelect.selectedIndex];
-            const power = selectedOption.getAttribute('data-power');
+            const selectedCheckbox = document.querySelector('.equipment-checkbox:checked');
+            if (!selectedCheckbox) return;
 
-            // 填充设备功率
-            if (power) {
-                document.getElementById('equipmentPower').value = power;
-            }
+            const power = selectedCheckbox.getAttribute('data-power');
+
+            // 为所有已勾选的能源类型尝试填充功率
+            const checkedBoxes = Array.from(document.querySelectorAll('input[name="energyType"]:checked'));
+            checkedBoxes.forEach(cb => {
+                const type = cb.value;
+                const powerInput = document.querySelector(`[data-energy-type="${type}"] .energy-power-input`);
+                if (powerInput && power) {
+                    powerInput.value = power;
+                }
+            });
         }
 
         // 保存设备能耗参数配置
         function saveEnergyConsumption() {
-            const equipment = document.getElementById('equipmentSelect').value;
-            const measurementType = document.getElementById('measurementType').value;
-            const energyTypes = Array.from(document.querySelectorAll('input[name="energyType"]:checked'))
-                                    .map(checkbox => checkbox.value);
-            const power = document.getElementById('equipmentPower').value;
-
-            if (!equipment || !measurementType || energyTypes.length === 0 || !power) {
-                alert('请填写必填项（设备名称、计量方式、能源类型、设备功率）');
+            const equipment = document.getElementById('selectedEquipmentIds').value;
+            const checkedBoxes = Array.from(document.querySelectorAll('input[name="energyType"]:checked'));
+            
+            if (!equipment || checkedBoxes.length === 0) {
+                alert('请填写必填项（设备名称、能源类型）');
                 return;
             }
+
+            // 校验动态参数
+            let allValid = true;
+            checkedBoxes.forEach(cb => {
+                const type = cb.value;
+                const label = cb.getAttribute('data-label');
+                const mode = document.querySelector(`input[name="measureMode_${type}"]:checked`).value;
+                
+                // 定额模式下，功率是必填的
+                if (mode === 'quota') {
+                    const powerInput = document.querySelector(`[data-energy-type="${type}"] .energy-power-input`);
+                    if (!powerInput || !powerInput.value) {
+                        alert(`请填写${label}的额定功率/流量参数（定额计算必需）`);
+                        allValid = false;
+                        return;
+                    }
+                }
+
+                // 直接计量下，仪表编号必填
+                if (mode === 'direct') {
+                    const meterInput = document.querySelector(`[data-energy-type="${type}"] .energy-meter-input`);
+                    if (!meterInput || !meterInput.value) {
+                        alert(`请填写${label}的仪表编号`);
+                        allValid = false;
+                        return;
+                    }
+                }
+            });
+
+            if (!allValid) return;
 
             alert('保存成功');
             closeAddModal();
@@ -952,6 +1157,24 @@
         // 页面加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
             resetForm();
+            
+            // 添加设备多选框的change事件监听
+            document.querySelectorAll('.equipment-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateSelectedEquipmentText();
+                    onEquipmentChange();
+                });
+            });
+            
+            // 点击外部关闭下拉菜单
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('equipmentDropdown');
+                const dropdownMenu = document.getElementById('equipmentDropdownMenu');
+                
+                if (!dropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.add('hidden');
+                }
+            });
         });
     </script>
 </body>

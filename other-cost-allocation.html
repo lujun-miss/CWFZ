@@ -59,7 +59,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                            <!-- 导航菜单 -->
+                                                                                                                                                                                                                        <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -181,6 +181,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
                                     <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -463,7 +469,7 @@
                     </button>
                     <button id="tabAllocation" class="px-4 py-2 text-sm font-medium text-primary border-b-2 border-primary bg-blue-50" onclick="switchTab('allocation')">
                         <i class="fa fa-cogs mr-1"></i>
-                        其他费用归集
+                        费用归集
                     </button>
                 </div>
 
@@ -554,6 +560,7 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集金额</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集项目</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集时间</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集状态</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作人</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                                     </tr>
@@ -617,31 +624,31 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">费用类别</label>
                     <div class="flex flex-wrap gap-4">
                         <label class="flex items-center">
-                            <input type="checkbox" name="allocationCategory" value="books" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                            <input type="checkbox" name="allocationCategory" value="books" checked class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
                             <span class="ml-2 text-sm text-gray-700">技术图书资料费</span>
                         </label>
                         <label class="flex items-center">
-                            <input type="checkbox" name="allocationCategory" value="translation" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                            <input type="checkbox" name="allocationCategory" value="translation" checked class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
                             <span class="ml-2 text-sm text-gray-700">资料翻译费</span>
                         </label>
                         <label class="flex items-center">
-                            <input type="checkbox" name="allocationCategory" value="consulting" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                            <input type="checkbox" name="allocationCategory" value="consulting" checked class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
                             <span class="ml-2 text-sm text-gray-700">专家咨询费</span>
                         </label>
                         <label class="flex items-center">
-                            <input type="checkbox" name="allocationCategory" value="intellectual" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                            <input type="checkbox" name="allocationCategory" value="intellectual" checked class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
                             <span class="ml-2 text-sm text-gray-700">知识产权费用</span>
                         </label>
                         <label class="flex items-center">
-                            <input type="checkbox" name="allocationCategory" value="meeting" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                            <input type="checkbox" name="allocationCategory" value="meeting" checked class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
                             <span class="ml-2 text-sm text-gray-700">会议费</span>
                         </label>
                         <label class="flex items-center">
-                            <input type="checkbox" name="allocationCategory" value="travel" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                            <input type="checkbox" name="allocationCategory" value="travel" checked class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
                             <span class="ml-2 text-sm text-gray-700">差旅费</span>
                         </label>
                         <label class="flex items-center">
-                            <input type="checkbox" name="allocationCategory" value="communication" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                            <input type="checkbox" name="allocationCategory" value="communication" checked class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
                             <span class="ml-2 text-sm text-gray-700">通讯费</span>
                         </label>
                     </div>
@@ -757,6 +764,7 @@
         let allocationRecords = [
             { 
                 id: 1, category: 'books', project: '智能传感器研发', month: '2026-04', allocationTime: '2026-04-15 10:30', operator: '张三', 
+                status: '已锁定',
                 totalAmount: 28500,
                 items: [
                     { dateRange: '2026-04月1-10日', expenseName: '技术图书资料费', amount: 12000 },
@@ -766,6 +774,7 @@
             },
             { 
                 id: 2, category: 'translation', project: '工业机器人控制系统', month: '2026-04', allocationTime: '2026-04-16 14:20', operator: '李四', 
+                status: '已归集',
                 totalAmount: 42000,
                 items: [
                     { dateRange: '2026-04月1-10日', expenseName: '资料翻译费', amount: 18000 },
@@ -775,6 +784,7 @@
             },
             { 
                 id: 3, category: 'consulting', project: '新能源材料研究', month: '2026-04', allocationTime: '2026-04-17 09:15', operator: '王五', 
+                status: '已归集',
                 totalAmount: 65000,
                 items: [
                     { dateRange: '2026-04月1-10日', expenseName: '专家咨询费', amount: 25000 },
@@ -784,6 +794,7 @@
             },
             { 
                 id: 4, category: 'intellectual', project: '智能传感器研发', month: '2026-04', allocationTime: '2026-04-18 11:00', operator: '张三', 
+                status: '已归集',
                 totalAmount: 18000,
                 items: [
                     { dateRange: '2026-04月1-10日', expenseName: '知识产权费用', amount: 8000 },
@@ -792,6 +803,7 @@
             },
             { 
                 id: 5, category: 'meeting', project: '工业机器人控制系统', month: '2026-04', allocationTime: '2026-04-19 15:30', operator: '李四', 
+                status: '已归集',
                 totalAmount: 35000,
                 items: [
                     { dateRange: '2026-04月1-10日', expenseName: '会议费', amount: 15000 },
@@ -812,15 +824,46 @@
                 total += item.totalAmount;
                 const row = document.createElement('tr');
                 row.className = 'table-row-hover';
+                
+                // 归集状态列样式
+                let statusHtml = '';
+                if (item.status === '已锁定') {
+                    statusHtml = `
+                        <div class="flex flex-col space-y-1">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 w-fit">已锁定</span>
+                            <span class="px-2 inline-flex text-[10px] leading-4 font-medium rounded-full bg-blue-100 text-blue-800 w-fit" title="该记录已生成年度辅助账，无法直接撤回">已关联年度辅助账</span>
+                        </div>
+                    `;
+                } else {
+                    statusHtml = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已归集</span>';
+                }
+
+                // 操作列样式
+                let actionHtml = '';
+                if (item.status === '已锁定') {
+                    actionHtml = `
+                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewDetail(${item.id})">查看详情</a>
+                        <span class="text-gray-300 ml-2 mr-2">|</span>
+                        <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="请先撤回年度辅助账后再操作">撤回重算</a>
+                    `;
+                } else {
+                    actionHtml = `
+                        <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700" onclick="viewDetail(${item.id})">查看详情</a>
+                        <span class="text-gray-300 ml-2 mr-2">|</span>
+                        <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(${item.id})">撤回重算</a>
+                    `;
+                }
+
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${categoryMap[item.category] || item.category}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.month}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥${item.totalAmount.toLocaleString()}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.project}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.allocationTime}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.allocationTime}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${statusHtml}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.operator}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm"><button onclick="viewDetail(${item.id})" class="text-primary hover:text-blue-700">查看详情</button></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">${actionHtml}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -890,8 +933,47 @@
         }
 
         function performAllocation() {
-            alert('归集任务已启动，正在按预设规则分配费用...');
+            const project = document.getElementById('allocationProject').value;
+            const month = document.getElementById('allocationMonth').value;
+            
+            if (!project || !month) {
+                alert('请选择归集项目和月份');
+                return;
+            }
+
+            allocationRecords.push({
+                id: allocationRecords.length + 1,
+                category: 'books', // 模拟
+                project: project,
+                month: month,
+                allocationTime: new Date().toLocaleString(),
+                operator: '管理员',
+                status: '已归集',
+                totalAmount: 15000,
+                items: [
+                    { dateRange: month + '月1-30日', expenseName: '技术图书资料费', amount: 15000 }
+                ]
+            });
+
+            renderTable();
             closeAllocationModal();
+            alert('归集成功');
+        }
+
+        function withdrawAllocation(id) {
+            // 模拟强锁定逻辑
+            const record = allocationRecords.find(r => r.id === id);
+            if (record && record.status === '已锁定') {
+                const lockMsg = `【操作拦截：年度数据已锁定】\n\n原因：该年度已生成“年度研发费用辅助账套表”，为了保证数据一致性，已锁定的月份记录不允许撤回。\n\n如需修改，请先前往“多口径报表 -> 账套表生成”中撤销对应年度的锁定。`;
+                alert(lockMsg);
+                return;
+            }
+
+            if (confirm('确定要撤回该笔归集记录吗？撤回后相关费用将恢复为“未归集”状态。')) {
+                allocationRecords = allocationRecords.filter(function(r) { return r.id !== id; });
+                renderTable();
+                alert('已成功撤回');
+            }
         }
 
         window.onload = function() {

@@ -102,7 +102,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                            <!-- 导航菜单 -->
+                                                                                                                                                                                                                        <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -224,6 +224,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
                                     <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -520,6 +526,29 @@
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     项目阶段
+                                    <span class="relative group cursor-pointer ml-1 inline-block align-middle">
+                                        <i class="fa fa-question-circle text-gray-400 hover:text-gray-600"></i>
+                                        <div class="hidden group-hover:block absolute z-50 left-0 top-full mt-1 w-72 bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-xs text-gray-600 normal-case tracking-normal">
+                                            <div class="font-medium text-gray-700 mb-2">阶段状态计算逻辑说明</div>
+                                            <div class="space-y-2">
+                                                <div>
+                                                    <span class="font-bold text-green-600">● 已完成：</span>
+                                                    当（已完成任务数 + 已取消任务数）= 总任务数时，阶段自动判定为“已完成”。
+                                                </div>
+                                                <div>
+                                                    <span class="font-bold text-blue-600">● 进行中：</span>
+                                                    只要有 1 个任务处于“进行中”，或任何任务进度 > 0% 且 < 100%，阶段即为“进行中”。
+                                                </div>
+                                                <div>
+                                                    <span class="font-bold text-gray-600">● 未开始：</span>
+                                                    只有当除“已取消”外的所有任务均处于“待开始”且进度为 0% 时。
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 pt-2 border-t border-gray-200 text-[10px] italic text-gray-400">
+                                                注：系统会自动排除“已取消”的任务量，不影响阶段结项。
+                                            </div>
+                                        </div>
+                                    </span>
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     任务完成状态
@@ -694,8 +723,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex space-x-2">
-                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs" onclick="auditStage('RD01', 'stage1')">审核</button>
-                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs" onclick="rejectStage('RD01', 'stage1')">驳回</button>
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs" onclick="auditStage('RD01', 'stage1')">审核通过</button>
                                         <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs" onclick="viewAttachments('RD01', 'stage1')">查看附件</button>
                                     </div>
                                 </td>
@@ -861,8 +889,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex space-x-2">
-                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="附件不齐全，无法审核">审核</button>
-                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs" onclick="rejectStage('RD02', 'stage6')">驳回</button>
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="附件不齐全，无法审核">审核通过</button>
                                         <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs" onclick="viewAttachments('RD02', 'stage6')">查看附件</button>
                                     </div>
                                 </td>
@@ -1028,8 +1055,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex space-x-2">
-                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="任务未完成，附件不齐全，无法审核">审核</button>
-                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs" onclick="rejectStage('RD03', 'stage1')">驳回</button>
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="任务未完成，附件不齐全，无法审核">审核通过</button>
                                         <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs" onclick="viewAttachments('RD03', 'stage1')">查看附件</button>
                                     </div>
                                 </td>
@@ -1058,8 +1084,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex space-x-2">
-                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法审核">审核</button>
-                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法驳回">驳回</button>
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法审核">审核通过</button>
                                         <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无附件可查看">查看附件</button>
                                     </div>
                                 </td>
@@ -1088,8 +1113,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex space-x-2">
-                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法审核">审核</button>
-                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法驳回">驳回</button>
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无法审核">审核通过</button>
                                         <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs opacity-50 cursor-not-allowed" title="未设置阶段，无附件可查看">查看附件</button>
                                     </div>
                                 </td>
@@ -1162,9 +1186,6 @@
                     <button class="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700" id="approveBtn">
                         通过
                     </button>
-                    <button class="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700" id="rejectBtn">
-                        拒绝
-                    </button>
                 </div>
             </div>
         </div>
@@ -1232,14 +1253,6 @@
             document.getElementById('stageDetailModal').classList.remove('hidden');
         }
 
-        // 驳回阶段函数
-        function rejectStage(projectId, stageId) {
-            if (confirm('确定要驳回此阶段吗？')) {
-                alert(`阶段 ${getStageName(stageId)} 已被驳回`);
-                // 这里可以添加实际的驳回逻辑
-            }
-        }
-
         // 查看附件函数
         function viewAttachments(projectId, stageId) {
             alert(`查看项目 ${projectId} 阶段 ${getStageName(stageId)} 的附件`);
@@ -1293,14 +1306,6 @@
             const stageName = document.getElementById('detailStageName').textContent;
             const comment = document.getElementById('auditComment').value;
             alert(`项目 ${projectId} 的 ${stageName} 阶段已审核通过\n意见：${comment || '无'}`);
-            document.getElementById('stageDetailModal').classList.add('hidden');
-        });
-
-        document.getElementById('rejectBtn').addEventListener('click', function() {
-            const projectId = document.getElementById('detailProjectId').textContent;
-            const stageName = document.getElementById('detailStageName').textContent;
-            const comment = document.getElementById('auditComment').value;
-            alert(`项目 ${projectId} 的 ${stageName} 阶段已被拒绝\n意见：${comment || '无'}`);
             document.getElementById('stageDetailModal').classList.add('hidden');
         });
 

@@ -249,7 +249,6 @@
     </style>
 </head>
 <body class="bg-gray-50 p-6">
-    <h2 class="text-xl font-bold text-gray-800 mb-6">长期待摊分配</h2>
     <div class="card">
         <div class="search-bar">
             <div>
@@ -287,9 +286,9 @@
                         <th>费用名称</th>
                         <th>费用类型</th>
                         <th>所属项目</th>
-                        <th>分配方式</th>
                         <th>分配比例</th>
                         <th>分配说明</th>
+                        <th>归集状态</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -300,12 +299,13 @@
                         <td rowspan="3">研发实验室装修</td>
                         <td rowspan="3">装修费</td>
                         <td>智能客服系统1</td>
-                        <td rowspan="3">固定比例</td>
                         <td>30%</td>
                         <td rowspan="3">按项目使用面积分摊</td>
+                        <td rowspan="3">
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已归集</span>
+                        </td>
                         <td rowspan="3" class="action-links">
-                            <a href="#" onclick="viewAllocationDetail('LTA-001')">查看分摊明细</a>
-                            <a href="#" onclick="editRule('LTA-001')">编辑</a>
+                            <span class="text-gray-400 cursor-not-allowed" title="费用已归集，不允许编辑">编辑</span>
                         </td>
                     </tr>
                     <tr>
@@ -326,11 +326,12 @@
                         <td rowspan="2">研发系统实施费</td>
                         <td rowspan="2">软件实施费</td>
                         <td>智能客服系统1</td>
-                        <td rowspan="2">固定比例</td>
                         <td>50%</td>
                         <td rowspan="2">按项目参与人员比例分摊</td>
+                        <td rowspan="2">
+                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
+                        </td>
                         <td rowspan="2" class="action-links">
-                            <a href="#" onclick="viewAllocationDetail('LTA-002')">查看分摊明细</a>
                             <a href="#" onclick="editRule('LTA-002')">编辑</a>
                         </td>
                     </tr>
@@ -346,12 +347,13 @@
                         <td rowspan="3">办公楼装修</td>
                         <td rowspan="3">装修费</td>
                         <td>智能客服系统1</td>
-                        <td rowspan="3">按使用比例</td>
                         <td>60%</td>
                         <td rowspan="3">按实际使用面积分摊</td>
+                        <td rowspan="3">
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已归集</span>
+                        </td>
                         <td rowspan="3" class="action-links">
-                            <a href="#" onclick="viewAllocationDetail('LTA-004')">查看分摊明细</a>
-                            <a href="#" onclick="editRule('LTA-004')">编辑</a>
+                            <span class="text-gray-400 cursor-not-allowed" title="费用已归集，不允许编辑">编辑</span>
                         </td>
                     </tr>
                     <tr>
@@ -372,11 +374,12 @@
                         <td>技术许可费</td>
                         <td>技术转让费</td>
                         <td>智能客服系统3</td>
-                        <td>固定比例</td>
                         <td>100%</td>
                         <td>专属项目使用</td>
+                        <td>
+                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">未归集</span>
+                        </td>
                         <td class="action-links">
-                            <a href="#" onclick="viewAllocationDetail('LTA-005')">查看分摊明细</a>
                             <a href="#" onclick="editRule('LTA-005')">编辑</a>
                         </td>
                     </tr>
@@ -410,13 +413,6 @@
                 <div class="form-group">
                     <label>月摊销额</label>
                     <input type="text" id="modalMonthlyAmount" readonly style="background-color: #f9fafb;">
-                </div>
-                <div class="form-group">
-                    <label>分配方式</label>
-                    <select id="modalAllocationMethod">
-                        <option value="fixed">固定比例</option>
-                        <option value="usage">按使用比例</option>
-                    </select>
                 </div>
                 <div class="form-group">
                     <label>分配说明</label>

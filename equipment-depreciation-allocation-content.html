@@ -30,6 +30,24 @@
         }
     </style>
     <style>
+        /* 针对 iframe 嵌套的铺满样式 */
+        .parent-iframe {
+            background-color: transparent !important;
+            padding: 0 !important;
+        }
+        .parent-iframe .page-header-section {
+            display: none !important;
+        }
+        .parent-iframe .content-wrapper {
+            padding: 1.5rem !important;
+        }
+        .parent-iframe .max-w-7xl, 
+        .parent-iframe .container {
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+        }
+
         .icon {
             display: inline-block;
             width: 16px;
@@ -46,8 +64,13 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans p-6">
-    <!-- 筛选条件区域 -->
-    <div class="bg-white rounded-lg shadow p-6 mb-6">
+    <div class="page-header-section mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">折旧与长期摊销费用</h1>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- 筛选条件区域 -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <!-- 时间范围 -->
             <div class="flex items-center space-x-2">
@@ -116,6 +139,7 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集金额</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集时间</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作人</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">归集状态</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                     </tr>
                 </thead>
@@ -128,8 +152,15 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 15,000</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex flex-col space-y-1">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 w-fit">已锁定</span>
+                                <span class="px-2 inline-flex text-[10px] leading-4 font-medium rounded-full bg-blue-100 text-blue-800 w-fit">已关联年度辅助账</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                             <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(1)">查看详情</a>
+                            <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="请先撤回年度辅助账后再操作" onclick="withdrawAllocation(1)">撤回重算</a>
                         </td>
                     </tr>
                     <tr class="table-row-hover">
@@ -140,8 +171,12 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 8,000</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                             <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(2)">查看详情</a>
+                            <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(2)">撤回重算</a>
                         </td>
                     </tr>
                     <tr class="table-row-hover">
@@ -152,8 +187,12 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 12,000</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 10:30</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">王五</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                             <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(3)">查看详情</a>
+                            <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(3)">撤回重算</a>
                         </td>
                     </tr>
                     <tr class="table-row-hover">
@@ -164,8 +203,12 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 10,000</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 11:15</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                             <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(4)">查看详情</a>
+                            <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(4)">撤回重算</a>
                         </td>
                     </tr>
                     <tr class="table-row-hover">
@@ -176,8 +219,12 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 6,000</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 11:15</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                             <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(5)">查看详情</a>
+                            <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(5)">撤回重算</a>
                         </td>
                     </tr>
                     <!-- 长期摊销费记录 -->
@@ -189,8 +236,12 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 3,333</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 14:20</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                             <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(6)">查看详情</a>
+                            <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(6)">撤回重算</a>
                         </td>
                     </tr>
                     <tr class="table-row-hover">
@@ -201,8 +252,12 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 1,667</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 14:25</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">李四</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                             <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(7)">查看详情</a>
+                            <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(7)">撤回重算</a>
                         </td>
                     </tr>
                     <tr class="table-row-hover">
@@ -213,8 +268,12 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 5,556</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 15:00</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">王五</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                             <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(8)">查看详情</a>
+                            <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(8)">撤回重算</a>
                         </td>
                     </tr>
                     <tr class="table-row-hover">
@@ -225,8 +284,12 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 2,500</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-05-01 15:30</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                             <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(9)">查看详情</a>
+                            <a href="javascript:void(0)" class="text-red-500 hover:text-red-700" onclick="withdrawAllocation(9)">撤回重算</a>
                         </td>
                     </tr>
                 </tbody>
@@ -234,7 +297,7 @@
                     <tr>
                         <td colspan="4" class="px-6 py-4 text-right text-sm font-medium text-gray-700">合计：</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">¥ 64,056</td>
-                        <td colspan="3"></td>
+                        <td colspan="4"></td>
                     </tr>
                 </tfoot>
             </table>
@@ -252,6 +315,7 @@
             </div>
         </div>
     </div>
+</div> <!-- End of content-wrapper -->
 
     <!-- 折旧与长期摊销费用模态框 -->
     <div id="allocationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
@@ -303,7 +367,7 @@
                             <label for="allocateEquipment" class="ml-2 text-sm text-gray-700">设备折旧</label>
                         </div>
                         <div class="flex items-center">
-                            <input type="checkbox" id="allocateAmortization" name="costType" value="amortization" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                            <input type="checkbox" id="allocateAmortization" name="costType" value="amortization" class="h-4 w-4 text-primary focus:ring-primary border-gray-300" checked>
                             <label for="allocateAmortization" class="ml-2 text-sm text-gray-700">长期待摊费</label>
                         </div>
                     </div>
@@ -312,10 +376,8 @@
                 <!-- 归集方式 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">归集方式</label>
-                    <select id="allocationMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option value="manual">手动分配</option>
-                        <option value="auto">自动分配（按设备工时）</option>
-                        <option value="import">导入分配</option>
+                    <select id="allocationMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" disabled>
+                        <option value="auto" selected>自动分配</option>
                     </select>
                 </div>
             </div>
@@ -672,6 +734,54 @@
         function closeDetailModal() {
             document.getElementById('detailModal').classList.add('hidden');
             document.getElementById('detailModal').classList.remove('flex');
+        }
+
+        // 撤回归集记录
+        function withdrawAllocation(id) {
+            const detail = depreciationDetails[id];
+            
+            // --- 专家级校验：检测年度锁定状态 ---
+            // 只有当 ID 为 1 时模拟“已关联年度辅助账”的拦截提示
+            if (id === 1) {
+                const lockMsg = `【操作拦截：年度数据已锁定】\n\n` +
+                              `检测到 [${detail.month}] 属于已结账年度。\n\n` +
+                              `原因：\n` +
+                              `该年度已生成“年度研发费用辅助账套表”，为了保证年度总账与月度明细的一致性，系统已对该年度数据执行了“强锁定”。\n\n` +
+                              `如何撤回：\n` +
+                              `若确实需要修改，请先前往 [多口径报表 -> 账套表生成] 模块，点击“查看生成记录”，撤回对应的年度账套表。年度表撤回后，月度数据将自动解锁。`;
+                alert(lockMsg);
+                return;
+            }
+
+            if (confirm(`确定要撤回 ${detail.month} ${detail.project} 的归集记录吗？\n撤回后，该月份的备查底稿将同步失效，需重新执行归集。`)) {
+                // 模拟撤回交互效果
+                const rows = document.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const firstCell = row.querySelector('td:first-child');
+                    if (firstCell && firstCell.textContent.trim() == id) {
+                        // 1. 修改状态显示
+                        const statusCell = row.querySelector('td:nth-last-child(2)');
+                        statusCell.innerHTML = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">已撤回</span>';
+                        
+                        // 2. 弱化整行显示
+                        row.classList.add('opacity-50');
+                        
+                        // 3. 修改操作按钮
+                        const actionCell = row.querySelector('td:last-child');
+                        actionCell.innerHTML = `
+                            <a href="javascript:void(0)" class="text-gray-400 cursor-not-allowed" title="记录已撤回">查看详情</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="javascript:void(0)" class="text-blue-500 hover:text-blue-700 font-medium" onclick="openAllocationModal()">重新归集</a>
+                        `;
+                    }
+                });
+                alert('已撤回。该月份数据已解锁，您可以修正原始凭证或工时记录后重新归集。');
+            }
+        }
+
+        // 检测是否在 iframe 中
+        if (window.self !== window.parent) {
+            document.body.classList.add('parent-iframe');
         }
     </script>
 </body>

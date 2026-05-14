@@ -47,6 +47,20 @@
         .btn-danger {
             @apply bg-danger text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors;
         }
+        /* Iframe 适配 */
+        .parent-iframe .left-sidebar,
+        .parent-iframe .page-header,
+        .parent-iframe header {
+            display: none !important;
+        }
+        .parent-iframe body {
+            padding: 0 !important;
+            background-color: transparent !important;
+        }
+        .parent-iframe .bg-white.rounded-lg.shadow-md {
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50 p-6">
@@ -202,20 +216,21 @@
     </div>
 
     <script>
+        // 检测是否在 iframe 中
+        if (window.self !== window.parent) {
+            document.body.classList.add('parent-iframe');
+        }
+
         function goBack() {
-            try {
-                if (window.parent && typeof window.parent.loadPage === 'function') {
-                    window.parent.loadPage('project-material.html');
-                } else if (window.opener && typeof window.opener.loadPage === 'function') {
-                    window.opener.loadPage('project-material.html');
-                    window.close();
-                } else if (window.history.length > 1) {
-                    window.history.back();
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                // 如果没有历史记录，根据是否在 iframe 中决定跳转目标
+                if (window.self !== window.parent) {
+                    window.location.href = 'project-material-content.html';
                 } else {
                     window.location.href = 'project-material.html';
                 }
-            } catch (e) {
-                window.location.href = 'project-material.html';
             }
         }
 

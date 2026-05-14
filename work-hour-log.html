@@ -86,7 +86,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                            <!-- 导航菜单 -->
+                                                                                                                                                                                                                        <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -208,6 +208,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
                                     <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -523,10 +529,8 @@
                             </select>
                         </div>
                         <div class="flex items-center gap-2">
-                            <label class="text-sm font-medium text-gray-700">日期范围:</label>
-                            <input type="date" id="startDate" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
-                            <span class="text-gray-500 text-sm">至</span>
-                            <input type="date" id="endDate" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+                            <label class="text-sm font-medium text-gray-700">归集月份:</label>
+                            <input type="month" id="filterMonth" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
                         </div>
                         <div class="flex items-center gap-2">
                             <button id="queryBtn" class="px-3 py-1.5 bg-primary text-white rounded-md text-sm hover:bg-blue-600">
@@ -535,12 +539,6 @@
                             <button id="resetBtn" class="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-50">
                                 重置
                             </button>
-                        </div>
-                        <div class="flex items-center gap-2 ml-auto">
-                            <button class="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50">全部</button>
-                            <button class="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50">今日</button>
-                            <button class="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50">本周</button>
-                            <button class="px-2 py-1 text-xs border border-primary bg-primary text-white rounded-full">本月</button>
                         </div>
                     </div>
                 </div>
@@ -1049,6 +1047,25 @@
         
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 绑定查询按钮点击事件
+            document.getElementById('queryBtn').addEventListener('click', function() {
+                const employee = document.getElementById('employeeInput').value;
+                const project = document.getElementById('projectFilter').value;
+                const status = document.getElementById('statusFilter').value;
+                const month = document.getElementById('filterMonth').value;
+                
+                console.log('查询条件:', { employee, project, status, month });
+                alert('查询成功');
+            });
+
+            // 绑定重置按钮点击事件
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                document.getElementById('employeeInput').value = '';
+                document.getElementById('projectFilter').value = '';
+                document.getElementById('statusFilter').value = '';
+                document.getElementById('filterMonth').value = '';
+                alert('重置成功');
+            });
             updatePendingCount();
             loadAllRecords();
             const projectSubmenu = document.getElementById('project-submenu');

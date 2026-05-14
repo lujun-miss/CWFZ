@@ -81,12 +81,20 @@
             @apply bg-danger text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors;
         }
         .parent-iframe .left-sidebar,
-        .parent-iframe .page-header {
+        .parent-iframe .page-header,
+        .parent-iframe .page-header-section {
             display: none !important;
         }
         .parent-iframe main {
             margin-left: 0 !important;
-            padding: 1rem !important;
+            padding: 0 !important;
+        }
+        .parent-iframe .max-w-7xl {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        .parent-iframe .content-wrapper {
+            padding: 1.5rem !important;
         }
     </style>
 </head>
@@ -94,8 +102,12 @@
     <div class="flex h-screen overflow-hidden">
             
             <!-- 内容区域 -->
-            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
-                <div class="max-w-7xl mx-auto">
+            <main class="flex-1 overflow-y-auto bg-gray-50">
+                <div class="page-header-section p-6 border-b border-gray-200 bg-white mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">项目领料管理</h1>
+                    <p class="text-gray-500 text-sm mt-1">维护领料单信息，包括领料单号、所属项目、领料人、领料时间等</p>
+                </div>
+                <div class="max-w-7xl mx-auto content-wrapper px-6 pb-6">
                     <!-- 搜索筛选区 -->
                     <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
                         <div class="flex flex-wrap items-center gap-4">
@@ -120,42 +132,8 @@
                             </div>
                             
                             <div class="flex items-center space-x-2">
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('all')">全部</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('today')">今日</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('week')">本周</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('month')">本月</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('year')">本年</button>
-                                <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors" onclick="setDateRange('custom')">自定义</button>
-                            </div>
-                            
-                            <div class="flex items-center space-x-2">
-                                <select id="yearSelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" onchange="onYearMonthChange()">
-                                    <option value="">选择年份</option>
-                                </select>
-                                <select id="monthSelect" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" onchange="onYearMonthChange()">
-                                    <option value="">选择月份</option>
-                                    <option value="01">1月</option>
-                                    <option value="02">2月</option>
-                                    <option value="03">3月</option>
-                                    <option value="04">4月</option>
-                                    <option value="05">5月</option>
-                                    <option value="06">6月</option>
-                                    <option value="07">7月</option>
-                                    <option value="08">8月</option>
-                                    <option value="09">9月</option>
-                                    <option value="10">10月</option>
-                                    <option value="11">11月</option>
-                                    <option value="12">12月</option>
-                                </select>
-                                <button class="px-3 py-1 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors" onclick="applyYearMonthFilter()">
-                                    <i class="fa fa-search mr-1"></i>查询
-                                </button>
-                            </div>
-                            
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" id="startDate">
-                                <span class="text-gray-500">至</span>
-                                <input type="date" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" id="endDate">
+                                <label class="text-gray-700 mr-2">月份：</label>
+                                <input type="month" id="filterMonth" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
                             </div>
                             
                             <!-- 导出选项 -->
@@ -172,7 +150,7 @@
                             <div class="ml-auto flex items-center space-x-2">
                                 <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors" onclick="queryRecords()">查询</button>
                                 <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors" onclick="resetFilters()">重置</button>
-                                <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors" onclick="createRequisition()">新建领料单</button>
+                                <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors" onclick="createRequisition(event)">新建领料单</button>
                             </div>
                         </div>
                     </div>
@@ -208,6 +186,7 @@
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料部门</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料时间</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">领料人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">审核人</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">备注说明</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">物料编码/名称</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">规格</th>
@@ -230,7 +209,8 @@
                                         <td class="px-4 py-3 border-b" rowspan="3">生产部门</td>
                                         <td class="px-4 py-3 border-b" rowspan="3">2025-10-05</td>
                                         <td class="px-4 py-3 border-b" rowspan="3">张三</td>
-                                        <td class="px-4 py-3 border-b" rowspan="3">用于研发使用</td>
+                                        <td class="px-4 py-3 border-b" rowspan="3">王五</td>
+                                        <td class="px-4 py-3 border-b" rowspan="3">项目初期耗材</td>
                                         <td class="px-4 py-3 border-b">BM001 物料A</td>
                                         <td class="px-4 py-3 border-b">ml</td>
                                         <td class="px-4 py-3 border-b">1000</td>
@@ -280,6 +260,7 @@
                                         <td class="px-4 py-3 border-b" rowspan="2">研发部门</td>
                                         <td class="px-4 py-3 border-b" rowspan="2">2025-10-08</td>
                                         <td class="px-4 py-3 border-b" rowspan="2">李四</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">王五</td>
                                         <td class="px-4 py-3 border-b" rowspan="2">项目测试使用</td>
                                         <td class="px-4 py-3 border-b">BM005 设备配件A</td>
                                         <td class="px-4 py-3 border-b">个</td>
@@ -322,6 +303,7 @@
                                         <td class="px-4 py-3 border-b">研发部门</td>
                                         <td class="px-4 py-3 border-b">2025-10-10</td>
                                         <td class="px-4 py-3 border-b">王五</td>
+                                        <td class="px-4 py-3 border-b">李四</td>
                                         <td class="px-4 py-3 border-b">批量采购备用</td>
                                         <td class="px-4 py-3 border-b">BM005 设备配件A</td>
                                         <td class="px-4 py-3 border-b">个</td>
@@ -356,6 +338,7 @@
                                         <td class="px-4 py-3 border-b" rowspan="2">生产部门</td>
                                         <td class="px-4 py-3 border-b" rowspan="2">2025-09-09</td>
                                         <td class="px-4 py-3 border-b" rowspan="2">张三</td>
+                                        <td class="px-4 py-3 border-b" rowspan="2">李四</td>
                                         <td class="px-4 py-3 border-b" rowspan="2">用于研发使用</td>
                                         <td class="px-4 py-3 border-b">BM001 物料A</td>
                                         <td class="px-4 py-3 border-b">ml</td>
@@ -398,6 +381,7 @@
                                         <td class="px-4 py-3 border-b">生产部门</td>
                                         <td class="px-4 py-3 border-b">2025-09-09</td>
                                         <td class="px-4 py-3 border-b">张三</td>
+                                        <td class="px-4 py-3 border-b">王五</td>
                                         <td class="px-4 py-3 border-b">用于研发使用</td>
                                         <td class="px-4 py-3 border-b">BM001 物料A</td>
                                         <td class="px-4 py-3 border-b">ml</td>
@@ -432,6 +416,7 @@
                                         <td class="px-4 py-3 border-b">研发部门</td>
                                         <td class="px-4 py-3 border-b">2025-09-09</td>
                                         <td class="px-4 py-3 border-b">李四</td>
+                                        <td class="px-4 py-3 border-b">王五</td>
                                         <td class="px-4 py-3 border-b">用于研发使用</td>
                                         <td class="px-4 py-3 border-b">BM002 物料B</td>
                                         <td class="px-4 py-3 border-b">ml</td>
@@ -466,6 +451,7 @@
                                         <td class="px-4 py-3 border-b">研发部门</td>
                                         <td class="px-4 py-3 border-b">2025-09-10</td>
                                         <td class="px-4 py-3 border-b">王五</td>
+                                        <td class="px-4 py-3 border-b">赵六</td>
                                         <td class="px-4 py-3 border-b">用于研发使用</td>
                                         <td class="px-4 py-3 border-b">BM003 物料C</td>
                                         <td class="px-4 py-3 border-b">kg</td>
@@ -500,6 +486,7 @@
                                         <td class="px-4 py-3 border-b">测试部门</td>
                                         <td class="px-4 py-3 border-b">2025-09-11</td>
                                         <td class="px-4 py-3 border-b">赵六</td>
+                                        <td class="px-4 py-3 border-b">张三</td>
                                         <td class="px-4 py-3 border-b">用于测试</td>
                                         <td class="px-4 py-3 border-b">BM004 物料D</td>
                                         <td class="px-4 py-3 border-b">个</td>
@@ -549,11 +536,13 @@
     </div>
 
     <script>
+        // 检测是否在 iframe 中
         if (window.self !== window.parent) {
             document.body.classList.add('parent-iframe');
         }
 
-        function loadPage(pageUrl) {
+        function loadPage(e, pageUrl) {
+            if (e && e.preventDefault) e.preventDefault();
             window.location.href = pageUrl;
         }
         
@@ -576,99 +565,7 @@
             if (resourceSubmenu) {
                 resourceSubmenu.classList.remove('collapsed');
             }
-            initYearSelect();
         });
-
-        function initYearSelect() {
-            const yearSelect = document.getElementById('yearSelect');
-            const today = new Date();
-            const currentYear = today.getFullYear();
-            
-            for (let i = currentYear - 5; i <= currentYear + 1; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i + '年';
-                if (i === currentYear) {
-                    option.selected = true;
-                }
-                yearSelect.appendChild(option);
-            }
-        }
-
-        function setDateRange(type) {
-            const startDate = document.getElementById('startDate');
-            const endDate = document.getElementById('endDate');
-            const today = new Date();
-            
-            switch(type) {
-                case 'all':
-                    startDate.value = '';
-                    endDate.value = '';
-                    document.getElementById('yearSelect').selectedIndex = 0;
-                    document.getElementById('monthSelect').selectedIndex = 0;
-                    break;
-                case 'today':
-                    startDate.value = today.toISOString().split('T')[0];
-                    endDate.value = today.toISOString().split('T')[0];
-                    document.getElementById('yearSelect').selectedIndex = 0;
-                    document.getElementById('monthSelect').selectedIndex = 0;
-                    break;
-                case 'week':
-                    const weekStart = new Date(today);
-                    weekStart.setDate(today.getDate() - today.getDay());
-                    startDate.value = weekStart.toISOString().split('T')[0];
-                    endDate.value = today.toISOString().split('T')[0];
-                    document.getElementById('yearSelect').selectedIndex = 0;
-                    document.getElementById('monthSelect').selectedIndex = 0;
-                    break;
-                case 'month':
-                    startDate.value = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-01';
-                    endDate.value = today.toISOString().split('T')[0];
-                    document.getElementById('yearSelect').value = today.getFullYear();
-                    document.getElementById('monthSelect').value = String(today.getMonth() + 1).padStart(2, '0');
-                    break;
-                case 'year':
-                    startDate.value = today.getFullYear() + '-01-01';
-                    endDate.value = today.toISOString().split('T')[0];
-                    document.getElementById('yearSelect').value = today.getFullYear();
-                    document.getElementById('monthSelect').selectedIndex = 0;
-                    break;
-                case 'custom':
-                    // 用户自行选择日期
-                    document.getElementById('yearSelect').selectedIndex = 0;
-                    document.getElementById('monthSelect').selectedIndex = 0;
-                    break;
-            }
-            queryRecords();
-        }
-
-        function onYearMonthChange() {
-            const yearSelect = document.getElementById('yearSelect');
-            const monthSelect = document.getElementById('monthSelect');
-            const startDate = document.getElementById('startDate');
-            const endDate = document.getElementById('endDate');
-            
-            if (yearSelect.value && monthSelect.value) {
-                startDate.value = yearSelect.value + '-' + monthSelect.value + '-01';
-                const lastDay = new Date(yearSelect.value, monthSelect.value, 0).getDate();
-                endDate.value = yearSelect.value + '-' + monthSelect.value + '-' + lastDay;
-            } else if (yearSelect.value && !monthSelect.value) {
-                startDate.value = yearSelect.value + '-01-01';
-                endDate.value = yearSelect.value + '-12-31';
-            }
-        }
-
-        function applyYearMonthFilter() {
-            const yearSelect = document.getElementById('yearSelect');
-            const monthSelect = document.getElementById('monthSelect');
-            
-            if (!yearSelect.value) {
-                alert('请选择年份');
-                return;
-            }
-            
-            queryRecords();
-        }
 
         function queryRecords() {
             // 查询逻辑，无需弹窗提示
@@ -676,39 +573,30 @@
 
         function resetFilters() {
             document.querySelectorAll('input, select').forEach(el => {
-                if (el.type === 'text' || el.type === 'date') el.value = '';
+                if (el.type === 'text' || el.type === 'date' || el.type === 'month') el.value = '';
                 if (el.tagName === 'SELECT') el.selectedIndex = 0;
             });
         }
 
-        function createRequisition() {
+        function createRequisition(e) {
+            if (e && e.preventDefault) e.preventDefault();
             window.location.href = 'material-requisition.html';
         }
 
         function exportDetail() {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+            const filterMonth = document.getElementById('filterMonth').value;
             let period = '全部';
-            if (startDate && endDate) {
-                period = `${startDate} 至 ${endDate}`;
-            } else if (startDate) {
-                period = `从 ${startDate} 开始`;
-            } else if (endDate) {
-                period = `到 ${endDate} 结束`;
+            if (filterMonth) {
+                period = `${filterMonth}`;
             }
             performExport('领料单_明细', period, 'detail');
         }
 
         function exportSummary() {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+            const filterMonth = document.getElementById('filterMonth').value;
             let period = '全部';
-            if (startDate && endDate) {
-                period = `${startDate} 至 ${endDate}`;
-            } else if (startDate) {
-                period = `从 ${startDate} 开始`;
-            } else if (endDate) {
-                period = `到 ${endDate} 结束`;
+            if (filterMonth) {
+                period = `${filterMonth}`;
             }
             performExport('领料单_按月汇总', period, 'monthly_summary');
         }
@@ -857,17 +745,28 @@
             </tr>
             </tbody>
         </table>
-        <div class="footer">
-            <div>领料人：____________________</div>
-        </div>
+        <table style="width: 100%; border: none; margin-top: 20px;">
+            <tr style="border: none;">
+                <td style="border: none; text-align: left; width: 50%;">领料人：____________________</td>
+                <td style="border: none; text-align: right; width: 50%;">审核人：____________________</td>
+            </tr>
+        </table>
     </div>`;
                 });
             } else {
                 // 明细或普通汇总导出
                 html += `
+    <div class="header">
+        <div class="title">${title}</div>
+        <div class="info">
+            <span>导出时间：${new Date().toLocaleString()}</span>
+            <span>筛选周期：${period}</span>
+        </div>
+    </div>
     <table>
         <thead>
             <tr>
+                <th>日期</th>
                 <th>品名</th>
                 <th>规格</th>
                 <th>单位</th>
@@ -882,6 +781,7 @@
                 data.forEach((item, index) => {
                     html += `
             <tr>
+                <td>${item.date || '-'}</td>
                 <td>${item.name}</td>
                 <td>${item.spec}</td>
                 <td>${item.unit}</td>
@@ -894,23 +794,24 @@
                 
                 html += `
             <tr class="total-row">
-                <td colspan="3">合计</td>
+                <td colspan="4">合计</td>
                 <td>${totalQty}</td>
                 <td></td>
                 <td>${totalAmt}</td>
                 <td></td>
             </tr>
         </tbody>
-    </table>`;
-                recordCount = data.length;
-            }
-            
-            html += `
-    <div class="footer">
-        <div>领料人：____________________</div>
-    </div>
+    </table>
+    <table style="width: 100%; border: none; margin-top: 30px;">
+        <tr style="border: none;">
+            <td style="border: none; text-align: left; width: 50%;">领料人：____________________</td>
+            <td style="border: none; text-align: right; width: 50%;">审核人：____________________</td>
+        </tr>
+    </table>
 </body>
 </html>`;
+                recordCount = data.length;
+            }
             
             const blob = new Blob([html], { type: 'text/html' });
             const url = URL.createObjectURL(blob);

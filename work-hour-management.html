@@ -97,7 +97,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                            <!-- 导航菜单 -->
+                                                                                                                                                                                                                        <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -219,6 +219,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
                                     <span>设备能源消耗档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -505,10 +511,8 @@
                             </select>
                         </div>
                         <div class="flex items-center gap-2">
-                            <label class="text-sm font-medium text-gray-700">打卡时间:</label>
-                            <input type="date" id="startDate" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
-                            <span class="text-gray-500 text-sm">至</span>
-                            <input type="date" id="endDate" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+                            <label class="text-sm font-medium text-gray-700">月份:</label>
+                            <input type="month" id="filterMonth" class="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm">
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="handleQuery()" class="px-3 py-1.5 bg-primary text-white rounded-md text-sm hover:bg-blue-600">
@@ -520,12 +524,6 @@
                             <button onclick="loadPage('work-hour-entry.html')" class="px-3 py-1.5 bg-primary text-white rounded-md text-sm hover:bg-blue-600 flex items-center">
                                 <i class="fa fa-plus mr-1"></i>日志填报
                             </button>
-                        </div>
-                        <div class="flex items-center gap-2 ml-auto">
-                            <button onclick="setDateRange('all')" class="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50">全部</button>
-                            <button onclick="setDateRange('today')" class="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50">今日</button>
-                            <button onclick="setDateRange('week')" class="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50">本周</button>
-                            <button onclick="setDateRange('month')" class="px-2 py-1 text-xs border border-primary bg-primary text-white rounded-full">本月</button>
                         </div>
                     </div>
                 </div>
@@ -792,50 +790,13 @@
             }
         }
         
-        // 设置日期范围
-        function setDateRange(range) {
-            const today = new Date();
-            let startDate, endDate;
-            
-            switch(range) {
-                case 'all':
-                    document.getElementById('startDate').value = '';
-                    document.getElementById('endDate').value = '';
-                    break;
-                case 'today':
-                    startDate = today.toISOString().split('T')[0];
-                    endDate = startDate;
-                    document.getElementById('startDate').value = startDate;
-                    document.getElementById('endDate').value = endDate;
-                    break;
-                case 'week':
-                    const dayOfWeek = today.getDay();
-                    const monday = new Date(today);
-                    monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-                    const sunday = new Date(monday);
-                    sunday.setDate(monday.getDate() + 6);
-                    document.getElementById('startDate').value = monday.toISOString().split('T')[0];
-                    document.getElementById('endDate').value = sunday.toISOString().split('T')[0];
-                    break;
-                case 'month':
-                    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-                    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                    document.getElementById('startDate').value = firstDay.toISOString().split('T')[0];
-                    document.getElementById('endDate').value = lastDay.toISOString().split('T')[0];
-                    break;
-            }
-            
-            handleQuery();
-        }
-        
         // 查询处理
         function handleQuery() {
             const employee = document.getElementById('employeeInput').value;
             const status = document.getElementById('statusFilter').value;
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+            const filterMonth = document.getElementById('filterMonth').value;
             
-            console.log('查询条件:', { employee, status, startDate, endDate });
+            console.log('查询条件:', { employee, status, filterMonth });
             
             if (currentTab === 'log') {
                 loadLogData();
@@ -850,8 +811,7 @@
         function handleReset() {
             document.getElementById('employeeInput').value = '';
             document.getElementById('statusFilter').value = '';
-            document.getElementById('startDate').value = '';
-            document.getElementById('endDate').value = '';
+            document.getElementById('filterMonth').value = '';
             handleQuery();
         }
         
