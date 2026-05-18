@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 p-6 min-h-screen">
+    <div class="max-w-[1400px] mx-auto">
+        <!-- 头部 -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-black text-slate-800">研发账变资产</h1>
+                <p class="text-sm text-slate-400 mt-1">把研发过程中花的钱，自动变成公司名下的无形资产</p>
+            </div>
+            <div class="flex items-center space-x-3 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
+                <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                    <i class="fa fa-refresh animate-spin"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400">正在同步研发账</p>
+                    <p class="text-xs font-black text-slate-800">发现 3 笔新支出可转资产</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-8">
+            <!-- 步骤一：选出要转资产的钱 -->
+            <div class="col-span-4 space-y-6">
+                <div class="bg-slate-900 rounded-[32px] p-6 text-white">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-blue-400 mb-6">第一步：选出研发支出</h3>
+                    <div class="space-y-3">
+                        <div class="p-4 bg-white/5 border border-white/10 rounded-2xl">
+                            <div class="flex justify-between items-start mb-1">
+                                <p class="text-xs font-bold">研发人工费</p>
+                                <p class="text-xs font-black text-blue-400">¥12.8万</p>
+                            </div>
+                            <p class="text-[10px] text-white/40">来自：智能算法研发项目</p>
+                        </div>
+                        <div class="p-4 bg-white/5 border border-white/10 rounded-2xl">
+                            <div class="flex justify-between items-start mb-1">
+                                <p class="text-xs font-bold">测试材料费</p>
+                                <p class="text-xs font-black text-blue-400">¥4.5万</p>
+                            </div>
+                            <p class="text-[10px] text-white/40">来自：智能算法研发项目</p>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-white/10 flex justify-between">
+                        <span class="text-[10px] text-white/40">选中的总金额</span>
+                        <span class="text-lg font-black text-blue-400">¥17.3万</span>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-[32px] border border-blue-100">
+                    <h4 class="text-xs font-bold text-blue-800 mb-2">小贴士</h4>
+                    <p class="text-[10px] text-blue-600 leading-relaxed">
+                        根据国家规定，研发进入开发阶段后，花的钱就可以转成资产。系统会自动帮您识别哪些钱符合条件。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 步骤二：确认转资产 -->
+            <div class="col-span-8">
+                <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm h-full flex flex-col">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-lg font-bold text-slate-800">第二步：确认转为资产入账</h3>
+                        <button class="px-8 py-3 bg-blue-600 text-white rounded-2xl font-black text-sm shadow-xl shadow-blue-100">
+                            确认转入资产
+                        </button>
+                    </div>
+
+                    <div class="flex-1 space-y-8">
+                        <!-- 资产信息 -->
+                        <div class="grid grid-cols-2 gap-8">
+                            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                <p class="text-[10px] text-slate-400 font-bold mb-1 uppercase">生成的资产名称</p>
+                                <p class="text-sm font-black text-slate-800">智能控制算法软件 V1.0</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                <p class="text-[10px] text-slate-400 font-bold mb-1 uppercase">预计能用多久</p>
+                                <p class="text-sm font-black text-slate-800">10 年 (120个月)</p>
+                            </div>
+                        </div>
+
+                        <!-- 效果预览 -->
+                        <div class="p-8 bg-blue-600 rounded-[32px] text-white relative overflow-hidden">
+                            <div class="absolute -right-8 -bottom-8 opacity-10 text-9xl font-black italic">WIN</div>
+                            <h4 class="text-sm font-bold mb-6">转资产后的好处：</h4>
+                            <div class="grid grid-cols-2 gap-8 relative z-10">
+                                <div>
+                                    <p class="text-[10px] text-white/60 uppercase font-bold mb-1">本月利润增加</p>
+                                    <p class="text-2xl font-black">¥17.3万</p>
+                                    <p class="text-[9px] text-white/40 mt-1">支出转为资产，不再直接扣减利润</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-white/60 uppercase font-bold mb-1">未来可省税</p>
+                                    <p class="text-2xl font-black">¥30.2万</p>
+                                    <p class="text-[9px] text-white/40 mt-1">享受 175% 研发费用加计扣除</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

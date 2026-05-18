@@ -932,6 +932,30 @@
                     <input type="month" id="allocationMonth" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" value="2026-04">
                 </div>
 
+                <!-- 归集类型 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">归集类型</label>
+                    <div class="flex flex-wrap gap-2" id="allocationTypeOptions">
+                        <label class="flex items-center space-x-1.5 px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" value="software" onchange="updateAllocationType()">
+                            <span class="text-sm text-gray-700">软件</span>
+                        </label>
+                        <label class="flex items-center space-x-1.5 px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" value="patent" onchange="updateAllocationType()">
+                            <span class="text-sm text-gray-700">专利权</span>
+                        </label>
+                        <label class="flex items-center space-x-1.5 px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" value="non_patent_tech" onchange="updateAllocationType()">
+                            <span class="text-sm text-gray-700">非专利技术</span>
+                        </label>
+                        <label class="flex items-center space-x-1.5 px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" value="intellectual_property" onchange="updateAllocationType()">
+                            <span class="text-sm text-gray-700">知识产权</span>
+                        </label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">可多选，根据无形资产管理中的资产类型配置</p>
+                </div>
+
                 <!-- 归集方式 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">归集方式</label>
@@ -1019,6 +1043,18 @@
             document.getElementById('content-' + tabName).classList.remove('hidden');
             document.getElementById('tab-' + tabName).classList.add('text-primary', 'border-primary');
             document.getElementById('tab-' + tabName).classList.remove('text-gray-500');
+        }
+
+        // 获取选中的归集类型
+        function getAllocationTypes() {
+            const checkboxes = document.querySelectorAll('#allocationTypeOptions input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        // 更新归集类型（可选，用于后续扩展）
+        function updateAllocationType() {
+            const selectedTypes = getAllocationTypes();
+            console.log('选中的归集类型:', selectedTypes);
         }
 
         // 无形资产基础数据

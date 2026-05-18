@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 p-6 min-h-screen">
+    <div class="max-w-[1400px] mx-auto">
+        <!-- 头部 -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-black text-slate-800">每月摊销与省税</h1>
+                <p class="text-sm text-slate-400 mt-1">看看您的宝贝资产每个月值多少钱，帮公司省了多少税</p>
+            </div>
+            <button class="px-6 py-3 bg-indigo-600 text-white rounded-2xl text-xs font-bold shadow-xl">
+                执行本月摊销计账
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 opacity-5 text-8xl text-indigo-600"><i class="fa fa-book"></i></div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">本月资产成本 (摊销额)</p>
+                <h3 class="text-3xl font-black text-slate-800">¥12.54 <span class="text-sm">万元</span></h3>
+                <p class="text-[10px] text-slate-400 mt-4">这些是已经入账的资产在本月分摊的成本</p>
+            </div>
+            <div class="bg-emerald-600 p-8 rounded-[32px] text-white shadow-xl relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl"><i class="fa fa-gift"></i></div>
+                <p class="text-[10px] font-bold text-white/60 uppercase tracking-widest mb-2">本月为公司省的税 (加计扣除)</p>
+                <h3 class="text-3xl font-black">¥21.95 <span class="text-sm">万元</span></h3>
+                <p class="text-[10px] text-white/60 mt-4">多亏了研发加计扣除政策，资产越多，省税越多</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+            <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-6">资产摊销清单 (2026年5月)</h3>
+            <div class="space-y-4">
+                <div class="flex items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 text-indigo-600 shadow-sm">
+                        <i class="fa fa-code"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-slate-800">智能控制算法软件 V1.0</p>
+                        <p class="text-[10px] text-slate-400">还要摊销 115 个月</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs font-black text-slate-800">本月成本: ¥1.04万</p>
+                        <p class="text-[10px] text-emerald-600 font-bold">帮省税: ¥1.82万</p>
+                    </div>
+                </div>
+                <div class="flex items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 text-indigo-600 shadow-sm">
+                        <i class="fa fa-shield"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-slate-800">边缘计算加密协议</p>
+                        <p class="text-[10px] text-slate-400">还要摊销 58 个月</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs font-black text-slate-800">本月成本: ¥1.42万</p>
+                        <p class="text-[10px] text-emerald-600 font-bold">帮省税: ¥2.48万</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

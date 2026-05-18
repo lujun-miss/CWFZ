@@ -49,6 +49,15 @@
             .btn-outline {
                 @apply border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors;
             }
+            .tooltip-icon {
+                @apply w-4 h-4 inline-block bg-gray-400 text-white rounded-full text-xs flex items-center justify-center ml-1 cursor-help hover:bg-gray-600 transition-colors;
+            }
+            .tooltip-content {
+                @apply absolute z-50 hidden bg-gray-800 text-white text-xs p-3 rounded-lg max-w-xs shadow-lg;
+            }
+            .tooltip-container:hover .tooltip-content {
+                @apply block;
+            }
         }
     </style>
 </head>
@@ -733,13 +742,31 @@
                                     参与项目
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    项目工时
+                                    <div class="tooltip-container inline-flex items-center">
+                                        项目工时
+                                        <span class="tooltip-icon">?</span>
+                                        <div class="tooltip-content">
+                                            员工在该项目中实际投入的工时
+                                        </div>
+                                    </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    人员总工时
+                                    <div class="tooltip-container inline-flex items-center">
+                                        人员总工时
+                                        <span class="tooltip-icon">?</span>
+                                        <div class="tooltip-content">
+                                            该员工当月实际出勤的总工时
+                                        </div>
+                                    </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    占比
+                                    <div class="tooltip-container inline-flex items-center">
+                                        占比
+                                        <span class="tooltip-icon">?</span>
+                                        <div class="tooltip-content">
+                                            项目工时/人员总工时，用于费用分摊
+                                        </div>
+                                    </div>
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     归集状态

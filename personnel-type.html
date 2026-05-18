@@ -626,17 +626,27 @@
     
     <script>
         function loadPage(pageUrl) {
+            event.preventDefault(); // 阻止默认链接行为
+            
             try {
+                // 尝试通过父窗口的iframe加载
                 if (window.parent && window.parent !== window) {
                     var contentFrame = window.parent.document.getElementById('contentFrame');
                     if (contentFrame) {
+                        // 添加load事件处理错误
+                        contentFrame.onerror = function(e) {
+                            console.warn('iframe加载失败，尝试直接跳转:', pageUrl);
+                            window.location.href = pageUrl;
+                        };
                         contentFrame.src = pageUrl;
                         return;
                     }
                 }
             } catch (e) {
-                // 跨域或安全策略阻止，忽略错误
+                console.warn('iframe加载失败:', e.message);
             }
+            
+            // 直接跳转
             window.location.href = pageUrl;
         }
         

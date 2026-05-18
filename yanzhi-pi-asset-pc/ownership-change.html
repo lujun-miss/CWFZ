@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 p-6 min-h-screen">
+    <div class="max-w-[1400px] mx-auto">
+        <!-- 头部 -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-black text-slate-800">权属变更管理</h1>
+                <p class="text-sm text-slate-400 mt-1">记录资产从公司转出或转入的全过程</p>
+            </div>
+            <button class="px-6 py-3 bg-blue-600 text-white rounded-2xl text-xs font-bold shadow-xl flex items-center">
+                <i class="fa fa-plus mr-2"></i> 发起变更申请
+            </button>
+        </div>
+
+        <!-- 变更统计 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">本月变更数</p>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-slate-800">12</span>
+                    <span class="text-xs text-slate-400">笔</span>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">转让出去</p>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-red-600">5</span>
+                    <span class="text-xs text-red-600 font-bold">笔</span>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">受让进来</p>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-green-600">7</span>
+                    <span class="text-xs text-green-600 font-bold">笔</span>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">待审核</p>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-orange-600">3</span>
+                    <span class="text-xs text-orange-600 font-bold">笔</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- 变更列表 -->
+            <div class="lg:col-span-2 bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-6">变更记录</h3>
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">智能控制算法软件 [软著]</p>
+                                <p class="text-[10px] text-slate-400 mt-1">变更类型：转让 | 2025-01-15</p>
+                            </div>
+                            <span class="px-2 py-1 bg-red-50 text-red-600 text-[10px] font-bold rounded">已完成</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <p class="text-slate-400">变更前权利人</p>
+                                <p class="font-bold text-slate-800">北京研知科技有限公司</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-400">变更后权利人</p>
+                                <p class="font-bold text-blue-600">上海智联技术有限公司</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 flex justify-end">
+                            <button class="px-3 py-1 bg-slate-100 text-[10px] rounded-lg mr-2">查看详情</button>
+                            <button class="px-3 py-1 bg-blue-600 text-white text-[10px] rounded-lg">下载证明</button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">工业传感器专利 [发明]</p>
+                                <p class="text-[10px] text-slate-400 mt-1">变更类型：受让 | 2025-01-12</p>
+                            </div>
+                            <span class="px-2 py-1 bg-green-50 text-green-600 text-[10px] font-bold rounded">已完成</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <p class="text-slate-400">变更前权利人</p>
+                                <p class="font-bold text-slate-800">深圳创新科技有限公司</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-400">变更后权利人</p>
+                                <p class="font-bold text-blue-600">北京研知科技有限公司</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 变更流程 -->
+            <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-6">变更流程</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mr-3">
+                            <i class="fa fa-edit text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">填写变更信息</p>
+                            <p class="text-[10px] text-slate-400">选择资产、变更类型、新权利人</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mr-3">
+                            <i class="fa fa-upload text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">上传证明文件</p>
+                            <p class="text-[10px] text-slate-400">转让协议、身份证明等</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mr-3">
+                            <i class="fa fa-check-circle text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">审核通过</p>
+                            <p class="text-[10px] text-slate-400">法务、财务审核确认</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mr-3">
+                            <i class="fa fa-database text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400">自动更新台账</p>
+                            <p class="text-[10px] text-slate-300">系统自动更新资产状态</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

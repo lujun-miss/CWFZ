@@ -1272,6 +1272,12 @@
         }
 
         async function fetchProjectCostData(year, projectIds) {
+            // 本地运行时直接返回模拟数据（避免API调用失败）
+            if (window.location.protocol === 'file:') {
+                console.info('本地运行模式，使用模拟数据');
+                return { ...MOCK_COST_DATA };
+            }
+            
             try {
                 const response = await fetch(API_ENDPOINTS.costData + '?year=' + year + '&projects=' + projectIds.join(','));
                 if (!response.ok) throw new Error('数据获取失败');
@@ -1292,6 +1298,18 @@
         }
 
         async function fetchProjects(year) {
+            // 本地运行时直接返回模拟数据
+            if (window.location.protocol === 'file:') {
+                console.info('本地运行模式，使用模拟项目数据');
+                return [
+                    { id: 'RD02', name: '人工智能项目', status: 'active' },
+                    { id: 'RD03', name: '新能源项目', status: 'active' },
+                    { id: 'RD04', name: '医疗科技项目', status: 'active' },
+                    { id: 'RD05', name: '智能制造项目', status: 'draft' },
+                    { id: 'RD06', name: '碳中和技术项目', status: 'draft' }
+                ];
+            }
+            
             try {
                 const response = await fetch(API_ENDPOINTS.projects + '?year=' + year);
                 if (!response.ok) throw new Error('项目列表获取失败');
@@ -1309,6 +1327,25 @@
         }
 
         async function validateCostDataAPI(costData, caliber) {
+            // 本地运行时直接返回模拟校验结果
+            if (window.location.protocol === 'file:') {
+                console.info('本地运行模式，使用模拟校验数据');
+                return {
+                    success: true,
+                    warnings: [],
+                    errors: [],
+                    details: {
+                        laborCost: { valid: true, message: '合规' },
+                        materialCost: { valid: true, message: '合规' },
+                        depreciationCost: { valid: true, message: '合规' },
+                        intangibleCost: { valid: true, message: '合规' },
+                        otherCost: { valid: true, message: '合规' },
+                        outsourceCost: { valid: true, message: '合规' },
+                        basicResearchCost: { valid: true, message: '合规' }
+                    }
+                };
+            }
+            
             try {
                 const response = await fetch(API_ENDPOINTS.validation, {
                     method: 'POST',

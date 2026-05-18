@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-slate-50 p-6 min-h-screen">
+    <div class="max-w-[1400px] mx-auto">
+        <!-- 头部 -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-black text-slate-800">资产盘点管理</h1>
+                <p class="text-sm text-slate-400 mt-1">定期盘点无形资产，确保账实相符</p>
+            </div>
+            <button class="px-6 py-3 bg-emerald-600 text-white rounded-2xl text-xs font-bold shadow-xl flex items-center">
+                <i class="fa fa-play-circle mr-2"></i> 发起盘点任务
+            </button>
+        </div>
+
+        <!-- 盘点统计 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">总资产数量</p>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-slate-800">128</span>
+                    <span class="text-xs text-slate-400">项</span>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">已盘点</p>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-green-600">105</span>
+                    <span class="text-xs text-green-600 font-bold">项 (82%)</span>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">正常</p>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-blue-600">98</span>
+                    <span class="text-xs text-blue-600 font-bold">项</span>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">异常</p>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-red-600">7</span>
+                    <span class="text-xs text-red-600 font-bold">项</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- 盘点任务列表 -->
+            <div class="lg:col-span-2 bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-6">盘点任务</h3>
+                <div class="space-y-4">
+                    <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">2025年度资产盘点</p>
+                                <p class="text-[10px] text-slate-400 mt-1">创建时间：2025-01-01 | 负责人：财务部</p>
+                            </div>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-600 text-[10px] font-bold rounded">进行中</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-24 bg-slate-200 h-2 rounded-full overflow-hidden mr-3">
+                                    <div class="bg-blue-600 h-full w-[82%]"></div>
+                                </div>
+                                <span class="text-xs font-bold text-slate-600">完成 82%</span>
+                            </div>
+                            <button class="px-3 py-1 bg-blue-600 text-white text-[10px] rounded-lg">继续盘点</button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-green-50 rounded-2xl border border-green-100">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">2024年度资产盘点</p>
+                                <p class="text-[10px] text-slate-400 mt-1">创建时间：2024-01-15 | 负责人：财务部</p>
+                            </div>
+                            <span class="px-2 py-1 bg-green-100 text-green-600 text-[10px] font-bold rounded">已完成</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-24 bg-slate-200 h-2 rounded-full overflow-hidden mr-3">
+                                    <div class="bg-green-600 h-full w-[100%]"></div>
+                                </div>
+                                <span class="text-xs font-bold text-green-600">完成 100%</span>
+                            </div>
+                            <button class="px-3 py-1 bg-green-600 text-white text-[10px] rounded-lg">查看报告</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 异常资产 -->
+            <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-6">异常资产</h3>
+                <div class="space-y-4">
+                    <div class="p-4 bg-red-50 rounded-2xl border border-red-100">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-xs font-bold text-slate-800">边缘计算协议 [专利]</p>
+                            <span class="text-[9px] text-red-600 font-bold">已过期</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">有效期至：2024-12-31</p>
+                        <button class="mt-3 w-full px-3 py-2 bg-red-600 text-white text-[10px] rounded-lg">立即处理</button>
+                    </div>
+                    <div class="p-4 bg-orange-50 rounded-2xl border border-orange-100">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-xs font-bold text-slate-800">工业传感器软件 [软著]</p>
+                            <span class="text-[9px] text-orange-600 font-bold">权属不明</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">请补充权属证明文件</p>
+                        <button class="mt-3 w-full px-3 py-2 bg-orange-600 text-white text-[10px] rounded-lg">补充材料</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 盘点图表 -->
+        <div class="mt-8 bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+            <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-6">盘点趋势</h3>
+            <div class="h-64">
+                <canvas id="inventoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('inventoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                datasets: [{
+                    label: '已盘点',
+                    data: [85, 92, 88, 95, 100, 105],
+                    backgroundColor: '#2563eb',
+                    borderRadius: 8
+                }, {
+                    label: '异常',
+                    data: [5, 3, 8, 4, 2, 7],
+                    backgroundColor: '#ef4444',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: { size: 10 },
+                            padding: 20
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { font: { size: 10 } }
+                    },
+                    x: {
+                        ticks: { font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
