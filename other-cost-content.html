@@ -65,13 +65,13 @@
         <!-- 列表 -->
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-800">其他费用项目列表</h2>
+                <h2 class="text-lg font-semibold text-gray-800">其他费用类型列表</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">费用项目</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">费用类型</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">关联项目</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">发生日期</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">费用金额</th>
@@ -121,9 +121,9 @@
                     <input type="date" id="addDate" class="w-full px-4 py-2 border border-gray-300 rounded-md">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">费用项目 <span class="text-gray-400 text-xs">(取数据字典值)</span> <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">费用类型 <span class="text-gray-400 text-xs">(取数据字典值)</span> <span class="text-red-500">*</span></label>
                     <select id="addName" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-                        <option value="">请选择费用项目</option>
+                        <option value="">请选择费用类型</option>
                         <option value="资料翻译费">资料翻译费</option>
                         <option value="专家咨询费">专家咨询费</option>
                         <option value="知识产权申请费">知识产权申请费</option>
@@ -250,7 +250,7 @@
                     alert('该费用已归集，不可删除');
                     return;
                 }
-                if (confirm(`确定要删除费用项目“${item.name}”吗？`)) {
+                if (confirm(`确定要删除费用类型“${item.name}”吗？`)) {
                     costItems.splice(index, 1);
                     renderTable();
                     alert('已成功删除');
@@ -274,7 +274,7 @@
                 return;
             }
             if (!name) {
-                alert('请输入费用项目名称');
+                alert('请选择费用类型');
                 return;
             }
             if (!amount || parseFloat(amount) <= 0) {
