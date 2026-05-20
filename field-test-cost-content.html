@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>试验费用管理 - 研发费用管理系统</title>
+    <title>田间试验费管理 - 研发费用管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -30,7 +30,6 @@
 </head>
 <body class="bg-gray-100 p-6">
     <div class="max-w-7xl mx-auto">
-        <!-- 操作栏 -->
         <div class="bg-white rounded-lg shadow p-4 mb-6">
             <div class="flex flex-wrap items-center gap-4">
                 <div class="flex items-center space-x-2">
@@ -56,16 +55,15 @@
                 <button onclick="resetFilter()" class="bg-gray-300 text-gray-700 px-4 py-1.5 rounded-md text-sm hover:bg-gray-400">
                     <i class="fa fa-refresh mr-1"></i>重置
                 </button>
-                <button onclick="openAddModal()" class="bg-blue-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600">
-                    <i class="fa fa-plus mr-1"></i>新增试验费用
+                <button onclick="openAddModal()" class="bg-green-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-green-600">
+                    <i class="fa fa-plus mr-1"></i>新增田间试验费
                 </button>
             </div>
         </div>
 
-        <!-- 列表 -->
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-800">试验费用类型列表</h2>
+                <h2 class="text-lg font-semibold text-gray-800">田间试验费用列表</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -95,18 +93,16 @@
         </div>
     </div>
 
-    <!-- 模态框 -->
     <div id="addModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold text-gray-900">新增试验费用</h3>
+                <h3 class="text-xl font-semibold text-gray-900">新增田间试验费</h3>
                 <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-500">
                     <i class="fa fa-times text-xl"></i>
                 </button>
             </div>
             <div class="space-y-4">
                 <input type="hidden" id="editId">
-                
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">关联项目 <span class="text-red-500">*</span></label>
                     <select id="addProject" class="w-full px-4 py-2 border border-gray-300 rounded-md">
@@ -124,8 +120,9 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">费用类型 <span class="text-gray-400 text-xs">(取数据字典值)</span> <span class="text-red-500">*</span></label>
                     <select id="addName" class="w-full px-4 py-2 border border-gray-300 rounded-md">
                         <option value="">请选择费用类型</option>
-                        <option value="新药研制的临床试验费">新药研制的临床试验费</option>
-                        <option value="勘探开发技术的现场试验费">勘探开发技术的现场试验费</option>
+                        <option value="田间试验费">田间试验费</option>
+                        <option value="农作物品种试验费">农作物品种试验费</option>
+                        <option value="农业技术试验费">农业技术试验费</option>
                     </select>
                 </div>
                 <div>
@@ -139,22 +136,37 @@
             </div>
             <div class="mt-6 flex justify-end space-x-3">
                 <button onclick="closeAddModal()" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">取消</button>
-                <button onclick="saveCostItem()" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-600">保存</button>
+                <button onclick="saveCostItem()" class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">保存</button>
             </div>
         </div>
     </div>
 
     <script>
-        let costItems = [
-            { id: 11, project: '智能传感器研发', name: '临床试验费', date: '2024-04-10', amount: '80000.00', isAllocated: 1, remark: '新药临床试验' },
-            { id: 12, project: '工业机器人控制系统', name: '现场试验费', date: '2024-04-15', amount: '15000.00', isAllocated: 1, remark: '现场测试验证' },
-            { id: 13, project: '新能源材料研究', name: '实验室试验费', date: '2024-05-01', amount: '20000.00', isAllocated: 1, remark: '实验室测试分析' },
-            { id: 14, project: '智能传感器研发', name: '其他试验费用', date: '2024-05-05', amount: '4000.00', isAllocated: 0, remark: '其他试验相关费用' },
+        window.fieldTestCostItems = [
+            { id: 1, project: '新能源材料研究', name: '田间试验费', date: '2024-04-10', amount: '50000.00', isAllocated: 1, remark: '作物品种试验' },
+            { id: 2, project: '智能传感器研发', name: '农业技术试验费', date: '2024-04-15', amount: '30000.00', isAllocated: 1, remark: '传感器田间测试' },
+            { id: 3, project: '新能源材料研究', name: '农作物品种试验费', date: '2024-05-01', amount: '25000.00', isAllocated: 0, remark: '新品种培育试验' },
+            { id: 4, project: '工业机器人控制系统', name: '田间试验费', date: '2024-05-10', amount: '42000.00', isAllocated: 1, remark: '机器人田间作业测试' },
+            { id: 5, project: '智能传感器研发', name: '田间试验费', date: '2024-05-15', amount: '18000.00', isAllocated: 0, remark: '土壤传感器测试' },
+            { id: 6, project: '新能源材料研究', name: '农业技术试验费', date: '2024-06-01', amount: '35000.00', isAllocated: 1, remark: '新型肥料田间试验' },
+            { id: 7, project: '工业机器人控制系统', name: '农作物品种试验费', date: '2024-06-10', amount: '22000.00', isAllocated: 0, remark: '品种对比试验' },
+            { id: 8, project: '智能传感器研发', name: '农作物品种试验费', date: '2024-06-15', amount: '28000.00', isAllocated: 1, remark: '高产品种筛选' },
+            { id: 9, project: '新能源材料研究', name: '田间试验费', date: '2024-07-01', amount: '55000.00', isAllocated: 0, remark: '新材料应用试验' },
+            { id: 10, project: '工业机器人控制系统', name: '农业技术试验费', date: '2024-07-10', amount: '33000.00', isAllocated: 1, remark: '自动化设备测试' },
+            { id: 11, project: '智能传感器研发', name: '田间试验费', date: '2024-07-15', amount: '19000.00', isAllocated: 0, remark: '气象传感器测试' },
+            { id: 12, project: '新能源材料研究', name: '农作物品种试验费', date: '2024-08-01', amount: '27000.00', isAllocated: 1, remark: '抗病品种试验' },
+            { id: 13, project: '工业机器人控制系统', name: '田间试验费', date: '2024-08-10', amount: '46000.00', isAllocated: 0, remark: '收割机器人测试' },
+            { id: 14, project: '智能传感器研发', name: '农业技术试验费', date: '2024-08-15', amount: '21000.00', isAllocated: 1, remark: '智能灌溉测试' },
+            { id: 15, project: '新能源材料研究', name: '田间试验费', date: '2024-09-01', amount: '38000.00', isAllocated: 0, remark: '太阳能田间应用' },
         ];
 
-        function renderTable(data = costItems) {
+        function renderTable(data) {
             const tbody = document.getElementById('costTableBody');
             tbody.innerHTML = '';
+            
+            if (!data || !Array.isArray(data)) {
+                data = window.fieldTestCostItems;
+            }
 
             data.forEach(item => {
                 const row = document.createElement('tr');
@@ -165,20 +177,17 @@
                     : '<span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">未归集</span>';
 
                 const actionButtons = item.isAllocated
-                    ? `<button class="text-gray-400 cursor-not-allowed mr-2" title="已归集费用不可修改" disabled>编辑</button>
-                       <button class="text-gray-400 cursor-not-allowed" title="已归集费用不可删除" disabled>删除</button>`
-                    : `<button onclick="editItem(${item.id})" class="text-primary hover:text-blue-700 mr-2">编辑</button>
-                       <button onclick="deleteItem(${item.id})" class="text-danger hover:text-red-700">删除</button>`;
+                    ? '<button class="text-gray-400 cursor-not-allowed mr-2" title="已归集费用不可修改" disabled>编辑</button><button class="text-gray-400 cursor-not-allowed" title="已归集费用不可删除" disabled>删除</button>'
+                    : '<button onclick="editItem(' + item.id + ')" class="text-primary hover:text-blue-700 mr-2">编辑</button><button onclick="deleteItem(' + item.id + ')" class="text-danger hover:text-red-700">删除</button>';
 
-                row.innerHTML = `
-                    <td class="px-6 py-4 text-sm text-gray-900">${item.name}</td>
-                    <td class="px-6 py-4 text-sm text-gray-900">${item.project}</td>
-                    <td class="px-6 py-4 text-sm text-gray-900">${item.date}</td>
-                    <td class="px-6 py-4 text-sm text-gray-900">¥${parseFloat(item.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-                    <td class="px-6 py-4 text-sm">${allocatedTag}</td>
-                    <td class="px-6 py-4 text-sm text-gray-900">${item.remark || '-'}</td>
-                    <td class="px-6 py-4 text-sm">${actionButtons}</td>
-                `;
+                row.innerHTML = '<td class="px-6 py-4 text-sm text-gray-900">' + item.name + '</td>' +
+                    '<td class="px-6 py-4 text-sm text-gray-900">' + item.project + '</td>' +
+                    '<td class="px-6 py-4 text-sm text-gray-900">' + item.date + '</td>' +
+                    '<td class="px-6 py-4 text-sm text-gray-900">¥' + parseFloat(item.amount).toLocaleString(undefined, {minimumFractionDigits: 2}) + '</td>' +
+                    '<td class="px-6 py-4 text-sm">' + allocatedTag + '</td>' +
+                    '<td class="px-6 py-4 text-sm text-gray-900">' + (item.remark || '-') + '</td>' +
+                    '<td class="px-6 py-4 text-sm">' + actionButtons + '</td>';
+                
                 tbody.appendChild(row);
             });
 
@@ -189,7 +198,7 @@
         function searchRecords() {
             const project = document.getElementById('filterProject').value;
             const allocation = document.getElementById('filterAllocation').value;
-            let filtered = costItems;
+            let filtered = window.fieldTestCostItems;
             if (project) filtered = filtered.filter(r => r.project === project);
             if (allocation !== '') filtered = filtered.filter(r => r.isAllocated == allocation);
             renderTable(filtered);
@@ -198,32 +207,26 @@
         function resetFilter() {
             document.getElementById('filterProject').value = '';
             document.getElementById('filterAllocation').value = '';
-            renderTable();
+            renderTable(window.fieldTestCostItems);
         }
 
         function openAddModal() {
-            document.getElementById('addModal').classList.remove('hidden');
-            document.getElementById('addModal').classList.add('flex');
             document.getElementById('editId').value = '';
             document.getElementById('addProject').value = '';
             document.getElementById('addDate').value = '';
             document.getElementById('addName').value = '';
             document.getElementById('addAmount').value = '';
             document.getElementById('addRemark').value = '';
+            document.getElementById('addModal').classList.remove('hidden');
         }
 
         function closeAddModal() {
             document.getElementById('addModal').classList.add('hidden');
-            document.getElementById('addModal').classList.remove('flex');
         }
 
         function editItem(id) {
-            const item = costItems.find(i => i.id === id);
+            const item = window.fieldTestCostItems.find(i => i.id === id);
             if (item) {
-                if (item.isAllocated) {
-                    alert('该费用已归集，不可编辑');
-                    return;
-                }
                 document.getElementById('editId').value = item.id;
                 document.getElementById('addProject').value = item.project;
                 document.getElementById('addDate').value = item.date;
@@ -231,23 +234,13 @@
                 document.getElementById('addAmount').value = item.amount;
                 document.getElementById('addRemark').value = item.remark;
                 document.getElementById('addModal').classList.remove('hidden');
-                document.getElementById('addModal').classList.add('flex');
             }
         }
 
         function deleteItem(id) {
-            const index = costItems.findIndex(i => i.id === id);
-            if (index !== -1) {
-                const item = costItems[index];
-                if (item.isAllocated) {
-                    alert('该费用已归集，不可删除');
-                    return;
-                }
-                if (confirm(`确定要删除费用类型“${item.name}”吗？`)) {
-                    costItems.splice(index, 1);
-                    renderTable();
-                    alert('已成功删除');
-                }
+            if (confirm('确定要删除这条记录吗？')) {
+                window.fieldTestCostItems = window.fieldTestCostItems.filter(i => i.id !== id);
+                renderTable(window.fieldTestCostItems);
             }
         }
 
@@ -257,55 +250,43 @@
             const date = document.getElementById('addDate').value;
             const name = document.getElementById('addName').value;
             const amount = document.getElementById('addAmount').value;
-            
-            if (!project) {
-                alert('请选择关联项目');
-                return;
-            }
-            if (!date) {
-                alert('请选择发生日期');
-                return;
-            }
-            if (!name) {
-                alert('请选择费用类型');
-                return;
-            }
-            if (!amount || parseFloat(amount) <= 0) {
-                alert('请输入有效的费用金额');
+
+            if (!project || !date || !name || !amount) {
+                alert('请填写所有必填字段');
                 return;
             }
 
             if (id) {
-                const item = costItems.find(i => i.id === parseInt(id));
-                if (item) {
-                    if (item.isAllocated) {
-                        alert('该费用已归集，不可修改');
-                        return;
-                    }
-                    item.project = project;
-                    item.date = date;
-                    item.name = name;
-                    item.amount = amount;
-                    item.remark = document.getElementById('addRemark').value;
+                const index = window.fieldTestCostItems.findIndex(i => i.id === parseInt(id));
+                if (index !== -1) {
+                    window.fieldTestCostItems[index] = {
+                        ...window.fieldTestCostItems[index],
+                        project,
+                        date,
+                        name,
+                        amount,
+                        remark: document.getElementById('addRemark').value
+                    };
                 }
             } else {
-                const newId = costItems.length > 0 ? Math.max(...costItems.map(i => i.id)) + 1 : 1;
-                costItems.push({
-                    id: newId,
-                    project: project,
-                    date: date,
-                    name: name,
-                    amount: amount,
+                window.fieldTestCostItems.push({
+                    id: Date.now(),
+                    project,
+                    date,
+                    name,
+                    amount,
                     remark: document.getElementById('addRemark').value,
                     isAllocated: 0
                 });
             }
 
             closeAddModal();
-            renderTable();
+            renderTable(window.fieldTestCostItems);
         }
 
-        renderTable();
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable(window.fieldTestCostItems);
+        });
     </script>
 </body>
 </html>

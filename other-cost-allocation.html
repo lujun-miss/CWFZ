@@ -274,7 +274,7 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
                                     <i class="fa fa-trash w-6"></i>
-                                    <span>物料报废管理</span>
+                                    <span>特殊收入管理</span>
                                 </a>
                             </li>
                         </ul>
@@ -545,8 +545,15 @@
                         <div class="flex items-start">
                             <i class="fa fa-warning text-yellow-600 mt-1 mr-3"></i>
                             <div>
-                                <p class="text-yellow-800 font-medium">其他费用超过限额警告</p>
-                                <p class="text-yellow-700 text-sm">当前其他费用占研发总费用比例已超过20%，请检查费用归集是否合规。</p>
+                                <p class="text-yellow-800 font-medium">其他费用超过限额预警</p>
+                                <div class="text-yellow-700 text-sm space-y-1">
+                                    <p>当前其他费用占研发总费用比例已触发阈值提醒：</p>
+                                    <ul class="list-disc list-inside ml-2">
+                                        <li><span class="font-medium">加计扣除口径：</span>限额 10% (采用倒推法：6项费用 ÷ 9)</li>
+                                        <li><span class="font-medium">高企认定口径：</span>限额 20%</li>
+                                    </ul>
+                                    <p class="mt-2">请检查费用归集是否合规，超出部分将无法计入对应口径的研发费用总额。</p>
+                                </div>
                             </div>
                         </div>
                     </div>

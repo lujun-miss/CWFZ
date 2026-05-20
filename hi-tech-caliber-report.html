@@ -325,7 +325,7 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
                                     <i class="fa fa-trash w-6"></i>
-                                    <span>物料报废管理</span>
+                                    <span>特殊收入管理</span>
                                 </a>
                             </li>
                         </ul>
@@ -373,6 +373,12 @@
                                 <a href="generate-account-table.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-magic w-6"></i>
                                     <span>账套表生成</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-rule-config.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>口径规则配置</span>
                                 </a>
                             </li>
                         </ul>
@@ -1093,13 +1099,17 @@
                                     <table class="min-w-full border border-gray-200">
                                         <thead class="bg-gray-50">
                                             <tr>
-                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" rowspan="2">凭证信息</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider" rowspan="2">会计凭证记载金额</th>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider" rowspan="2">税法规定的归集金额</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" rowspan="2">序号</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="4">凭证信息</th>
+                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider" rowspan="2">帐载金额</th>
                                                 <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="6">费用明细（税法规定）</th>
                                                 <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="2">委托研发费用</th>
                                             </tr>
                                             <tr>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">日期</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">凭证字</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">凭证号</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">摘要</th>
                                                 <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">人员人工费用</th>
                                                 <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">直接投入费用</th>
                                                 <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">折旧费用</th>
@@ -1112,15 +1122,11 @@
                                         </thead>
                                         <tbody class="divide-y divide-gray-200">
                                             <tr>
-                                                <td class="px-4 py-3 border-b">
-                                                    <div class="voucher-info">
-                                                        <div class="text-center">2026-01</div>
-                                                        <div class="text-center">记</div>
-                                                        <div class="text-center">0001</div>
-                                                        <div>研发人员工资</div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
+                                                <td class="px-4 py-3 border-b">1</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">2026-01</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">记</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">0001</td>
+                                                <td class="px-2 py-3 border-b text-sm">研发人员工资</td>
                                                 <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -1132,15 +1138,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">
-                                                    <div class="voucher-info">
-                                                        <div class="text-center">2026-02</div>
-                                                        <div class="text-center">记</div>
-                                                        <div class="text-center">0002</div>
-                                                        <div>研发材料采购</div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 border-b text-right">¥3,750.00</td>
+                                                <td class="px-4 py-3 border-b">2</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">2026-02</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">记</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">0002</td>
+                                                <td class="px-2 py-3 border-b text-sm">研发材料采购</td>
                                                 <td class="px-4 py-3 border-b text-right">¥3,750.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥3,750.00</td>
@@ -1152,15 +1154,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">
-                                                    <div class="voucher-info">
-                                                        <div class="text-center">2026-03</div>
-                                                        <div class="text-center">记</div>
-                                                        <div class="text-center">0003</div>
-                                                        <div>研发设备折旧</div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 border-b text-right">¥1,250.00</td>
+                                                <td class="px-4 py-3 border-b">3</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">2026-03</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">记</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">0003</td>
+                                                <td class="px-2 py-3 border-b text-sm">研发设备折旧</td>
                                                 <td class="px-4 py-3 border-b text-right">¥1,250.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -1172,15 +1170,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">
-                                                    <div class="voucher-info">
-                                                        <div class="text-center">2026-04</div>
-                                                        <div class="text-center">记</div>
-                                                        <div class="text-center">0004</div>
-                                                        <div>软件摊销</div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 border-b text-right">¥833.33</td>
+                                                <td class="px-4 py-3 border-b">4</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">2026-04</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">记</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">0004</td>
+                                                <td class="px-2 py-3 border-b text-sm">软件摊销</td>
                                                 <td class="px-4 py-3 border-b text-right">¥833.33</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -1192,15 +1186,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">
-                                                    <div class="voucher-info">
-                                                        <div class="text-center">2026-05</div>
-                                                        <div class="text-center">记</div>
-                                                        <div class="text-center">0005</div>
-                                                        <div>研发设计费</div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 border-b text-right">¥1,000.00</td>
+                                                <td class="px-4 py-3 border-b">5</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">2026-05</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">记</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">0005</td>
+                                                <td class="px-2 py-3 border-b text-sm">研发设计费</td>
                                                 <td class="px-4 py-3 border-b text-right">¥1,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -1212,15 +1202,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">
-                                                    <div class="voucher-info">
-                                                        <div class="text-center">2026-06</div>
-                                                        <div class="text-center">记</div>
-                                                        <div class="text-center">0006</div>
-                                                        <div>装备调试费</div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 border-b text-right">¥500.00</td>
+                                                <td class="px-4 py-3 border-b">6</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">2026-06</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">记</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">0006</td>
+                                                <td class="px-2 py-3 border-b text-sm">装备调试费</td>
                                                 <td class="px-4 py-3 border-b text-right">¥500.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -1232,15 +1218,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">
-                                                    <div class="voucher-info">
-                                                        <div class="text-center">2026-07</div>
-                                                        <div class="text-center">记</div>
-                                                        <div class="text-center">0007</div>
-                                                        <div>委托外部研发</div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 border-b text-right">¥2,000.00</td>
+                                                <td class="px-4 py-3 border-b">7</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">2026-07</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">记</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">0007</td>
+                                                <td class="px-2 py-3 border-b text-sm">委托外部研发</td>
                                                 <td class="px-4 py-3 border-b text-right">¥2,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -1252,15 +1234,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">
-                                                    <div class="voucher-info">
-                                                        <div class="text-center">2026-08</div>
-                                                        <div class="text-center">记</div>
-                                                        <div class="text-center">0008</div>
-                                                        <div>研发差旅费</div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 border-b text-right">¥1,666.67</td>
+                                                <td class="px-4 py-3 border-b">8</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">2026-08</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">记</td>
+                                                <td class="px-2 py-3 border-b text-sm text-center">0008</td>
+                                                <td class="px-2 py-3 border-b text-sm">研发差旅费</td>
                                                 <td class="px-4 py-3 border-b text-right">¥1,666.67</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -1272,8 +1250,7 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr class="bg-gray-50 font-medium">
-                                                <td class="px-4 py-3 border-b font-bold">合计金额</td>
-                                                <td class="px-4 py-3 border-b text-right font-bold">¥21,000.00</td>
+                                                <td class="px-4 py-3 border-b font-bold text-center" colspan="5">合计金额</td>
                                                 <td class="px-4 py-3 border-b text-right font-bold">¥21,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right font-bold">¥10,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right font-bold">¥3,750.00</td>

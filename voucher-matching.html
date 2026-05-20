@@ -547,10 +547,10 @@
                 
                 <!-- 操作按钮 -->
                 <div class="mb-6 flex flex-wrap items-center gap-4">
-                    <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600">
-                        <i class="fa fa-magic mr-2"></i> 自动匹配
+                    <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600" title="按规则重新扫描未保存的凭证">
+                        <i class="fa fa-magic mr-2"></i> 重新自动匹配
                     </button>
-                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300" onclick="confirmReset()" title="清除当前页面所有未保存的匹配建议">
                         <i class="fa fa-refresh mr-2"></i> 重置匹配
                     </button>
                     <div class="ml-auto flex items-center gap-3">
@@ -645,8 +645,16 @@
                                         </button>
                                     </td>
                                     <td class="px-4 py-4 border-b align-top">
-                                        <button class="p-1 text-blue-500 hover:bg-blue-50 rounded" title="保存当前行"><i class="fa fa-save"></i></button>
-                                        <button class="p-1 text-gray-400 hover:bg-gray-100 rounded" title="锁定"><i class="fa fa-lock"></i></button>
+                                        <div class="flex items-start gap-1">
+                                            <button class="p-1 text-blue-500 hover:bg-blue-50 rounded group relative" onclick="toggleLock(this)" title="锁定状态">
+                                                <i class="fa fa-unlock text-gray-400"></i>
+                                                <!-- 气泡提示 -->
+                                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">点击锁定</span>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-blue-500 mt-1" onclick="showLockHelp()" title="查看锁定说明">
+                                                <i class="fa fa-question-circle-o"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -680,8 +688,16 @@
                                         </button>
                                     </td>
                                     <td class="px-4 py-4 border-b align-top">
-                                        <button class="p-1 text-blue-500 hover:bg-blue-50 rounded" title="保存当前行"><i class="fa fa-save"></i></button>
-                                        <button class="p-1 text-gray-400 hover:bg-gray-100 rounded" title="锁定"><i class="fa fa-lock"></i></button>
+                                        <div class="flex items-start gap-1">
+                                            <button class="p-1 text-blue-500 hover:bg-blue-50 rounded group relative" onclick="toggleLock(this)" title="锁定状态">
+                                                <i class="fa fa-unlock text-gray-400"></i>
+                                                <!-- 气泡提示 -->
+                                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">点击锁定</span>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-blue-500 mt-1" onclick="showLockHelp()" title="查看锁定说明">
+                                                <i class="fa fa-question-circle-o"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -713,7 +729,7 @@
                     <button class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 mr-4" onclick="loadPage('voucher-import.html')">
                         <i class="fa fa-arrow-left mr-2"></i> 上一步
                     </button>
-                    <button class="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-600" onclick="loadPage('voucher-list.html')">
+                    <button class="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-600" onclick="confirmComplete()" title="保存所有已匹配的凭证并提交">
                         <i class="fa fa-check mr-2"></i> 完成匹配
                     </button>
                 </div>
@@ -785,6 +801,83 @@
             } else {
                 alert('凭证至少需要保留一个匹配项');
             }
+        }
+
+        // 重置匹配确认
+        function confirmReset() {
+            if (confirm('确定要重置当前页面所有未保存、未锁定的匹配建议吗？这将把这些凭证恢复到“未匹配”状态。')) {
+                // 执行重置逻辑
+                console.log('匹配已重置');
+            }
+        }
+
+        // 完成匹配确认
+        function confirmComplete() {
+            const allRows = document.querySelectorAll('.voucher-row');
+            let unmatchedCount = 0;
+
+            allRows.forEach(row => {
+                const selects = row.querySelectorAll('select');
+                let rowMatched = true;
+                selects.forEach(s => {
+                    if (s.value === '') rowMatched = false;
+                });
+                if (!rowMatched) unmatchedCount++;
+            });
+
+            if (unmatchedCount > 0) {
+                if (confirm(`检测到当前页面仍有 ${unmatchedCount} 条凭证未完成匹配（未选择项目或类别）。\n\n未匹配的凭证将不会计入研发报表。是否确认现在提交？`)) {
+                    loadPage('voucher-list.html');
+                }
+            } else {
+                if (confirm('当前页面所有凭证已完成匹配。是否确认提交并查看凭证一览表？')) {
+                    loadPage('voucher-list.html');
+                }
+            }
+        }
+
+        // 切换锁定状态
+        function toggleLock(button) {
+            const icon = button.querySelector('i');
+            const tooltip = button.querySelector('span');
+            const row = button.closest('tr');
+            const selects = row.querySelectorAll('select');
+            const removeBtns = row.querySelectorAll('.split-rows-container button');
+            const addBtn = row.querySelector('button[onclick^="addSplitRow"]');
+            const isLocked = icon.classList.contains('fa-lock');
+            
+            if (isLocked) {
+                // 解锁
+                icon.className = 'fa fa-unlock text-gray-400';
+                button.classList.replace('text-amber-500', 'text-blue-500');
+                button.classList.replace('bg-amber-50', 'bg-blue-50');
+                tooltip.textContent = '点击锁定';
+                
+                // 启用修改
+                selects.forEach(s => s.disabled = false);
+                removeBtns.forEach(b => b.disabled = false);
+                if (addBtn) addBtn.disabled = false;
+            } else {
+                // 锁定
+                icon.className = 'fa fa-lock text-amber-500';
+                button.classList.add('bg-amber-50');
+                tooltip.textContent = '已锁定';
+                
+                // 禁用修改
+                selects.forEach(s => s.disabled = true);
+                removeBtns.forEach(b => b.disabled = true);
+                if (addBtn) addBtn.disabled = true;
+            }
+        }
+
+        // 移除自动锁定逻辑
+        function autoLock(element) {
+            // 已移除自动锁定，完全由用户手动点击图标控制
+        }
+
+        // 显示锁定功能说明
+        function showLockHelp() {
+            alert('【锁定功能说明】\n\n1. 手动锁定：由您点击锁图标手动开启锁定，锁定后该行凭证不可修改。\n2. 保护作用：锁定后的凭证不会被“重新自动匹配”覆盖，再次导入同号凭证时也会保留您的手动匹配关系。\n3. 解锁修改：若需修改已锁定的凭证，请先点击图标解锁后再进行操作。');
         }
     </script>
 </body>

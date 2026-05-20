@@ -319,7 +319,7 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
                                     <i class="fa fa-trash w-6"></i>
-                                    <span>物料报废管理</span>
+                                    <span>特殊收入管理</span>
                                 </a>
                             </li>
                         </ul>
@@ -367,6 +367,12 @@
                                 <a href="generate-account-table.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-magic w-6"></i>
                                     <span>账套表生成</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-rule-config.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>口径规则配置</span>
                                 </a>
                             </li>
                         </ul>
@@ -513,8 +519,8 @@
                     <div class="file-upload-area rounded-lg p-8 text-center mb-6" id="fileUploadArea">
                         <i class="fa fa-cloud-upload text-4xl text-gray-400 mb-4"></i>
                         <p class="text-gray-600 mb-2">点击或拖拽文件到此处上传</p>
-                        <p class="text-gray-400 text-sm">支持 Excel、CSV、JSON 格式</p>
-                        <input type="file" id="fileInput" class="hidden" accept=".xlsx,.xls,.csv,.json">
+                        <p class="text-gray-400 text-sm">支持 Excel 格式 (.xlsx, .xls)</p>
+                        <input type="file" id="fileInput" class="hidden" accept=".xlsx,.xls">
                     </div>
                     
                     <!-- 上传按钮 -->
@@ -738,6 +744,13 @@
                             <ul class="mt-2 text-sm text-blue-700 list-disc list-inside space-y-1">
                                 <li>请确保上传的文件包含完整的凭证信息，包括凭证号、日期、摘要、科目、金额等</li>
                                 <li><strong>筛选规则：</strong>只导入借方金额 > 0 的凭证（贷方有值的结转凭证不导入）</li>
+                                <li><strong>增量导入与去重保护：</strong>系统以「凭证号」为唯一标识，自动处理新旧数据冲突。
+                                    <ul class="ml-5 mt-1 list-disc text-xs">
+                                        <li><strong>新凭证/未匹配：</strong>直接追加或覆盖更新旧有的凭证内容。</li>
+                                        <li><strong>已匹配凭证：</strong>保留原有项目匹配关系，仅更新金额、摘要等基础信息。</li>
+                                        <li><strong>已锁定凭证：</strong>报表已生成，系统将自动跳过，禁止覆盖。</li>
+                                    </ul>
+                                </li>
                                 <li><strong>识别规则：</strong>系统使用「费用科目映射表」配置的规则进行凭证识别</li>
                                 <li><strong>匹配逻辑：</strong>科目代码匹配 + 摘要关键词匹配（双重验证）</li>
                                 <li><strong>会计规则：</strong>费用增加记借方，研发费用取借方发生额</li>
@@ -973,19 +986,31 @@
                 // 步骤5：数据验证
                 this.updateProgress(90);
                 this.setStepStatus(5, 'processing');
-                this.addLog('开始验证数据格式...');
+                this.addLog('开始验证数据格式与冲突检测...');
                 await this.simulateDelay(800);
+                
+                // 模拟冲突检测统计
+                const totalInFile = accrualCount;
+                const duplicateCount = 12; // 假设有12条重复
+                const matchedDuplicateCount = 8; // 其中8条已匹配
+                const lockedCount = 2; // 2条已锁定
+                
                 const validationResults = [
-                    { valid: true, message: `日期格式验证通过: ${accrualCount}/${accrualCount}` },
-                    { valid: true, message: `借方金额验证通过: ${accrualCount}/${accrualCount}` },
-                    { valid: true, message: `科目编码验证通过: ${accrualCount}/${accrualCount}` },
-                    { valid: false, message: '发现 0 条重复凭证号' }
+                    { valid: true, message: `基础格式验证通过: ${totalInFile}/${totalInFile}` },
+                    { valid: true, message: `发现重复凭证: ${duplicateCount} 条 (其中 ${matchedDuplicateCount} 条已匹配，将保留匹配关系)` },
+                    { valid: false, message: `⚠️ 跳过已锁定凭证: ${lockedCount} 条 (报表已生成，不可修改)` }
                 ];
+                
+                this.addLog(`冲突检测详情:`);
+                this.addLog(`  - 新增凭证: ${totalInFile - duplicateCount} 条`);
+                this.addLog(`  - 更新凭证: ${duplicateCount - lockedCount} 条`);
+                this.addLog(`  - 跳过凭证: ${lockedCount} 条 (原因: 已生成报表并锁定)`);
+                
                 validationResults.forEach(result => {
                     this.addLog(result.message);
                 });
                 this.showValidationResults(validationResults);
-                this.setStepStatus(5, 'completed', `数据验证完成，可以导入`);
+                this.setStepStatus(5, 'completed', `数据验证完成，有效凭证 ${totalInFile - lockedCount} 条`);
                 
                 // 完成
                 this.updateProgress(100);

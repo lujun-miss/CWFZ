@@ -7,6 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
+        // 切换规则详情显示
+        function toggleDetail(detailId, btn) {
+            const detail = document.getElementById(detailId);
+            const icon = btn.querySelector('i');
+            const span = btn.querySelector('span');
+            
+            if (detail.classList.contains('collapsed')) {
+                detail.classList.remove('collapsed');
+                detail.classList.add('expanded');
+                span.textContent = detailId.includes('high-overseas') ? '收起详情' : '收起逻辑';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                detail.classList.remove('expanded');
+                detail.classList.add('collapsed');
+                span.textContent = detailId.includes('high-overseas') ? '展开详情' : '查看逻辑';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -33,6 +52,11 @@
             .rule-card.hidden { display: none; }
             .nav-item-active { @apply bg-primary text-white; }
             .nav-item-hover { @apply hover:bg-blue-100 transition-colors duration-200; }
+            
+            /* 新增折叠详情样式 */
+            .detail-container { @apply transition-all duration-300 ease-in-out overflow-hidden; }
+            .detail-container.collapsed { @apply max-h-0 opacity-0 mt-0; }
+            .detail-container.expanded { @apply max-h-[500px] opacity-100 mt-3; }
         }
     </style>
     <style>
@@ -322,7 +346,7 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage(event, 'material-scrap.html')">
                                     <i class="fa fa-trash w-6"></i>
-                                    <span>物料报废管理</span>
+                                    <span>特殊收入管理</span>
                                 </a>
                             </li>
                         </ul>
@@ -376,12 +400,6 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600 bg-blue-50 text-primary font-medium" onclick="loadPage(event, 'caliber-rule-config.html')">
                                     <i class="fa fa-cogs w-6"></i>
                                     <span>口径规则配置</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage(event, 'caliber-validation-report.html')">
-                                    <i class="fa fa-check-square w-6"></i>
-                                    <span>校验报告</span>
                                 </a>
                             </li>
                         </ul>
@@ -505,28 +523,62 @@
                     </div>
                 </div>
 
-                <!-- 口径筛选条件 -->
-                <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                <!-- 筛选条件 -->
+                <div class="bg-gray-50 rounded-xl p-4 mb-6 space-y-4">
+                    <!-- 口径筛选 -->
                     <div>
                         <span class="text-sm text-gray-600">适用口径：</span>
                         <div class="flex flex-wrap gap-2 mt-2">
                             <button onclick="filterRulesByCaliber('all')" id="filter-caliber-all" class="px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-100 active-filter">
                                 <i class="fa fa-filter mr-1"></i>全部口径
                             </button>
-                            <button onclick="filterRulesByCaliber('plus_deduction')" id="filter-caliber-plus" class="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700 hover:bg-blue-100">
+                            <button onclick="filterRulesByCaliber('plus_deduction')" id="filter-caliber-plus_deduction" class="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700 hover:bg-blue-100">
                                 <i class="fa fa-calculator mr-1"></i>加计扣除
                             </button>
-                            <button onclick="filterRulesByCaliber('high_tech')" id="filter-caliber-high" class="px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-lg text-sm text-purple-700 hover:bg-purple-100">
+                            <button onclick="filterRulesByCaliber('high_tech')" id="filter-caliber-high_tech" class="px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-lg text-sm text-purple-700 hover:bg-purple-100">
                                 <i class="fa fa-award mr-1"></i>高企认定
                             </button>
                             <button onclick="filterRulesByCaliber('accounting')" id="filter-caliber-accounting" class="px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700 hover:bg-green-100">
                                 <i class="fa fa-book mr-1"></i>会计口径
                             </button>
-                            <button onclick="filterRulesByCaliber('rd_statistics')" id="filter-caliber-rd" class="px-3 py-1.5 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-700 hover:bg-yellow-100">
+                            <button onclick="filterRulesByCaliber('rd_statistics')" id="filter-caliber-rd_statistics" class="px-3 py-1.5 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-700 hover:bg-yellow-100">
                                 <i class="fa fa-bar-chart mr-1"></i>R&D统计
                             </button>
-                            <button onclick="filterRulesByCaliber('ipo_review')" id="filter-caliber-ipo" class="px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 hover:bg-red-100">
+                            <button onclick="filterRulesByCaliber('ipo_review')" id="filter-caliber-ipo_review" class="px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 hover:bg-red-100">
                                 <i class="fa fa-file-text mr-1"></i>IPO审查
+                            </button>
+                        </div>
+                    </div>
+                    <!-- 费用类别筛选 -->
+                    <div class="pt-3 border-t border-gray-200">
+                        <span class="text-sm text-gray-600">费用类别 (八大费用)：</span>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <button onclick="filterRulesByExpenseType('all')" id="filter-expense-all" class="px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-100 active-filter">
+                                <i class="fa fa-list mr-1"></i>全部费用
+                            </button>
+                            <button onclick="filterRulesByExpenseType('personnel')" id="filter-expense-personnel" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+                                人员人工
+                            </button>
+                            <button onclick="filterRulesByExpenseType('direct')" id="filter-expense-direct" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+                                直接投入
+                            </button>
+                            <button onclick="filterRulesByExpenseType('depreciation')" id="filter-expense-depreciation" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+                                折旧与长期待摊费用
+                            </button>
+                            <button onclick="filterRulesByExpenseType('amortization')" id="filter-expense-amortization" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+                                无形资产摊销
+                            </button>
+                            <button onclick="filterRulesByExpenseType('design')" id="filter-expense-design" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+                                设计费用
+                            </button>
+                            <button onclick="filterRulesByExpenseType('commissioning')" id="filter-expense-commissioning" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+                                装备调试与试验费用
+                            </button>
+                            <button onclick="filterRulesByExpenseType('outsourced')" id="filter-expense-outsourced" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+                                委托外部研发
+                            </button>
+                            <button onclick="filterRulesByExpenseType('other')" id="filter-expense-other" class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+                                其他费用
                             </button>
                         </div>
                     </div>
@@ -536,325 +588,424 @@
                 <div class="mb-8">
                     <div class="flex items-center mb-4">
                         <div class="w-2 h-6 bg-indigo-500 rounded mr-3"></div>
-                        <h2 class="text-lg font-semibold text-gray-800">系统预设规则</h2>
-                        <span class="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">系统内置，不可编辑</span>
+                        <h2 class="text-lg font-semibold text-gray-800">系统内置规则</h2>
+                        <span class="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">不可编辑</span>
                     </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="space-y-3">
                         <!-- 加计扣除口径 - 其他费用限额 -->
-                        <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-indigo-500 shadow-sm">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <div class="flex items-center flex-wrap gap-2">
-                                        <span class="rule-tag bg-blue-100 text-blue-700 text-xs">加计扣除</span>
-                                        <span class="rule-tag bg-gray-200 text-gray-600 text-xs">其他费用</span>
-                                        <span class="rule-tag bg-indigo-100 text-indigo-600 text-xs">系统预设</span>
-                                        <h3 class="font-semibold text-gray-800">其他费用限额</h3>
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-blue-50 text-blue-600 text-[10px] w-fit mb-1">加计扣除</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">其他费用限额</h3>
                                     </div>
-                                    <p class="text-gray-500 text-sm mt-2">与研发活动直接相关的其他费用，总额不得超过可加计扣除研发费用总额的10%</p>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">与研发活动直接相关的其他费用，总额不得超过可加计扣除研发费用总额的10%</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">其他费用</span>
+                                        <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
+                                            6项费用 ÷ 9
+                                        </div>
+                                    </div>
                                 </div>
-                                <span class="text-gray-300"><i class="fa fa-lock"></i></span>
-                            </div>
-                            <div class="mt-4 p-3 bg-indigo-50 rounded-lg">
-                                <div class="flex items-center justify-between text-sm">
-                                    <span class="text-gray-600">计算公式</span>
-                                    <span class="font-mono bg-white px-2 py-1 rounded">其他费用 ≤ 7项费用 ÷ 9</span>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button onclick="toggleDetail('detail-plus-other', this)" class="text-xs text-indigo-600 hover:text-indigo-800 flex items-center">
+                                        <span>查看逻辑</span>
+                                        <i class="fa fa-chevron-down ml-1 transition-transform"></i>
+                                    </button>
+                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
                                 </div>
                             </div>
-                            <div class="mt-3 flex items-center space-x-2">
-                                <span class="text-xs text-gray-500">适用口径:</span>
-                                <span class="rule-tag bg-blue-50 text-blue-600">加计扣除</span>
+                            <div id="detail-plus-other" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
+                                <div class="text-xs text-indigo-700 space-y-2">
+                                    <div class="bg-indigo-50/50 p-2 rounded border border-indigo-100 mb-2">
+                                        <p class="font-semibold mb-1">※ 6项费用组成备注：</p>
+                                        <p class="text-[10px] leading-relaxed text-indigo-600">
+                                            人员人工费 + 直接投入 + 折旧费用 + 无形资产摊销 + 设计费用 + 装备调试与试验费
+                                        </p>
+                                    </div>
+                                    <p class="font-medium flex items-center">
+                                        <i class="fa fa-info-circle mr-1"></i> 倒推法逻辑解析：
+                                    </p>
+                                    <div class="bg-white/50 p-2 rounded leading-relaxed">
+                                        <p>1. 设 6项费用之和 = 90万，其他费用 = 20万</p>
+                                        <p>2. 理想研发总额 = 90万 ÷ 90% = 100万</p>
+                                        <p>3. 其他费用上限 = 100万 × 10% = 10万</p>
+                                        <p class="mt-1 font-semibold text-indigo-800">故：20万 > 10万，此时以10万计入</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 高企认定口径 - 委托境内研发 -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-purple-50 text-purple-600 text-[10px] w-fit mb-1">高企认定</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">委托境内研发 (高企)</h3>
+                                    </div>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境内机构或个人进行研发活动所发生的费用，按照其实际发生额的80%计入</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">委托外部研发</span>
+                                        <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
+                                            实际发生 × 80%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 高企认定口径 - 委托境外研发 -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-purple-50 text-purple-600 text-[10px] w-fit mb-1">高企认定</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">委托境外研发 (高企)</h3>
+                                    </div>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境外机构研发费用按80%计入，且需满足境内占比≥60%及境外≤40%限额</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">委托外部研发</span>
+                                        <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
+                                            综合限额计算
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button onclick="toggleDetail('detail-high-overseas', this)" class="text-xs text-indigo-600 hover:text-indigo-800 flex items-center">
+                                        <span>展开详情</span>
+                                        <i class="fa fa-chevron-down ml-1 transition-transform"></i>
+                                    </button>
+                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                </div>
+                            </div>
+                            <div id="detail-high-overseas" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
+                                <div class="text-xs text-indigo-700 space-y-3">
+                                    <div class="bg-white/50 p-2 rounded leading-relaxed">
+                                        <p class="font-medium text-indigo-900 mb-1">※ 自主研发费用定义：</p>
+                                        <p class="text-[10px] text-indigo-600 mb-2 leading-tight">
+                                            人员人工 + 直接投入 + 折旧 + 无形资产摊销 + 设计费 + 装备调试费 + 其他费用
+                                        </p>
+                                        <p class="font-semibold text-indigo-900">1. 确定计算基数 (总研发费用)</p>
+                                        <p>公式：自主研发 + 境内委托×80% + 境外委托×80%</p>
+                                        <p class="italic text-gray-500">示例：20 + 40×80% + 60×80% = <span class="font-bold text-indigo-800">100万</span></p>
+                                    </div>
+                                    <div class="bg-white/50 p-2 rounded leading-relaxed">
+                                        <p class="font-semibold text-indigo-900">2. 境内占比校验 (≥60%)</p>
+                                        <p>境内费 = 自主研发 + 境内委托×80% = <span class="font-bold text-indigo-800">52万</span></p>
+                                        <p>校验：52 / 100 = 52% <span class="text-red-600 font-bold ml-1"><i class="fa fa-close"></i> 低于60%</span></p>
+                                        <p class="text-red-600 font-medium mt-1">结论：由于境内占比不达标，境外研发费用计入为 0</p>
+                                    </div>
+                                    <div class="bg-white/50 p-2 rounded leading-relaxed">
+                                        <p class="font-semibold text-indigo-900">3. 境外限额校验 (≤40%)</p>
+                                        <p>若境内达标，境外计入额 = min(境外实际×80%, 总研发费×40%)</p>
+                                        <p class="italic text-gray-500">本例限额：100 × 40% = 40万</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 高企认定口径 - 其他费用限额 -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-purple-50 text-purple-600 text-[10px] w-fit mb-1">高企认定</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">其他费用限额 (高企)</h3>
+                                    </div>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">与研发活动直接相关的其他费用，一般不得超过研发总费用的20%</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">其他费用</span>
+                                        <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
+                                            6项费用 ÷ 4
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button onclick="toggleDetail('detail-high-other', this)" class="text-xs text-indigo-600 hover:text-indigo-800 flex items-center">
+                                        <span>查看逻辑</span>
+                                        <i class="fa fa-chevron-down ml-1 transition-transform"></i>
+                                    </button>
+                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                </div>
+                            </div>
+                            <div id="detail-high-other" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
+                                <div class="text-xs text-indigo-700 space-y-2">
+                                    <div class="bg-indigo-50/50 p-2 rounded border border-indigo-100 mb-2">
+                                        <p class="font-semibold mb-1">※ 6项费用组成备注：</p>
+                                        <p class="text-[10px] leading-relaxed text-indigo-600">
+                                            人员人工费 + 直接投入 + 折旧费用 + 无形资产摊销 + 设计费用 + 装备调试与试验费
+                                        </p>
+                                    </div>
+                                    <p class="font-medium flex items-center">
+                                        <i class="fa fa-info-circle mr-1"></i> 倒推法逻辑解析：
+                                    </p>
+                                    <div class="bg-white/50 p-2 rounded leading-relaxed">
+                                        <p>1. 设 6项费用之和 = 80万，其他费用 = 30万</p>
+                                        <p>2. 理想研发总额 = 80万 ÷ 80% = 100万</p>
+                                        <p>3. 其他费用上限 = 100万 × 20% = 20万</p>
+                                        <p class="mt-1 font-semibold text-indigo-800">故：30万 > 20万，此时以20万计入</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 高企认定口径 - 人员人工183天限制 -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-purple-50 text-purple-600 text-[10px] w-fit mb-1">高企认定</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">科技人员在司工时限制</h3>
+                                    </div>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">科技人员实际年度工作时间需累计满183天以上（按实际考勤工作日）</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">人员人工</span>
+                                        <div class="bg-red-50 px-3 py-1 rounded-lg text-xs font-mono text-red-700">
+                                            在司工时 ≥ 183天
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button onclick="toggleDetail('detail-high-183', this)" class="text-xs text-indigo-600 hover:text-indigo-800 flex items-center">
+                                        <span>查看逻辑</span>
+                                        <i class="fa fa-chevron-down ml-1 transition-transform"></i>
+                                    </button>
+                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                </div>
+                            </div>
+                            <div id="detail-high-183" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
+                                <div class="text-xs text-indigo-700 space-y-2">
+                                    <p class="font-medium flex items-center text-red-600">
+                                        <i class="fa fa-exclamation-circle mr-1"></i> 高企硬性指标解析：
+                                    </p>
+                                    <div class="bg-white/50 p-2 rounded leading-relaxed border border-red-100">
+                                        <p class="font-semibold text-red-800 mb-1">※ 政策要求：</p>
+                                        <p>1. 科技人员是指直接从事研发及相关技术创新活动，以及专门负责研发活动管理的人员。</p>
+                                        <p>2. <span class="text-red-700 font-bold">累计实际工作时间必须 ≥ 183天</span>。</p>
+                                        <p>3. 计算口径：<span class="font-semibold">按实际考勤工作日来算</span>，剔除节假日及非研发相关请假。</p>
+                                        <p class="mt-2 font-semibold text-red-800">※ 归集影响：</p>
+                                        <p>若某科技人员当年在司时间不足183天，则该人员全年的工资、奖金、五险一金等人工费用均<span class="font-bold">不得计入</span>高企口径研发费用。</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- 加计扣除口径 - 委托境内×80% -->
-                        <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-indigo-500 shadow-sm">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <div class="flex items-center flex-wrap gap-2">
-                                        <span class="rule-tag bg-blue-100 text-blue-700 text-xs">加计扣除</span>
-                                        <span class="rule-tag bg-gray-200 text-gray-600 text-xs">委托外部研发</span>
-                                        <span class="rule-tag bg-indigo-100 text-indigo-600 text-xs">系统预设</span>
-                                        <h3 class="font-semibold text-gray-800">委托境内研发×80%</h3>
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-blue-50 text-blue-600 text-[10px] w-fit mb-1">加计扣除</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">委托境内研发×80%</h3>
                                     </div>
-                                    <p class="text-gray-500 text-sm mt-2">委托境内机构或个人研发费用，按实际发生额的80%计入加计扣除基数</p>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境内机构或个人研发费用，按实际发生额的80%计入加计扣除基数</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">委托外部研发</span>
+                                        <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
+                                            实际发生 × 80%
+                                        </div>
+                                    </div>
                                 </div>
-                                <span class="text-gray-300"><i class="fa fa-lock"></i></span>
-                            </div>
-                            <div class="mt-4 p-3 bg-indigo-50 rounded-lg">
-                                <div class="flex items-center justify-between text-sm">
-                                    <span class="text-gray-600">计算公式</span>
-                                    <span class="font-mono bg-white px-2 py-1 rounded">可扣除 = 实际发生 × 80%</span>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
                                 </div>
-                            </div>
-                            <div class="mt-3 flex items-center space-x-2">
-                                <span class="text-xs text-gray-500">适用口径:</span>
-                                <span class="rule-tag bg-blue-50 text-blue-600">加计扣除</span>
                             </div>
                         </div>
 
-                        <!-- 加计扣除口径 - 委托境外×80% -->
-                        <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-indigo-500 shadow-sm">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <div class="flex items-center flex-wrap gap-2">
-                                        <span class="rule-tag bg-blue-100 text-blue-700 text-xs">加计扣除</span>
-                                        <span class="rule-tag bg-gray-200 text-gray-600 text-xs">委托外部研发</span>
-                                        <span class="rule-tag bg-indigo-100 text-indigo-600 text-xs">系统预设</span>
-                                        <h3 class="font-semibold text-gray-800">委托境外研发×80%</h3>
+                        <!-- 加计扣除口径 - 委托境外研发限额 (综合) -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-blue-50 text-blue-600 text-[10px] w-fit mb-1">加计扣除</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">委托境外研发 (加计)</h3>
                                     </div>
-                                    <p class="text-gray-500 text-sm mt-2">委托境外机构研发费用，按实际发生额的80%计入加计扣除基数（需先满足2/3限制）</p>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境外机构研发费用，按实际发生额 of 80% 计入，且不得超过境内费用的 2/3</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">委托外部研发</span>
+                                        <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
+                                            min(80%, 2/3上限)
+                                        </div>
+                                    </div>
                                 </div>
-                                <span class="text-gray-300"><i class="fa fa-lock"></i></span>
-                            </div>
-                            <div class="mt-4 p-3 bg-indigo-50 rounded-lg">
-                                <div class="flex items-center justify-between text-sm">
-                                    <span class="text-gray-600">计算公式</span>
-                                    <span class="font-mono bg-white px-2 py-1 rounded">可扣除 = 实际发生 × 80%</span>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button onclick="toggleDetail('detail-plus-overseas', this)" class="text-xs text-indigo-600 hover:text-indigo-800 flex items-center">
+                                        <span>查看逻辑</span>
+                                        <i class="fa fa-chevron-down ml-1 transition-transform"></i>
+                                    </button>
+                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
                                 </div>
                             </div>
-                            <div class="mt-3 flex items-center space-x-2">
-                                <span class="text-xs text-gray-500">适用口径:</span>
-                                <span class="rule-tag bg-blue-50 text-blue-600">加计扣除</span>
+                            <div id="detail-plus-overseas" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
+                                <div class="text-xs text-indigo-700 space-y-2">
+                                    <p class="font-medium flex items-center">
+                                        <i class="fa fa-info-circle mr-1"></i> 计算步骤演示：
+                                    </p>
+                                    <div class="bg-white/50 p-2 rounded leading-relaxed">
+                                        <p class="font-medium text-indigo-900 mb-1">※ 自主研发费用定义：</p>
+                                        <p class="text-[10px] text-indigo-600 mb-2 leading-tight">
+                                            人员人工 + 直接投入 + 折旧 + 无形资产摊销 + 设计费 + 装备调试费 + 其他费用
+                                        </p>
+                                        <p>设：自主研发=40万，委托境内=40万，委托境外=60万</p>
+                                        <p>1. 境内符合条件研发费 = 40 + 40×80% = <span class="font-semibold text-indigo-800">72万</span></p>
+                                        <p>2. 境内费用的2/3上限 = 72 × 2/3 = <span class="font-semibold text-indigo-800">48万</span></p>
+                                        <p>3. 境外费用的80%部分 = 60 × 80% = <span class="font-semibold text-indigo-800">48万</span></p>
+                                        <p class="mt-1 font-semibold text-indigo-800">结论：取两者最小值，即最终境外计入 48万</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- 加计扣除口径 - 委托境外≤2/3 -->
-                        <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-indigo-500 shadow-sm">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <div class="flex items-center flex-wrap gap-2">
-                                        <span class="rule-tag bg-blue-100 text-blue-700 text-xs">加计扣除</span>
-                                        <span class="rule-tag bg-gray-200 text-gray-600 text-xs">委托外部研发</span>
-                                        <span class="rule-tag bg-indigo-100 text-indigo-600 text-xs">系统预设</span>
-                                        <h3 class="font-semibold text-gray-800">委托境外研发≤2/3</h3>
+                        <!-- 加计/高企/会计 - 特殊收入冲减规则 -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-gray-50 text-gray-600 text-[10px] w-fit mb-1">全口径适用</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">特殊收入冲减研发费</h3>
                                     </div>
-                                    <p class="text-gray-500 text-sm mt-2">委托境外机构研发费用不得超过境内研发费用的三分之二，委托境外个人不得扣除</p>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">下脚料、试制产品销售等特殊收入应全额冲减对应项目的研发费用</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">特殊收入</span>
+                                        <div class="bg-green-50 px-3 py-1 rounded-lg text-xs font-mono text-green-700">
+                                            100% 冲减 (A107012)
+                                        </div>
+                                    </div>
                                 </div>
-                                <span class="text-gray-300"><i class="fa fa-lock"></i></span>
-                            </div>
-                            <div class="mt-4 p-3 bg-indigo-50 rounded-lg">
-                                <div class="flex items-center justify-between text-sm">
-                                    <span class="text-gray-600">计算公式</span>
-                                    <span class="font-mono bg-white px-2 py-1 rounded">境外费用 ≤ 境内费用 × 2/3</span>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button onclick="toggleDetail('detail-special-income', this)" class="text-xs text-indigo-600 hover:text-indigo-800 flex items-center">
+                                        <span>查看逻辑</span>
+                                        <i class="fa fa-chevron-down ml-1 transition-transform"></i>
+                                    </button>
+                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
                                 </div>
                             </div>
-                            <div class="mt-3 flex items-center space-x-2">
-                                <span class="text-xs text-gray-500">适用口径:</span>
-                                <span class="rule-tag bg-blue-50 text-blue-600">加计扣除</span>
+                            <div id="detail-special-income" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
+                                <div class="text-xs text-indigo-700 space-y-2">
+                                    <div class="bg-indigo-50/50 p-2 rounded border border-indigo-100 mb-2">
+                                        <p class="font-semibold mb-1">※ 政策依据 (国家税务总局公告2021年第28号)：</p>
+                                        <p class="text-[10px] leading-relaxed text-indigo-600">
+                                            企业在研发过程中形成的试制产品、下脚料等，销售时应按其实际销售收入冲减对应的研发费用。
+                                        </p>
+                                    </div>
+                                    <p class="font-medium flex items-center">
+                                        <i class="fa fa-info-circle mr-1"></i> 结转逻辑解析：
+                                    </p>
+                                    <div class="bg-white/50 p-2 rounded leading-relaxed">
+                                        <p>1. 设：某项目当期总费用 100万，特殊收入 120万</p>
+                                        <p>2. 当期冲减：<span class="font-bold">100万 (费用减至0)</span></p>
+                                        <p>3. 结转处理：<span class="font-bold text-amber-600">余额 20万 待结转</span></p>
+                                        <p class="mt-1 text-[10px] text-gray-500 italic">备注：余额将结转至以后年度，继续冲减该项目的研发费用。</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 可配置规则 -->
                 <div>
                     <div class="flex items-center mb-4">
                         <div class="w-2 h-6 bg-green-500 rounded mr-3"></div>
-                        <h2 class="text-lg font-semibold text-gray-800">可配置规则</h2>
-                        <span class="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">用户可自定义</span>
+                        <h2 class="text-lg font-semibold text-gray-800">可调配政策规则</h2>
+                        <span class="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">系统预设，允许微调</span>
                     </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="rules-container">
-                        <!-- 加计扣除口径 - 研发人员工时占比 -->
-                        <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <div class="flex items-center flex-wrap gap-2">
-                                        <span class="rule-tag bg-blue-100 text-blue-700 text-xs">加计扣除</span>
-                                        <span class="rule-tag bg-gray-200 text-gray-600 text-xs">人员人工</span>
-                                        <h3 class="font-semibold text-gray-800">研发人员工时占比</h3>
+                    <div class="space-y-3" id="rules-container">
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-warning shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-blue-50 text-blue-600 text-[10px] w-fit mb-1">加计扣除</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">排除装备调试及田间试验费</h3>
                                     </div>
-                                    <p class="text-gray-500 text-sm mt-2">同时从事研发和非研发活动的人员，需按实际工时占比分摊人工费用</p>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">加计扣除口径下，不包含装备调试费用、田间试验费用</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">装备调试与试验费</span>
+                                        <div class="bg-red-50 px-3 py-1 rounded-lg text-xs font-mono text-red-700">
+                                            排除调试/田间试验
+                                        </div>
+                                    </div>
                                 </div>
-                                <button class="text-gray-400 hover:text-warning" onclick="editRule('r11')"><i class="fa fa-pencil"></i></button>
-                            </div>
-                            <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-center justify-between text-sm">
-                                    <span class="text-gray-600">分摊公式</span>
-                                    <span class="font-mono bg-white px-2 py-1 rounded">研发人工 = 总工 × 研发工时占比</span>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button class="text-gray-400 hover:text-warning" onclick="editRule('r15')"><i class="fa fa-pencil"></i></button>
                                 </div>
-                            </div>
-                            <div class="mt-3 flex items-center space-x-2">
-                                <span class="text-xs text-gray-500">适用口径:</span>
-                                <span class="rule-tag bg-blue-50 text-blue-600">加计扣除</span>
                             </div>
                         </div>
 
 
 
-                    <!-- 高企认定口径核心规则 -->
-                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center flex-wrap gap-2">
-                                    <span class="rule-tag bg-purple-100 text-purple-700 text-xs">高企认定</span>
-                                    <span class="rule-tag bg-gray-200 text-gray-600 text-xs">人员人工</span>
-                                    <h3 class="font-semibold text-gray-800">人员人工费用限制</h3>
+                        <!-- 加计扣除口径 - 直接投入排除场地租赁 -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-warning shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-blue-50 text-blue-600 text-[10px] w-fit mb-1">加计扣除</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">场地租赁费排除 (加计)</h3>
+                                    </div>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">加计扣除口径下，直接投入不包含房屋/场地租赁费，仅允许仪器设备租赁费</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">直接投入</span>
+                                        <div class="bg-red-50 px-3 py-1 rounded-lg text-xs font-mono text-red-700">
+                                            排除场地租赁
+                                        </div>
+                                    </div>
                                 </div>
-                                <p class="text-gray-500 text-sm mt-2">仅包含直接从事研发活动人员的工资薪金、五险一金，外聘研发人员劳务费用</p>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button class="text-gray-400 hover:text-warning" onclick="editRule('r13')"><i class="fa fa-pencil"></i></button>
+                                </div>
                             </div>
-                            <button class="text-gray-400 hover:text-warning" onclick="editRule('r3')"><i class="fa fa-pencil"></i></button>
                         </div>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <span class="text-xs text-gray-500">适用口径:</span>
-                            <span class="rule-tag bg-purple-50 text-purple-600">高企认定</span>
-                        </div>
-                    </div>
 
-                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center flex-wrap gap-2">
-                                    <span class="rule-tag bg-purple-100 text-purple-700 text-xs">高企认定</span>
-                                    <span class="rule-tag bg-gray-200 text-gray-600 text-xs">无形资产摊销</span>
-                                    <h3 class="font-semibold text-gray-800">无形资产摊销限制</h3>
+                        <!-- 规则16: 共用设备研发工时占比限制 -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-warning shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-blue-50 text-blue-600 text-[10px] w-fit mb-1">加计扣除</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">共用设备研发工时限制</h3>
+                                    </div>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">生产与研发共用设备，研发工时占比不得超过设备年度总工时的15%</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">折旧费用</span>
+                                        <div class="bg-red-50 px-3 py-1 rounded-lg text-xs font-mono text-red-700">
+                                            研发工时 ≤ 15%
+                                        </div>
+                                    </div>
                                 </div>
-                                <p class="text-gray-500 text-sm mt-2">仅限于专门用于研发活动的软件、专利权、非专利技术等无形资产</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-warning" onclick="editRule('r5')"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center justify-between text-sm">
-                                <span class="text-gray-600">可扣除资产类型</span>
-                                <div class="flex items-center space-x-1">
-                                    <span class="rule-tag bg-green-100 text-green-600">专利</span>
-                                    <span class="rule-tag bg-green-100 text-green-600">软件</span>
-                                    <span class="rule-tag bg-green-100 text-green-600">非专利技术</span>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button class="text-gray-400 hover:text-warning" onclick="editRule('r16')"><i class="fa fa-pencil"></i></button>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <span class="text-xs text-gray-500">适用口径:</span>
-                            <span class="rule-tag bg-purple-50 text-purple-600">高企认定</span>
-                        </div>
-                    </div>
 
-                    <!-- 会计口径核心规则 -->
-                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center flex-wrap gap-2">
-                                    <span class="rule-tag bg-green-100 text-green-700 text-xs">会计口径</span>
-                                    <span class="rule-tag bg-gray-200 text-gray-600 text-xs">折旧费用</span>
-                                    <h3 class="font-semibold text-gray-800">固定资产专门用途</h3>
+                        <!-- 加计/会计/R&D统计 - 折旧排除长期待摊 -->
+                        <!-- 规则14: 排除长期待摊费用 -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-warning shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-blue-50 text-blue-600 text-[10px] w-fit mb-1">加计,会计,R&D</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">排除长期待摊费用</h3>
+                                    </div>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">加计扣除、会计口径、R&D统计下，折旧费用不含长期待摊费</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">折旧费用</span>
+                                        <div class="bg-red-50 px-3 py-1 rounded-lg text-xs font-mono text-red-700">
+                                            排除长期待摊
+                                        </div>
+                                    </div>
                                 </div>
-                                <p class="text-gray-500 text-sm mt-2">折旧费用仅限于专门用于研发活动的仪器、设备</p>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button class="text-gray-400 hover:text-warning" onclick="editRule('r14')"><i class="fa fa-pencil"></i></button>
+                                </div>
                             </div>
-                            <button class="text-gray-400 hover:text-warning" onclick="editRule('r4')"><i class="fa fa-pencil"></i></button>
                         </div>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <span class="text-xs text-gray-500">适用口径:</span>
-                            <span class="rule-tag bg-green-50 text-green-600">会计口径</span>
-                        </div>
-                    </div>
 
-                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center flex-wrap gap-2">
-                                    <span class="rule-tag bg-green-100 text-green-700 text-xs">会计口径</span>
-                                    <span class="rule-tag bg-gray-200 text-gray-600 text-xs">直接投入</span>
-                                    <h3 class="font-semibold text-gray-800">直接投入费用限制</h3>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-2">直接消耗的材料、燃料和动力费用；以及通过经营租赁方式租入的用于研发活动的仪器、设备租赁费</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-warning" onclick="editRule('r7')"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <span class="text-xs text-gray-500">适用口径:</span>
-                            <span class="rule-tag bg-green-50 text-green-600">会计口径</span>
-                        </div>
-                    </div>
 
-                    <!-- R&D统计口径核心规则 -->
-                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center flex-wrap gap-2">
-                                    <span class="rule-tag bg-yellow-100 text-yellow-700 text-xs">R&D统计</span>
-                                    <span class="rule-tag bg-gray-200 text-gray-600 text-xs">折旧费用</span>
-                                    <h3 class="font-semibold text-gray-800">共用设备折旧分摊</h3>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-2">同时用于研发和生产的设备，需按实际工时占比分摊折旧费用，未分摊不得加计扣除</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-warning" onclick="editRule('r10')"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center justify-between text-sm">
-                                <span class="text-gray-600">分摊公式</span>
-                                <span class="font-mono bg-white px-2 py-1 rounded">研发折旧 = 总折旧 × 研发工时占比</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <span class="text-xs text-gray-500">适用口径:</span>
-                            <span class="rule-tag bg-yellow-50 text-yellow-600">R&D统计</span>
-                        </div>
-                    </div>
-
-                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center flex-wrap gap-2">
-                                    <span class="rule-tag bg-yellow-100 text-yellow-700 text-xs">R&D统计</span>
-                                    <span class="rule-tag bg-gray-200 text-gray-600 text-xs">无形资产摊销</span>
-                                    <h3 class="font-semibold text-gray-800">共用无形资产分摊</h3>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-2">同时用于研发和生产的无形资产，需按实际工时占比分摊摊销费用，未分摊不得加计扣除</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-warning" onclick="editRule('r6')"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center justify-between text-sm">
-                                <span class="text-gray-600">分摊公式</span>
-                                <span class="font-mono bg-white px-2 py-1 rounded">研发摊销 = 总摊销 × 研发工时占比</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <span class="text-xs text-gray-500">适用口径:</span>
-                            <span class="rule-tag bg-yellow-50 text-yellow-600">R&D统计</span>
-                        </div>
-                    </div>
-
-                    <!-- IPO审查口径核心规则 -->
-                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-danger shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center flex-wrap gap-2">
-                                    <span class="rule-tag bg-red-100 text-red-700 text-xs">IPO审查</span>
-                                    <span class="rule-tag bg-gray-200 text-gray-600 text-xs">折旧费用</span>
-                                    <h3 class="font-semibold text-gray-800">共用设备研发工时上限</h3>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-2">同一台设备同时用于生产和研发时，研发工时占比不得超过总工时的15%，超过部分不得加计扣除</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-danger" onclick="editRule('r12')"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center justify-between text-sm">
-                                <span class="text-gray-600">计算公式</span>
-                                <span class="font-mono bg-white px-2 py-1 rounded">研发工时占比 ≤ 15%</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <span class="text-xs text-gray-500">适用口径:</span>
-                            <span class="rule-tag bg-red-50 text-red-600">IPO审查</span>
-                        </div>
-                    </div>
-
-                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-success shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center flex-wrap gap-2">
-                                    <span class="rule-tag bg-red-100 text-red-700 text-xs">IPO审查</span>
-                                    <span class="rule-tag bg-gray-200 text-gray-600 text-xs">设计费用</span>
-                                    <h3 class="font-semibold text-gray-800">设计费用限制</h3>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-2">新产品设计费、新工艺规程制定费、新药研制的临床试验费、勘探开发技术的现场试验费</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-success" onclick="editRule('r8')"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <span class="text-xs text-gray-500">适用口径:</span>
-                            <span class="rule-tag bg-red-50 text-red-600">IPO审查</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -875,89 +1026,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <!-- 规则1：研发人员工作时间 -->
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-danger shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center">
-                                    <span class="rule-tag bg-danger text-white">强限制</span>
-                                    <h3 class="font-semibold text-gray-800 ml-2">研发人员工作时间</h3>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-2">科技人员需累计实际工作时间≥183天</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-danger"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <span class="text-xs text-gray-500">适用对象:</span>
-                            <span class="rule-tag bg-gray-100 text-gray-600">研发人员</span>
-                        </div>
-                    </div>
-
-                    <!-- 规则2：委托外部研发比例 -->
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-danger shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center">
-                                    <span class="rule-tag bg-danger text-white">强限制</span>
-                                    <h3 class="font-semibold text-gray-800 ml-2">委托外部研发比例</h3>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-2">委托外部研发费用按80%计入，且不超过研发总费用的40%</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-danger"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                            <div class="text-sm">
-                                <span class="text-gray-600">规则：</span>
-                                <span class="font-mono bg-white px-2 py-1 rounded">委托费用 × 80% ≤ 总费用 × 40%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 规则3：境内研发占比要求 -->
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-danger shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center">
-                                    <span class="rule-tag bg-danger text-white">强限制</span>
-                                    <h3 class="font-semibold text-gray-800 ml-2">境内研发占比要求</h3>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-2">境内研发费用占研发总费用比例不低于60%，否则境外研发费用不可计入</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-danger"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                            <div class="text-sm">
-                                <span class="text-gray-600">计算公式：</span>
-                                <span class="font-mono bg-white px-2 py-1 rounded">(自主研发 + 委托境内×80%) ≥ 总费用 × 60%</span>
-                            </div>
-                            <div class="text-xs text-gray-500 mt-2">
-                                <span>示例：自主20万 + 委托境内40万×80% + 委托境外60万×80% = 100万</span><br>
-                                <span>境内部分：20 + 32 = 52万，占比52% < 60% → 境外48万不可计入</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 规则4：其他费用限额 -->
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center">
-                                    <span class="rule-tag bg-warning text-white">中限制</span>
-                                    <h3 class="font-semibold text-gray-800 ml-2">其他费用限额</h3>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-2">与研发活动直接相关的其他费用一般不得超过研发总费用的20%</p>
-                            </div>
-                            <button class="text-gray-400 hover:text-warning"><i class="fa fa-pencil"></i></button>
-                        </div>
-                        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                            <div class="text-sm">
-                                <span class="text-gray-600">计算公式：</span>
-                                <span class="font-mono bg-white px-2 py-1 rounded">其他费用 ≤ 研发总费用 × 20%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 规则5：研发费用占比要求 -->
+                    <!-- 规则2：研发费用占比要求 -->
                     <div class="bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
@@ -1099,11 +1168,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-gray-400 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-gray-400 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-gray-400 text-white">宽松</span>
+                                    <span class="rule-tag bg-gray-400 text-white">会计口径</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">费用资本化判断</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">研究阶段支出费用化，开发阶段支出符合条件可资本化</p>
@@ -1112,14 +1181,14 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-gray-400 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-gray-400 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-gray-400 text-white">宽松</span>
+                                    <span class="rule-tag bg-gray-400 text-white">会计口径</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">费用配比原则</h3>
                                 </div>
-                                <p class="text-gray-500 text-sm mt-2">费用应与产生的收入或成果相配比</p>
+                                <p class="text-gray-500 text-sm mt-2">费用应与产生的收入 or 成果相配比</p>
                             </div>
                             <button class="text-gray-400 hover:text-gray-600"><i class="fa fa-pencil"></i></button>
                         </div>
@@ -1143,11 +1212,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-cyan-500 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-cyan-500 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-cyan-500 text-white">中限制</span>
+                                    <span class="rule-tag bg-cyan-500 text-white">R&D统计</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">研发活动界定</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">按Frascati手册定义的研发活动范围归集费用</p>
@@ -1156,11 +1225,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-cyan-500 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-cyan-500 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-cyan-500 text-white">中限制</span>
+                                    <span class="rule-tag bg-cyan-500 text-white">R&D统计</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">人员分类标准</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">按R&D人员、技术人员、管理人员分类统计</p>
@@ -1169,11 +1238,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-cyan-500 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-cyan-500 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-cyan-500 text-white">中限制</span>
+                                    <span class="rule-tag bg-cyan-500 text-white">R&D统计</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">费用分类标准</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">按人员费用、材料费用、设备费用等标准分类</p>
@@ -1200,11 +1269,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-purple-500 text-white">强限制</span>
+                                    <span class="rule-tag bg-purple-500 text-white">IPO审查</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">证据链完整性</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">每笔费用需有完整的合同、发票、付款凭证等证据支撑</p>
@@ -1213,11 +1282,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-purple-500 text-white">强限制</span>
+                                    <span class="rule-tag bg-purple-500 text-white">IPO审查</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">费用真实性验证</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">需证明费用与研发活动的直接相关性和真实性</p>
@@ -1226,11 +1295,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-warning text-white">中限制</span>
+                                    <span class="rule-tag bg-warning text-white">IPO审查</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">会计政策一致性</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">研发费用归集政策需保持一致性，不得随意变更</p>
@@ -1239,11 +1308,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-warning text-white">中限制</span>
+                                    <span class="rule-tag bg-warning text-white">IPO审查</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">关联交易公允性</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">关联方之间的研发服务需按公允价值定价</p>
@@ -1253,11 +1322,11 @@
                     </div>
 
                     <!-- 规则5：资产用途证明 -->
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-purple-500 text-white">强限制</span>
+                                    <span class="rule-tag bg-purple-500 text-white">IPO审查</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">资产用途证明</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">研发用固定资产需提供明确的用途证明文件</p>
@@ -1272,11 +1341,11 @@
                     </div>
 
                     <!-- 规则6：折旧政策一致性 -->
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-warning shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-warning text-white">中限制</span>
+                                    <span class="rule-tag bg-warning text-white">IPO审查</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">折旧政策一致性</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">研发用固定资产折旧政策需保持前后一致</p>
@@ -1286,11 +1355,11 @@
                     </div>
 
                     <!-- 规则7：无形资产权属证明 -->
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-purple-500 text-white">强限制</span>
+                                    <span class="rule-tag bg-purple-500 text-white">IPO审查</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">无形资产权属证明</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">研发用无形资产需提供权属证明文件及摊销年限合理性说明</p>
@@ -1305,11 +1374,11 @@
                     </div>
 
                     <!-- 规则8：委托合同审查 -->
-                    <div class="bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-purple-500 shadow-sm">
                         <div class="flex items-start justify-between">
                             <div>
                                 <div class="flex items-center">
-                                    <span class="rule-tag bg-purple-500 text-white">强限制</span>
+                                    <span class="rule-tag bg-purple-500 text-white">IPO审查</span>
                                     <h3 class="font-semibold text-gray-800 ml-2">委托合同审查</h3>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-2">委托研发需提供完整合同及成果归属证明</p>
@@ -1349,14 +1418,14 @@
                         </button>
                     </div>
                     <!-- 系统预设模板 -->
-                    <div class="mb-3">
+                    <div class="mb-3 hidden">
                         <span class="text-xs text-gray-400 mb-1 block">系统预设（政策标准）</span>
                         <div class="flex flex-wrap gap-2" id="systemTemplates">
                             <!-- 动态生成 -->
                         </div>
                     </div>
                     <!-- 用户自定义模板 -->
-                    <div>
+                    <div class="hidden">
                         <span class="text-xs text-gray-400 mb-1 block">我的模板</span>
                         <div class="flex flex-wrap gap-2" id="customTemplates">
                             <!-- 动态生成 -->
@@ -1365,6 +1434,19 @@
                 </div>
 
                 <!-- 基本信息 -->
+                <!-- 1. 政策场景选择 (新增核心：引导式配置) -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">政策应用场景 <span class="text-xs text-primary font-normal">(推荐选择，自动配置逻辑)</span></label>
+                    <select id="policyScenario" class="w-full border-2 border-primary/20 bg-blue-50/30 rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-primary" onchange="applyScenario()">
+                        <option value="custom">-- 自定义配置规则 --</option>
+                        <option value="other_reverse">其他费用倒推限额 (加计10% / 高企20%)</option>
+                        <option value="person_days">人员年度在职天数硬门槛 (如183天)</option>
+                        <option value="device_ratio">共用设备研发工时占比预警 (如15%)</option>
+                        <option value="outsource_80">委托研发 80% 孰低原则归集</option>
+                        <option value="domestic_60">高企认定：境内研发占比 ≥ 60%</option>
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">规则名称</label>
@@ -1372,7 +1454,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">适用口径 <span class="text-red-500">*</span></label>
-                        <select id="ruleCaliber" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                        <select id="ruleCaliber" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" onchange="loadSubExpenseTypes()">
                             <option value="">请选择适用口径</option>
                             <option value="plus_deduction">加计扣除</option>
                             <option value="high_tech">高企认定</option>
@@ -1388,16 +1470,26 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">规则条件配置</label>
                     <div class="grid grid-cols-2 gap-2">
                         <select id="ruleExpenseType" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" onchange="loadSubExpenseTypes()">
-                            <option value="">费用类型</option>
-                            <option value="personnel_expense">人工费归集</option>
-                            <option value="depreciation_expense">折旧与长期摊销费用</option>
-                            <option value="material_expense">直接投入归集</option>
-                            <option value="intangible_expense">无形资产摊销</option>
-                            <option value="design_expense">设计费用归集</option>
-                            <option value="trial_expense">装备调试费用与试验费用</option>
-                            <option value="other_expense">其他费用归集</option>
-                            <option value="outsource_expense">委托外部研究开发费用</option>
-                            <option value="domestic_total">境内研发费用(自主+委托境内×80%)</option>
+                            <option value="">请选择判定主体</option>
+                            <optgroup label="八大费用归集类别">
+                                <option value="personnel_expense">人员人工费</option>
+                                <option value="material_expense">直接投入费</option>
+                                <option value="depreciation_expense">折旧费用</option>
+                                <option value="intangible_expense">无形资产摊销</option>
+                                <option value="design_expense">新产品设计费</option>
+                                <option value="trial_expense">装备调试与试验费</option>
+                                <option value="outsource_expense">委托外部研发费</option>
+                                <option value="other_expense">其他相关费用</option>
+                            </optgroup>
+                            <optgroup label="政策判定综合指标">
+                                <option value="domestic_total">境内研发总额 (自主+委托境内×80%)</option>
+                                <option value="equipment_rd_hours">设备研发工时 (小时)</option>
+                                <option value="personnel_rd_hours">人员研发工时 (小时)</option>
+                                <option value="work_days">人员年度在职天数</option>
+                                <option value="high_tech_revenue">高新收入占比 (高新收入/总收入)</option>
+                                <option value="rd_investment_ratio">研发强度 (研发费用/营业收入)</option>
+                                <option value="staff_ratio">科技人员占比 (科技人员/职工总数)</option>
+                            </optgroup>
                         </select>
                         <select id="ruleSubExpenseType" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
                             <option value="">子费用类型（全部）</option>
@@ -1422,7 +1514,7 @@
 
                 <!-- 操作符 -->
                 <div id="operatorSection">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">比较操作符</label>
+                    <label id="operatorLabel" class="block text-sm font-medium text-gray-700 mb-1">比较方式</label>
                     <select id="ruleOperator" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
                         <option value="<=">≤</option>
                         <option value="<"><</option>
@@ -1433,24 +1525,41 @@
                 </div>
 
                 <!-- 计算基数 -->
-                <div id="baseSection" class="grid grid-cols-3 gap-2">
-                    <select id="ruleBaseType" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option value="total_rd">研发费用总额(含×80%调整)</option>
-                        <option value="domestic_rd">境内研发(含×80%调整)</option>
-                        <option value="self_rd">自主研发费用(原始)</option>
-                        <option value="outsource_domestic">委托境内×80%</option>
-                        <option value="outsource_overseas">委托境外×80%</option>
-                        <option value="device_hours">设备总工时</option>
-                        <option value="rd_hours">研发工时</option>
-                        <option value="work_days">年度在职天数</option>
-                        <option value="outsource_expense">委托外部研发(原始)</option>
-                        <option value="salary_total">工资总额</option>
-                        <option value="fixed_value">固定金额</option>
-                    </select>
-                    <div class="flex items-center space-x-1">
-                        <span class="text-gray-400 text-sm">×</span>
-                        <input type="number" id="ruleBasePercent" class="flex-1 border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="100" value="100">
-                        <span class="text-gray-400 text-sm">%</span>
+                <div id="baseSectionContainer">
+                    <label id="baseLabel" class="block text-sm font-medium text-gray-700 mb-1">规则计算逻辑</label>
+                    <div id="baseSection" class="grid grid-cols-3 gap-2">
+                        <!-- 1. 计算方法 (意图) -->
+                        <select id="ruleMethod" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="ratio_limit">比例限额 (%)</option>
+                            <option value="policy_reverse">政策倒推法</option>
+                            <option value="veto_access">准入判定 (一票否决)</option>
+                            <option value="amount_limit">绝对值限制</option>
+                            <option value="cap_min">孰低原则 (Min)</option>
+                        </select>
+                        
+                        <!-- 2. 计算基数 (参照) -->
+                        <select id="ruleBaseType" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                            <optgroup label="费用基数">
+                                <option value="total_rd">研发费用总额</option>
+                                <option value="domestic_rd">境内研发费用</option>
+                                <option value="6_expense_sum">前6项费用之和</option>
+                                <option value="self_rd">自主研发费用</option>
+                            </optgroup>
+                            <optgroup label="业务基数">
+                                <option value="revenue_3yr">近三年平均营收</option>
+                                <option value="equipment_total_hours">设备总工时</option>
+                                <option value="personnel_total_hours">人员总工时</option>
+                                <option value="work_days">年度在职天数</option>
+                                <option value="fixed_value">固定数值</option>
+                            </optgroup>
+                        </select>
+
+                        <!-- 3. 数值/单位 (结果) -->
+                        <div class="flex items-center space-x-1">
+                            <span id="rulePrefix" class="text-gray-400 text-sm">×</span>
+                            <input type="number" id="ruleBasePercent" class="flex-1 border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="数值">
+                            <span id="ruleUnit" class="text-gray-400 text-sm">%</span>
+                        </div>
                     </div>
                 </div>
 
@@ -1536,12 +1645,13 @@
          * - 结论：境外48万不可计入高企研发费用
          */
         const SYSTEM_TEMPLATES = {
-            'deduction_shared_device': { name: '加计-共用设备研发≤15%', expenseType: 'depreciation_expense', subExpenseType: 'depreciation_equipment', operator: '<=', baseType: 'device_hours', percent: 15, timeDimension: 'monthly', severity: 'strong', message: '共用设备研发工时超过设备总工时的15%', caliber: 'plus_deduction' },
+            'deduction_shared_device': { name: '加计-共用设备研发≤15%', expenseType: 'rd_hours', subExpenseType: '', operator: '<=', baseType: 'device_hours', percent: 15, timeDimension: 'monthly', severity: 'strong', message: '共用设备研发工时超过设备总工时的15%', caliber: 'plus_deduction' },
             'hitech_other': { name: '高企-其他费用≤20%', expenseType: 'other_expense', subExpenseType: '', operator: '<=', baseType: 'total_rd', percent: 20, timeDimension: 'yearly', severity: 'strong', message: '其他费用超过研发总费用的20%', caliber: 'high_tech' },
             'hitech_outsource_domestic': { name: '高企-委托境内≤40%', expenseType: 'outsource_expense', subExpenseType: 'outsource_domestic', operator: '<=', baseType: 'total_rd', percent: 40, timeDimension: 'yearly', severity: 'medium', message: '委托境内研发费用超过研发总费用的40%', caliber: 'high_tech' },
             'hitech_outsource_overseas': { name: '高企-委托境外≤40%', expenseType: 'outsource_expense', subExpenseType: 'outsource_overseas', operator: '<=', baseType: 'total_rd', percent: 40, timeDimension: 'yearly', severity: 'medium', message: '委托境外研发费用超过研发总费用的40%', caliber: 'high_tech' },
             'hitech_domestic_ratio': { name: '高企-境内研发≥60%', expenseType: 'domestic_total', subExpenseType: '', operator: '>=', baseType: 'total_rd', percent: 60, timeDimension: 'yearly', severity: 'strong', message: '境内研发费用占比不足60%，境外研发费用不可计入', caliber: 'high_tech' },
-            'hitech_183days': { name: '高企-人员183天', expenseType: 'personnel_expense', subExpenseType: '', operator: '>=', baseType: 'work_days', percent: 183, timeDimension: 'yearly', severity: 'strong', message: '研发人员未满足全年183天工作要求', caliber: 'high_tech' }
+            'hitech_183days': { name: '高企-人员183天', expenseType: 'work_days', subExpenseType: '', operator: '>=', baseType: 'fixed_value', percent: 183, timeDimension: 'yearly', severity: 'strong', message: '研发人员年度在司时间不足183天', caliber: 'high_tech' },
+            'deduction_direct_input_no_rental': { name: '加计-直接投入排除场地租赁', expenseType: 'material_expense', subExpenseType: '', operator: '>=', baseType: 'fixed_value', percent: 0, timeDimension: 'yearly', severity: 'medium', message: '加计扣除口径下的直接投入需排除场地租赁费', caliber: 'plus_deduction', exclusions: ['material_rent_site'] }
         };
 
         function showCaliber(caliberId) {
@@ -1625,29 +1735,8 @@
             });
         }
 
-        function filterRulesByCaliber(caliber) {
-            // 更新筛选按钮状态
-            document.querySelectorAll('[id^="filter-caliber-"]').forEach(btn => {
-                btn.classList.remove('active-filter');
-                if (btn.id === 'filter-caliber-' + caliber) {
-                    btn.classList.add('active-filter');
-                }
-            });
-
-            // 显示/隐藏规则卡片
-            document.querySelectorAll('.rule-card').forEach(card => {
-                if (caliber === 'all') {
-                    card.classList.remove('hidden');
-                } else {
-                    const caliberTag = card.querySelector('.rule-tag');
-                    if (caliberTag && caliberTag.textContent.includes(caliberMap[caliber])) {
-                        card.classList.remove('hidden');
-                    } else {
-                        card.classList.add('hidden');
-                    }
-                }
-            });
-        }
+        let filterCaliber = 'all';
+        let filterExpenseType = 'all';
 
         const caliberMap = {
             'plus_deduction': '加计扣除',
@@ -1657,57 +1746,171 @@
             'ipo_review': 'IPO审查'
         };
 
+        const expenseMap = {
+            'personnel': '人员',
+            'direct': '直接投入',
+            'depreciation': '折旧|长期待摊',
+            'amortization': '摊销',
+            'design': '设计',
+            'commissioning': '装备调试|试验',
+            'outsourced': '委托',
+            'other': '其他'
+        };
+
+        function filterRulesByCaliber(caliber) {
+            filterCaliber = caliber;
+            // 更新筛选按钮状态
+            document.querySelectorAll('[id^="filter-caliber-"]').forEach(btn => {
+                btn.classList.remove('active-filter');
+                if (btn.id === 'filter-caliber-' + caliber) {
+                    btn.classList.add('active-filter');
+                }
+            });
+            applyFilters();
+        }
+
+        function filterRulesByExpenseType(expenseType) {
+            filterExpenseType = expenseType;
+            // 更新筛选按钮状态
+            document.querySelectorAll('[id^="filter-expense-"]').forEach(btn => {
+                btn.classList.remove('active-filter');
+                if (btn.id === 'filter-expense-' + expenseType) {
+                    btn.classList.add('active-filter');
+                }
+            });
+            applyFilters();
+        }
+
+        function applyFilters() {
+            // 显示/隐藏规则卡片
+            document.querySelectorAll('.rule-card').forEach(card => {
+                const tags = Array.from(card.querySelectorAll('.rule-tag')).map(t => t.textContent.trim());
+                const cardTitle = card.querySelector('h3')?.textContent.trim() || "";
+                const cardDesc = card.querySelector('p')?.textContent.trim() || "";
+                
+                let caliberMatch = filterCaliber === 'all';
+                let expenseMatch = filterExpenseType === 'all';
+
+                if (!caliberMatch) {
+                    const caliberLabel = caliberMap[filterCaliber];
+                    // 支持多口径标签匹配 (如 "加计,会计,R&D")
+                    caliberMatch = tags.some(text => {
+                        const parts = text.split(/[，,]/);
+                        return parts.some(p => p.trim().includes(caliberLabel) || caliberLabel.includes(p.trim()));
+                    });
+                }
+
+                if (!expenseMatch) {
+                    const searchPattern = expenseMap[filterExpenseType];
+                    const keywords = searchPattern.split('|');
+                    
+                    // 支持多关键词匹配（只要命中其中一个即可）
+                    expenseMatch = keywords.some(keyword => {
+                        return tags.some(text => text.includes(keyword)) || 
+                               cardTitle.includes(keyword) || 
+                               cardDesc.includes(keyword);
+                    });
+                }
+
+                if (caliberMatch && expenseMatch) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
         function updateFormulaPreview() {
+            const caliber = document.getElementById('ruleCaliber');
             const expenseType = document.getElementById('ruleExpenseType');
             const operator = document.getElementById('ruleOperator');
             const baseType = document.getElementById('ruleBaseType');
             const percent = document.getElementById('ruleBasePercent');
+            const method = document.getElementById('ruleMethod');
+            const prefix = document.getElementById('rulePrefix');
+            const unit = document.getElementById('ruleUnit');
+            const operatorLabel = document.getElementById('operatorLabel');
+            const baseLabel = document.getElementById('baseLabel');
             const checkboxes = document.querySelectorAll('input[name="hasLimit"]:checked');
             const hasLimitChecked = Array.from(checkboxes).some(cb => cb.value === 'yes');
             const preview = document.getElementById('ruleFormulaPreview');
 
+            // 动态调整 UI 标签与语义 (核心灵活性体现)
+            switch (method.value) {
+                case 'ratio_limit':
+                    operatorLabel.textContent = '比较方式';
+                    baseLabel.textContent = '计算基数与比例';
+                    prefix.textContent = '×';
+                    unit.textContent = '%';
+                    percent.disabled = false;
+                    break;
+                case 'veto_access':
+                case 'amount_limit':
+                    operatorLabel.textContent = '判定方向';
+                    baseLabel.textContent = method.value === 'veto_access' ? '准入门槛设定' : '限制数值设定';
+                    prefix.textContent = '：';
+                    // 根据主体自动切换单位
+                    if (expenseType.value.includes('hours')) unit.textContent = '小时';
+                    else if (expenseType.value.includes('days')) unit.textContent = '天';
+                    else if (expenseType.value.includes('ratio') || expenseType.value.includes('revenue')) unit.textContent = '%';
+                    else unit.textContent = '值';
+                    percent.disabled = false;
+                    break;
+                case 'policy_reverse':
+                    operatorLabel.textContent = '计算逻辑';
+                    baseLabel.textContent = '政策限额比例';
+                    prefix.textContent = '限额';
+                    unit.textContent = '%';
+                    // 根据口径自动推荐比例
+                    if (!percent.value || percent.disabled) {
+                        percent.value = caliber.value === 'high_tech' ? '20' : '10';
+                    }
+                    percent.disabled = false;
+                    break;
+                case 'cap_min':
+                    operatorLabel.textContent = '比对方式';
+                    baseLabel.textContent = '限额计算基准';
+                    prefix.textContent = '×';
+                    unit.textContent = '%';
+                    percent.disabled = false;
+                    break;
+            }
+
             if (!expenseType.value) {
-                preview.textContent = '请选择费用类型';
+                preview.textContent = '请选择判定主体';
                 return;
             }
 
-            const expenseLabels = {
-                'other_expense': '其他费用归集',
-                'outsource_expense': '委托外部研究开发费用',
-                'outsource_overseas': '委托境外研发费用',
-                'personnel_expense': '人工费归集',
-                'material_expense': '直接投入归集',
-                'depreciation_expense': '折旧与长期摊销费用',
+            const subjectLabels = {
+                'personnel_expense': '人员人工费',
+                'material_expense': '直接投入费',
+                'depreciation_expense': '折旧费用',
                 'intangible_expense': '无形资产摊销',
-                'design_expense': '设计费用归集',
-                'trial_expense': '装备调试费用与试验费用',
-                'domestic_total': '境内研发费用(自主+委托境内×80%)'
+                'design_expense': '新产品设计费',
+                'trial_expense': '装备调试与试验费',
+                'outsource_expense': '委托外部研发费',
+                'other_expense': '其他相关费用',
+                'domestic_total': '境内研发总额',
+                'equipment_rd_hours': '设备研发工时',
+                'personnel_rd_hours': '人员研发工时',
+                'work_days': '人员年度在职天数',
+                'high_tech_revenue': '高新收入占比',
+                'rd_investment_ratio': '研发强度',
+                'staff_ratio': '科技人员占比'
             };
 
-            // 如果不需要数值限制，只显示费用类型
-            if (!hasLimitChecked) {
-                preview.textContent = expenseLabels[expenseType.value] || expenseType.value;
-                return;
-            }
-
-            if (!baseType.value) {
-                preview.textContent = '请选择计算基数';
-                return;
-            }
-
             const baseLabels = {
-                'total_rd': '研发费用总额(含×80%调整)',
-                'domestic_rd': '境内研发(含×80%调整)',
-                'self_rd': '自主研发费用(原始)',
-                'outsource_domestic': '委托境内×80%',
-                'outsource_overseas': '委托境外×80%',
-                'person_hours': '人员总工时',
-                'rd_hours': '研发工时',
-                'outsource_expense': '委托外部研发(原始)',
-                'salary_total': '工资总额',
-                'fixed_value': '固定金额',
-                'device_hours': '设备总工时',
-                'work_days': '年度在职天数'
+                'total_rd': '研发费用总额 (政策口径)',
+                'domestic_rd': '境内研发费用 (政策口径)',
+                '6_expense_sum': '前6项费用之和',
+                'self_rd': '自主研发费用 (原始)',
+                'revenue_3yr': '近三年平均营收',
+                'total_assets': '总资产',
+                'net_assets': '净资产',
+                'equipment_total_hours': '设备总工时',
+                'personnel_total_hours': '人员总工时',
+                'work_days': '年度在职天数',
+                'fixed_value': '固定数值'
             };
 
             const operatorLabels = {
@@ -1718,18 +1921,44 @@
                 '=': '='
             };
 
-            let formula = expenseLabels[expenseType.value] + ' ' + operatorLabels[operator.value] + ' ';
-            
-            if (baseType.value === 'fixed_value') {
-                formula += '¥' + (parseFloat(percent.value) || 0).toLocaleString();
-            } else {
-                formula += baseLabels[baseType.value];
-                if (parseFloat(percent.value) !== 100) {
-                    formula += ' × ' + (parseFloat(percent.value) || 0) + '%';
-                }
+            if (!hasLimitChecked) {
+                preview.innerHTML = `<span class="text-blue-600 font-medium">${subjectLabels[expenseType.value]}</span>：仅执行费用项过滤逻辑`;
+                return;
             }
 
-            preview.textContent = formula;
+            let formula = '';
+            const subject = `<span class="text-blue-600 font-medium">${subjectLabels[expenseType.value]}</span>`;
+            const base = `<span class="text-indigo-600 font-medium">${baseLabels[baseType.value]}</span>`;
+            const op = `<span class="text-red-500 font-bold mx-1">${operatorLabels[operator.value]}</span>`;
+            const pct = `<span class="text-green-600 font-medium">${percent.value}${unit.textContent}</span>`;
+
+            // 3. 语义化预览生成
+            switch (method.value) {
+                case 'ratio_limit':
+                    formula = `${subject} ${op} ${base} × ${pct}`;
+                    break;
+                case 'policy_reverse':
+                    const p = parseFloat(percent.value) || 10;
+                    const idealTotal = `<span class="text-purple-600 font-medium">( ${base} / ${100 - p}% )</span>`;
+                    formula = `<div class="font-bold text-indigo-700">[政策倒推] ${subject} 限额 = ${idealTotal} × ${p}%</div>
+                               <div class="text-[10px] text-gray-400 mt-1">※ 逻辑：先由前6项倒推理想研发总额，再计算${p}%的限额上限</div>`;
+                    break;
+                case 'veto_access':
+                    const vetoBase = baseType.value === 'fixed_value' ? `<span class="text-green-600 font-medium">${percent.value} ${unit.textContent}</span>` : base;
+                    formula = `<span class="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">准入判定</span>：${subject} 必须 ${op} ${vetoBase}，否则口径判定失败`;
+                    break;
+                case 'cap_min':
+                    formula = `${subject} 取值 = <span class="bg-blue-50 text-blue-700 px-1 rounded">Min</span> ( ${subject}, ${base} × ${pct} )`;
+                    break;
+                default: // amount_limit
+                    if (baseType.value === 'fixed_value') {
+                        formula = `${subject} ${op} ${pct}`;
+                    } else {
+                        formula = `${subject} ${op} ${base}`;
+                    }
+            }
+
+            preview.innerHTML = formula;
         }
 
         function applyTemplate(template) {
@@ -1761,7 +1990,7 @@
             document.querySelector('input[name="hasLimit"][value="no"]').checked = true;
             
             toggleLimitFields();
-            loadSubExpenseTypes();
+            loadSubExpenseTypes(template.exclusions || null);
             
             // 设置默认子费用类型
             if (template.subExpenseType) {
@@ -1909,10 +2138,10 @@
                     label: '试验费', 
                     children: [
                         { value: 'trial_clinical', label: '新药研制的临床试验费' },
-                        { value: 'trial_field', label: '勘探开发技术的现场试验费' },
-                        { value: 'trial_farm', label: '田间试验费' }
+                        { value: 'trial_field', label: '勘探开发技术的现场试验费' }
                     ]
-                }
+                },
+                { value: 'trial_farm', label: '田间试验费' }
             ],
             'other_expense': [
                 { value: 'other_books', label: '技术图书资料费' },
@@ -1931,13 +2160,6 @@
                 { value: 'outsource_domestic_overseas', label: '境内+境外研发' },
                 { value: 'outsource_individual', label: '委托境外个人' }
             ]
-        };
-
-        const DEFAULT_EXCLUSIONS = {
-            'material_expense': ['material_rent_site'],
-            'outsource_expense': ['outsource_individual'],
-            'trial_expense': ['equipment_debug', 'trial_farm'],
-            'intangible_expense': ['intangible_trademark', 'intangible_other_copyright']
         };
 
         function toggleLimitFields() {
@@ -1967,19 +2189,84 @@
             updateFormulaPreview();
         }
 
-        function loadSubExpenseTypes() {
+        function loadSubExpenseTypes(selectedExclusions = null) {
             const expenseType = document.getElementById('ruleExpenseType').value;
+            const caliber = document.getElementById('ruleCaliber').value;
             const subSelect = document.getElementById('ruleSubExpenseType');
             const exclusionContainer = document.getElementById('exclusionOptions');
+            const operator = document.getElementById('ruleOperator');
+            const baseType = document.getElementById('ruleBaseType');
+            const percent = document.getElementById('ruleBasePercent');
+            const method = document.getElementById('ruleMethod');
+            
+            // 智能预设逻辑：根据判定主体自动调整操作符和基数
+            if (expenseType === 'work_days') {
+                operator.value = '>=';
+                baseType.value = 'fixed_value';
+                percent.value = '183';
+                method.value = 'veto_access';
+            } else if (expenseType === 'high_tech_revenue') {
+                operator.value = '>=';
+                baseType.value = 'fixed_value';
+                percent.value = '60';
+                method.value = 'ratio_limit';
+            } else if (expenseType === 'other_expense') {
+                operator.value = '<=';
+                baseType.value = '6_expense_sum';
+                method.value = 'policy_reverse';
+            } else if (expenseType === 'equipment_rd_hours') {
+                operator.value = '<=';
+                baseType.value = 'equipment_total_hours';
+                percent.value = '15';
+                method.value = 'ratio_limit';
+            }
             
             subSelect.innerHTML = '<option value="">子费用类型（全部）</option>';
+            
+            // 立即更新公式预览
+            updateFormulaPreview();
             
             if (!expenseType || !SUB_EXPENSE_TYPES[expenseType]) {
                 exclusionContainer.innerHTML = '<span class="text-xs text-gray-400" id="exclusionHint">请先选择费用类型</span>';
                 return;
             }
             
-            const defaultExclusions = DEFAULT_EXCLUSIONS[expenseType] || [];
+            // 根据口径设置默认排除项
+            let defaultExclusions = [];
+            if (selectedExclusions) {
+                defaultExclusions = selectedExclusions;
+            } else {
+                // 加计扣除口径下的特殊排除逻辑
+                if (caliber === 'plus_deduction') {
+                    if (expenseType === 'material_expense') {
+                        defaultExclusions = ['material_rent_site']; // 加计扣除排除场地租赁
+                    } else if (expenseType === 'depreciation_expense') {
+                        defaultExclusions = ['depreciation_long_term']; // 加计扣除排除长期待摊
+                    } else if (expenseType === 'outsource_expense') {
+                        defaultExclusions = ['outsource_individual'];
+                    } else if (expenseType === 'trial_expense') {
+                        defaultExclusions = ['equipment_debug', 'trial_farm'];
+                    } else if (expenseType === 'intangible_expense') {
+                        defaultExclusions = ['intangible_trademark', 'intangible_other_copyright'];
+                    }
+                } else if (caliber === 'accounting' || caliber === 'rd_statistics') {
+                    // 会计和R&D统计口径也排除长期待摊
+                    if (expenseType === 'depreciation_expense') {
+                        defaultExclusions = ['depreciation_long_term'];
+                    } else if (expenseType === 'outsource_expense') {
+                        defaultExclusions = ['outsource_individual'];
+                    } else if (expenseType === 'intangible_expense') {
+                        defaultExclusions = ['intangible_trademark', 'intangible_other_copyright'];
+                    }
+                } else {
+                    // 其他口径（如高企）默认不排除场地租赁和长期待摊
+                    if (expenseType === 'outsource_expense') {
+                        defaultExclusions = ['outsource_individual'];
+                    } else if (expenseType === 'intangible_expense') {
+                        defaultExclusions = ['intangible_trademark', 'intangible_other_copyright'];
+                    }
+                }
+            }
             
             exclusionContainer.innerHTML = '';
             SUB_EXPENSE_TYPES[expenseType].forEach(category => {
@@ -2081,10 +2368,77 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            ['ruleOperator', 'ruleBaseType', 'ruleBasePercent'].forEach(id => {
-                document.getElementById(id).addEventListener('change', updateFormulaPreview);
+            // 监听所有输入框变化，实时更新预览
+            const inputs = ['ruleExpenseType', 'ruleOperator', 'ruleBaseType', 'ruleBasePercent', 'ruleMethod', 'ruleCaliber'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('change', updateFormulaPreview);
+                    if (el.tagName === 'INPUT') el.addEventListener('input', updateFormulaPreview);
+                }
+            });
+            
+            // 监听复选框变化
+            document.querySelectorAll('input[name="hasLimit"]').forEach(cb => {
+                cb.addEventListener('change', updateFormulaPreview);
             });
         });
+
+        function applyScenario() {
+            const scenario = document.getElementById('policyScenario').value;
+            if (scenario === 'custom') return;
+
+            const name = document.getElementById('ruleName');
+            const caliber = document.getElementById('ruleCaliber');
+            const subject = document.getElementById('ruleExpenseType');
+            const method = document.getElementById('ruleMethod');
+            const base = document.getElementById('ruleBaseType');
+            const op = document.getElementById('ruleOperator');
+            const val = document.getElementById('ruleBasePercent');
+
+            switch (scenario) {
+                case 'other_reverse':
+                    name.value = '其他费用限额 (倒推法)';
+                    subject.value = 'other_expense';
+                    method.value = 'policy_reverse';
+                    base.value = '6_expense_sum';
+                    val.value = '10';
+                    break;
+                case 'person_days':
+                    name.value = '研发人员年度在职天数要求';
+                    subject.value = 'work_days';
+                    method.value = 'veto_access';
+                    base.value = 'fixed_value';
+                    op.value = '>=';
+                    val.value = '183';
+                    break;
+                case 'device_ratio':
+                    name.value = '共用设备研发工时占比预警';
+                    subject.value = 'equipment_rd_hours';
+                    method.value = 'ratio_limit';
+                    base.value = 'equipment_total_hours';
+                    op.value = '<=';
+                    val.value = '15';
+                    break;
+                case 'outsource_80':
+                    name.value = '委托外部研发80%限额归集';
+                    subject.value = 'outsource_expense';
+                    method.value = 'cap_min';
+                    base.value = 'self_rd'; 
+                    val.value = '80';
+                    break;
+                case 'domestic_60':
+                    name.value = '高企认定-境内研发占比要求';
+                    caliber.value = 'high_tech';
+                    subject.value = 'domestic_total';
+                    method.value = 'veto_access';
+                    base.value = 'total_rd';
+                    op.value = '>=';
+                    val.value = '60';
+                    break;
+            }
+            updateFormulaPreview();
+        }
 
         function loadPage(e, pageUrl) {
             if (e && e.preventDefault) e.preventDefault();
