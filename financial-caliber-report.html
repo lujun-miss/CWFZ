@@ -139,7 +139,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                                        <!-- 导航菜单 -->
+            <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -226,6 +226,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('amortization-fee-type.html')">
                                     <i class="fa fa-calendar w-6"></i>
                                     <span>待摊费用类型</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
+                                    <i class="fa fa-cube w-6"></i>
+                                    <span>物料管理</span>
                                 </a>
                             </li>
                             <li>
@@ -363,7 +369,7 @@
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600 bg-blue-50 text-blue-600">
                                     <i class="fa fa-calculator w-6"></i>
                                     <span>财务加计扣除</span>
                                 </a>
@@ -402,6 +408,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-rule-config.html')">
                                     <i class="fa fa-cogs w-6"></i>
                                     <span>口径规则配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-validation-report.html')">
+                                    <i class="fa fa-check-square w-6"></i>
+                                    <span>校验报告</span>
                                 </a>
                             </li>
                         </ul>
@@ -503,16 +515,22 @@
                                     <span>分摊规则配置</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('data-dictionary.html')">
+                                    <i class="fa fa-book w-6"></i>
+                                    <span>数据字典管理</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
             </nav>
         </div>
         
-        <!-- 右侧主内容区域 -->
-        <div class="flex-1 flex flex-col ml-64">
+        <!-- 右侧主内容区域 - 修复：使用 calc 计算宽度，防止被 ml-64 挤出屏幕 -->
+        <div class="w-[calc(100%-16rem)] ml-64 flex flex-col h-screen overflow-hidden">
             <!-- 顶部信息栏 -->
-            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6 flex-none">
                 <div class="flex items-center">
                     <h2 id="page-title" class="text-lg font-medium text-gray-800">加计扣除口径报表</h2>
                 </div>
@@ -529,14 +547,13 @@
             </header>
             
             <!-- 主内容 -->
-            <main class="flex-1 overflow-auto p-6">
-                <div class="mb-6">
-                    <h1 class="text-2xl font-bold text-gray-800 mb-2">加计扣除口径报表</h1>
-                    <p class="text-gray-600">依据：《财政部 国家税务总局 科技部关于完善研究开发费用税前加计扣除政策的通知》（财税〔2015〕119号）</p>
+            <main class="flex-1 overflow-auto p-4">
+                <div class="mb-4">
+                    <h1 class="text-2xl font-bold text-gray-800">加计扣除口径报表</h1>
                 </div>
                 
                 <!-- 年份选择 -->
-                <div class="mb-6 flex items-center">
+                <div class="mb-4 flex items-center">
                     <label class="mr-4 text-gray-700">选择年度：</label>
                     <select id="year-select" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="2026">2026年</option>
@@ -551,7 +568,7 @@
                 </div>
                 
                 <!-- 报表内容区域 -->
-                <div id="report-content" class="bg-white rounded-lg shadow-md p-6">
+                <div id="report-content" class="bg-white rounded-lg shadow-md p-4">
 
 
                     
@@ -601,8 +618,8 @@
                                         <span class="ml-2">元</span>
                                     </div>
                                 </div>
-                                <div class="overflow-x-auto" style="max-width: 100%;">
-                                    <table class="border border-gray-200" style="width: fit-content; min-width: 100%;">
+                                <div class="overflow-x-auto w-full border rounded-lg">
+                                    <table class="min-w-full divide-y divide-gray-200">
                                         <thead class="bg-gray-50">
                                             <!-- 第一行：大分组标题 -->
                                             <tr>
@@ -633,8 +650,10 @@
                                         <tbody class="divide-y divide-gray-200">
                                             <tr>
                                                 <td class="px-2 py-2 border-b">RD02</td>
-                                                <td class="px-2 py-2 border-b">人工智能</td>
-                                                <td class="px-2 py-2 border-b">进行中</td>
+                                                <td class="px-2 py-2 border-b">
+                                                    <a href="javascript:void(0)" class="text-blue-600 hover:underline" onclick="jumpToVoucher('RD02')">人工智能</a>
+                                                </td>
+                                                <td class="px-2 py-2 border-b">未完成</td>
                                                 <td class="px-2 py-2 border-b">费用化</td>
                                                 <td class="px-2 py-2 border-b text-right">210,000.00</td>
                                                 <td class="px-2 py-2 border-b text-right">120,000.00</td>
@@ -652,8 +671,10 @@
                                             </tr>
                                             <tr>
                                                 <td class="px-2 py-2 border-b">RD03</td>
-                                                <td class="px-2 py-2 border-b">新能源</td>
-                                                <td class="px-2 py-2 border-b">进行中</td>
+                                                <td class="px-2 py-2 border-b">
+                                                    <a href="javascript:void(0)" class="text-blue-600 hover:underline" onclick="jumpToVoucher('RD03')">新能源</a>
+                                                </td>
+                                                <td class="px-2 py-2 border-b">未完成</td>
                                                 <td class="px-2 py-2 border-b">费用化</td>
                                                 <td class="px-2 py-2 border-b text-right">270,000.00</td>
                                                 <td class="px-2 py-2 border-b text-right">150,000.00</td>
@@ -671,8 +692,10 @@
                                             </tr>
                                             <tr>
                                                 <td class="px-2 py-2 border-b">RD04</td>
-                                                <td class="px-2 py-2 border-b">医疗科技</td>
-                                                <td class="px-2 py-2 border-b">进行中</td>
+                                                <td class="px-2 py-2 border-b">
+                                                    <a href="javascript:void(0)" class="text-blue-600 hover:underline" onclick="jumpToVoucher('RD04')">医疗科技</a>
+                                                </td>
+                                                <td class="px-2 py-2 border-b">未完成</td>
                                                 <td class="px-2 py-2 border-b">费用化</td>
                                                 <td class="px-2 py-2 border-b text-right">330,000.00</td>
                                                 <td class="px-2 py-2 border-b text-right">180,000.00</td>
@@ -779,8 +802,8 @@
                                         <span class="ml-2">元</span>
                                     </div>
                                 </div>
-                                <div class="overflow-x-auto" style="max-width: 100%;">
-                                    <table class="border border-gray-200" style="width: fit-content; min-width: 100%;">
+                                <div class="overflow-x-auto w-full border rounded-lg">
+                                    <table class="min-w-full divide-y divide-gray-200">
                                         <thead class="bg-gray-50">
                                             <tr>
                                                 <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">行次</th>
@@ -1082,33 +1105,39 @@
                         <div id="financial-voucher" class="tab-pane hidden">
                             <div class="mb-4 bg-white p-4 rounded-lg border border-gray-200">
                                 <h3 class="text-center text-lg font-medium text-gray-800 mb-4">2021版研发支出辅助账（样式）</h3>
+                                <!-- 项目切换选择器 -->
+                                <div class="mb-6 flex items-center">
+                                    <label class="mr-4 text-gray-700 font-medium">切换研发项目：</label>
+                                    <select id="project-selector" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px]" onchange="switchProject(this.value)">
+                                        <option value="RD02">RD02 - 人工智能</option>
+                                        <option value="RD03">RD03 - 新能源</option>
+                                        <option value="RD04">RD04 - 医疗科技</option>
+                                    </select>
+                                </div>
                                 <div class="flex flex-wrap items-center mb-4 gap-4">
                                     <div>
                                         <span class="font-medium">项目编号:</span>
-                                        <span class="ml-2">001</span>
+                                        <span id="v-project-no" class="ml-2 text-blue-700 font-bold">RD02</span>
                                     </div>
                                     <div>
                                         <span class="font-medium">项目名称:</span>
-                                        <span class="ml-2">人工智能</span>
+                                        <span id="v-project-name" class="ml-2">人工智能</span>
                                     </div>
                                     <div>
                                         <span class="font-medium">完成情况:</span>
-                                        <select id="completion-status" class="ml-2 px-2 py-1 border border-gray-300 rounded text-sm">
-                                            <option value="未完成">未完成</option>
-                                            <option value="已完成">已完成</option>
-                                        </select>
+                                        <span id="v-project-status" class="ml-2">未完成</span>
                                     </div>
                                     <div>
                                         <span class="font-medium">支出类型:</span>
-                                        <span class="ml-2">费用化</span>
+                                        <span id="v-project-type" class="ml-2">费用化</span>
                                     </div>
                                     <div>
                                         <span class="font-medium">金额单位:</span>
                                         <span class="ml-2">元</span>
                                     </div>
                                 </div>
-                                <div class="overflow-x-auto" style="max-width: 100%;">
-                                    <table class="border border-gray-200" style="width: fit-content; min-width: 100%;">
+                                <div class="overflow-x-auto w-full border rounded-lg">
+                                    <table class="min-w-full divide-y divide-gray-200">
                                         <thead class="bg-gray-50">
                                             <tr>
                                                 <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="4">凭证信息</th>
@@ -1497,6 +1526,39 @@
                     document.getElementById('save-status').classList.add('hidden');
                 }, 3000);
             }, 1000);
+        }
+
+        // 切换辅助账项目
+        function switchProject(projectId) {
+            const projectData = {
+                'RD02': { name: '人工智能', status: '未完成', type: '费用化' },
+                'RD03': { name: '新能源', status: '未完成', type: '费用化' },
+                'RD04': { name: '医疗科技', status: '未完成', type: '费用化' }
+            };
+
+            const data = projectData[projectId];
+            if (data) {
+                document.getElementById('v-project-no').textContent = projectId;
+                document.getElementById('v-project-name').textContent = data.name;
+                document.getElementById('v-project-status').textContent = data.status;
+                document.getElementById('v-project-type').textContent = data.type;
+                
+                // 更新下拉选择器 UI
+                const selector = document.getElementById('project-selector');
+                if (selector) {
+                    selector.value = projectId;
+                }
+            }
+        }
+
+        // 从汇总表跳转到辅助账
+        function jumpToVoucher(projectId) {
+            // 1. 切换到辅助账标签页
+            const voucherTab = document.getElementById('financial-voucher-tab');
+            voucherTab.click();
+
+            // 2. 切换项目
+            switchProject(projectId);
         }
     </script>
 </body>

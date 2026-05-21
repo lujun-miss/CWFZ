@@ -109,7 +109,7 @@
             <nav class="mt-4">
                 <ul>
                     <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
+                        <a href="index.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700">
                             <i class="fa fa-home w-6"></i>
                             <span>首页</span>
                         </a>
@@ -192,6 +192,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('amortization-fee-type.html')">
                                     <i class="fa fa-calendar w-6"></i>
                                     <span>待摊费用类型</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
+                                    <i class="fa fa-cube w-6"></i>
+                                    <span>物料管理</span>
                                 </a>
                             </li>
                             <li>
@@ -347,7 +353,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600 bg-blue-50 text-blue-600">
                                     <i class="fa fa-flask w-6"></i>
                                     <span>R&D统计</span>
                                 </a>
@@ -368,6 +374,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-rule-config.html')">
                                     <i class="fa fa-cogs w-6"></i>
                                     <span>口径规则配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-validation-report.html')">
+                                    <i class="fa fa-check-square w-6"></i>
+                                    <span>校验报告</span>
                                 </a>
                             </li>
                         </ul>
@@ -469,6 +481,12 @@
                                     <span>分摊规则配置</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('data-dictionary.html')">
+                                    <i class="fa fa-book w-6"></i>
+                                    <span>数据字典管理</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -498,7 +516,6 @@
             <main class="flex-1 overflow-auto p-6">
                 <div class="mb-6">
                     <h1 class="text-2xl font-bold text-gray-800 mb-2">R&D统计口径报表</h1>
-                    <p class="text-gray-600">依据：国家统计局《研究与试验发展（R&D）投入统计规范》</p>
                 </div>
                 
                 <!-- 年份选择 -->
@@ -519,7 +536,6 @@
                 <!-- 报表内容区域 -->
                 <div id="report-content" class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-lg font-medium text-gray-800 mb-4">2026年度 R&D统计口径报表</h3>
-                    <p class="text-sm text-gray-600 mb-4">依据：国家统计局《研究与试验发展（R&D）投入统计规范》</p>
                     
                     <!-- 标签页导航 -->
                     <div class="mb-4 border-b border-gray-200">
@@ -599,10 +615,6 @@
                                             <p><span class="font-medium">单位详细名称：</span></p>
                                         </div>
                                         <div class="text-right">
-                                            <p><span class="font-medium">表　号：</span>107-1表</p>
-                                            <p><span class="font-medium">制定机关：</span>国家统计局</p>
-                                            <p><span class="font-medium">文　号：</span>国统字(2022)90号</p>
-                                            <p><span class="font-medium">有效期至：</span>2023年6月</p>
                                         </div>
                                     </div>
                                     <p class="text-lg font-medium">2022 年</p>
@@ -625,7 +637,7 @@
                                                 <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目技术目标</th>
                                                 <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目起始日期</th>
                                                 <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目完成日期</th>
-                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">跨年项目当年所处主要进展阶段</th>
+                                                <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">完成情况</th>
                                                 <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目研究开发人员（人）</th>
                                                 <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目工作人员实际工作时间（人月）</th>
                                                 <th class="border border-gray-800 px-2 py-1 text-center text-xs font-medium" rowspan="2">项目经费支出（千元）</th>
@@ -658,7 +670,7 @@
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">技术改进</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-01-01</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-12-31</td>
-                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">研发阶段</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">未完成</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">15</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">180</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">3000</td>
@@ -674,7 +686,7 @@
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">技术创新</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-03-01</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2023-02-28</td>
-                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">试验阶段</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">未完成</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">12</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">144</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2500</td>
@@ -706,7 +718,7 @@
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">技术改进</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-09-01</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2023-08-31</td>
-                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">中试阶段</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">未完成</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">8</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">96</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">1800</td>
@@ -714,7 +726,9 @@
                                             </tr>
                                             <tr>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">5</td>
-                                                <td class="border border-gray-800 px-2 py-1 text-sm">人工智能算法优化</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-sm">
+                                                    <a href="javascript:void(0)" class="text-blue-600 hover:underline" onclick="jumpToVoucher('RD02')">人工智能算法优化</a>
+                                                </td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">自主研发</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">独立研发</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">软件著作权</td>
@@ -722,7 +736,7 @@
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">技术创新</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-01-15</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2022-11-30</td>
-                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">完成</td>
+                                                <td class="border border-gray-800 px-2 py-1 text-center text-sm">已完成</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">10</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">120</td>
                                                 <td class="border border-gray-800 px-2 py-1 text-center text-sm">2200</td>
@@ -780,13 +794,42 @@
                         <!-- R&D统计辅助账明细表 -->
                         <div id="rd-detail" class="tab-pane hidden">
                             <div class="mb-4 bg-white p-4 rounded-lg border border-gray-200">
+                                <!-- 项目切换选项卡 -->
+                                <div class="mb-6 border-b border-gray-200">
+                                    <nav class="flex -mb-px space-x-8" id="project-tabs">
+                                        <button onclick="switchProject('RD02', this)" class="project-tab-btn py-3 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">
+                                            RD02 - 人工智能算法优化
+                                        </button>
+                                        <button onclick="switchProject('RD03', this)" class="project-tab-btn py-3 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                            RD03 - 新能源
+                                        </button>
+                                        <button onclick="switchProject('RD04', this)" class="project-tab-btn py-3 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                            RD04 - 医疗科技
+                                        </button>
+                                    </nav>
+                                </div>
                                 <div class="flex justify-between items-center mb-4">
-                                    <div class="flex items-center">
-                                        <span class="mr-4">项目编号: 001</span>
-                                        <span class="mr-4">项目名称: 人工智能</span>
-                                        <span class="mr-4">完成情况: 001</span>
-                                        <span class="mr-4">支出类型: 类型一</span>
-                                        <span>金额单位: 元</span>
+                                    <div class="flex items-center gap-4">
+                                        <div>
+                                            <span class="font-medium">项目编号:</span>
+                                            <span id="v-project-no" class="ml-2 text-blue-700 font-bold">RD02</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">项目名称:</span>
+                                            <span id="v-project-name" class="ml-2">人工智能算法优化</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">完成情况:</span>
+                                            <span id="v-project-status" class="ml-2">未完成</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">支出类型:</span>
+                                            <span id="v-project-type" class="ml-2">类型一</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">金额单位:</span>
+                                            <span class="ml-2">元</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="overflow-x-auto">
@@ -964,10 +1007,6 @@
                                             <p><span class="font-medium">单位详细名称：</span></p>
                                         </div>
                                         <div class="text-right">
-                                            <p><span class="font-medium">表　号：</span>107-2表</p>
-                                            <p><span class="font-medium">制定机关：</span>国家统计局</p>
-                                            <p><span class="font-medium">文　号：</span>国统字(2022)90号</p>
-                                            <p><span class="font-medium">有效期至：</span>2023年6月</p>
                                         </div>
                                     </div>
                                     <p class="text-lg font-medium">2022 年</p>
@@ -1610,6 +1649,53 @@
                 alert(fileName.replace('.xlsx', '.csv') + ' 已导出');
             });
         });
+
+        // 切换辅助账项目
+        function switchProject(projectId, element) {
+            const projectData = {
+                'RD02': { name: '人工智能算法优化', status: '未完成', type: '类型一' },
+                'RD03': { name: '新能源', status: '未完成', type: '类型二' },
+                'RD04': { name: '医疗科技', status: '未完成', type: '类型一' }
+            };
+
+            const data = projectData[projectId];
+            if (data) {
+                document.getElementById('v-project-no').textContent = projectId;
+                document.getElementById('v-project-name').textContent = data.name;
+                document.getElementById('v-project-status').textContent = data.status;
+                document.getElementById('v-project-type').textContent = data.type;
+                
+                // 更新选项卡 UI
+                const tabs = document.querySelectorAll('.project-tab-btn');
+                tabs.forEach(tab => {
+                    tab.classList.remove('border-blue-500', 'text-blue-600');
+                    tab.classList.add('border-transparent', 'text-gray-500');
+                });
+
+                if (element) {
+                    element.classList.remove('border-transparent', 'text-gray-500');
+                    element.classList.add('border-blue-500', 'text-blue-600');
+                } else {
+                    // 如果是通过 jumpToVoucher 调用的，需要手动找到对应的 tab
+                    tabs.forEach(tab => {
+                        if (tab.innerText.includes(projectId)) {
+                            tab.classList.remove('border-transparent', 'text-gray-500');
+                            tab.classList.add('border-blue-500', 'text-blue-600');
+                        }
+                    });
+                }
+            }
+        }
+
+        // 从汇总表跳转到辅助账
+        function jumpToVoucher(projectId) {
+            // 1. 切换到辅助账标签页
+            const voucherTab = document.querySelector('[data-tab="rd-detail"]');
+            voucherTab.click();
+
+            // 2. 切换项目
+            switchProject(projectId);
+        }
     </script>
 </body>
 </html>

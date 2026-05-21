@@ -609,16 +609,8 @@
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-800">财务加计扣除</h4>
-                                <p class="text-xs text-gray-500">财税〔2015〕119号</p>
                             </div>
                         </div>
-                        <ul class="text-xs text-gray-600 space-y-1">
-                            <li>✓ 人员人工费用</li>
-                            <li>✓ 直接投入费用</li>
-                            <li>✓ 折旧费用</li>
-                            <li>✓ 无形资产摊销</li>
-                            <li>⚠ 其他费用≤10%</li>
-                        </ul>
                         <div class="mt-3 text-xs"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded">最常用</span></div>
                     </div>
 
@@ -629,16 +621,8 @@
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-800">高企认定</h4>
-                                <p class="text-xs text-gray-500">国科发火〔2016〕32号</p>
                             </div>
                         </div>
-                        <ul class="text-xs text-gray-600 space-y-1">
-                            <li>✓ 人员人工费用≥50%</li>
-                            <li>✓ 人员占比≥10%</li>
-                            <li>✓ 研发费用占比≥4%</li>
-                            <li>⚠ 委托境外≤20%</li>
-                            <li>⚠ 境内委托≤80%</li>
-                        </ul>
                         <div class="mt-3 text-xs"><span class="px-2 py-1 bg-purple-100 text-purple-700 rounded">高企资质</span></div>
                     </div>
 
@@ -649,16 +633,8 @@
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-800">会计口径</h4>
-                                <p class="text-xs text-gray-500">企业会计准则</p>
                             </div>
                         </div>
-                        <ul class="text-xs text-gray-600 space-y-1">
-                            <li>✓ 研发人员人工</li>
-                            <li>✓ 直接材料</li>
-                            <li>✓ 折旧与摊销</li>
-                            <li>✓ 委托外部研发</li>
-                            <li>✓ 其他相关费用</li>
-                        </ul>
                         <div class="mt-3 text-xs"><span class="px-2 py-1 bg-gray-100 text-gray-700 rounded">会计核算</span></div>
                     </div>
 
@@ -669,16 +645,8 @@
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-800">R&D统计</h4>
-                                <p class="text-xs text-gray-500">研究与试验发展</p>
                             </div>
                         </div>
-                        <ul class="text-xs text-gray-600 space-y-1">
-                            <li>✓ 内部研发经费</li>
-                            <li>✓ 人员人工费用</li>
-                            <li>✓ 设备折旧费用</li>
-                            <li>⚠ 基础研究≤20%</li>
-                            <li>⚠ 试验发展≥80%</li>
-                        </ul>
                         <div class="mt-3 text-xs"><span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded">统计上报</span></div>
                     </div>
 
@@ -689,37 +657,9 @@
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-800">IPO审查</h4>
-                                <p class="text-xs text-gray-500">上市前核查</p>
                             </div>
                         </div>
-                        <ul class="text-xs text-gray-600 space-y-1">
-                            <li>✓ 研发人员人工</li>
-                            <li>✓ 研发领料</li>
-                            <li>⚠ 3年数据稳定性</li>
-                            <li>⚠ 委外研发充分披露</li>
-                            <li>⚠ 可追溯性要求</li>
-                        </ul>
                         <div class="mt-3 text-xs"><span class="px-2 py-1 bg-pink-100 text-pink-700 rounded">上市准备</span></div>
-                    </div>
-
-                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4" data-caliber="comparison" onclick="selectCaliber('comparison')">
-                        <div class="flex items-center mb-3">
-                            <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mr-3">
-                                <i class="fa fa-columns text-teal-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-gray-800">多口径对比</h4>
-                                <p class="text-xs text-gray-500">一键生成所有口径</p>
-                            </div>
-                        </div>
-                        <ul class="text-xs text-gray-600 space-y-1">
-                            <li>✓ 同时生成5种口径</li>
-                            <li>✓ 对比差异分析</li>
-                            <li>✓ 汇总数据看板</li>
-                            <li>✓ 导出全套报表</li>
-                            <li>⚠ 生成时间较长</li>
-                        </ul>
-                        <div class="mt-3 text-xs"><span class="px-2 py-1 bg-teal-100 text-teal-700 rounded">综合分析</span></div>
                     </div>
                 </div>
 
@@ -758,14 +698,15 @@
                                         onkeyup="filterProjects()">
                                 </div>
                                 <select id="projectPhaseFilter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 focus:ring-2 focus:ring-blue-500" onchange="filterProjects()">
-                                    <option value="">所有阶段</option>
+                                    <option value="">所有状态</option>
+                                    <option value="规划中">规划中</option>
                                     <option value="进行中">进行中</option>
-                                    <option value="已结项">已结项</option>
-                                    <option value="暂停">暂停</option>
+                                    <option value="已暂停">已暂停</option>
+                                    <option value="已完成">已完成</option>
                                 </select>
                             </div>
 
-                            <div class="border border-gray-300 rounded-lg p-0 max-h-64 overflow-y-auto">
+                            <div class="border border-gray-300 rounded-lg p-0 max-h-[600px] overflow-y-auto">
                                 <div class="sticky top-0 bg-gray-50 p-3 border-b border-gray-200 z-10">
                                     <label class="flex items-center cursor-pointer">
                                         <input type="checkbox" id="selectAllProjects" class="w-4 h-4 text-blue-600 rounded" onchange="toggleAllProjects(this)" checked>
@@ -778,50 +719,50 @@
                                             <input type="checkbox" class="project-checkbox w-4 h-4 text-blue-600 rounded" value="RD02" checked onchange="updateProjectCount()">
                                             <div class="ml-3">
                                                 <span class="block text-sm font-medium text-gray-700">RD02 - 人工智能项目</span>
-                                                <span class="block text-xs text-gray-400">负责人：张三 | 阶段：进行中</span>
+                                                <span class="block text-xs text-gray-400">负责人：张三 | 状态：进行中</span>
                                             </div>
                                         </div>
-                                        <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px]">进行中</span>
+                                        <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px]">进行中</span>
                                     </label>
-                                    <label class="project-item flex items-center justify-between p-2 hover:bg-blue-50 rounded cursor-pointer" data-name="RD03 新能源项目" data-phase="进行中">
+                                    <label class="project-item flex items-center justify-between p-2 hover:bg-blue-50 rounded cursor-pointer" data-name="RD03 新能源项目" data-phase="规划中">
                                         <div class="flex items-center">
                                             <input type="checkbox" class="project-checkbox w-4 h-4 text-blue-600 rounded" value="RD03" checked onchange="updateProjectCount()">
                                             <div class="ml-3">
                                                 <span class="block text-sm font-medium text-gray-700">RD03 - 新能源项目</span>
-                                                <span class="block text-xs text-gray-400">负责人：李四 | 阶段：进行中</span>
+                                                <span class="block text-xs text-gray-400">负责人：李四 | 状态：规划中</span>
                                             </div>
                                         </div>
-                                        <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px]">进行中</span>
+                                        <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px]">规划中</span>
                                     </label>
-                                    <label class="project-item flex items-center justify-between p-2 hover:bg-blue-50 rounded cursor-pointer" data-name="RD04 医疗科技项目" data-phase="已结项">
+                                    <label class="project-item flex items-center justify-between p-2 hover:bg-blue-50 rounded cursor-pointer" data-name="RD04 医疗科技项目" data-phase="已完成">
                                         <div class="flex items-center">
                                             <input type="checkbox" class="project-checkbox w-4 h-4 text-blue-600 rounded" value="RD04" checked onchange="updateProjectCount()">
                                             <div class="ml-3">
                                                 <span class="block text-sm font-medium text-gray-700">RD04 - 医疗科技项目</span>
-                                                <span class="block text-xs text-gray-400">负责人：王五 | 阶段：已结项</span>
+                                                <span class="block text-xs text-gray-400">负责人：王五 | 状态：已完成</span>
                                             </div>
                                         </div>
-                                        <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px]">已结项</span>
+                                        <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px]">已完成</span>
                                     </label>
-                                    <label class="project-item flex items-center justify-between p-2 hover:bg-blue-50 rounded cursor-pointer" data-name="RD05 智能制造项目" data-phase="进行中">
+                                    <label class="project-item flex items-center justify-between p-2 hover:bg-blue-50 rounded cursor-pointer" data-name="RD05 智能制造项目" data-phase="已暂停">
                                         <div class="flex items-center">
                                             <input type="checkbox" class="project-checkbox w-4 h-4 text-blue-600 rounded" value="RD05" onchange="updateProjectCount()">
                                             <div class="ml-3">
                                                 <span class="block text-sm font-medium text-gray-700">RD05 - 智能制造项目</span>
-                                                <span class="block text-xs text-gray-400">负责人：赵六 | 阶段：进行中</span>
+                                                <span class="block text-xs text-gray-400">负责人：赵六 | 状态：已暂停</span>
                                             </div>
                                         </div>
-                                        <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px]">进行中</span>
+                                        <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-[10px]">已暂停</span>
                                     </label>
-                                    <label class="project-item flex items-center justify-between p-2 hover:bg-blue-50 rounded cursor-pointer" data-name="RD06 碳中和技术项目" data-phase="暂停">
+                                    <label class="project-item flex items-center justify-between p-2 hover:bg-blue-50 rounded cursor-pointer" data-name="RD06 碳中和技术项目" data-phase="进行中">
                                         <div class="flex items-center">
                                             <input type="checkbox" class="project-checkbox w-4 h-4 text-blue-600 rounded" value="RD06" onchange="updateProjectCount()">
                                             <div class="ml-3">
                                                 <span class="block text-sm font-medium text-gray-700">RD06 - 碳中和技术项目</span>
-                                                <span class="block text-xs text-gray-400">负责人：钱七 | 阶段：暂停</span>
+                                                <span class="block text-xs text-gray-400">负责人：钱七 | 状态：进行中</span>
                                             </div>
                                         </div>
-                                        <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-[10px]">暂停</span>
+                                        <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px]">进行中</span>
                                     </label>
                                 </div>
                             </div>
@@ -829,16 +770,6 @@
                                 <p class="text-xs text-gray-500">已选择 <span id="selectedProjectCount" class="font-bold text-blue-600">3</span> 个项目</p>
                                 <button type="button" class="text-xs text-blue-600 hover:underline" onclick="resetProjectFilters()">重置筛选</button>
                             </div>
-                        </div>
-
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <h4 class="text-sm font-medium text-blue-800 mb-2"><i class="fa fa-info-circle mr-1"></i>数据来源说明</h4>
-                            <ul class="text-xs text-blue-700 space-y-1">
-                                <li>• 人员人工费用：从工资系统和工时分配系统汇总</li>
-                                <li>• 折旧费用：从设备工时分配和固定资产系统汇总</li>
-                                <li>• 直接投入费用：从材料成本分配系统汇总</li>
-                                <li>• 其他费用：从费用报销系统汇总</li>
-                            </ul>
                         </div>
                     </div>
 
@@ -876,24 +807,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="mt-4">
-                            <h4 class="text-sm font-medium text-gray-700 mb-3"><i class="fa fa-pie-chart mr-1"></i>费用结构占比</h4>
-                            <div class="flex items-end h-32 space-x-2">
-                                <div class="flex-1 bg-blue-500 rounded-t" style="height: 100%"></div>
-                                <div class="flex-1 bg-green-500 rounded-t" style="height: 54%"></div>
-                                <div class="flex-1 bg-orange-500 rounded-t" style="height: 34%"></div>
-                                <div class="flex-1 bg-purple-500 rounded-t" style="height: 14%"></div>
-                                <div class="flex-1 bg-gray-400 rounded-t" style="height: 8%"></div>
-                            </div>
-                            <div class="flex justify-around mt-2 text-xs text-gray-500">
-                                <span>人工47.6%</span>
-                                <span>投入25.9%</span>
-                                <span>折旧16.0%</span>
-                                <span>无形资产6.9%</span>
-                                <span>其他3.6%</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -914,7 +827,6 @@
                 <div class="flex items-center mb-4">
                     <span class="text-sm text-gray-600 mr-4">当前口径：</span>
                     <span id="currentCaliberName" class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">财务加计扣除</span>
-                    <span class="text-sm text-gray-500 ml-4" id="currentPolicy">依据：财税〔2015〕119号</span>
                 </div>
 
                 <div id="validationProgress" class="mb-6">
@@ -1254,37 +1166,37 @@
         let accountTableData = null;
 
         const CALIBER_CONFIG = {
-            financial: { name: '财务加计扣除', policy: '财税〔2015〕119号', color: 'blue', rules: [
+            financial: { name: '财务加计扣除', color: 'blue', rules: [
                 { field: 'laborCost', name: '人员人工费用', required: true, minRatio: null, maxRatio: null, message: '人员人工费用为必填项' },
                 { field: 'materialCost', name: '直接投入费用', required: true, minRatio: null, maxRatio: null, message: '直接投入费用为必填项' },
                 { field: 'depreciationCost', name: '折旧费用', required: true, minRatio: null, maxRatio: null, message: '折旧费用为必填项' },
                 { field: 'intangibleCost', name: '无形资产摊销', required: false, minRatio: null, maxRatio: null, message: '无形资产摊销为选填项' },
                 { field: 'otherCost', name: '其他费用', required: false, minRatio: null, maxRatio: 0.10, message: '其他费用不得超过可加计扣除总额的10%' }
             ]},
-            hiTech: { name: '高企认定', policy: '国科发火〔2016〕32号', color: 'green', rules: [
+            hiTech: { name: '高企认定', color: 'green', rules: [
                 { field: 'laborCost', name: '人员人工费用', required: true, minRatio: 0.50, maxRatio: null, message: '人员人工费用占研发费用比例不得低于50%（2026年起）' },
                 { field: 'materialCost', name: '直接投入费用', required: true, minRatio: null, maxRatio: null, message: '直接投入费用为必填项' },
                 { field: 'depreciationCost', name: '折旧费用', required: true, minRatio: null, maxRatio: null, message: '折旧费用为必填项' },
                 { field: 'outsourceCost', name: '委托外部研发费用', required: false, minRatio: null, maxRatio: 0.80, message: '委托外部研发费用不得超过境内研发费用总额的80%' },
                 { field: 'personnelRatio', name: '科技人员占比', required: true, minRatio: 0.10, maxRatio: null, message: '科技人员占企业当年职工总数比例不得低于10%' }
             ]},
-            accounting: { name: '会计口径', policy: '企业会计准则', color: 'orange', rules: [
+            accounting: { name: '会计口径', color: 'orange', rules: [
                 { field: 'laborCost', name: '研发人员人工', required: true, minRatio: null, maxRatio: null, message: '研发人员人工为必填项，需全额计入研发支出' },
                 { field: 'materialCost', name: '直接材料', required: true, minRatio: null, maxRatio: null, message: '直接材料为必填项，需全额计入研发支出' },
                 { field: 'depreciationCost', name: '折旧与摊销', required: true, minRatio: null, maxRatio: null, message: '折旧与摊销为必填项，需按使用部门归集' }
             ]},
-            rd: { name: 'R&D统计', policy: '研究与试验发展统计', color: 'purple', rules: [
+            rd: { name: 'R&D统计', color: 'purple', rules: [
                 { field: 'laborCost', name: '人员人工费用', required: true, minRatio: null, maxRatio: null, message: '人员人工费用为必填项' },
                 { field: 'depreciationCost', name: '设备折旧费用', required: true, minRatio: null, maxRatio: null, message: '设备折旧费用为必填项' },
                 { field: 'basicResearchRatio', name: '基础研究比例', required: false, minRatio: null, maxRatio: 0.20, message: '基础研究费用占比不得超过20%' }
             ]},
-            ipo: { name: 'IPO审查', policy: '上市前核查要求', color: 'red', rules: [
+            ipo: { name: 'IPO审查', color: 'red', rules: [
                 { field: 'laborCost', name: '研发人员人工', required: true, minRatio: null, maxRatio: null, message: '研发人员人工为必填项' },
                 { field: 'stability', name: '数据稳定性', required: true, minRatio: null, maxRatio: null, message: '近3年研发费用需保持稳定增长或合理波动' },
                 { field: 'outsourceDisclosure', name: '委外研发披露', required: true, minRatio: null, maxRatio: null, message: '委外研发需充分披露并说明必要性' },
                 { field: 'traceability', name: '可追溯性', required: true, minRatio: null, maxRatio: null, message: '研发费用需可追溯至原始凭证' }
             ]},
-            comparison: { name: '多口径对比', policy: '综合分析', color: 'teal', rules: [] }
+            comparison: { name: '多口径对比', color: 'teal', rules: [] }
         };
 
         const COST_FIELD_MAPPING = {
@@ -1576,7 +1488,6 @@
         function startValidation() {
             const config = CALIBER_CONFIG[selectedCaliber];
             document.getElementById('currentCaliberName').textContent = config.name;
-            document.getElementById('currentPolicy').textContent = '依据：' + config.policy;
             document.getElementById('passedCaliberName').textContent = config.name;
             document.getElementById('validationProgress').classList.remove('hidden');
             document.getElementById('validationResults').classList.add('hidden');
@@ -1743,7 +1654,6 @@
                 csvContent += '\n';
                 csvContent += '审核信息\n';
                 csvContent += '编制人:XXX\t审核人:XXX\t批准人:XXX\n';
-                csvContent += '依据:' + CALIBER_CONFIG[caliber].policy + '\n';
 
                 var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                 var link = document.createElement('a');

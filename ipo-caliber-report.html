@@ -105,11 +105,11 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                                        <!-- 导航菜单 -->
+            <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
+                        <a href="index.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700">
                             <i class="fa fa-home w-6"></i>
                             <span>首页</span>
                         </a>
@@ -192,6 +192,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('amortization-fee-type.html')">
                                     <i class="fa fa-calendar w-6"></i>
                                     <span>待摊费用类型</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
+                                    <i class="fa fa-cube w-6"></i>
+                                    <span>物料管理</span>
                                 </a>
                             </li>
                             <li>
@@ -353,7 +359,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="ipo-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                <a href="ipo-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600 bg-blue-50 text-blue-600">
                                     <i class="fa fa-line-chart w-6"></i>
                                     <span>IPO审查</span>
                                 </a>
@@ -368,6 +374,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-rule-config.html')">
                                     <i class="fa fa-cogs w-6"></i>
                                     <span>口径规则配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-validation-report.html')">
+                                    <i class="fa fa-check-square w-6"></i>
+                                    <span>校验报告</span>
                                 </a>
                             </li>
                         </ul>
@@ -469,6 +481,12 @@
                                     <span>分摊规则配置</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('data-dictionary.html')">
+                                    <i class="fa fa-book w-6"></i>
+                                    <span>数据字典管理</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -498,7 +516,6 @@
             <main class="flex-1 overflow-auto p-6">
                 <div class="mb-6">
                     <h1 class="text-2xl font-bold text-gray-800 mb-2">IPO审查口径报表</h1>
-                    <p class="text-gray-600">依据：中国证监会《首次公开发行股票并上市管理办法》</p>
                 </div>
                 
                 <!-- 年份选择 -->
@@ -519,7 +536,6 @@
                 <!-- 报表内容区域 -->
                 <div id="report-content" class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-lg font-medium text-gray-800 mb-4">2026年度 IPO审查口径报表</h3>
-                    <p class="text-sm text-gray-600 mb-4">依据：中国证监会《首次公开发行股票并上市管理办法》</p>
                     
                     <!-- 标签页导航 -->
                     <div class="mb-4 border-b border-gray-200">
@@ -589,25 +605,33 @@
                         <!-- IPO审查辅助账明细表 -->
                         <div id="ipo-detail" class="tab-pane active">
                             <div class="bg-white p-6 rounded-lg border border-gray-200">
+                                <!-- 项目切换选择器 -->
+                                <div class="mb-6 flex items-center">
+                                    <label class="mr-4 text-gray-700 font-medium">切换研发项目：</label>
+                                    <select id="project-selector" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px]" onchange="switchProject(this.value)">
+                                        <option value="RD001">RD001 - 人工智能算法研发</option>
+                                        <option value="RD002">RD002 - 新能源材料研究</option>
+                                        <option value="RD003">RD003 - 工业机器人控制系统</option>
+                                    </select>
+                                </div>
                                 <!-- 表头信息 -->
                                 <div class="text-center mb-6">
                                     <h3 class="text-xl font-bold text-gray-800 mb-4">研发支出辅助账（IPO审查口径）</h3>
-                                    <p class="text-sm text-gray-600">依据：国家税务总局公告2021年第28号、中国证监会《首次公开发行股票并上市管理办法》</p>
                                 </div>
                                 
                                 <!-- 项目信息 -->
                                 <div class="flex flex-wrap gap-6 mb-6 p-4 bg-gray-50 rounded-lg">
                                     <div>
-                                        <span class="font-medium">项目编号：</span><span>RD001</span>
+                                        <span class="font-medium">项目编号：</span><span id="v-project-no" class="text-blue-700 font-bold">RD001</span>
                                     </div>
                                     <div>
-                                        <span class="font-medium">项目名称：</span><span>人工智能算法研发</span>
+                                        <span class="font-medium">项目名称：</span><span id="v-project-name">人工智能算法研发</span>
                                     </div>
                                     <div>
-                                        <span class="font-medium">完成情况：</span><span>未结束</span>
+                                        <span class="font-medium">完成情况：</span><span id="v-project-status">未完成</span>
                                     </div>
                                     <div>
-                                        <span class="font-medium">支出类型：</span><span>费用化</span>
+                                        <span class="font-medium">支出类型：</span><span id="v-project-type">费用化</span>
                                     </div>
                                     <div>
                                         <span class="font-medium">金额单位：</span><span>元</span>
@@ -748,7 +772,6 @@
                                 <!-- 表头信息 -->
                                 <div class="text-center mb-6">
                                     <h3 class="text-xl font-bold text-gray-800 mb-4">研发支出辅助账汇总表（IPO审查口径）</h3>
-                                    <p class="text-sm text-gray-600">依据：国家税务总局公告2021年第28号、中国证监会《首次公开发行股票并上市管理办法》</p>
                                     <p class="text-lg font-medium">2026 年度</p>
                                 </div>
                                 
@@ -775,7 +798,9 @@
                                         <tbody>
                                             <tr>
                                                 <td class="border border-gray-800 px-3 py-2 text-center text-sm">RD001</td>
-                                                <td class="border border-gray-800 px-3 py-2 text-sm">人工智能算法研发</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">
+                                                    <a href="javascript:void(0)" class="text-blue-600 hover:underline" onclick="jumpToVoucher('RD001')">人工智能算法研发</a>
+                                                </td>
                                                 <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,440,000.00</td>
                                                 <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,020,000.00</td>
                                                 <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥540,000.00</td>
@@ -790,7 +815,9 @@
                                             </tr>
                                             <tr>
                                                 <td class="border border-gray-800 px-3 py-2 text-center text-sm">RD002</td>
-                                                <td class="border border-gray-800 px-3 py-2 text-sm">新能源材料研究</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">
+                                                    <a href="javascript:void(0)" class="text-blue-600 hover:underline" onclick="jumpToVoucher('RD002')">新能源材料研究</a>
+                                                </td>
                                                 <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,800,000.00</td>
                                                 <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥1,080,000.00</td>
                                                 <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥300,000.00</td>
@@ -805,7 +832,9 @@
                                             </tr>
                                             <tr>
                                                 <td class="border border-gray-800 px-3 py-2 text-center text-sm">RD003</td>
-                                                <td class="border border-gray-800 px-3 py-2 text-sm">工业机器人控制系统</td>
+                                                <td class="border border-gray-800 px-3 py-2 text-sm">
+                                                    <a href="javascript:void(0)" class="text-blue-600 hover:underline" onclick="jumpToVoucher('RD003')">工业机器人控制系统</a>
+                                                </td>
                                                 <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥960,000.00</td>
                                                 <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥640,000.00</td>
                                                 <td class="border border-gray-800 px-3 py-2 text-right text-sm">¥160,000.00</td>
@@ -854,7 +883,6 @@
                                 <!-- 表头信息 -->
                                 <div class="text-center mb-6">
                                     <h3 class="text-xl font-bold text-gray-800 mb-4">序时记账凭证一览表（IPO审查口径）</h3>
-                                    <p class="text-sm text-gray-600">依据：国家税务总局公告2021年第28号、中国证监会《首次公开发行股票并上市管理办法》</p>
                                 </div>
                                 
                                 <!-- 主表格 -->
@@ -1107,6 +1135,39 @@
                 alert(fileName.replace('.xlsx', '.csv') + ' 已导出');
             });
         });
+
+        // 切换辅助账项目
+        function switchProject(projectId) {
+            const projectData = {
+                'RD001': { name: '人工智能算法研发', status: '未完成', type: '费用化' },
+                'RD002': { name: '新能源材料研究', status: '未完成', type: '费用化' },
+                'RD003': { name: '工业机器人控制系统', status: '未完成', type: '费用化' }
+            };
+
+            const data = projectData[projectId];
+            if (data) {
+                document.getElementById('v-project-no').textContent = projectId;
+                document.getElementById('v-project-name').textContent = data.name;
+                document.getElementById('v-project-status').textContent = data.status;
+                document.getElementById('v-project-type').textContent = data.type;
+                
+                // 更新下拉选择器 UI
+                const selector = document.getElementById('project-selector');
+                if (selector) {
+                    selector.value = projectId;
+                }
+            }
+        }
+
+        // 从汇总表跳转到辅助账
+        function jumpToVoucher(projectId) {
+            // 1. 切换到辅助账标签页
+            const voucherTab = document.querySelector('[data-tab="ipo-detail"]');
+            voucherTab.click();
+
+            // 2. 切换项目
+            switchProject(projectId);
+        }
     </script>
 </body>
 </html>
