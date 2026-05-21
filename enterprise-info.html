@@ -39,6 +39,133 @@
         .menu-arrow.collapsed { transform: rotate(-90deg); }
         .menu-arrow { transition: transform 0.3s ease; }
     </style>
+    <script>
+        // 负面清单行业代码（不得享受研发费用加计扣除政策）
+        const NEGATIVE_LIST_INDUSTRIES = [
+            'C16', // 烟草制造业
+            'H61', // 住宿业
+            'H62', // 餐饮业
+            'F51', // 批发业
+            'F52', // 零售业
+            'S91', // 娱乐业
+        ];
+
+        // 制造业行业代码前缀（部分政策适用）
+        const MANUFACTURING_INDUSTRY_PREFIXES = ['C', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'];
+
+        // 判断是否为负面清单行业
+        function isNegativeListIndustry(industryCode) {
+            if (!industryCode) return false;
+            return NEGATIVE_LIST_INDUSTRIES.some(code => industryCode.startsWith(code));
+        }
+
+        // 判断是否为制造业
+        function isManufacturingIndustry(industryCode) {
+            if (!industryCode) return false;
+            return MANUFACTURING_INDUSTRY_PREFIXES.some(prefix => industryCode.startsWith(prefix));
+        }
+
+        // 判断高新技术企业是否有效
+        function isHighTechValid(certNumber, expireDate) {
+            if (!certNumber || !expireDate) return false;
+            const expire = new Date(expireDate);
+            return expire > new Date();
+        }
+
+        // 判断科技型中小企业是否有效
+        function isSMBTValid(certNumber, expireDate) {
+            if (!certNumber || !expireDate) return false;
+            const expire = new Date(expireDate);
+            return expire > new Date();
+        }
+
+        // 自动计算加计扣除比例
+        function calculateRatio() {
+            const industryCode = document.getElementById('industry-code').value;
+            const hiTechCert = document.getElementById('hitech-cert').value;
+            const hiTechExpire = document.getElementById('hitech-expire').value;
+            const smbtCert = document.getElementById('smbt-cert').value;
+            const smbtExpire = document.getElementById('smbt-expire').value;
+            const resultDiv = document.getElementById('ratio-result');
+            const ratioRadios = document.getElementsByName('ratio');
+
+            // 重置为未选中
+            ratioRadios.forEach(r => r.checked = false);
+
+            // 1. 检查负面清单
+            if (isNegativeListIndustry(industryCode)) {
+                resultDiv.innerHTML = `
+                    <div class="p-4 bg-red-50 rounded-lg border border-red-200">
+                        <div class="flex items-center">
+                            <i class="fa fa-times-circle text-red-500 mr-2 text-xl"></i>
+                            <span class="font-bold text-red-700">无法享受加计扣除政策</span>
+                        </div>
+                        <p class="text-xs text-red-600 mt-2">您所属的行业（${industryCode}）属于负面清单行业，不得享受研发费用加计扣除政策。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // 2. 检查各项资质
+            const hiTechValid = isHighTechValid(hiTechCert, hiTechExpire);
+            const smbtValid = isSMBTValid(smbtCert, smbtExpire);
+            const manufacturing = isManufacturingIndustry(industryCode);
+
+            let ratio = '100%'; // 默认100%
+            let reasons = [];
+
+            if (hiTechValid) {
+                reasons.push('高新技术企业证书有效');
+            }
+            if (smbtValid) {
+                reasons.push('科技型中小企业证书有效');
+            }
+            if (manufacturing) {
+                reasons.push(`属于制造业企业（行业代码：${industryCode}）`);
+            }
+            // 如果没有其他资质，但不属于负面清单，默认可享受100%
+            // 2023年起政策：所有非负面清单企业均可享受100%加计扣除
+            if (reasons.length === 0) {
+                reasons.push('一般企业（2023年起政策：研发费用加计扣除比例为100%）');
+            }
+
+            resultDiv.innerHTML = `
+                <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fa fa-check-circle text-green-500 mr-2 text-xl"></i>
+                            <span class="font-bold text-green-700">适用加计扣除比例：100%</span>
+                        </div>
+                        <button onclick="applyRatio('100')" class="px-3 py-1 bg-green-500 text-white text-xs font-bold rounded hover:bg-green-600">
+                            应用此比例
+                        </button>
+                    </div>
+                    <div class="mt-2 text-xs text-green-700">
+                        <p><strong>适用原因：</strong></p>
+                        <ul class="list-disc list-inside mt-1">
+                            ${reasons.map(r => `<li>${r}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 应用计算结果
+        function applyRatio(value) {
+            const ratioRadios = document.getElementsByName('ratio');
+            ratioRadios.forEach(r => {
+                if (value === '100' && r.value === '100') r.checked = true;
+                else if (value === '75' && r.value === '75') r.checked = true;
+                else if (value === 'other' && r.value === 'other') r.checked = true;
+                else r.checked = false;
+            });
+        }
+
+        // 页面加载时自动计算
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateRatio();
+        });
+    </script>
 </head>
 <body class="bg-gray-50 flex h-screen overflow-hidden">
     <!-- 左侧导航菜单 (保持与全局一致) -->
@@ -449,7 +576,7 @@
                         </div>
                         <div class="space-y-1">
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">所属行业 (GB/T 4754) <span class="text-red-500">*</span></label>
-                            <select class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                            <select id="industry-code" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" onchange="calculateRatio()">
                                 <option value="I6510">软件开发 (I6510)</option>
                                 <option value="I6520">信息系统集成服务 (I6520)</option>
                                 <option value="C39">计算机、通信和其他电子设备制造业 (C39)</option>
@@ -476,21 +603,33 @@
                     <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-1">
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">高新技术企业证书号</label>
-                            <input type="text" value="GR20233200XXXX" class="w-full px-3 py-2 border border-gray-200 rounded-lg outline-none">
+                            <input type="text" id="hitech-cert" value="GR20233200XXXX" class="w-full px-3 py-2 border border-gray-200 rounded-lg outline-none" onchange="calculateRatio()">
                         </div>
                         <div class="space-y-1">
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">证书到期日期</label>
                             <div class="relative">
-                                <input type="date" value="2026-11-20" class="w-full px-3 py-2 border border-gray-200 rounded-lg outline-none">
+                                <input type="date" id="hitech-expire" value="2026-11-20" class="w-full px-3 py-2 border border-gray-200 rounded-lg outline-none" onchange="calculateRatio()">
                                 <span class="absolute right-10 top-2.5 text-xs text-orange-600 font-bold">距离到期 210 天</span>
                             </div>
                         </div>
                         <div class="space-y-1">
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">科技型中小企业编号</label>
+                            <input type="text" id="smbt-cert" value="" placeholder="如：202332010400XXXX" class="w-full px-3 py-2 border border-gray-200 rounded-lg outline-none" onchange="calculateRatio()">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">科技型中小企业到期日期</label>
+                            <input type="date" id="smbt-expire" value="" class="w-full px-3 py-2 border border-gray-200 rounded-lg outline-none" onchange="calculateRatio()">
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">研发费用加计扣除比例 (%)</label>
+                            <div id="ratio-result" class="mt-2"></div>
                             <div class="flex items-center space-x-4 mt-2">
-                                <label class="flex items-center"><input type="radio" name="ratio" class="mr-2" checked> 100%</label>
-                                <label class="flex items-center"><input type="radio" name="ratio" class="mr-2"> 75%</label>
-                                <label class="flex items-center"><input type="radio" name="ratio" class="mr-2"> 其他</label>
+                                <label class="flex items-center"><input type="radio" name="ratio" value="100" class="mr-2"> 100%</label>
+                                <label class="flex items-center"><input type="radio" name="ratio" value="75" class="mr-2"> 75%</label>
+                                <label class="flex items-center"><input type="radio" name="ratio" value="other" class="mr-2"> 其他</label>
+                                <button onclick="calculateRatio()" class="ml-4 px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded hover:bg-blue-600">
+                                    <i class="fa fa-calculator mr-1"></i> 重新计算
+                                </button>
                             </div>
                         </div>
                         <div class="space-y-1">
