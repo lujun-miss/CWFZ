@@ -102,6 +102,41 @@
                 gap: 2px;
             }
         }
+        .help-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 10px;
+            line-height: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 4px;
+            vertical-align: middle;
+            transition: background-color 0.2s ease;
+        }
+        .help-icon:hover {
+            background-color: #2563eb;
+        }
+        .help-tooltip {
+            position: absolute;
+            background-color: #1f2937;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.5;
+            max-width: 300px;
+            z-index: 1000;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .help-tooltip.visible {
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -366,7 +401,7 @@
                             <li>
                                 <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-flask w-6"></i>
-                                    <span>R&D统计</span>
+                                    <span>统计局R&D口径</span>
                                 </a>
                             </li>
                             <li>
@@ -542,6 +577,9 @@
                     <button id="generate-report" class="ml-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-sm">
                         <i class="fa fa-refresh mr-1"></i> 生成报表
                     </button>
+                    <button id="top-export-btn" class="ml-auto px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors shadow-sm flex items-center">
+                        <i class="fa fa-download mr-1"></i> 导出报表
+                    </button>
                 </div>
                 
                 <!-- 报表内容区域 -->
@@ -551,13 +589,29 @@
                     <div class="mb-2 border-b border-gray-200">
                         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="hi-techTabs" role="tablist">
                             <li class="mr-2" role="presentation">
-                                <button class="inline-block p-4 border-b-2 border-blue-500 text-blue-600 rounded-t-lg active" id="hi-tech-summary-tab" data-tab="hi-tech-summary" type="button" role="tab" aria-selected="true">研发费用归集汇总表</button>
+                                <button class="inline-flex items-center p-4 border-b-2 border-blue-500 text-blue-600 rounded-t-lg active" id="hi-tech-summary-tab" data-tab="hi-tech-summary" type="button" role="tab" aria-selected="true">
+                                    <i class="fa fa-table mr-2"></i>研发费用归集汇总表
+                                </button>
                             </li>
                             <li class="mr-2" role="presentation">
-                                <button class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="hi-tech-voucher-tab" data-tab="hi-tech-voucher" type="button" role="tab" aria-selected="false">研发支出辅助账明细表</button>
+                                <button class="inline-flex items-center p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="hi-tech-voucher-tab" data-tab="hi-tech-voucher" type="button" role="tab" aria-selected="false">
+                                    <i class="fa fa-book mr-2"></i>研发支出辅助账明细表
+                                </button>
+                            </li>
+                            <li class="mr-2" role="presentation">
+                                <button class="inline-flex items-center p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="hi-tech-ratio-tab" data-tab="hi-tech-ratio" type="button" role="tab" aria-selected="false">
+                                    <i class="fa fa-pie-chart mr-2"></i>研发费用总额及比例表
+                                </button>
+                            </li>
+                            <li class="mr-2" role="presentation">
+                                <button class="inline-flex items-center p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="hi-tech-structure-tab" data-tab="hi-tech-structure" type="button" role="tab" aria-selected="false">
+                                    <i class="fa fa-bar-chart mr-2"></i>年度研究开发费用结构明细表
+                                </button>
                             </li>
                             <li role="presentation">
-                                <button class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="hi-tech-ratio-tab" data-tab="hi-tech-ratio" type="button" role="tab" aria-selected="false">研发费用总额及比例表</button>
+                                <button class="inline-flex items-center p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="hi-tech-benefit-tab" data-tab="hi-tech-benefit" type="button" role="tab" aria-selected="false">
+                                    <i class="fa fa-file-text-o mr-2"></i>高新技术企业优惠情况及明细表
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -572,18 +626,18 @@
                                     <table class="min-w-full divide-y divide-gray-200">
                                         <thead class="bg-gray-50">
                                             <tr>
-                                                <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">项目编号</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">项目编号</th>
                                                 <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">项目名称</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">人员人工费</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">直接投入</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">折旧与长期待摊费用</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">无形资产摊销</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">设计费</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">装备调试与试验费</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">委托内部研发</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">委托外部研发</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">其他费用</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">合计</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">人员人工费</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">直接投入</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">折旧与长期待摊费用</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">无形资产摊销</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">设计费</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">装备调试与试验费</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">委托内部研发</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">委托外部研发</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">其他费用</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">允许归集金额合计<span class="help-icon" title="指在帐载金额基础上，根据相关政策规定进行剔除或限额调整后，最终计入研发支出的金额。">?</span></th>
                                             </tr>
                                         </thead>
                                         <tbody class="divide-y divide-gray-200">
@@ -651,10 +705,19 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="mt-4 flex justify-between items-center text-sm text-gray-700">
-                                    <div>法定代表人（签章）：</div>
-                                    <div>财务负责人（签章）：</div>
-                                    <div>制表人：管理员</div>
+                                <div class="mt-4 flex justify-between items-center text-sm text-gray-700 px-2">
+                                    <div class="flex items-center">
+                                        <span class="font-medium">单位负责人（签章）：</span>
+                                        <div class="w-32 border-b border-gray-400 ml-2"></div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="font-medium">财务负责人（签章）：</span>
+                                        <div class="w-32 border-b border-gray-400 ml-2"></div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="font-medium">制表人：</span>
+                                        <div class="w-24 border-b border-gray-400 ml-2">管理员</div>
+                                    </div>
                                 </div>
                                 <div class="mt-2 text-xs text-gray-500 italic">
                                     备注：表中的数据都是已经经限额调整后的其他相关费用、允许汇集的委托研发费用
@@ -705,17 +768,16 @@
                                                 <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap" rowspan="2">序号</th>
                                                 <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap" colspan="4">凭证信息</th>
                                                 <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap" colspan="2">金额</th>
-                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap" colspan="6">费用明细（税法规定）</th>
-                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap" colspan="2">委托研发费用</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap" colspan="8">费用明细<span class="help-icon" title="指根据政策口径拆解后的各项具体费用金额，各列金额之和应等于允许归集金额。">?</span></th>
                                                 <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap" rowspan="2">其他费用</th>
                                             </tr>
                                             <tr>
-                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20 whitespace-nowrap">日期</th>
-                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16 whitespace-nowrap">凭证字</th>
-                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20 whitespace-nowrap">凭证号</th>
+                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-20 whitespace-nowrap">日期</th>
+                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-16 whitespace-nowrap">凭证字</th>
+                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-20 whitespace-nowrap">凭证号</th>
                                                 <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px] whitespace-nowrap">摘要</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">帐载金额</th>
-                                                <th class="px-4 py-3 border-b text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">允许归集金额</th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">帐载金额<span class="help-icon" title="指财务会计凭证实际记载的金额，反映企业研发支出的原始投入。">?</span></th>
+                                                <th class="px-4 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">允许归集金额<span class="help-icon" title="指在帐载金额基础上，根据相关政策规定进行剔除或限额调整后，最终计入研发支出的金额。">?</span></th>
                                                 <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">人员人工费</th>
                                                 <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">直接投入</th>
                                                 <th class="px-4 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">折旧与长期待摊费用</th>
@@ -728,11 +790,11 @@
                                         </thead>
                                         <tbody class="divide-y divide-gray-200">
                                             <tr>
-                                                <td class="px-4 py-3 border-b">1</td>
+                                                <td class="px-4 py-3 border-b text-center text-sm">1</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">2026-01</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">记</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">0001</td>
-                                                <td class="px-2 py-3 border-b text-sm">研发人员工资</td>
+                                                <td class="px-2 py-3 border-b text-sm text-left">研发人员工资</td>
                                                 <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
@@ -746,11 +808,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">2</td>
+                                                <td class="px-4 py-3 border-b text-center text-sm">2</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">2026-02</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">记</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">0002</td>
-                                                <td class="px-2 py-3 border-b text-sm">研发材料采购</td>
+                                                <td class="px-2 py-3 border-b text-sm text-left">研发材料采购</td>
                                                 <td class="px-4 py-3 border-b text-right">¥3,750.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥3,750.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -764,11 +826,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">3</td>
+                                                <td class="px-4 py-3 border-b text-center text-sm">3</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">2026-03</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">记</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">0003</td>
-                                                <td class="px-2 py-3 border-b text-sm">研发设备折旧</td>
+                                                <td class="px-2 py-3 border-b text-sm text-left">研发设备折旧</td>
                                                 <td class="px-4 py-3 border-b text-right">¥1,250.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥1,250.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -782,11 +844,11 @@
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="px-4 py-3 border-b">4</td>
+                                                <td class="px-4 py-3 border-b text-center text-sm">4</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">2026-04</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">记</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">0004</td>
-                                                <td class="px-2 py-3 border-b text-sm">软件摊销</td>
+                                                <td class="px-2 py-3 border-b text-sm text-left">软件摊销</td>
                                                 <td class="px-4 py-3 border-b text-right">¥833.33</td>
                                                 <td class="px-4 py-3 border-b text-right">¥833.33</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -957,6 +1019,141 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- 年度研究开发费用结构明细表 -->
+                        <div id="hi-tech-structure" class="tab-pane hidden">
+                            <div class="mb-4">
+                                <h3 class="text-center text-lg font-medium text-gray-800 mb-4">2026年度研究开发费用结构明细表</h3>
+                                <div class="flex justify-between items-center mb-4 px-2">
+                                    <div class="text-sm text-gray-600">
+                                        <span class="font-medium text-gray-700">企业名称：</span>研知科技股份有限公司
+                                    </div>
+                                    <div class="flex space-x-6 text-sm text-gray-600">
+                                        <div><span class="font-medium text-gray-700">年度：</span>2026</div>
+                                        <div><span class="font-medium text-gray-700">金额单位：</span>元</div>
+                                    </div>
+                                </div>
+                                <div class="overflow-x-auto w-full border rounded-lg shadow-sm">
+                                    <table class="min-w-full border-collapse">
+                                        <thead class="bg-gray-50 text-xs font-bold text-gray-700 uppercase">
+                                            <tr>
+                                                <th class="px-4 py-3 border border-gray-300 text-center w-12" rowspan="2">行次</th>
+                                                <th class="px-4 py-3 border border-gray-300 text-left" rowspan="2">指标项目</th>
+                                                <th class="px-4 py-3 border border-gray-300 text-center" colspan="3">项目明细</th>
+                                                <th class="px-4 py-3 border border-gray-300 text-center w-40" rowspan="2">金额</th>
+                                            </tr>
+                                            <tr class="bg-gray-50">
+                                                <th class="px-4 py-2 border border-gray-300 text-center text-gray-600">RD02 人工智能</th>
+                                                <th class="px-4 py-2 border border-gray-300 text-center text-gray-600">RD03 新能源</th>
+                                                <th class="px-4 py-2 border border-gray-300 text-center text-gray-600">RD04 医疗科技</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-sm">
+                                            <tr class="hover:bg-blue-50/30">
+                                                <td class="px-4 py-3 border border-gray-300 text-center text-gray-500">1</td>
+                                                <td class="px-4 py-3 border border-gray-300 font-medium">1. 人员人工费用 <span class="text-[10px] text-blue-500 font-normal ml-2">[系统提取]</span></td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">120,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">150,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">180,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right font-bold text-blue-700 bg-blue-50/20">450,000.00</td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/30">
+                                                <td class="px-4 py-3 border border-gray-300 text-center text-gray-500">2</td>
+                                                <td class="px-4 py-3 border border-gray-300 font-medium">2. 直接投入费用 <span class="text-[10px] text-blue-500 font-normal ml-2">[系统提取]</span></td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">45,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">60,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">75,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right font-bold text-blue-700 bg-blue-50/20">180,000.00</td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/30">
+                                                <td class="px-4 py-3 border border-gray-300 text-center text-gray-500">3</td>
+                                                <td class="px-4 py-3 border border-gray-300 font-medium">3. 折旧费用与长期待摊费用 <span class="text-[10px] text-blue-500 font-normal ml-2">[系统提取]</span></td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">15,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">20,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">25,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right font-bold text-blue-700 bg-blue-50/20">60,000.00</td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/30">
+                                                <td class="px-4 py-3 border border-gray-300 text-center text-gray-500">4</td>
+                                                <td class="px-4 py-3 border border-gray-300 font-medium">4. 无形资产摊销费用 <span class="text-[10px] text-blue-500 font-normal ml-2">[系统提取]</span></td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">10,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">15,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">20,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right font-bold text-blue-700 bg-blue-50/20">45,000.00</td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/30">
+                                                <td class="px-4 py-3 border border-gray-300 text-center text-gray-500">5</td>
+                                                <td class="px-4 py-3 border border-gray-300 font-medium">5. 设计费用 <span class="text-[10px] text-blue-500 font-normal ml-2">[系统提取]</span></td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">8,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">12,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">15,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right font-bold text-blue-700 bg-blue-50/20">35,000.00</td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/30">
+                                                <td class="px-4 py-3 border border-gray-300 text-center text-gray-500">6</td>
+                                                <td class="px-4 py-3 border border-gray-300 font-medium">6. 装备调试费用与试验费用 <span class="text-[10px] text-blue-500 font-normal ml-2">[系统提取]</span></td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">5,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">7,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">10,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right font-bold text-blue-700 bg-blue-50/20">22,000.00</td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/30">
+                                                <td class="px-4 py-3 border border-gray-300 text-center text-gray-500">7</td>
+                                                <td class="px-4 py-3 border border-gray-300 font-medium">7. 委托外部研究开发费用 <span class="text-[10px] text-blue-500 font-normal ml-2">[系统提取]</span></td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">12,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">18,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">22,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right font-bold text-blue-700 bg-blue-50/20">52,000.00</td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/30">
+                                                <td class="px-4 py-3 border border-gray-300 text-center text-gray-500">8</td>
+                                                <td class="px-4 py-3 border border-gray-300 font-medium">8. 其他费用 <span class="text-[10px] text-blue-500 font-normal ml-2">[系统提取]</span></td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">6,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">8,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">12,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right font-bold text-blue-700 bg-blue-50/20">26,000.00</td>
+                                            </tr>
+                                            <tr class="bg-gray-100 font-bold">
+                                                <td class="px-4 py-3 border border-gray-300 text-center">9</td>
+                                                <td class="px-4 py-3 border border-gray-300">研究开发费用合计</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">221,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">290,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right">359,000.00</td>
+                                                <td class="px-4 py-3 border border-gray-300 text-right text-blue-800 bg-blue-100/50">870,000.00</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-8 flex justify-between items-center text-sm text-gray-700 px-2">
+                                    <div class="flex items-center">
+                                        <span class="font-medium">单位负责人：</span>
+                                        <div class="w-32 border-b border-gray-400 ml-2"></div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="font-medium">财务负责人：</span>
+                                        <div class="w-32 border-b border-gray-400 ml-2"></div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="font-medium">填表人：</span>
+                                        <div class="w-32 border-b border-gray-400 ml-2">管理员</div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800 flex items-start">
+                                    <i class="fa fa-info-circle mt-0.5 mr-2"></i>
+                                    <div>
+                                        <p class="font-bold mb-1">报表生成说明：</p>
+                                        <p>1. 本表按照高企认定 8 大类费用结构进行归集，横向展示各研发项目（RD02、RD03等）的投入明细。</p>
+                                        <p>2. 行次 1-8 对应高企认定法定 8 大类费用科目，行次 9 为年度总计。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 高新技术企业优惠情况及明细表 (A107041) -->
+                        <div id="hi-tech-benefit" class="tab-pane hidden">
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 flex justify-center">
+                                <img src="高新技术企业优惠情况及明细表.png" alt="高新技术企业优惠情况及明细表" class="max-w-full h-auto shadow-lg rounded-lg">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -1023,13 +1220,15 @@
                 const tabTitleMap = {
                     'hi-tech-summary': '研发费用归集汇总表',
                     'hi-tech-voucher': '研发支出辅助账明细表',
-                    'hi-tech-ratio': '研发费用总额及比例表'
+                    'hi-tech-ratio': '研发费用总额及比例表',
+                    'hi-tech-structure': '年度研究开发费用结构明细表',
+                    'hi-tech-benefit': '高新技术企业优惠情况及明细表'
                 };
                 alert(year + '年度 ' + (tabTitleMap[activeTabId] || '报表') + ' 已生成');
             });
             
             // 导出按钮点击事件
-            const exportBtn = document.getElementById('export-btn');
+            const exportBtn = document.getElementById('top-export-btn');
             if (exportBtn) {
                 exportBtn.addEventListener('click', function() {
                     const activeTab = document.querySelector('.tab-pane:not(.hidden)');
@@ -1043,7 +1242,9 @@
                     const tabTitleMap = {
                         'hi-tech-summary': '研发费用归集汇总表',
                         'hi-tech-voucher': '研发支出辅助账明细表',
-                        'hi-tech-ratio': '研发费用总额及比例表'
+                        'hi-tech-ratio': '研发费用总额及比例表',
+                        'hi-tech-structure': '年度研究开发费用结构明细表',
+                        'hi-tech-benefit': '高新技术企业优惠情况及明细表'
                     };
                     const fileName = (tabTitleMap[activeTabId] || '报表') + '_' + document.getElementById('year-select').value + '年.xlsx';
                     
@@ -1085,7 +1286,45 @@
                 // 初始计算一次
                 updateRatioTable();
             }
+
+            // 为帮助图标添加点击事件
+            document.querySelectorAll('.help-icon').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showHelpTip(this);
+                });
+            });
         });
+
+        // 帮助提示功能
+        function showHelpTip(element) {
+            // 移除其他已显示的提示
+            document.querySelectorAll('.help-tooltip').forEach(tip => {
+                tip.remove();
+            });
+            
+            const tooltip = document.createElement('div');
+            tooltip.className = 'help-tooltip';
+            tooltip.textContent = element.getAttribute('title');
+            
+            const rect = element.getBoundingClientRect();
+            tooltip.style.left = (rect.right + 8) + 'px';
+            tooltip.style.top = rect.top + 'px';
+            
+            document.body.appendChild(tooltip);
+            tooltip.classList.add('visible');
+            
+            // 点击其他地方关闭提示
+            const closeTooltip = function(e) {
+                if (!element.contains(e.target) && !tooltip.contains(e.target)) {
+                    tooltip.remove();
+                    document.removeEventListener('click', closeTooltip);
+                }
+            };
+            setTimeout(() => {
+                document.addEventListener('click', closeTooltip);
+            }, 10);
+        }
 
         // 格式化金额
         function formatMoney(amount) {

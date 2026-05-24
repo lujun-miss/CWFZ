@@ -87,7 +87,7 @@
 <body class="bg-gray-50">
     <div class="flex h-screen overflow-hidden">
         <!-- 左侧导航栏 -->
-        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto" style="max-height: 100vh;">
+        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto flex-none fixed left-0 top-0 h-screen" style="max-height: 100vh;">
             <!-- 系统标题 -->
             <div class="p-4 border-b border-gray-200">
                 <h1 class="text-xl font-bold text-primary flex items-center">
@@ -346,7 +346,7 @@
                             <li>
                                 <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-flask w-6"></i>
-                                    <span>R&D统计</span>
+                                    <span>统计局R&D口径</span>
                                 </a>
                             </li>
                             <li>
@@ -484,10 +484,10 @@
             </nav>
         </div>
         
-        <!-- 右侧主内容区域 -->
-        <div class="flex-1 flex flex-col">
+        <!-- 右侧主内容区域 - 修复：使用 calc 计算宽度，防止被 ml-64 挤出屏幕 -->
+        <div class="w-[calc(100%-16rem)] ml-64 flex flex-col h-screen overflow-hidden">
             <!-- 顶部信息栏 -->
-            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6 flex-none">
                 <div class="flex items-center">
                     <h2 id="page-title" class="text-lg font-medium text-gray-800">首页</h2>
                 </div>

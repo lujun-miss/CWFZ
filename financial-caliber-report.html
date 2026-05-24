@@ -389,7 +389,7 @@
                             <li>
                                 <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-flask w-6"></i>
-                                    <span>R&D统计</span>
+                                    <span>统计局R&D口径</span>
                                 </a>
                             </li>
                             <li>
@@ -553,8 +553,8 @@
                 </div>
                 
                 <!-- 年份选择 -->
-                <div class="mb-4 flex items-center">
-                    <label class="mr-4 text-gray-700">选择年度：</label>
+                <div class="mb-6 flex items-center bg-white p-4 rounded-lg shadow-sm">
+                    <label class="mr-4 text-gray-700 font-medium">选择年度：</label>
                     <select id="year-select" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="2026">2026年</option>
                         <option value="2025">2025年</option>
@@ -562,8 +562,11 @@
                         <option value="2023">2023年</option>
                         <option value="2022">2022年</option>
                     </select>
-                    <button id="generate-report" class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                        生成报表
+                    <button id="generate-report" class="ml-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-sm">
+                        <i class="fa fa-refresh mr-1"></i> 生成报表
+                    </button>
+                    <button id="top-export-btn" class="ml-auto px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors shadow-sm flex items-center">
+                        <i class="fa fa-download mr-1"></i> 导出报表
                     </button>
                 </div>
                 
@@ -589,9 +592,6 @@
                     
                     <!-- 导出按钮 -->
                     <div class="mb-4 flex justify-end">
-                        <button id="export-btn" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center">
-                            <i class="fa fa-download mr-1"></i> 导出
-                        </button>
                     </div>
                     
                     <!-- 标签页内容 -->
@@ -1105,14 +1105,19 @@
                         <div id="financial-voucher" class="tab-pane hidden">
                             <div class="mb-4 bg-white p-4 rounded-lg border border-gray-200">
                                 <h3 class="text-center text-lg font-medium text-gray-800 mb-4">2021版研发支出辅助账（样式）</h3>
-                                <!-- 项目切换选择器 -->
-                                <div class="mb-6 flex items-center">
-                                    <label class="mr-4 text-gray-700 font-medium">切换研发项目：</label>
-                                    <select id="project-selector" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px]" onchange="switchProject(this.value)">
-                                        <option value="RD02">RD02 - 人工智能</option>
-                                        <option value="RD03">RD03 - 新能源</option>
-                                        <option value="RD04">RD04 - 医疗科技</option>
-                                    </select>
+                                <!-- 项目切换选项卡 -->
+                                <div class="mb-6 border-b border-gray-200">
+                                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="projectTabs">
+                                        <li class="mr-2">
+                                            <button class="inline-block p-2 border-b-2 border-blue-500 text-blue-600 rounded-t-lg active project-tab" data-project="RD02" onclick="switchProject('RD02')">RD02 - 人工智能</button>
+                                        </li>
+                                        <li class="mr-2">
+                                            <button class="inline-block p-2 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg project-tab" data-project="RD03" onclick="switchProject('RD03')">RD03 - 新能源</button>
+                                        </li>
+                                        <li class="mr-2">
+                                            <button class="inline-block p-2 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg project-tab" data-project="RD04" onclick="switchProject('RD04')">RD04 - 医疗科技</button>
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div class="flex flex-wrap items-center mb-4 gap-4">
                                     <div>
@@ -1142,23 +1147,23 @@
                                             <tr>
                                                 <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="4">凭证信息</th>
                                                 <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="2">金额</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="8">费用明细（税法规定）</th>
+                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider" colspan="8">费用明细<span class="help-icon" title="指根据政策口径拆解后的各项具体费用金额，各列金额之和应等于允许归集金额。">?</span></th>
                                             </tr>
                                             <tr>
                                                 <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
                                                 <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">种类</th>
                                                 <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">号数</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">摘要</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">会计凭证记载金额</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">税法规定的归集金额</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">人员人工费用</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">直接投入费用</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">折旧费用</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">无形资产摊销</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">新产品设计费等</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">其他相关费用</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">委托境内机构或个人进行研发活动所发生的费用</th>
-                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">委托境外机构进行研发活动所发生的费用</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">摘要</th>
+                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">会计凭证记载金额<span class="help-icon" title="指财务会计凭证实际记载的金额，反映企业研发支出的原始投入。">?</span></th>
+                                                <th class="px-2 py-3 border-b text-center text-xs font-medium text-gray-500 uppercase tracking-wider">允许归集金额<span class="help-icon" title="指在帐载金额基础上，根据相关政策规定进行剔除或限额调整后，最终计入研发支出的金额。">?</span></th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">人员人工费用</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">直接投入费用</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">折旧费用</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">无形资产摊销</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">新产品设计费等</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">其他相关费用</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">委托境内机构或个人进行研发活动所发生的费用</th>
+                                                <th class="px-2 py-3 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">委托境外机构进行研发活动所发生的费用</th>
                                             </tr>
                                         </thead>
                                         <tbody class="divide-y divide-gray-200">
@@ -1166,7 +1171,7 @@
                                                 <td class="px-2 py-3 border-b text-sm text-center">2026-01</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">记</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">0001</td>
-                                                <td class="px-2 py-3 border-b text-sm">研发人员工资</td>
+                                                <td class="px-2 py-3 border-b text-sm text-left">研发人员工资</td>
                                                 <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥10,000.00</td>
@@ -1182,7 +1187,7 @@
                                                 <td class="px-2 py-3 border-b text-sm text-center">2026-02</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">记</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">0002</td>
-                                                <td class="px-2 py-3 border-b text-sm">研发材料采购</td>
+                                                <td class="px-2 py-3 border-b text-sm text-left">研发材料采购</td>
                                                 <td class="px-4 py-3 border-b text-right">¥3,750.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥3,750.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -1198,7 +1203,7 @@
                                                 <td class="px-2 py-3 border-b text-sm text-center">2026-03</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">记</td>
                                                 <td class="px-2 py-3 border-b text-sm text-center">0003</td>
-                                                <td class="px-2 py-3 border-b text-sm">研发设备折旧</td>
+                                                <td class="px-2 py-3 border-b text-sm text-left">研发设备折旧</td>
                                                 <td class="px-4 py-3 border-b text-right">¥1,250.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥1,250.00</td>
                                                 <td class="px-4 py-3 border-b text-right">¥0.00</td>
@@ -1358,48 +1363,51 @@
             });
             
             // 导出按钮点击事件
-            document.getElementById('export-btn').addEventListener('click', function() {
-                const activeTab = document.querySelector('.tab-pane:not(.hidden)');
-                const activeTabId = activeTab ? activeTab.id : 'financial-detail';
-                const table = activeTab.querySelector('table');
-                if (!table) {
-                    alert('没有可导出的数据');
-                    return;
-                }
-                
-                const tabTitleMap = {
-                    'financial-detail': '财务加计扣除辅助账明细表',
-                    'financial-summary': '财务加计扣除辅助账汇总表',
-                    'financial-voucher': '序时记账凭证一览表'
-                };
-                const fileName = tabTitleMap[activeTabId] + '_' + document.getElementById('year-select').value + '年.xlsx';
-                
-                // 创建CSV内容
-                let csvContent = '';
-                const rows = table.querySelectorAll('tr');
-                rows.forEach(row => {
-                    const cols = row.querySelectorAll('th, td');
-                    const rowData = [];
-                    cols.forEach(col => {
-                        let text = col.innerText.replace(/"/g, '""');
-                        rowData.push('"' + text + '"');
+            const exportBtn = document.getElementById('top-export-btn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', function() {
+                    const activeTab = document.querySelector('.tab-pane:not(.hidden)');
+                    const activeTabId = activeTab ? activeTab.id : 'financial-detail';
+                    const table = activeTab.querySelector('table');
+                    if (!table) {
+                        alert('没有可导出的数据');
+                        return;
+                    }
+                    
+                    const tabTitleMap = {
+                        'financial-detail': '财务加计扣除辅助账明细表',
+                        'financial-summary': '财务加计扣除辅助账汇总表',
+                        'financial-voucher': '序时记账凭证一览表'
+                    };
+                    const fileName = tabTitleMap[activeTabId] + '_' + document.getElementById('year-select').value + '年.xlsx';
+                    
+                    // 创建CSV内容
+                    let csvContent = '';
+                    const rows = table.querySelectorAll('tr');
+                    rows.forEach(row => {
+                        const cols = row.querySelectorAll('th, td');
+                        const rowData = [];
+                        cols.forEach(col => {
+                            let text = col.innerText.replace(/"/g, '""');
+                            rowData.push('"' + text + '"');
+                        });
+                        csvContent += rowData.join(',') + '\n';
                     });
-                    csvContent += rowData.join(',') + '\n';
+                    
+                    // 添加BOM以支持UTF-8编码
+                    const BOM = '\uFEFF';
+                    csvContent = BOM + csvContent;
+                    
+                    // 创建下载链接
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = fileName.replace('.xlsx', '.csv');
+                    link.click();
+                    
+                    alert(fileName.replace('.xlsx', '.csv') + ' 已导出');
                 });
-                
-                // 添加BOM以支持UTF-8编码
-                const BOM = '\uFEFF';
-                csvContent = BOM + csvContent;
-                
-                // 创建下载链接
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = fileName.replace('.xlsx', '.csv');
-                link.click();
-                
-                alert(fileName.replace('.xlsx', '.csv') + ' 已导出');
-            });
+            }
             
             // 为帮助图标添加点击事件
             document.querySelectorAll('.help-icon').forEach(icon => {
@@ -1543,11 +1551,16 @@
                 document.getElementById('v-project-status').textContent = data.status;
                 document.getElementById('v-project-type').textContent = data.type;
                 
-                // 更新下拉选择器 UI
-                const selector = document.getElementById('project-selector');
-                if (selector) {
-                    selector.value = projectId;
-                }
+                // 更新选项卡 UI
+                document.querySelectorAll('.project-tab').forEach(tab => {
+                    if (tab.getAttribute('data-project') === projectId) {
+                        tab.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+                        tab.classList.add('border-blue-500', 'text-blue-600', 'active');
+                    } else {
+                        tab.classList.remove('border-blue-500', 'text-blue-600', 'active');
+                        tab.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+                    }
+                });
             }
         }
 

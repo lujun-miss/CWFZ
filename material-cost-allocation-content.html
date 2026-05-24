@@ -68,6 +68,7 @@
                                 <option value="直接投入-材料费用">直接投入-材料费用</option>
                                 <option value="直接投入-能源费用">直接投入-能源费用</option>
                                 <option value="直接投入-检验费">直接投入-检验费</option>
+                                <option value="直接投入-维修费用">直接投入-维修费用</option>
                                 <option value="直接投入-固定资产租赁费">直接投入-固定资产租赁费</option>
                                 <option value="其他直接费用">其他直接费用</option>
                             </select>
@@ -173,6 +174,20 @@
                                         <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="reallocate(8)">撤回重算</a>
                                     </td>
                                 </tr>
+                                <tr class="table-row-hover">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">6</td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900 font-medium text-blue-600">直接投入-维修费用</div></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04</td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">智能传感器研发</div></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥ 4,500</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-04-20 10:30</td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">已锁定</span></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">张三</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                        <a href="javascript:void(0)" class="text-primary hover:text-blue-700" onclick="viewDetail(11)">查看</a>
+                                        <a href="javascript:void(0)" class="text-danger hover:text-red-700" onclick="reallocate(11)">撤回重算</a>
+                                    </td>
+                                </tr>
                             </tbody>
                             <tfoot class="bg-gray-50">
                                 <tr>
@@ -229,6 +244,14 @@
                     </div>
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">数据来源</label>
+                    <div class="p-3 bg-blue-50 border border-blue-100 rounded-md">
+                        <p class="text-xs text-blue-700 leading-relaxed">
+                            <i class="fa fa-info-circle mr-1"></i> 系统将自动从 <b>[维修费用管理]</b> 模块同步已标记为“研发关联”的维修单据，并根据设备所属项目进行自动分配。
+                        </p>
+                    </div>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">归集方式</label>
                     <select id="allocationMethod" class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed" disabled>
                         <option value="auto" selected>自动分配（按预设规则）</option>
@@ -281,6 +304,14 @@
                         <tfoot class="bg-gray-50"><tr><td colspan="5" class="px-4 py-2 text-right text-sm font-medium text-gray-700">合计：</td><td id="energyDetailTotal" class="px-4 py-2 text-sm font-bold text-gray-900"></td></tr></tfoot>
                     </table>
                 </div>
+                <div id="repairDetailSection" class="mt-6 hidden">
+                    <h4 class="text-md font-semibold text-gray-800 mb-3">维修费用明细</h4>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50"><tr><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">设备编号</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">设备名称</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">维修类型</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">维修内容</th><th class="px-4 py-2 text-left text-xs font-medium text-gray-500">金额</th></tr></thead>
+                        <tbody id="repairDetailBody" class="bg-white divide-y divide-gray-200"></tbody>
+                        <tfoot class="bg-gray-50"><tr><td colspan="4" class="px-4 py-2 text-right text-sm font-medium text-gray-700">合计：</td><td id="repairDetailTotal" class="px-4 py-2 text-sm font-bold text-gray-900"></td></tr></tfoot>
+                    </table>
+                </div>
                 <div id="materialDetailSection" class="mt-6">
                     <h4 class="text-md font-semibold text-gray-800 mb-3">明细详情</h4>
                     <table class="min-w-full divide-y divide-gray-200">
@@ -307,7 +338,8 @@
             7: { type: '直接投入-检验费', month: '2026-04', project: '新能源材料研究', material: '产品检验', amount: '¥ 12,000', time: '2026-04-19 10:00', operator: '王五', items: [{ name: '性能可靠性测试', supplier: '国家检测中心', type: '第三方检测', quantity: 3, unit: '批', unitPrice: '¥ 4,000', amount: '¥ 12,000' }] },
             8: { type: '直接投入-固定资产租赁费', month: '2026-04', project: '高精度数控机床', material: '设备租赁', amount: '¥ 20,000', time: '2026-04-10 09:00', operator: '赵六', items: [{ name: '五轴加工中心', supplier: '德国DMG', type: '设备租赁', monthlyRent: '¥ 15,000', period: '1个月', amount: '¥ 15,000' }, { name: '激光切割机', supplier: '大族激光', type: '设备租赁', monthlyRent: '¥ 5,000', period: '1个月', amount: '¥ 5,000' }] },
             9: { type: '直接投入-场地租赁', month: '2026-04', project: '智能传感器研发', material: '场地租赁', amount: '¥ 8,000', time: '2026-04-01 08:00', operator: '张三', items: [{ name: '研发实验室', supplier: '科技园物业', type: '场地租赁', monthlyRent: '¥ 8,000', period: '1个月', amount: '¥ 8,000' }] },
-            10: { type: '直接投入-检验费', month: '2026-04', project: '工业机器人控制系统', material: '环境测试', amount: '¥ 6,200', time: '2026-04-22 14:30', operator: '李四', items: [{ name: '高低温测试', supplier: '苏州检测中心', type: '第三方检测', quantity: 2, unit: '次', unitPrice: '¥ 2,100', amount: '¥ 4,200' }, { name: '振动测试', supplier: '苏州检测中心', type: '第三方检测', quantity: 1, unit: '次', unitPrice: '¥ 2,000', amount: '¥ 2,000' }] }
+            10: { type: '直接投入-检验费', month: '2026-04', project: '工业机器人控制系统', material: '环境测试', amount: '¥ 6,200', time: '2026-04-22 14:30', operator: '李四', items: [{ name: '高低温测试', supplier: '苏州检测中心', type: '第三方检测', quantity: 2, unit: '次', unitPrice: '¥ 2,100', amount: '¥ 4,200' }, { name: '振动测试', supplier: '苏州检测中心', type: '第三方检测', quantity: 1, unit: '次', unitPrice: '¥ 2,000', amount: '¥ 2,000' }] },
+            11: { type: '直接投入-维修费用', month: '2026-04', project: '智能传感器研发', material: '精密测量仪维修', amount: '¥ 4,500', time: '2026-04-20 10:30', operator: '张三', items: [{ eqNo: 'EQ-001', eqName: '精密测量仪', type: '维修', content: '年度校准及常规保养', amount: '¥ 2,500' }, { eqNo: 'EQ-003', eqName: '电子显微镜', type: '运维', content: '镜头清洁，光路校准', amount: '¥ 2,000' }] }
         };
 
         function openAllocationModal() { document.getElementById('allocationModal').classList.remove('hidden'); document.getElementById('allocationModal').classList.add('flex'); }
@@ -368,8 +400,9 @@
                 var inspectionSection = document.getElementById('inspectionDetailSection');
                 var rentalSection = document.getElementById('rentalDetailSection');
                 var energySection = document.getElementById('energyDetailSection');
+                var repairSection = document.getElementById('repairDetailSection');
                 var materialSection = document.getElementById('materialDetailSection');
-                inspectionSection.classList.add('hidden'); rentalSection.classList.add('hidden'); energySection.classList.add('hidden'); materialSection.classList.add('hidden');
+                inspectionSection.classList.add('hidden'); rentalSection.classList.add('hidden'); energySection.classList.add('hidden'); repairSection.classList.add('hidden'); materialSection.classList.add('hidden');
                 if (type.indexOf('检验费') !== -1) {
                     inspectionSection.classList.remove('hidden');
                     var tbody = document.getElementById('inspectionDetailBody');
@@ -409,6 +442,19 @@
                         tbody.appendChild(row);
                     }
                     document.getElementById('energyDetailTotal').textContent = '¥ ' + total.toLocaleString();
+                } else if (type.indexOf('维修费用') !== -1) {
+                    repairSection.classList.remove('hidden');
+                    var tbody = document.getElementById('repairDetailBody');
+                    tbody.innerHTML = '';
+                    var total = 0;
+                    for (var i = 0; i < detail.items.length; i++) {
+                        var item = detail.items[i];
+                        total += parseFloat(item.amount.replace(/[¥,]/g, ''));
+                        var row = document.createElement('tr');
+                        row.innerHTML = '<td class="px-4 py-2 text-sm">' + item.eqNo + '</td><td class="px-4 py-2 text-sm">' + item.eqName + '</td><td class="px-4 py-2 text-sm">' + item.type + '</td><td class="px-4 py-2 text-sm">' + item.content + '</td><td class="px-4 py-2 text-sm">' + item.amount + '</td>';
+                        tbody.appendChild(row);
+                    }
+                    document.getElementById('repairDetailTotal').textContent = '¥ ' + total.toLocaleString();
                 } else {
                     materialSection.classList.remove('hidden');
                     var tbody = document.getElementById('materialDetailBody');

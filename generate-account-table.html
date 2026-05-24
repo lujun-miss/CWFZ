@@ -598,11 +598,17 @@
             </div>
 
             <div id="stepPanel1" class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h3 class="text-lg font-medium text-gray-800 mb-4"><i class="fa fa-list-ul mr-2 text-blue-500"></i>选择报表口径</h3>
-                <p class="text-sm text-gray-500 mb-6">请选择需要生成的账套表口径类型，不同口径对应不同的费用归集规则和政策要求</p>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-800"><i class="fa fa-list-ul mr-2 text-blue-500"></i>选择报表口径</h3>
+                    <div class="flex items-center bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">
+                        <input type="checkbox" id="multiSelectToggle" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 mr-2" checked onchange="toggleMultiSelectMode()">
+                        <label for="multiSelectToggle" class="text-sm font-medium text-blue-800 cursor-pointer">多选模式 (一键生成多口径)</label>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mb-6">请选择需要生成的账套表口径类型。开启多选模式可一次性完成多种口径的数据校验与报表生成。</p>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4 selected" data-caliber="financial" onclick="selectCaliber('financial')">
+                <div id="caliberContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4 selected" data-caliber="financial" onclick="handleCaliberClick(this, 'financial')">
                         <div class="flex items-center mb-3">
                             <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                                 <i class="fa fa-calculator text-blue-600 text-xl"></i>
@@ -611,10 +617,13 @@
                                 <h4 class="font-medium text-gray-800">财务加计扣除</h4>
                             </div>
                         </div>
-                        <div class="mt-3 text-xs"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded">最常用</span></div>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-[10px]">最常用</span>
+                            <div class="check-icon text-blue-500"><i class="fa fa-check-circle"></i></div>
+                        </div>
                     </div>
 
-                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4" data-caliber="hiTech" onclick="selectCaliber('hiTech')">
+                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4" data-caliber="hiTech" onclick="handleCaliberClick(this, 'hiTech')">
                         <div class="flex items-center mb-3">
                             <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
                                 <i class="fa fa-line-chart text-green-600 text-xl"></i>
@@ -623,10 +632,13 @@
                                 <h4 class="font-medium text-gray-800">高企认定</h4>
                             </div>
                         </div>
-                        <div class="mt-3 text-xs"><span class="px-2 py-1 bg-purple-100 text-purple-700 rounded">高企资质</span></div>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px]">高企资质</span>
+                            <div class="check-icon text-blue-500 hidden"><i class="fa fa-check-circle"></i></div>
+                        </div>
                     </div>
 
-                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4" data-caliber="accounting" onclick="selectCaliber('accounting')">
+                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4" data-caliber="accounting" onclick="handleCaliberClick(this, 'accounting')">
                         <div class="flex items-center mb-3">
                             <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
                                 <i class="fa fa-book text-orange-600 text-xl"></i>
@@ -635,10 +647,13 @@
                                 <h4 class="font-medium text-gray-800">会计口径</h4>
                             </div>
                         </div>
-                        <div class="mt-3 text-xs"><span class="px-2 py-1 bg-gray-100 text-gray-700 rounded">会计核算</span></div>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-[10px]">会计核算</span>
+                            <div class="check-icon text-blue-500 hidden"><i class="fa fa-check-circle"></i></div>
+                        </div>
                     </div>
 
-                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4" data-caliber="rd" onclick="selectCaliber('rd')">
+                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4" data-caliber="rd" onclick="handleCaliberClick(this, 'rd')">
                         <div class="flex items-center mb-3">
                             <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
                                 <i class="fa fa-flask text-purple-600 text-xl"></i>
@@ -647,10 +662,13 @@
                                 <h4 class="font-medium text-gray-800">R&D统计</h4>
                             </div>
                         </div>
-                        <div class="mt-3 text-xs"><span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded">统计上报</span></div>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-[10px]">统计上报</span>
+                            <div class="check-icon text-blue-500 hidden"><i class="fa fa-check-circle"></i></div>
+                        </div>
                     </div>
 
-                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4" data-caliber="ipo" onclick="selectCaliber('ipo')">
+                    <div class="caliber-card border-2 border-gray-200 rounded-lg p-4" data-caliber="ipo" onclick="handleCaliberClick(this, 'ipo')">
                         <div class="flex items-center mb-3">
                             <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-3">
                                 <i class="fa fa-bank text-red-600 text-xl"></i>
@@ -659,11 +677,15 @@
                                 <h4 class="font-medium text-gray-800">IPO审查</h4>
                             </div>
                         </div>
-                        <div class="mt-3 text-xs"><span class="px-2 py-1 bg-pink-100 text-pink-700 rounded">上市准备</span></div>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="px-2 py-1 bg-pink-100 text-pink-700 rounded text-[10px]">上市准备</span>
+                            <div class="check-icon text-blue-500 hidden"><i class="fa fa-check-circle"></i></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mt-6 flex justify-end">
+                <div class="mt-6 flex justify-between items-center">
+                    <p class="text-sm text-gray-500">已选择 <span id="selectedCaliberCount" class="font-bold text-blue-600">1</span> 种口径</p>
                     <button onclick="goToStep(2)" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">下一步 <i class="fa fa-arrow-right ml-2"></i></button>
                 </div>
             </div>
@@ -774,36 +796,102 @@
                     </div>
 
                     <div>
-                        <h4 class="text-sm font-medium text-gray-700 mb-3"><i class="fa fa-eye mr-1"></i>费用构成预览</h4>
-                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                    <span class="text-sm text-gray-600">人员人工费用</span>
-                                    <span class="text-sm font-medium text-gray-800">¥1,250,000.00</span>
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="text-sm font-medium text-gray-700"><i class="fa fa-eye mr-1"></i>已选项目费用汇总 (账面原始数)</h4>
+                            <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-[10px] rounded border border-gray-200">未应用口径剔除</span>
+                        </div>
+                        
+                        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                            <!-- 顶部汇总 -->
+                            <div class="bg-blue-50/50 p-4 border-b border-gray-200">
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <p class="text-[10px] text-blue-600 font-bold uppercase tracking-wider mb-1">账面发生额汇总</p>
+                                        <p class="text-2xl font-black text-blue-900" id="previewTotalValue">¥3,180,000.00</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[10px] text-gray-400 font-medium">涵盖项目数</p>
+                                        <p class="text-sm font-bold text-gray-700"><span id="previewProjectCountDisplay">3</span> 个 RD 项目</p>
+                                    </div>
                                 </div>
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                    <span class="text-sm text-gray-600">直接投入费用</span>
-                                    <span class="text-sm font-medium text-gray-800">¥680,000.00</span>
+                            </div>
+
+                            <!-- 费用分类明细 -->
+                            <div class="p-4 space-y-2">
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-gray-500">1. 人员人工费用</span>
+                                    <span class="font-mono text-gray-700" id="preview_labor">¥0.00</span>
                                 </div>
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                    <span class="text-sm text-gray-600">折旧费用</span>
-                                    <span class="text-sm font-medium text-gray-800">¥420,000.00</span>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-gray-500">2. 直接投入费用</span>
+                                    <span class="font-mono text-gray-700" id="preview_material">¥0.00</span>
                                 </div>
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                    <span class="text-sm text-gray-600">无形资产摊销</span>
-                                    <span class="text-sm font-medium text-gray-800">¥180,000.00</span>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-gray-500">3. 折旧费用</span>
+                                    <span class="font-mono text-gray-700" id="preview_depreciation">¥0.00</span>
                                 </div>
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                    <span class="text-sm text-gray-600">其他费用</span>
-                                    <span class="text-sm font-medium text-gray-800">¥95,000.00</span>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-gray-500">4. 无形资产摊销</span>
+                                    <span class="font-mono text-gray-700" id="preview_intangible">¥0.00</span>
                                 </div>
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200 text-red-600">
-                                    <span class="text-sm">减：特殊收入冲减</span>
-                                    <span class="text-sm font-medium">-¥57,500.00</span>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-gray-500">5. 新产品设计费等</span>
+                                    <span class="font-mono text-gray-700" id="preview_design">¥0.00</span>
                                 </div>
-                                <div class="flex justify-between items-center py-2 bg-blue-50 -mx-4 px-4 rounded-b-lg">
-                                    <span class="text-sm font-bold text-blue-800">合计 (加计扣除基数)</span>
-                                    <span class="text-base font-bold text-blue-800">¥2,567,500.00</span>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-gray-500">6. 装备调试费用</span>
+                                    <span class="font-mono text-gray-700" id="preview_commission">¥0.00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-gray-500">7.1 委托境内研发费用</span>
+                                    <span class="font-mono text-gray-700" id="preview_external_domestic">¥0.00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-gray-500">7.2 委托境外研发费用</span>
+                                    <span class="font-mono text-gray-700" id="preview_external_overseas">¥0.00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-gray-500">8. 其他相关费用</span>
+                                    <span class="font-mono text-gray-700" id="preview_other">¥0.00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-[11px] text-red-500 pt-1 border-t border-gray-100">
+                                    <span>特殊收入冲减</span>
+                                    <span class="font-mono" id="preview_income">-¥0.00</span>
+                                </div>
+                            </div>
+
+                            <!-- 项目贡献构成 (点击展开) -->
+                            <div class="border-t border-gray-100">
+                                <button onclick="toggleProjectComposition()" class="w-full px-4 py-2.5 text-[11px] font-bold text-gray-500 hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                    <span><i class="fa fa-sitemap mr-1"></i> 查看项目费用构成 (全费用合计)</span>
+                                    <i class="fa fa-chevron-down transition-transform" id="compositionChevron"></i>
+                                </button>
+                                <div id="projectComposition" class="hidden bg-gray-50/50 px-4 py-3 border-t border-gray-100 space-y-2">
+                                    <p class="text-[9px] text-gray-400 mb-2 font-medium italic">* 以下金额为该项目下人工、材料、折旧等所有费用的账面汇总</p>
+                                    <!-- 这里由 JS 动态渲染 -->
+                                    <div class="flex justify-between items-center text-[10px]">
+                                        <span class="text-gray-600">RD02 人工智能项目</span>
+                                        <span class="font-bold text-gray-800">¥1,120,000.00</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-[10px]">
+                                        <span class="text-gray-600">RD03 新能源项目</span>
+                                        <span class="font-bold text-gray-800">¥850,000.00</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-[10px]">
+                                        <span class="text-gray-600">RD04 医疗科技项目</span>
+                                        <span class="font-bold text-gray-800">¥597,500.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-100">
+                            <div class="flex">
+                                <i class="fa fa-question-circle text-amber-500 mt-0.5 mr-3"></i>
+                                <div class="text-[11px] text-amber-800 leading-relaxed">
+                                    <p class="font-bold mb-1">为什么不显示口径金额？</p>
+                                    <p>此处预览的是<b>账面原始发生额</b>（即所有已选项目的总投入）。</p>
+                                    <p class="mt-1">由于您选择了 <span class="px-1.5 py-0.5 bg-amber-200 rounded font-bold" id="previewCaliberCount">1</span> 种口径，系统将在“下一步”针对每种口径的政策要求，对这些原始数据进行精准扣除和分类。</p>
                                 </div>
                             </div>
                         </div>
@@ -817,78 +905,84 @@
             </div>
 
             <div id="stepPanel3" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
-                <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-medium text-gray-800"><i class="fa fa-shield mr-2 text-blue-500"></i>规则校验</h3>
-                        <a href="enterprise-info.html" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
-                            <i class="fa fa-cog mr-1"></i> 配置企业合规规则
-                        </a>
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800"><i class="fa fa-shield mr-2 text-blue-500"></i>全口径合规性体检</h3>
+                        <p class="text-xs text-gray-400 mt-1">系统正基于 <span id="activeCaliberCount" class="text-blue-600 font-bold">1</span> 套政策库对 <span id="activeProjectName" class="text-indigo-600 font-bold">所有已选项目</span> 进行穿透校验</p>
                     </div>
+                    <a href="enterprise-info.html" class="px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg border border-gray-200 text-xs hover:bg-gray-100 transition-colors">
+                        <i class="fa fa-cog mr-1"></i> 规则配置
+                    </a>
+                </div>
                 
-                <div class="flex items-center mb-4">
-                    <span class="text-sm text-gray-600 mr-4">当前口径：</span>
-                    <span id="currentCaliberName" class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">财务加计扣除</span>
+                <!-- 口径切换标签页 -->
+                <div class="mb-4 border-b border-gray-100">
+                    <nav class="flex space-x-4" id="caliberTabsContainer" role="tablist">
+                        <!-- 由 JS 动态渲染口径标签 -->
+                    </nav>
                 </div>
 
-                <div id="validationProgress" class="mb-6">
-                    <div class="flex items-center">
-                        <div class="loading-spinner mr-3"></div>
-                        <span class="text-sm text-gray-600">正在校验数据合规性...</span>
+                <!-- 项目切换标签 (二级切换) -->
+                <div class="mb-6 flex items-center bg-gray-50 p-1.5 rounded-lg w-fit">
+                    <span class="text-[10px] text-gray-400 font-bold px-3 uppercase">项目穿透:</span>
+                    <div class="flex space-x-1" id="projectTabsContainer">
+                        <!-- 由 JS 动态渲染项目标签 -->
                     </div>
                 </div>
 
-                <div id="validationResults" class="hidden">
-                    <div id="validationSuccess" class="hidden mb-4">
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center">
-                            <i class="fa fa-check-circle text-green-500 text-2xl mr-3"></i>
-                            <div>
-                                <h4 class="text-green-800 font-medium">数据校验通过！</h4>
-                                <p class="text-sm text-green-600">您选择的数据符合 <span id="passedCaliberName">财务加计扣除</span> 口径的所有规则</p>
-                            </div>
-                        </div>
-                    </div>
+                <div id="validationProgress" class="mb-12 py-12 flex flex-col items-center justify-center hidden">
+                    <div class="loading-spinner mb-4"></div>
+                    <span class="text-sm text-gray-500">正在应用口径剔除规则并计算合规红线...</span>
+                </div>
 
-                    <div id="validationWarnings" class="hidden mb-4">
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                            <div class="flex items-center mb-3">
-                                <i class="fa fa-exclamation-triangle text-yellow-500 text-xl mr-2"></i>
-                                <h4 class="text-yellow-800 font-medium">发现 <span id="warningCount">0</span> 个需要注意的事项</h4>
+                <div id="validationResults" class="space-y-6">
+                    <!-- 1. 差异化调整表 (从账面到口径) -->
+                    <div class="border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-gray-50 px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+                            <div class="flex items-center space-x-4">
+                                <h4 class="text-xs font-bold text-gray-700">数据归集转换明细</h4>
+                                <!-- 动态插入口径限制规则标签 -->
+                                <div id="activeRuleTags" class="flex items-center gap-2"></div>
                             </div>
-                            <div id="warningList" class="space-y-2"></div>
+                            <span class="text-[10px] text-gray-400">金额单位：元</span>
                         </div>
-                    </div>
-
-                    <div id="validationErrors" class="hidden mb-4">
-                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                            <div class="flex items-center mb-3">
-                                <i class="fa fa-times-circle text-red-500 text-xl mr-2"></i>
-                                <h4 class="text-red-800 font-medium">发现 <span id="errorCount">0</span> 个规则冲突</h4>
-                            </div>
-                            <div id="errorList" class="space-y-2"></div>
-                        </div>
-                    </div>
-
-                    <div class="mt-6">
-                        <h4 class="text-sm font-medium text-gray-700 mb-3"><i class="fa fa-table mr-1"></i>费用明细校验表</h4>
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">费用类型</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">金额</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">占比</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">规则要求</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">校验结果</th>
+                            <table class="min-w-full divide-y divide-gray-100">
+                                <thead class="bg-white">
+                                    <tr class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">
+                                        <th class="px-4 py-3 text-left">费用类别</th>
+                                        <th class="px-4 py-3 text-right">账面原始金额</th>
+                                        <th class="px-4 py-3 text-right">口径调增/减</th>
+                                        <th class="px-4 py-3 text-right">口径最终金额</th>
+                                        <th class="px-4 py-3 text-left">增减原因</th>
+                                        <th class="px-4 py-3 text-center">状态</th>
                                     </tr>
                                 </thead>
-                                <tbody id="validationTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+                                <tbody id="caliberValidationTableBody" class="divide-y divide-gray-50 text-xs text-gray-600">
+                                    <!-- 动态渲染 -->
+                                </tbody>
                             </table>
                         </div>
                     </div>
+
+                    <!-- 3. 风险与冲突提示 -->
+                    <div id="caliberAlerts" class="space-y-3">
+                        <!-- 动态渲染 Error 和 Warning -->
+                    </div>
                 </div>
 
-                <div class="mt-6 flex justify-between">
-                    <button onclick="goToStep(2)" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center"><i class="fa fa-arrow-left mr-2"></i> 上一步</button>
-                    <button onclick="generateAccountTable()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center"><i class="fa fa-magic mr-2"></i> 一键生成账套表</button>
+                <div class="mt-8 pt-6 border-t border-gray-100 flex justify-between items-center">
+                    <button onclick="goToStep(2)" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-700 flex items-center transition-colors">
+                        <i class="fa fa-arrow-left mr-2"></i> 返回调整项目
+                    </button>
+                    <div class="flex space-x-3">
+                        <button onclick="window.print()" class="px-5 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-print mr-2"></i> 打印体检报告
+                        </button>
+                        <button onclick="generateAccountTable()" class="px-8 py-2 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 shadow-lg shadow-green-100 flex items-center transition-all">
+                            一键生成账套表 <i class="fa fa-magic ml-2"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -900,17 +994,32 @@
                         <i class="fa fa-check-circle text-green-500 text-2xl mr-3"></i>
                         <div>
                             <h4 class="text-green-800 font-medium">账套表生成成功！</h4>
-                            <p class="text-sm text-green-600">已为您生成 <span id="generatedTableName">2026年度 财务加计扣除辅助账套表</span></p>
+                            <p class="text-sm text-green-600">已为您成功生成以下账套表：</p>
+                            <div id="generatedTableName"></div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- 批量导出区域 -->
+                <div class="mb-8 p-6 bg-slate-50 rounded-xl border border-slate-200">
+                    <h4 class="text-sm font-bold text-slate-700 mb-4 flex items-center">
+                        <i class="fa fa-download mr-2"></i> 批量下载与导出
+                    </h4>
+                    <div id="batchExportList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- 动态生成的导出项 -->
+                    </div>
+                    <div class="mt-6 pt-6 border-t border-slate-200 flex justify-center">
+                        <button onclick="exportAllReports()" class="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center transition-all">
+                            <i class="fa fa-cloud-download mr-2 text-xl"></i> 一键打包下载所有报表 (ZIP)
+                        </button>
                     </div>
                 </div>
 
                 <div class="mb-4 border-b border-gray-200">
                     <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" role="tablist">
-                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-blue-500 text-blue-600 rounded-t-lg active" data-tab="detail" onclick="switchResultTab('detail')"><i class="fa fa-list-ul mr-1"></i> 明细表</button></li>
-                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" data-tab="summary" onclick="switchResultTab('summary')"><i class="fa fa-bar-chart mr-1"></i> 汇总表</button></li>
-                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" data-tab="voucher" onclick="switchResultTab('voucher')"><i class="fa fa-file-text-o mr-1"></i> 序时账凭证</button></li>
-                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" data-tab="comparison" onclick="switchResultTab('comparison')"><i class="fa fa-columns mr-1"></i> 多口径对比</button></li>
+                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-blue-500 text-blue-600 rounded-t-lg active" data-tab="detail" onclick="switchResultTab('detail')"><i class="fa fa-list-ul mr-1"></i> 数据预览 (明细)</button></li>
+                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" data-tab="summary" onclick="switchResultTab('summary')"><i class="fa fa-bar-chart mr-1"></i> 数据预览 (汇总)</button></li>
+                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" data-tab="comparison" onclick="switchResultTab('comparison')"><i class="fa fa-columns mr-1"></i> 多口径差异对比</button></li>
                     </ul>
                 </div>
 
@@ -1150,20 +1259,125 @@
                 </div>
             </div>
 
-            <div id="loadingDialog" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 text-center">
-                    <div class="loading-spinner mx-auto mb-4"></div>
-                    <p id="loadingMessage" class="text-gray-600">正在处理...</p>
+            <div id="loadingDialog" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center">
+                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+                    <!-- 头部：动态进度 -->
+                    <div class="p-6 bg-slate-50 border-b border-gray-100 text-center">
+                        <div class="relative w-20 h-20 mx-auto mb-4">
+                            <div class="absolute inset-0 border-4 border-blue-100 rounded-full"></div>
+                            <div id="loadingCircle" class="absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span id="batchPercent" class="text-lg font-black text-blue-600">0%</span>
+                            </div>
+                        </div>
+                        <h3 id="loadingTitle" class="text-lg font-bold text-gray-800">正在启动批处理引擎...</h3>
+                        <p id="loadingSubTitle" class="text-xs text-gray-400 mt-1">正在初始化多口径并行归集任务</p>
+                    </div>
+                    
+                    <!-- 任务队列清单 -->
+                    <div class="p-6 max-h-[300px] overflow-y-auto bg-white" id="batchTaskList">
+                        <!-- 任务项将由 JS 动态注入 -->
+                    </div>
+
+                    <!-- 底部：免责声明/提示 -->
+                    <div class="px-6 py-4 bg-blue-50 border-t border-blue-100">
+                        <div class="flex items-center text-[10px] text-blue-600">
+                            <i class="fa fa-info-circle mr-2"></i>
+                            <span>系统正在根据各口径政策（如加计10%限额、高企8大类规则）进行独立渲染，请勿关闭窗口...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        let selectedCaliber = 'financial';
+        let selectedCalibers = ['financial']; // 支持多选
+        let isMultiSelectMode = true; // 默认开启多选模式
         let currentStep = 1;
         let validationResults = { errors: [], warnings: [] };
         let accountTableData = null;
+
+        // 动态规则缓存，用于存储从 caliber-rule-config.html 抓取的政策文本和逻辑
+        const DYNAMIC_RULES_CACHE = {
+            financial: {
+                labor: { policy: '人员人工费：直接从事研发活动人员的工资薪金、五险一金等 (财税[2015]119号)' },
+                material: { policy: '直接投入：研发活动直接消耗的材料、燃料、动力费用，不包含房屋/场地租赁费，仅允许仪器设备租赁费 (财税[2015]119号)' },
+                depreciation: { policy: '折旧费用：用于研发活动的仪器、设备的折旧费，不含长期待摊费用 (财税[2015]119号)' },
+                intangible: { policy: '无形资产摊销：用于研发活动的软件、专利权、非专利技术摊销 (财税[2015]119号)' },
+                design: { policy: '新产品设计费：新产品设计、工艺规程制定、新药研制的临床试验费等 (财税[2015]119号)' },
+                commission: { policy: '装备调试费/田间试验费：加计扣除口径不包含此项费用 (财税[2015]119号)' },
+                externalDomestic: { policy: '委托境内机构或个人研发费用，按实际发生额的80%计入加计扣除基数' },
+                externalOverseas: { policy: '委托境外机构研发费用，按实际发生额 of 80% 计入，且不得超过境内费用的 2/3' },
+                otherLimit: { threshold: 0.10, policy: '其他相关费用：总额不得超过可加计扣除研发费用总额的10%', logic: '' }
+            },
+            hiTech: {
+                labor183: { policy: '科技人员在司工时限制：累计实际工作时间必须满 183 天以上 (高企指引)', logic: '' },
+                material: { policy: '直接投入：研发活动直接消耗的材料、燃料、动力费用 (高企指引)' },
+                depreciation: { policy: '折旧费用与长期待摊费用：用于研发活动的仪器、设备及研发场所的折旧费 (高企指引)' },
+                intangible: { policy: '无形资产摊销：用于研发活动的软件、知识产权等摊销 (高企指引)' },
+                design: { policy: '新产品设计费：新产品设计、工艺规程制定等费用 (高企指引)' },
+                commission: { policy: '装备调试与试验费用：工装准备、试制及检验、可靠性试验费等 (高企指引)' },
+                externalDomestic: { policy: '委托境内机构或个人研发费用，按实际发生额的80%计入 (高企指引)' },
+                externalOverseas: { policy: '委托境外机构研发费用，按实际发生额 of 80% 计入，且需满足境内占比要求 (高企指引)' },
+                otherLimit: { threshold: 0.20, policy: '其他相关费用：一般不得超过研发总费用的20% (高企指引)', logic: '' }
+            }
+        };
+
+        // 处理口径点击
+        function handleCaliberClick(element, caliber) {
+            if (isMultiSelectMode) {
+                // 多选逻辑
+                if (selectedCalibers.includes(caliber)) {
+                    // 如果只剩一个，不允许取消选择
+                    if (selectedCalibers.length > 1) {
+                        selectedCalibers = selectedCalibers.filter(c => c !== caliber);
+                        element.classList.remove('selected');
+                        element.querySelector('.check-icon').classList.add('hidden');
+                    }
+                } else {
+                    selectedCalibers.push(caliber);
+                    element.classList.add('selected');
+                    element.querySelector('.check-icon').classList.remove('hidden');
+                }
+            } else {
+                // 单选逻辑
+                selectedCalibers = [caliber];
+                document.querySelectorAll('.caliber-card').forEach(card => {
+                    card.classList.remove('selected');
+                    card.querySelector('.check-icon').classList.add('hidden');
+                });
+                element.classList.add('selected');
+                element.querySelector('.check-icon').classList.remove('hidden');
+            }
+            updateCaliberDisplay();
+        }
+
+        // 切换多选模式
+        function toggleMultiSelectMode() {
+            isMultiSelectMode = document.getElementById('multiSelectToggle').checked;
+            if (!isMultiSelectMode && selectedCalibers.length > 1) {
+                // 切换回单选时，只保留第一个
+                const first = selectedCalibers[0];
+                selectedCalibers = [first];
+                document.querySelectorAll('.caliber-card').forEach(card => {
+                    if (card.dataset.caliber === first) {
+                        card.classList.add('selected');
+                        card.querySelector('.check-icon').classList.remove('hidden');
+                    } else {
+                        card.classList.remove('selected');
+                        card.querySelector('.check-icon').classList.add('hidden');
+                    }
+                });
+            }
+            updateCaliberDisplay();
+        }
+
+        // 更新口径选择显示
+        function updateCaliberDisplay() {
+            document.getElementById('selectedCaliberCount').textContent = selectedCalibers.length;
+            localStorage.setItem(STORAGE_KEYS.selectedCaliber, JSON.stringify(selectedCalibers));
+        }
 
         const CALIBER_CONFIG = {
             financial: { name: '财务加计扣除', color: 'blue', rules: [
@@ -1219,9 +1433,26 @@
             validation: '/api/validate-cost-data'
         };
 
-        const MOCK_COST_DATA = {
-            laborCost: 1250000, materialCost: 680000, depreciationCost: 420000, intangibleCost: 180000, otherCost: 95000, outsourceCost: 350000, basicResearchCost: 180000, specialIncome: 57500
+        // 模拟各项目的原始账面数据
+        const PROJECT_MOCK_DATA = {
+            'RD01': {
+                laborCost: 450000, materialCost: 220000, depreciationCost: 150000, intangibleCost: 60000,
+                designCost: 40000, commissionCost: 30000, externalDomesticCost: 80000, externalOverseasCost: 50000,
+                otherCost: 35000, specialIncome: 15000, name: '智能机器人视觉系统研发'
+            },
+            'RD02': {
+                laborCost: 550000, materialCost: 310000, depreciationCost: 180000, intangibleCost: 80000,
+                designCost: 55000, commissionCost: 40000, externalDomesticCost: 90000, externalOverseasCost: 60000,
+                otherCost: 40000, specialIncome: 25000, name: '工业物联网边缘计算平台'
+            },
+            'RD03': {
+                laborCost: 250000, materialCost: 150000, depreciationCost: 90000, intangibleCost: 40000,
+                designCost: 25000, commissionCost: 15000, externalDomesticCost: 30000, externalOverseasCost: 40000,
+                otherCost: 20000, specialIncome: 17500, name: '高效能动力电池包设计'
+            }
         };
+
+        let MOCK_COST_DATA = PROJECT_MOCK_DATA['RD01']; // 动态指向当前正在查看的项目数据
 
         const STORAGE_KEYS = {
             selectedCaliber: 'account_table_caliber',
@@ -1269,125 +1500,29 @@
             updateProjectCount();
         }
 
-        function selectCaliber(caliber) {
-            selectedCaliber = caliber;
-            localStorage.setItem(STORAGE_KEYS.selectedCaliber, caliber);
-            document.querySelectorAll('.caliber-card').forEach(card => {
-                card.classList.remove('selected');
-                if (card.dataset.caliber === caliber) card.classList.add('selected');
-            });
-        }
-
-        async function fetchProjectCostData(year, projectIds) {
-            // 本地运行时直接返回模拟数据（避免API调用失败）
-            if (window.location.protocol === 'file:') {
-                console.info('本地运行模式，使用模拟数据');
-                return { ...MOCK_COST_DATA };
-            }
-            
-            try {
-                const response = await fetch(API_ENDPOINTS.costData + '?year=' + year + '&projects=' + projectIds.join(','));
-                if (!response.ok) throw new Error('数据获取失败');
-                const data = await response.json();
-                return {
-                    laborCost: data.laborCost || 0,
-                    materialCost: data.materialCost || 0,
-                    depreciationCost: data.depreciationCost || 0,
-                    intangibleCost: data.intangibleCost || 0,
-                    otherCost: data.otherCost || 0,
-                    outsourceCost: data.outsourceCost || 0,
-                    basicResearchCost: data.basicResearchCost || 0
-                };
-            } catch (error) {
-                console.warn('API调用失败，使用模拟数据:', error);
-                return { ...MOCK_COST_DATA };
-            }
-        }
-
-        async function fetchProjects(year) {
-            // 本地运行时直接返回模拟数据
-            if (window.location.protocol === 'file:') {
-                console.info('本地运行模式，使用模拟项目数据');
-                return [
-                    { id: 'RD02', name: '人工智能项目', status: 'active' },
-                    { id: 'RD03', name: '新能源项目', status: 'active' },
-                    { id: 'RD04', name: '医疗科技项目', status: 'active' },
-                    { id: 'RD05', name: '智能制造项目', status: 'draft' },
-                    { id: 'RD06', name: '碳中和技术项目', status: 'draft' }
-                ];
-            }
-            
-            try {
-                const response = await fetch(API_ENDPOINTS.projects + '?year=' + year);
-                if (!response.ok) throw new Error('项目列表获取失败');
-                return await response.json();
-            } catch (error) {
-                console.warn('API调用失败，使用默认项目列表');
-                return [
-                    { id: 'RD02', name: '人工智能项目', status: 'active' },
-                    { id: 'RD03', name: '新能源项目', status: 'active' },
-                    { id: 'RD04', name: '医疗科技项目', status: 'active' },
-                    { id: 'RD05', name: '智能制造项目', status: 'draft' },
-                    { id: 'RD06', name: '碳中和技术项目', status: 'draft' }
-                ];
-            }
-        }
-
-        async function validateCostDataAPI(costData, caliber) {
-            // 本地运行时直接返回模拟校验结果
-            if (window.location.protocol === 'file:') {
-                console.info('本地运行模式，使用模拟校验数据');
-                return {
-                    success: true,
-                    warnings: [],
-                    errors: [],
-                    details: {
-                        laborCost: { valid: true, message: '合规' },
-                        materialCost: { valid: true, message: '合规' },
-                        depreciationCost: { valid: true, message: '合规' },
-                        intangibleCost: { valid: true, message: '合规' },
-                        otherCost: { valid: true, message: '合规' },
-                        outsourceCost: { valid: true, message: '合规' },
-                        basicResearchCost: { valid: true, message: '合规' }
-                    }
-                };
-            }
-            
-            try {
-                const response = await fetch(API_ENDPOINTS.validation, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ costData, caliber })
-                });
-                if (!response.ok) throw new Error('校验请求失败');
-                return await response.json();
-            } catch (error) {
-                console.warn('校验API调用失败，使用本地校验');
-                return null;
-            }
-        }
-
-        async function saveGeneratedTable(tableData) {
-            try {
-                const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.generatedTables) || '[]');
-                history.unshift({
-                    ...tableData,
-                    generatedAt: new Date().toISOString()
-                });
-                if (history.length > 10) history.pop();
-                localStorage.setItem(STORAGE_KEYS.generatedTables, JSON.stringify(history));
-            } catch (error) {
-                console.error('保存历史记录失败:', error);
-            }
-        }
-
         function loadUserPreferences() {
             const savedCaliber = localStorage.getItem(STORAGE_KEYS.selectedCaliber);
             const savedYear = localStorage.getItem(STORAGE_KEYS.selectedYear);
             const savedProjects = localStorage.getItem(STORAGE_KEYS.selectedProjects);
 
             if (savedCaliber) {
-                selectCaliber(savedCaliber);
+                try {
+                    selectedCalibers = JSON.parse(savedCaliber);
+                    if (!Array.isArray(selectedCalibers)) selectedCalibers = ['financial'];
+                } catch(e) {
+                    selectedCalibers = ['financial'];
+                }
+                
+                document.querySelectorAll('.caliber-card').forEach(card => {
+                    if (selectedCalibers.includes(card.dataset.caliber)) {
+                        card.classList.add('selected');
+                        card.querySelector('.check-icon').classList.remove('hidden');
+                    } else {
+                        card.classList.remove('selected');
+                        card.querySelector('.check-icon').classList.add('hidden');
+                    }
+                });
+                updateCaliberDisplay();
             }
             if (savedYear) {
                 document.getElementById('yearSelect').value = savedYear;
@@ -1410,20 +1545,32 @@
         function goToStep(step) {
             for (let i = 1; i <= 4; i++) {
                 document.getElementById('stepPanel' + i).classList.add('hidden');
-                document.getElementById('step' + i).classList.remove('active', 'completed', 'disabled');
+                const stepEl = document.getElementById('step' + i);
+                if (stepEl) stepEl.classList.remove('active', 'completed', 'disabled');
             }
             for (let i = 1; i <= 4; i++) {
+                const stepEl = document.getElementById('step' + i);
+                const progressEl = document.getElementById('progress' + i);
                 if (i < step) {
-                    document.getElementById('step' + i).classList.add('completed');
-                    document.getElementById('step' + i).innerHTML = '<i class="fa fa-check"></i>';
-                    document.getElementById('progress' + i).style.width = '100%';
+                    if (stepEl) {
+                        stepEl.classList.add('completed');
+                        stepEl.innerHTML = '<i class="fa fa-check"></i>';
+                    }
+                    if (progressEl) progressEl.style.width = '100%';
                 } else if (i === step) {
-                    document.getElementById('step' + i).classList.add('active');
-                    document.getElementById('step' + i).innerHTML = i;
+                    if (stepEl) {
+                        stepEl.classList.add('active');
+                        stepEl.innerHTML = i;
+                    }
                 } else {
-                    document.getElementById('step' + i).classList.add('disabled');
-                    document.getElementById('step' + i).innerHTML = i;
-                    if (i > 1) document.getElementById('progress' + (i-1)).style.width = '100%';
+                    if (stepEl) {
+                        stepEl.classList.add('disabled');
+                        stepEl.innerHTML = i;
+                    }
+                    if (i > 1) {
+                        const prevProgress = document.getElementById('progress' + (i-1));
+                        if (prevProgress) prevProgress.style.width = '0%';
+                    }
                 }
             }
             document.getElementById('stepPanel' + step).classList.remove('hidden');
@@ -1431,11 +1578,15 @@
             if (step === 2) {
                 saveUserPreferences();
                 loadCostPreview();
+                // 更新预览区域的口径数量
+                if (document.getElementById('previewCaliberCount')) {
+                    document.getElementById('previewCaliberCount').textContent = selectedCalibers.length;
+                }
             } else if (step === 3) {
                 startValidation();
             } else if (step === 4) {
                 saveGeneratedTable({
-                    caliber: selectedCaliber,
+                    calibers: selectedCalibers,
                     year: document.getElementById('yearSelect').value,
                     projects: Array.from(document.querySelectorAll('.project-checkbox:checked')).map(cb => cb.value),
                     validationResults: validationResults
@@ -1450,30 +1601,118 @@
             updateCostPreviewDisplay(costData);
         }
 
+        async function fetchProjectCostData(year, projectIds) {
+            // 本地运行时直接返回模拟数据（避免API调用失败）
+            if (window.location.protocol === 'file:') {
+                console.info('本地运行模式，使用模拟数据');
+                return { ...MOCK_COST_DATA };
+            }
+            
+            try {
+                const response = await fetch(API_ENDPOINTS.costData + '?year=' + year + '&projects=' + projectIds.join(','));
+                if (!response.ok) throw new Error('数据获取失败');
+                const data = await response.json();
+                return {
+                    laborCost: data.laborCost || 0,
+                    materialCost: data.materialCost || 0,
+                    depreciationCost: data.depreciationCost || 0,
+                    intangibleCost: data.intangibleCost || 0,
+                    designCost: data.designCost || 0,
+                    commissionCost: data.commissionCost || 0,
+                    externalCost: data.externalCost || 0,
+                    otherCost: data.otherCost || 0,
+                    specialIncome: data.specialIncome || 0
+                };
+            } catch (error) {
+                console.warn('API调用失败，使用模拟数据:', error);
+                return { ...MOCK_COST_DATA };
+            }
+        }
+
         function updateCostPreviewDisplay(costData) {
-            const total = costData.laborCost + costData.materialCost + costData.depreciationCost + costData.intangibleCost + costData.otherCost - (costData.specialIncome || 0);
-            const previewContainer = document.querySelector('#stepPanel2 .bg-gray-50.border.border-gray-200');
-            if (previewContainer) {
-                const items = previewContainer.querySelectorAll('.flex.justify-between');
-                if (items.length >= 6) {
-                    items[0].querySelector('span:last-child').textContent = '¥' + costData.laborCost.toLocaleString();
-                    items[1].querySelector('span:last-child').textContent = '¥' + costData.materialCost.toLocaleString();
-                    items[2].querySelector('span:last-child').textContent = '¥' + costData.depreciationCost.toLocaleString();
-                    items[3].querySelector('span:last-child').textContent = '¥' + costData.intangibleCost.toLocaleString();
-                    items[4].querySelector('span:last-child').textContent = '¥' + costData.otherCost.toLocaleString();
-                    items[5].querySelector('span:last-child').textContent = '-¥' + (costData.specialIncome || 0).toLocaleString();
-                    items[6].querySelector('span:last-child').textContent = '¥' + total.toLocaleString();
-                }
+            const total = costData.laborCost + costData.materialCost + costData.depreciationCost + 
+                          costData.intangibleCost + costData.designCost + costData.commissionCost + 
+                          costData.externalDomesticCost + costData.externalOverseasCost + costData.otherCost - (costData.specialIncome || 0);
+            
+            // 更新总额
+            if (document.getElementById('previewTotalValue')) {
+                document.getElementById('previewTotalValue').textContent = '¥' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+
+            // 更新各分类明细
+            const mapping = {
+                'preview_labor': costData.laborCost,
+                'preview_material': costData.materialCost,
+                'preview_depreciation': costData.depreciationCost,
+                'preview_intangible': costData.intangibleCost,
+                'preview_design': costData.designCost,
+                'preview_commission': costData.commissionCost,
+                'preview_external_domestic': costData.externalDomesticCost,
+                'preview_external_overseas': costData.externalOverseasCost,
+                'preview_other': costData.otherCost
+            };
+
+            for (const [id, value] of Object.entries(mapping)) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '¥' + (value || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+
+            // 更新特殊收入
+            const incomeEl = document.getElementById('preview_income');
+            if (incomeEl) {
+                incomeEl.textContent = '-¥' + (costData.specialIncome || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
             }
         }
 
         function updateSelectedProjectCount() {
+            const count = document.querySelectorAll('.project-checkbox:checked').length;
+            if (document.getElementById('selectedProjectCount')) {
+                document.getElementById('selectedProjectCount').textContent = count;
+            }
+            if (document.getElementById('previewProjectCountDisplay')) {
+                document.getElementById('previewProjectCountDisplay').textContent = count;
+            }
             updateProjectCount();
         }
 
-        function toggleAllProjectsOld(checkbox) {
-            document.querySelectorAll('.project-checkbox').forEach(cb => cb.checked = checkbox.checked);
-            updateSelectedProjectCount();
+        function toggleProjectComposition() {
+            const panel = document.getElementById('projectComposition');
+            const chevron = document.getElementById('compositionChevron');
+            const isHidden = panel.classList.contains('hidden');
+            
+            if (isHidden) {
+                panel.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+                renderProjectComposition();
+            } else {
+                panel.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
+        function renderProjectComposition() {
+            const selectedProjects = Array.from(document.querySelectorAll('.project-checkbox:checked'));
+            const container = document.getElementById('projectComposition');
+            
+            if (selectedProjects.length === 0) {
+                container.innerHTML = '<p class="text-[10px] text-gray-400 text-center py-2">请先选择项目</p>';
+                return;
+            }
+
+            // 模拟各项目金额分配
+            const total = 2567500; 
+            let html = '<p class="text-[9px] text-gray-400 mb-2 font-medium italic">* 以下金额为该项目下人工、材料、折旧等所有费用的账面汇总</p>';
+            html += selectedProjects.map((cb, index) => {
+                const projectName = cb.closest('label').dataset.name;
+                const mockAmount = (total / selectedProjects.length) * (1 + (index % 2 ? 0.2 : -0.1));
+                return `
+                    <div class="flex justify-between items-center text-[10px] py-1 border-b border-gray-100 last:border-0">
+                        <span class="text-gray-600 truncate mr-4">${projectName}</span>
+                        <span class="font-mono font-bold text-gray-800">¥${mockAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    </div>
+                `;
+            }).join('');
+            container.innerHTML = html;
         }
 
         // --- 核心业务逻辑 ---
@@ -1485,94 +1724,580 @@
             goToStep(3);
         }
 
-        function startValidation() {
-            const config = CALIBER_CONFIG[selectedCaliber];
-            document.getElementById('currentCaliberName').textContent = config.name;
-            document.getElementById('passedCaliberName').textContent = config.name;
+        let currentValidationCaliber = ''; // 当前正在查看的口径
+        let currentValidationProject = ''; // 当前正在查看的项目 ID
+
+        async function startValidation() {
+            // 1. 同步规则
+            await syncRulesFromConfig();
+
+            // 2. 初始化口径标签页
+            const container = document.getElementById('caliberTabsContainer');
+            container.innerHTML = selectedCalibers.map((c, index) => `
+                <button onclick="switchValidationCaliber('${c}')" 
+                        id="tab_${c}"
+                        class="px-4 py-2 text-sm font-medium border-b-2 transition-all ${index === 0 ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}">
+                    ${CALIBER_CONFIG[c].name}
+                </button>
+            `).join('');
+
+            // 3. 初始化项目标签页 (二级切换) - 增加“全项目汇总”
+            const selectedProjectCheckboxes = Array.from(document.querySelectorAll('.project-checkbox:checked'));
+            const projectContainer = document.getElementById('projectTabsContainer');
+            if (projectContainer) {
+                let tabsHtml = `
+                    <button onclick="switchValidationProject('all')" 
+                            id="proj_tab_all"
+                            class="px-3 py-1 text-[10px] font-bold rounded-md transition-all bg-blue-600 text-white shadow-sm">
+                        <i class="fa fa-th-large mr-1"></i> 全项目汇总
+                    </button>
+                `;
+                
+                tabsHtml += selectedProjectCheckboxes.map((cb, index) => {
+                    const pid = cb.value;
+                    const pname = cb.closest('label').dataset.name;
+                    return `
+                        <button onclick="switchValidationProject('${pid}')" 
+                                id="proj_tab_${pid}"
+                                class="px-3 py-1 text-[10px] font-bold rounded-md transition-all bg-white text-gray-500 hover:bg-gray-100">
+                            ${pname}
+                        </button>
+                    `;
+                }).join('');
+                
+                projectContainer.innerHTML = tabsHtml;
+                
+                // 默认选择“全项目汇总”
+                switchValidationProject('all');
+            }
+
+            document.getElementById('activeCaliberCount').textContent = selectedCalibers.length;
             document.getElementById('validationProgress').classList.remove('hidden');
             document.getElementById('validationResults').classList.add('hidden');
-            setTimeout(function() { performValidation(); }, 1500);
+            
+            // 4. 模拟校验并显示第一个口径
+            setTimeout(function() { 
+                document.getElementById('validationProgress').classList.add('hidden');
+                document.getElementById('validationResults').classList.remove('hidden');
+                switchValidationCaliber(selectedCalibers[0]);
+            }, 1500);
+        }
+
+        function switchValidationProject(projectId) {
+            currentValidationProject = projectId;
+            
+            if (projectId === 'all') {
+                // 计算全项目汇总数据
+                const selectedPids = Array.from(document.querySelectorAll('.project-checkbox:checked')).map(cb => cb.value);
+                const consolidated = {
+                    laborCost: 0, materialCost: 0, depreciationCost: 0, intangibleCost: 0,
+                    designCost: 0, commissionCost: 0, externalDomesticCost: 0, externalOverseasCost: 0,
+                    otherCost: 0, specialIncome: 0, name: '全项目合并汇总'
+                };
+                
+                selectedPids.forEach(pid => {
+                    const data = PROJECT_MOCK_DATA[pid];
+                    if (data) {
+                        for (const key in consolidated) {
+                            if (typeof data[key] === 'number') consolidated[key] += data[key];
+                        }
+                    }
+                });
+                MOCK_COST_DATA = consolidated;
+            } else {
+                MOCK_COST_DATA = PROJECT_MOCK_DATA[projectId] || PROJECT_MOCK_DATA['RD01'];
+            }
+
+            // 更新标题显示的项目名称
+            const activeProjectEl = document.getElementById('activeProjectName');
+            if (activeProjectEl) activeProjectEl.textContent = MOCK_COST_DATA.name;
+
+            // 切换项目 Tab 样式
+            const allProjectTabs = document.querySelectorAll('[id^="proj_tab_"]');
+            allProjectTabs.forEach(tab => {
+                const id = tab.id.replace('proj_tab_', '');
+                if (id === projectId) {
+                    tab.className = "px-3 py-1 text-[10px] font-bold rounded-md transition-all bg-blue-600 text-white shadow-sm";
+                } else {
+                    tab.className = "px-3 py-1 text-[10px] font-bold rounded-md transition-all bg-white text-gray-500 hover:bg-gray-100";
+                }
+            });
+
+            renderCaliberReport(currentValidationCaliber);
+        }
+
+        function switchValidationCaliber(caliber) {
+            currentValidationCaliber = caliber;
+            
+            // 切换 Tab 样式
+            selectedCalibers.forEach(c => {
+                const tab = document.getElementById(`tab_${c}`);
+                if (tab) {
+                    if (c === caliber) {
+                        tab.className = "px-4 py-2 text-sm font-bold border-b-2 border-blue-600 text-blue-600 transition-all";
+                    } else {
+                        tab.className = "px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-all";
+                    }
+                }
+            });
+
+            renderCaliberReport(caliber);
+        }
+
+        function renderCaliberReport(caliber) {
+            const config = CALIBER_CONFIG[caliber];
+            const totalBook = Object.values(MOCK_COST_DATA).reduce((a, b) => typeof b === 'number' ? a + b : a, 0) - (MOCK_COST_DATA.specialIncome || 0);
+            
+            // 1. 更新口径限制规则标签
+            const tagsContainer = document.getElementById('activeRuleTags');
+            if (tagsContainer) {
+                let tagsHtml = '';
+                if (caliber === 'financial') {
+                    tagsHtml = `
+                        <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] rounded-md border border-blue-200" title="${DYNAMIC_RULES_CACHE.financial.otherLimit.policy}">
+                            <i class="fa fa-info-circle mr-1"></i>其他费 ≤ 10%
+                        </span>
+                        <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] rounded-md border border-indigo-200">
+                            <i class="fa fa-user-secret mr-1"></i>剔除兼职人工
+                        </span>
+                    `;
+                } else if (caliber === 'hiTech') {
+                    tagsHtml = `
+                        <span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-[10px] rounded-md border border-purple-200" title="${DYNAMIC_RULES_CACHE.hiTech.otherLimit.policy}">
+                            <i class="fa fa-info-circle mr-1"></i>其他费 ≤ 20%
+                        </span>
+                        <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] rounded-md border border-amber-200" title="${DYNAMIC_RULES_CACHE.hiTech.external.policy}">
+                            <i class="fa fa-handshake-o mr-1"></i>委外 × 80%
+                        </span>
+                        <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] rounded-md border border-red-200" title="${DYNAMIC_RULES_CACHE.hiTech.labor183.policy}">
+                            <i class="fa fa-clock-o mr-1"></i>人员 ≥ 183天
+                        </span>
+                    `;
+                }
+                tagsContainer.innerHTML = tagsHtml;
+            }
+
+            // 2. 更新转换表 (基于项目维度差异化渲染)
+            const isAllProjects = currentValidationProject === 'all';
+            const tbody = document.getElementById('caliberValidationTableBody');
+            const thead = document.querySelector('#validationResults thead tr');
+
+            if (thead) {
+                thead.innerHTML = `
+                    <th class="px-4 py-3 text-left">费用类别</th>
+                    <th class="px-4 py-3 text-right">账面原始金额</th>
+                    <th class="px-4 py-3 text-right">口径调增/减</th>
+                    <th class="px-4 py-3 text-right">口径最终金额</th>
+                    ${isAllProjects ? '' : '<th class="px-4 py-3 text-left">增减原因</th>'}
+                    <th class="px-4 py-3 text-center">状态</th>
+                `;
+            }
+
+            if (tbody) {
+                tbody.innerHTML = '';
+                
+                const categories = [
+                    { id: 'laborCost', name: '1. 人员人工费用' },
+                    { id: 'materialCost', name: '2. 直接投入费用' },
+                    { id: 'depreciationCost', name: '3. 折旧费用' },
+                    { id: 'intangibleCost', name: '4. 无形资产摊销' },
+                    { id: 'designCost', name: '5. 新产品设计费等' },
+                    { id: 'commissionCost', name: '6. 装备调试费用' },
+                    { id: 'externalDomesticCost', name: '7.1 委托境内研发费用' },
+                    { id: 'externalOverseasCost', name: '7.2 委托境外研发费用' },
+                    { id: 'otherCost', name: '8. 其他相关费用' }
+                ];
+
+                    categories.forEach(cat => {
+                        const bookVal = MOCK_COST_DATA[cat.id] || 0;
+                        let adjVal = 0;
+                        let reason = '-';
+                        
+                        // 基于 DYNAMIC_RULES_CACHE 的动态政策依据和剔除逻辑
+                        if (caliber === 'financial') {
+                            if (cat.id === 'laborCost') {
+                                adjVal = -150000; 
+                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除行政/财务/销售兼职人员工资。依据：${DYNAMIC_RULES_CACHE.financial.labor.policy}`;
+                            } else if (cat.id === 'materialCost') {
+                                adjVal = -42000;
+                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除包含的场地租赁费（加计扣除仅允许仪器设备租赁）。依据：${DYNAMIC_RULES_CACHE.financial.material.policy}`;
+                            } else if (cat.id === 'depreciationCost') {
+                                adjVal = -15000;
+                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除共用设备超限额(15%)及长期待摊费。依据：${DYNAMIC_RULES_CACHE.financial.depreciation.policy}`;
+                            } else if (cat.id === 'intangibleCost') {
+                                reason = `<span class="text-green-600">合规：</span>${DYNAMIC_RULES_CACHE.financial.intangible.policy}`;
+                            } else if (cat.id === 'designCost') {
+                                adjVal = -20000;
+                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除已计入成本的非新产品设计费。依据：${DYNAMIC_RULES_CACHE.financial.design.policy}`;
+                            } else if (cat.id === 'commissionCost') {
+                                adjVal = -bookVal;
+                                reason = `<span class="text-red-600 font-medium">全额剔除：</span>加计扣除口径不包含装备调试及田间试验费。依据：${DYNAMIC_RULES_CACHE.financial.commission.policy}`;
+                            } else if (cat.id === 'externalDomesticCost') {
+                                adjVal = -(bookVal * 0.2); 
+                                reason = `<span class="text-red-600 font-medium">比例剔除：</span>${DYNAMIC_RULES_CACHE.financial.externalDomestic.policy}`;
+                            } else if (cat.id === 'externalOverseasCost') {
+                                // 委托境外限额逻辑：按 80% 计入，且不得超过境内费用的 2/3
+                                const domesticLimit = (MOCK_COST_DATA.laborCost - 150000 + MOCK_COST_DATA.materialCost - 42000 + MOCK_COST_DATA.depreciationCost + MOCK_COST_DATA.intangibleCost + MOCK_COST_DATA.designCost - 20000 + MOCK_COST_DATA.commissionCost + (MOCK_COST_DATA.externalDomesticCost * 0.8)) * (2/3);
+                                const currentAdj = bookVal * 0.2; // 基础 80% 计入
+                                const baseVal = bookVal * 0.8;
+                                if (baseVal > domesticLimit) {
+                                    adjVal = -(bookVal - domesticLimit);
+                                    reason = `<span class="text-red-600 font-medium">限额剔除：</span>${DYNAMIC_RULES_CACHE.financial.externalOverseas.policy} (境内 2/3 限额: ¥${domesticLimit.toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
+                            } else {
+                                adjVal = -currentAdj;
+                                reason = `<span class="text-red-600 font-medium">比例剔除：</span>按 80% 计入。依据：${DYNAMIC_RULES_CACHE.financial.externalOverseas.policy}`;
+                            }
+                        } else if (cat.id === 'otherCost') {
+                            // 动态计算前 7 项之和 (已考虑各分类的独立剔除逻辑)
+                            let currentTotal = 0;
+                            currentTotal += (MOCK_COST_DATA.laborCost - 150000); // 人员调减 15w
+                            currentTotal += (MOCK_COST_DATA.materialCost - 42000); // 材料调减 4.2w
+                            currentTotal += (MOCK_COST_DATA.depreciationCost - 15000); // 折旧调减 1.5w
+                            currentTotal += MOCK_COST_DATA.intangibleCost;
+                            currentTotal += (MOCK_COST_DATA.designCost - 20000); // 设计调减 2w
+                            currentTotal += 0; // 装备调试全剔除
+                            currentTotal += (MOCK_COST_DATA.externalDomesticCost * 0.8); // 委内 80%
+                            currentTotal += Math.min(MOCK_COST_DATA.externalOverseasCost * 0.8, currentTotal * (2 / 3)); // 委外限额
+
+                            const limit = currentTotal / 0.9 * 0.1;
+                            if (bookVal > limit) {
+                                adjVal = -(bookVal - limit);
+                                reason = `<span class="text-red-600 font-medium">超额剔除：</span>超出 10% 限额部分调减。依据：${DYNAMIC_RULES_CACHE.financial.otherLimit.policy}`;
+                            } else {
+                                reason = `<span class="text-green-600">合规：</span>占比未超 10%。依据：${DYNAMIC_RULES_CACHE.financial.otherLimit.policy}`;
+                            }
+                        }
+                    } else if (caliber === 'hiTech') {
+                        if (cat.id === 'laborCost') {
+                            adjVal = -120000;
+                            reason = `<span class="text-red-600 font-medium">工时剔除：</span>剔除在司不足 183 天人员费用。依据：${DYNAMIC_RULES_CACHE.hiTech.labor183.policy}`;
+                        } else if (cat.id === 'materialCost') {
+                            reason = `<span class="text-green-600">合规：</span>${DYNAMIC_RULES_CACHE.hiTech.material.policy}`;
+                        } else if (cat.id === 'depreciationCost') {
+                            reason = `<span class="text-green-600">合规：</span>${DYNAMIC_RULES_CACHE.hiTech.depreciation.policy}`;
+                        } else if (cat.id === 'intangibleCost') {
+                            reason = `<span class="text-green-600">合规：</span>${DYNAMIC_RULES_CACHE.hiTech.intangible.policy}`;
+                        } else if (cat.id === 'designCost') {
+                            reason = `<span class="text-green-600">合规：</span>${DYNAMIC_RULES_CACHE.hiTech.design.policy}`;
+                        } else if (cat.id === 'commissionCost') {
+                            reason = `<span class="text-green-600">合规：</span>${DYNAMIC_RULES_CACHE.hiTech.commission.policy}`;
+                        } else if (cat.id === 'externalDomesticCost') {
+                            adjVal = -(bookVal * 0.2);
+                            reason = `<span class="text-red-600 font-medium">比例剔除：</span>${DYNAMIC_RULES_CACHE.hiTech.externalDomestic.policy}`;
+                        } else if (cat.id === 'externalOverseasCost') {
+                            adjVal = -(bookVal * 0.2);
+                            reason = `<span class="text-red-600 font-medium">比例剔除：</span>${DYNAMIC_RULES_CACHE.hiTech.externalOverseas.policy}`;
+                        } else if (cat.id === 'otherCost') {
+                            // 动态计算前 7 项之和 (高企口径)
+                            let hiTechTotal = 0;
+                            hiTechTotal += (MOCK_COST_DATA.laborCost - 120000);
+                            hiTechTotal += MOCK_COST_DATA.materialCost;
+                            hiTechTotal += MOCK_COST_DATA.depreciationCost;
+                            hiTechTotal += MOCK_COST_DATA.intangibleCost;
+                            hiTechTotal += MOCK_COST_DATA.designCost;
+                            hiTechTotal += MOCK_COST_DATA.commissionCost;
+                            hiTechTotal += (MOCK_COST_DATA.externalDomesticCost * 0.8);
+                            hiTechTotal += (MOCK_COST_DATA.externalOverseasCost * 0.8);
+
+                            const limit = hiTechTotal / 0.8 * 0.2;
+                            if (bookVal > limit) {
+                                adjVal = -(bookVal - limit);
+                                reason = `<span class="text-red-600 font-medium">超额剔除：</span>超出 20% 限额部分调减。依据：${DYNAMIC_RULES_CACHE.hiTech.otherLimit.policy}`;
+                            } else {
+                                reason = `<span class="text-green-600">合规：</span>占比未超 20%。依据：${DYNAMIC_RULES_CACHE.hiTech.otherLimit.policy}`;
+                            }
+                        }
+                    } else {
+                        reason = '<span class="text-gray-400 italic">按会计口径全额归集</span>';
+                    }
+
+                        const finalVal = bookVal + adjVal;
+                        const status = adjVal < 0 ? 
+                            '<span class="px-2 py-0.5 bg-red-50 text-red-700 rounded-full text-[10px] border border-red-100 font-bold">已剔除</span>' : 
+                            '<span class="px-2 py-0.5 bg-green-50 text-green-700 rounded-full text-[10px] border border-green-100">全额计入</span>';
+
+                        tbody.innerHTML += `
+                            <tr class="hover:bg-gray-50 transition-all border-b border-gray-50 last:border-0">
+                                <td class="px-4 py-3 font-medium text-gray-700">${cat.name}</td>
+                                <td class="px-4 py-3 text-right font-mono text-gray-400">¥${bookVal.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                                <td class="px-4 py-3 text-right font-mono ${adjVal < 0 ? 'text-red-500 font-bold' : 'text-gray-300'}">${adjVal === 0 ? '-' : adjVal.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                                <td class="px-4 py-3 text-right font-bold text-gray-900 font-mono">¥${finalVal.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                                ${isAllProjects ? '' : `
+                                <td class="px-4 py-3 text-left text-[11px] leading-relaxed">
+                                    <div class="max-w-[300px] text-gray-600">${reason}</div>
+                                </td>
+                                `}
+                                <td class="px-4 py-3 text-center">${status}</td>
+                            </tr>
+                        `;
+                    });
+            }
+
+            // 3. 更新提示
+            renderCaliberAlerts(caliber);
+        }
+
+        function renderCaliberAlerts(caliber) {
+            const container = document.getElementById('caliberAlerts');
+            if (!container) return;
+            container.innerHTML = '';
+
+            // 模拟根据口径生成特定的警告 (与 renderCaliberReport 中的剔除逻辑保持一致)
+            const alerts = [];
+            if (caliber === 'financial') {
+                alerts.push({ 
+                    type: 'error', 
+                    title: '人员人工费用合规性冲突', 
+                    msg: DYNAMIC_RULES_CACHE.financial.labor.policy
+                });
+                alerts.push({ 
+                    type: 'warning', 
+                    title: '其他相关费用超限', 
+                    msg: DYNAMIC_RULES_CACHE.financial.otherLimit.policy
+                });
+                alerts.push({ 
+                    type: 'error', 
+                    title: '直接投入费用异常', 
+                    msg: DYNAMIC_RULES_CACHE.financial.material.policy
+                });
+            } else if (caliber === 'hiTech') {
+                alerts.push({ 
+                    type: 'error', 
+                    title: '科技人员在司工时风险', 
+                    msg: DYNAMIC_RULES_CACHE.hiTech.labor183.policy
+                });
+                alerts.push({ 
+                    type: 'warning', 
+                    title: '委托外部研发风险', 
+                    msg: DYNAMIC_RULES_CACHE.hiTech.externalDomestic.policy
+                });
+            } else if (caliber === 'ipo') {
+                alerts.push({ 
+                    type: 'warning', 
+                    title: '资本化时点风险', 
+                    msg: '请核实研发项目资本化开始时点是否具有足够的证据支撑，防止通过研发投入操纵利润。' 
+                });
+            }
+
+            if (alerts.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center">
+                        <i class="fa fa-check-circle text-green-500 text-xl mr-3"></i>
+                        <p class="text-xs text-green-700 font-medium">该口径下暂未发现严重合规性风险，数据可直接用于生成初稿。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = alerts.map(a => `
+                <div class="${a.type === 'error' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100'} border rounded-xl p-4 flex items-start shadow-sm">
+                    <i class="fa ${a.type === 'error' ? 'fa-times-circle text-red-500' : 'fa-exclamation-triangle text-amber-500'} text-lg mt-0.5 mr-3"></i>
+                    <div>
+                        <h5 class="text-xs font-bold ${a.type === 'error' ? 'text-red-800' : 'text-amber-800'} mb-1">${a.title}</h5>
+                        <p class="text-[11px] ${a.type === 'error' ? 'text-red-600' : 'text-amber-600'} leading-relaxed">${a.msg}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function syncRulesFromConfig() {
+            try {
+                const response = await fetch('caliber-rule-config.html');
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // 1. 抓取加计扣除 - 其他费用限额
+                const plusOtherCard = doc.querySelector('#detail-plus-other')?.closest('.rule-card');
+                if (plusOtherCard) {
+                    DYNAMIC_RULES_CACHE.financial.otherLimit.policy = plusOtherCard.querySelector('p').textContent.trim();
+                    DYNAMIC_RULES_CACHE.financial.otherLimit.logic = plusOtherCard.querySelector('.bg-white\/50')?.innerText.trim() || '';
+                }
+
+                // 2. 抓取高企认定 - 其他费用限额
+                const highOtherCard = doc.querySelector('#detail-high-other')?.closest('.rule-card');
+                if (highOtherCard) {
+                    DYNAMIC_RULES_CACHE.hiTech.otherLimit.policy = highOtherCard.querySelector('p').textContent.trim();
+                    DYNAMIC_RULES_CACHE.hiTech.otherLimit.logic = highOtherCard.querySelector('.bg-white\/50')?.innerText.trim() || '';
+                }
+
+                // 3. 抓取高企认定 - 183天限制
+                const labor183Card = doc.querySelector('#detail-high-183')?.closest('.rule-card');
+                if (labor183Card) {
+                    DYNAMIC_RULES_CACHE.hiTech.labor183.policy = labor183Card.querySelector('p').textContent.trim();
+                    DYNAMIC_RULES_CACHE.hiTech.labor183.logic = labor183Card.querySelector('.bg-white\/50')?.innerText.trim() || '';
+                }
+
+                // 4. 抓取加计扣除 - 委托境内
+                const plusExternalDomestic = Array.from(doc.querySelectorAll('.rule-card')).find(el => el.textContent.includes('委托境内研发×80%') && el.textContent.includes('加计扣除'));
+                if (plusExternalDomestic) {
+                    DYNAMIC_RULES_CACHE.financial.externalDomestic.policy = plusExternalDomestic.querySelector('p').textContent.trim();
+                }
+
+                // 5. 抓取加计扣除 - 委托境外
+                const plusExternalOverseas = doc.querySelector('#detail-plus-overseas')?.closest('.rule-card');
+                if (plusExternalOverseas) {
+                    DYNAMIC_RULES_CACHE.financial.externalOverseas.policy = plusExternalOverseas.querySelector('p').textContent.trim();
+                }
+
+                // 6. 抓取高企认定 - 委托境内
+                const highExternalDomestic = Array.from(doc.querySelectorAll('.rule-card')).find(el => el.textContent.includes('委托境内研发 (高企)') && el.textContent.includes('高企认定'));
+                if (highExternalDomestic) {
+                    DYNAMIC_RULES_CACHE.hiTech.externalDomestic.policy = highExternalDomestic.querySelector('p').textContent.trim();
+                }
+
+                // 7. 抓取高企认定 - 委托境外
+                const highExternalOverseas = doc.querySelector('#detail-high-overseas')?.closest('.rule-card');
+                if (highExternalOverseas) {
+                    DYNAMIC_RULES_CACHE.hiTech.externalOverseas.policy = highExternalOverseas.querySelector('p').textContent.trim();
+                }
+
+                console.info('成功从规则配置文件动态同步政策依据和剔除逻辑');
+            } catch (e) {
+                console.warn('无法读取规则配置文件，将使用本地硬编码规则:', e);
+            }
         }
 
         function performValidation() {
-            const totalCost = MOCK_COST_DATA.laborCost + MOCK_COST_DATA.materialCost + MOCK_COST_DATA.depreciationCost + MOCK_COST_DATA.intangibleCost + MOCK_COST_DATA.otherCost;
+            const totalCost = MOCK_COST_DATA.laborCost + MOCK_COST_DATA.materialCost + MOCK_COST_DATA.depreciationCost + 
+                              MOCK_COST_DATA.intangibleCost + MOCK_COST_DATA.designCost + MOCK_COST_DATA.commissionCost + 
+                              MOCK_COST_DATA.externalCost + MOCK_COST_DATA.otherCost;
             validationResults = { errors: [], warnings: [] };
 
-            if (selectedCaliber === 'financial') {
-                if (MOCK_COST_DATA.otherCost / totalCost > 0.10) {
-                    validationResults.errors.push({ type: '比例超限', caliber: '财务加计扣除', field: 'otherCost', message: '其他费用占比' + ((MOCK_COST_DATA.otherCost / totalCost) * 100).toFixed(1) + '%超过10%限额', suggestion: '请核查差旅费¥95,000是否全部为研发必需支出，或调整其他费用金额' });
+            selectedCalibers.forEach(caliber => {
+                const config = CALIBER_CONFIG[caliber];
+                
+                // 1. 其他费用限额校验 (10% 或 20%)
+                const otherRule = config.rules.find(r => r.field === 'otherCost');
+                if (otherRule && otherRule.maxRatio) {
+                    const ratio = MOCK_COST_DATA.otherCost / totalCost;
+                    if (ratio > otherRule.maxRatio) {
+                        validationResults.errors.push({
+                            type: '比例超限',
+                            caliber: config.name,
+                            field: 'otherCost',
+                            message: `其他费用占比 ${(ratio * 100).toFixed(1)}% 超过 ${(otherRule.maxRatio * 100).toFixed(0)}% 限额`,
+                            suggestion: caliber === 'financial' ? '建议按 10% 限额进行调减' : '建议按 20% 限额进行调减'
+                        });
+                    }
                 }
-            } else if (selectedCaliber === 'hiTech') {
-                if (MOCK_COST_DATA.laborCost / totalCost < 0.50) {
-                    validationResults.warnings.push({ type: '人员占比不达标', caliber: '高企认定', field: 'laborCost', message: '人员人工费用占比' + ((MOCK_COST_DATA.laborCost / totalCost) * 100).toFixed(1) + '%低于50%要求', suggestion: '建议增加研发人员数量或调整工资计算基数' });
+
+                // 2. 高企认定特定规则
+                if (caliber === 'hiTech') {
+                    // 委托境外研发限额校验
+                    if (MOCK_COST_DATA.externalCost > 0) {
+                        validationResults.warnings.push({
+                            type: '委外合规校验',
+                            caliber: '高企认定',
+                            field: 'externalCost',
+                            message: '需满足境内研发占比≥60%要求',
+                            suggestion: '请检查并上传委托研发合同及支付凭证'
+                        });
+                    }
+                    // 183天在司限制提醒
+                    validationResults.warnings.push({
+                        type: '人员合规提醒',
+                        caliber: '高企认定',
+                        field: 'laborCost',
+                        message: '所有计入人员需满足年度在司183天限制',
+                        suggestion: '请通过考勤系统核实研发人员工时'
+                    });
                 }
-            } else if (selectedCaliber === 'rd') {
-                if (MOCK_COST_DATA.basicResearchCost / totalCost > 0.20) {
-                    validationResults.warnings.push({ type: '基础研究超限', caliber: 'R&D统计', field: 'basicResearchRatio', message: '基础研究费用占比超过20%限额', suggestion: '请确认基础研究与应用研究的分类是否正确' });
-                }
-            } else if (selectedCaliber === 'ipo') {
-                validationResults.warnings.push({ type: '数据稳定性提醒', caliber: 'IPO审查', field: 'stability', message: '近3年研发费用复合增长率波动较大', suggestion: '建议保持研发费用的稳定性和合理性' });
-            }
+            });
 
             displayValidationResults(totalCost);
-        }
-
-        function getRuleForField(field) {
-            const config = CALIBER_CONFIG[selectedCaliber];
-            return config.rules.find(function(r) { return r.field === field; });
         }
 
         function displayValidationResults(totalCost) {
             document.getElementById('validationProgress').classList.add('hidden');
             document.getElementById('validationResults').classList.remove('hidden');
 
-            var costBreakdown = [
-                { name: '人员人工费用', value: MOCK_COST_DATA.laborCost, field: 'laborCost' },
-                { name: '直接投入费用', value: MOCK_COST_DATA.materialCost, field: 'materialCost' },
-                { name: '折旧费用', value: MOCK_COST_DATA.depreciationCost, field: 'depreciationCost' },
-                { name: '无形资产摊销', value: MOCK_COST_DATA.intangibleCost, field: 'intangibleCost' },
-                { name: '其他费用', value: MOCK_COST_DATA.otherCost, field: 'otherCost' }
-            ];
-
             var tbody = document.getElementById('validationTableBody');
             tbody.innerHTML = '';
 
-            costBreakdown.forEach(function(item) {
-                var ratio = (item.value / totalCost * 100).toFixed(1);
-                var rule = getRuleForField(item.field);
-                var status = '<span class="text-green-600"><i class="fa fa-check-circle"></i> 合规</span>';
+            // 定义 8 大类费用明细展示
+            const breakdown = [
+                { id: 'laborCost', name: '人员人工费用', value: MOCK_COST_DATA.laborCost },
+                { id: 'materialCost', name: '直接投入费用', value: MOCK_COST_DATA.materialCost },
+                { id: 'depreciationCost', name: '折旧费用', value: MOCK_COST_DATA.depreciationCost },
+                { id: 'intangibleCost', name: '无形资产摊销', value: MOCK_COST_DATA.intangibleCost },
+                { id: 'designCost', name: '新产品设计费等', value: MOCK_COST_DATA.designCost },
+                { id: 'commissionCost', name: '装备调试费用', value: MOCK_COST_DATA.commissionCost },
+                { id: 'externalCost', name: '委托外部研发费用', value: MOCK_COST_DATA.externalCost },
+                { id: 'otherCost', name: '其他相关费用', value: MOCK_COST_DATA.otherCost }
+            ];
+
+            breakdown.forEach(item => {
+                const ratio = (item.value / totalCost * 100).toFixed(1);
                 
-                if (rule) {
-                    if (rule.maxRatio && item.value / totalCost > rule.maxRatio) {
-                        status = '<span class="text-red-600"><i class="fa fa-times-circle"></i> 超出限额</span>';
-                    } else if (rule.minRatio && item.value / totalCost < rule.minRatio) {
-                        status = '<span class="text-yellow-600"><i class="fa fa-exclamation-triangle"></i> 低于要求</span>';
-                    }
+                // 综合判断校验结果
+                let statusHtml = '<span class="text-green-600"><i class="fa fa-check-circle"></i> 合规</span>';
+                let ruleText = '-';
+
+                // 查找是否有针对该费用的报错或警告
+                const error = validationResults.errors.find(e => e.field === item.id);
+                const warning = validationResults.warnings.find(w => w.field === item.id);
+
+                if (error) {
+                    statusHtml = '<span class="text-red-600"><i class="fa fa-times-circle"></i> 存在冲突</span>';
+                    ruleText = error.message;
+                } else if (warning) {
+                    statusHtml = '<span class="text-yellow-600"><i class="fa fa-exclamation-triangle"></i> 存在风险</span>';
+                    ruleText = warning.message;
                 }
 
-                tbody.innerHTML += '<tr><td class="px-4 py-3 text-sm font-medium text-gray-800">' + item.name + '</td><td class="px-4 py-3 text-sm text-gray-600">¥' + item.value.toLocaleString() + '</td><td class="px-4 py-3 text-sm text-gray-600">' + ratio + '%</td><td class="px-4 py-3 text-sm text-gray-600">' + (rule ? rule.message : '-') + '</td><td class="px-4 py-3 text-sm">' + status + '</td></tr>';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-800">${item.name}</td>
+                        <td class="px-4 py-3 text-sm text-gray-600 font-mono">¥${item.value.toLocaleString()}</td>
+                        <td class="px-4 py-3 text-sm text-gray-600">${ratio}%</td>
+                        <td class="px-4 py-3 text-sm text-gray-500">${ruleText}</td>
+                        <td class="px-4 py-3 text-sm">${statusHtml}</td>
+                    </tr>
+                `;
             });
 
+            // 更新错误/警告卡片... (保留原有逻辑)
+            updateResultCards();
+        }
+
+        function updateResultCards() {
+            // 更新错误列表
             if (validationResults.errors.length > 0) {
                 document.getElementById('validationErrors').classList.remove('hidden');
                 document.getElementById('errorCount').textContent = validationResults.errors.length;
-                var errorList = document.getElementById('errorList');
-                errorList.innerHTML = '';
-                validationResults.errors.forEach(function(error, index) {
-                    errorList.innerHTML += '<div class="rule-item bg-red-50 border border-red-200 rounded p-3"><div class="flex items-start"><span class="text-red-500 mr-2">[' + (index + 1) + ']</span><div><p class="text-sm font-medium text-red-800">' + error.type + ' - ' + error.caliber + '</p><p class="text-sm text-red-600">' + error.message + '</p><p class="text-xs text-gray-500 mt-1">建议：' + error.suggestion + '</p></div></div></div>';
-                });
+                document.getElementById('errorList').innerHTML = validationResults.errors.map((error, index) => 
+                    `<div class="rule-item bg-red-50 border border-red-200 rounded p-3 mb-2">
+                        <div class="flex items-start">
+                            <span class="text-red-500 mr-2">[${index + 1}]</span>
+                            <div>
+                                <p class="text-sm font-medium text-red-800">${error.type} - ${error.caliber}</p>
+                                <p class="text-sm text-red-600">${error.message}</p>
+                                <p class="text-xs text-gray-500 mt-1">建议：${error.suggestion}</p>
+                            </div>
+                        </div>
+                    </div>`
+                ).join('');
             } else {
                 document.getElementById('validationErrors').classList.add('hidden');
             }
 
+            // 更新警告列表
             if (validationResults.warnings.length > 0) {
                 document.getElementById('validationWarnings').classList.remove('hidden');
                 document.getElementById('warningCount').textContent = validationResults.warnings.length;
-                var warningList = document.getElementById('warningList');
-                warningList.innerHTML = '';
-                validationResults.warnings.forEach(function(warning, index) {
-                    warningList.innerHTML += '<div class="rule-item bg-yellow-50 border border-yellow-200 rounded p-3"><div class="flex items-start"><span class="text-yellow-500 mr-2">[' + (index + 1) + ']</span><div><p class="text-sm font-medium text-yellow-800">' + warning.type + ' - ' + warning.caliber + '</p><p class="text-sm text-yellow-600">' + warning.message + '</p><p class="text-xs text-gray-500 mt-1">建议：' + warning.suggestion + '</p></div></div></div>';
-                });
+                document.getElementById('warningList').innerHTML = validationResults.warnings.map((warning, index) => 
+                    `<div class="rule-item bg-yellow-50 border border-yellow-200 rounded p-3 mb-2">
+                        <div class="flex items-start">
+                            <span class="text-yellow-500 mr-2">[${index + 1}]</span>
+                            <div>
+                                <p class="text-sm font-medium text-yellow-800">${warning.type} - ${warning.caliber}</p>
+                                <p class="text-sm text-yellow-600">${warning.message}</p>
+                                <p class="text-xs text-gray-500 mt-1">建议：${warning.suggestion}</p>
+                            </div>
+                        </div>
+                    </div>`
+                ).join('');
             } else {
                 document.getElementById('validationWarnings').classList.add('hidden');
             }
@@ -1584,12 +2309,129 @@
             }
         }
 
-        function generateAccountTable() {
-            showLoading('正在生成账套表...');
-            setTimeout(function() {
-                hideLoading();
-                document.getElementById('generatedTableName').textContent = document.getElementById('yearSelect').value + '年度 ' + CALIBER_CONFIG[selectedCaliber].name + '辅助账套表';
+        async function generateAccountTable() {
+            // 1. 初始化批处理 UI
+            const dialog = document.getElementById('loadingDialog');
+            const taskList = document.getElementById('batchTaskList');
+            const title = document.getElementById('loadingTitle');
+            const percent = document.getElementById('batchPercent');
+            
+            dialog.classList.remove('hidden');
+            taskList.innerHTML = '';
+            
+            // 准备任务队列
+            const tasks = [];
+            selectedCalibers.forEach(c => {
+                const config = CALIBER_CONFIG[c];
+                tasks.push({ id: `${c}_calc`, name: `${config.name}：逻辑归集与计算`, status: 'pending' });
+                tasks.push({ id: `${c}_format`, name: `${config.name}：生成正式报表文件`, status: 'pending' });
+            });
+            tasks.push({ id: 'zip_all', name: '全套报表打包压缩', status: 'pending' });
+
+            // 渲染初始清单
+            taskList.innerHTML = tasks.map(t => `
+                <div class="flex items-center justify-between mb-3 last:mb-0" id="task_item_${t.id}">
+                    <div class="flex items-center overflow-hidden">
+                        <i class="fa fa-circle-o-notch fa-spin text-blue-400 mr-3 hidden" id="task_spinner_${t.id}"></i>
+                        <i class="fa fa-circle-thin text-gray-200 mr-3" id="task_wait_${t.id}"></i>
+                        <i class="fa fa-check-circle text-green-500 mr-3 hidden" id="task_done_${t.id}"></i>
+                        <span class="text-xs text-gray-600 truncate">${t.name}</span>
+                    </div>
+                    <span class="text-[10px] text-gray-300 uppercase font-mono" id="task_status_${t.id}">等待中</span>
+                </div>
+            `).join('');
+
+            // 2. 模拟异步分步处理
+            for (let i = 0; i < tasks.length; i++) {
+                const task = tasks[i];
+                const item = document.getElementById(`task_item_${task.id}`);
+                const spinner = document.getElementById(`task_spinner_${task.id}`);
+                const wait = document.getElementById(`task_wait_${task.id}`);
+                const done = document.getElementById(`task_done_${task.id}`);
+                const status = document.getElementById(`task_status_${task.id}`);
+                
+                // 开始任务
+                spinner.classList.remove('hidden');
+                wait.classList.add('hidden');
+                status.textContent = '处理中';
+                status.classList.remove('text-gray-300');
+                status.classList.add('text-blue-500');
+                title.textContent = task.name;
+                
+                // 模拟处理时间
+                const duration = 400 + Math.random() * 600;
+                await new Promise(resolve => setTimeout(resolve, duration));
+                
+                // 完成任务
+                spinner.classList.add('hidden');
+                done.classList.remove('hidden');
+                status.textContent = '已完成';
+                status.classList.remove('text-blue-500');
+                status.classList.add('text-green-500');
+                
+                // 更新总进度
+                const progress = Math.round(((i + 1) / tasks.length) * 100);
+                percent.textContent = `${progress}%`;
+            }
+
+            // 3. 处理完成
+            setTimeout(() => {
+                dialog.classList.add('hidden');
+                const year = document.getElementById('yearSelect').value;
+                
+                // 更新已生成表格的标签显示
+                document.getElementById('generatedTableName').innerHTML = `
+                    <div class="flex flex-wrap gap-2 mt-1">
+                        ${selectedCalibers.map(c => `<span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-md text-xs font-bold border border-blue-200">${year}年度 ${CALIBER_CONFIG[c].name}</span>`).join('')}
+                    </div>
+                `;
+
+                // 更新批量导出列表
+                const batchExportList = document.getElementById('batchExportList');
+                batchExportList.innerHTML = selectedCalibers.map(c => `
+                    <div class="bg-white p-4 rounded-lg border border-slate-200 flex items-center justify-between group hover:border-blue-300 transition-all">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-${CALIBER_CONFIG[c].color}-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fa ${c === 'financial' ? 'fa-calculator' : c === 'hiTech' ? 'fa-line-chart' : c === 'accounting' ? 'fa-book' : c === 'rd' ? 'fa-flask' : 'fa-bank'} text-${CALIBER_CONFIG[c].color}-600"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-sm font-bold text-slate-800">${CALIBER_CONFIG[c].name}</h5>
+                                <p class="text-[10px] text-slate-400 uppercase font-mono">${year}年 包含明细账/汇总表/审计快照</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="exportSingleReport('${c}', 'pdf')" class="px-2 py-1 text-[10px] bg-slate-50 text-slate-600 border border-slate-200 rounded hover:bg-red-50 hover:text-red-600 transition-colors">PDF 审计版</button>
+                            <button onclick="exportSingleReport('${c}', 'xlsx')" class="px-2 py-1 text-[10px] bg-slate-50 text-slate-600 border border-slate-200 rounded hover:bg-green-50 hover:text-green-600 transition-colors">Excel 申报版</button>
+                        </div>
+                    </div>
+                `).join('');
+
                 goToStep(4);
+            }, 500);
+        }
+
+        function exportSingleReport(caliber, format) {
+            // 这里复用现有的导出逻辑，但允许指定口径
+            const originalCaliber = selectedCalibers[0]; // 备份
+            const tempCaliber = caliber;
+            
+            // 模拟导出
+            const caliberName = CALIBER_CONFIG[tempCaliber].name;
+            const year = document.getElementById('yearSelect').value;
+            alert(`正在导出：${year}年度 ${caliberName} 账套表 (${format.toUpperCase()})`);
+            
+            // 实际导出逻辑可以调用现有的 exportAccountTable(format)
+            // 但需要先临时修改全局 selectedCalibers 或者重构 exportAccountTable
+        }
+
+        function exportAllReports() {
+            showLoading('正在打包所有报表...');
+            setTimeout(() => {
+                hideLoading();
+                const year = document.getElementById('yearSelect').value;
+                alert(`打包成功！已生成 ${selectedCalibers.length} 份报表：\n\n` + 
+                      selectedCalibers.map(c => `- ${year}年度 ${CALIBER_CONFIG[c].name}账套表`).join('\n') +
+                      `\n\n正在下载 ZIP 压缩包...`);
             }, 2000);
         }
 
