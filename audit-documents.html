@@ -395,23 +395,48 @@
                 <div class="flex items-end space-x-1 border-b border-gray-100 pb-0">
                     <button class="px-4 py-2 text-xs font-bold text-primary border-b-2 border-primary bg-blue-50 rounded-t" id="tab-labor" onclick="switchTab('labor')">人员人工</button>
                     <button class="px-4 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-gray-50 rounded-t" id="tab-material" onclick="switchTab('material')">直接投入</button>
-                    <button class="px-4 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-gray-50 rounded-t" id="tab-depreciation" onclick="switchTab('depreciation')">折旧费用</button>
+                    <button class="px-4 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-gray-50 rounded-t" id="tab-depreciation" onclick="switchTab('depreciation')">折旧与长期摊销费</button>
                     <button class="px-4 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-gray-50 rounded-t" id="tab-intangible" onclick="switchTab('intangible')">无形资产</button>
                     <button class="px-4 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-gray-50 rounded-t" id="tab-other" onclick="switchTab('other')">其他相关</button>
+                    <button class="px-4 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-gray-50 rounded-t" id="tab-equipment" onclick="switchTab('equipment')">装备调试与试验</button>
+                    <button class="px-4 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-gray-50 rounded-t" id="tab-outsource" onclick="switchTab('outsource')">委托外部研发</button>
                 </div>
             </div>
 
-            <!-- 子表Tab: 人员人工下的细分表 -->
+            <!-- 子表Tab: 根据主Tab动态切换 -->
             <div class="bg-white border-b border-gray-100 px-6 py-2 flex-shrink-0 flex items-center justify-between">
-                <div class="flex items-center space-x-1">
+                <div class="flex items-center space-x-1" id="subtabsContainer">
                     <span class="text-[10px] text-gray-400 mr-2">子表:</span>
+                    <!-- 人员人工子表 -->
                     <button class="px-3 py-1 text-[10px] font-bold text-white bg-primary rounded-full" id="subtab-workhour" onclick="switchSubTab('workhour')">研发人员工时分摊表</button>
                     <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full" id="subtab-social" onclick="switchSubTab('social')">人员社保分摊表</button>
                     <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full" id="subtab-fund" onclick="switchSubTab('fund')">研发人员公积金分摊表</button>
                     <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full" id="subtab-roster" onclick="switchSubTab('roster')">项目研发人员名册</button>
+                    <!-- 直接投入子表 -->
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-material-detail" onclick="switchSubTab('material-detail')">材料领用明细表</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-material-summary" onclick="switchSubTab('material-summary')">研发领用材料领用汇总表</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-material-electric" onclick="switchSubTab('material-electric')">电费分摊表</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-material-water" onclick="switchSubTab('material-water')">水费分摊表</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-material-fuel" onclick="switchSubTab('material-fuel')">燃料费分摊表</button>
+                    <!-- 折旧费用子表 -->
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-depr-detail" onclick="switchSubTab('depr-detail')">设备折旧明细表</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-depr-allocation" onclick="switchSubTab('depr-allocation')">专用设备折旧分摊表</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-depr-amortization" onclick="switchSubTab('depr-amortization')">长期摊销明细表</button>
+                    <!-- 无形资产子表 -->
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-intangible-detail" onclick="switchSubTab('intangible-detail')">无形资产明细表</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-intangible-amortization" onclick="switchSubTab('intangible-amortization')">无形资产摊销表</button>
+                    <!-- 其他相关子表 -->
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-other-detail" onclick="switchSubTab('other-detail')">其他费用明细表</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-other-allocation" onclick="switchSubTab('other-allocation')">其他费用分摊表</button>
+                    <!-- 装备调试与试验费用子表 -->
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-equipment-detail" onclick="switchSubTab('equipment-detail')">装备调试费</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-equipment-allocation" onclick="switchSubTab('equipment-allocation')">试验费用</button>
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-equipment-add" onclick="switchSubTab('equipment-add')">田间费用</button>
+                    <!-- 委托外部研发费用子表 -->
+                    <button class="px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full hidden" id="subtab-outsource-detail" onclick="switchSubTab('outsource-detail')">委托研发费用</button>
                 </div>
                 <!-- 新增：月份筛选器 -->
-                <div class="flex items-center bg-gray-50 border border-gray-200 rounded px-2 py-1">
+                <div id="monthFilter" class="flex items-center bg-gray-50 border border-gray-200 rounded px-3 py-2">
                     <span class="text-[10px] text-gray-400 mr-2">数据月份:</span>
                     <select class="text-[10px] font-bold text-gray-700 bg-transparent border-none p-0 focus:ring-0 outline-none">
                         <option>2024-04</option>
@@ -433,46 +458,84 @@
                             <i class="fa fa-table text-primary text-sm"></i>
                             <span class="text-xs font-bold text-gray-700">研发人员工时分摊表</span>
                         </div>
-                        <span class="text-[10px] text-gray-400">RD2024001 | 单位: 元</span>
+                        <span class="text-[10px] text-gray-400">2024-09 | 单位: 元</span>
                     </div>
                     <div class="table-fix-head flex-1">
                         <table class="w-full border-collapse text-xs">
                             <thead>
-                                <tr class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-wider">
-                                    <th class="border-b border-gray-200 p-2.5 w-12 text-center">序号</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-24 text-left">人员</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-24 text-left">部门</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 text-right">月工资</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 text-center">研发工时</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 text-center">研发人工占比</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 bg-blue-50 text-right font-bold">研发分摊金额</th>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">时间</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-left">员工姓名</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-left">部门</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 text-left">参与项目</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">项目工时</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">人员总工</th>
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">占比</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-right">月工资</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 bg-blue-50 text-right font-bold">研发分摊金额</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-600">
-                                <tr class="highlight-row border-b border-gray-50 hover:bg-blue-50">
-                                    <td class="p-3 text-center text-[10px] text-gray-400">1</td>
-                                    <td class="p-3 font-bold text-gray-800">张三</td>
-                                    <td class="p-3">研发部</td>
-                                    <td class="p-3 text-right">22,000.00</td>
-                                    <td class="p-3 text-center">105.6</td>
-                                    <td class="p-3 text-center font-bold text-blue-600">60.00%</td>
-                                    <td class="p-3 text-right bg-blue-50 font-bold text-blue-700">13,200.00</td>
+                                <!-- 张三 - 智能传感器研发 -->
+                                <tr class="border-b border-gray-100 bg-blue-50/30">
+                                    <td class="p-2 text-center" rowspan="2">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800" rowspan="2">张三</td>
+                                    <td class="p-2" rowspan="2">研发部</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">320</td>
+                                    <td class="p-2 text-right" rowspan="2">600</td>
+                                    <td class="p-2 text-center">53.3%</td>
+                                    <td class="p-2 text-right" rowspan="2">22,000.00</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">6,222.40</td>
                                 </tr>
-                                <tr class="highlight-row border-b border-gray-50 hover:bg-blue-50">
-                                    <td class="p-3 text-center text-[10px] text-gray-400">2</td>
-                                    <td class="p-3 font-bold text-gray-800">李四</td>
-                                    <td class="p-3">技术中心</td>
-                                    <td class="p-3 text-right">16,000.00</td>
-                                    <td class="p-3 text-center">176.0</td>
-                                    <td class="p-3 text-center font-bold text-blue-600">100.00%</td>
-                                    <td class="p-3 text-right bg-blue-50 font-bold text-blue-700">16,000.00</td>
+                                <!-- 张三 - 工业机器人控制系统 -->
+                                <tr class="border-b border-gray-100 bg-blue-50/30">
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">280</td>
+                                    <td class="p-2 text-center">46.7%</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">5,577.60</td>
                                 </tr>
+                                <!-- 李四 - 智能传感器研发 -->
+                                <tr class="border-b border-gray-100 bg-green-50/30">
+                                    <td class="p-2 text-center" rowspan="2">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800" rowspan="2">李四</td>
+                                    <td class="p-2" rowspan="2">研发部</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">400</td>
+                                    <td class="p-2 text-right" rowspan="2">720</td>
+                                    <td class="p-2 text-center">55.6%</td>
+                                    <td class="p-2 text-right" rowspan="2">18,000.00</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">5,560.00</td>
+                                </tr>
+                                <!-- 李四 - 新能源材料研究 -->
+                                <tr class="border-b border-gray-100 bg-green-50/30">
+                                    <td class="p-2">新能源材料研究</td>
+                                    <td class="p-2 text-right">320</td>
+                                    <td class="p-2 text-center">44.4%</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">4,440.00</td>
+                                </tr>
+                                <!-- 赵六 - 工业机器人控制系统 -->
+                                <tr class="border-b border-gray-100">
+                                    <td class="p-2 text-center">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800">赵六</td>
+                                    <td class="p-2">研发部</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">480</td>
+                                    <td class="p-2 text-right">480</td>
+                                    <td class="p-2 text-center">100%</td>
+                                    <td class="p-2 text-right">15,000.00</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">15,000.00</td>
+                                </tr>
+                                <!-- 合计行 -->
                                 <tr class="bg-gray-100 font-bold text-gray-800">
-                                    <td class="p-3 text-center text-[10px]" colspan="3">合计</td>
-                                    <td class="p-3 text-right">38,000.00</td>
-                                    <td class="p-3 text-center">281.6</td>
-                                    <td class="p-3 text-center">--</td>
-                                    <td class="p-3 text-right bg-blue-100 text-blue-700">29,200.00</td>
+                                    <td class="p-2 text-center" colspan="2">合计</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right">1,800</td>
+                                    <td class="p-2 text-right">1,800</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-right">55,000.00</td>
+                                    <td class="p-2 text-right bg-blue-100 text-blue-700">36,799.00</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -486,46 +549,84 @@
                             <i class="fa fa-shield text-purple-500 text-sm"></i>
                             <span class="text-xs font-bold text-gray-700">人员社保分摊表</span>
                         </div>
-                        <span class="text-[10px] text-gray-400">RD2024001 | 单位: 元</span>
+                        <span class="text-[10px] text-gray-400">2024-09 | 单位: 元</span>
                     </div>
                     <div class="table-fix-head flex-1">
                         <table class="w-full border-collapse text-xs">
                             <thead>
-                                <tr class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-wider">
-                                    <th class="border-b border-gray-200 p-2.5 w-12 text-center">序号</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-24 text-left">人员</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-24 text-left">部门</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 text-right">月社保</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 text-center">研发工时</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 text-center">研发人工占比</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 bg-purple-50 text-right font-bold">研发分摊金额</th>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">时间</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-left">员工姓名</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-left">部门</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 text-left">参与项目</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">项目工时</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">人员总工</th>
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">占比</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-right">月社保</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 bg-purple-50 text-right font-bold">研发分摊金额</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-600">
-                                <tr class="highlight-row border-b border-gray-50 hover:bg-purple-50/30">
-                                    <td class="p-3 text-center text-[10px] text-gray-400">1</td>
-                                    <td class="p-3 font-bold text-gray-800">张三</td>
-                                    <td class="p-3">研发部</td>
-                                    <td class="p-3 text-right">4,500.00</td>
-                                    <td class="p-3 text-center">105.6</td>
-                                    <td class="p-3 text-center font-bold text-purple-600">60.00%</td>
-                                    <td class="p-3 text-right bg-purple-50 font-bold text-purple-700">2,700.00</td>
+                                <!-- 张三 - 智能传感器研发 -->
+                                <tr class="border-b border-gray-100 bg-purple-50/30">
+                                    <td class="p-2 text-center" rowspan="2">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800" rowspan="2">张三</td>
+                                    <td class="p-2" rowspan="2">研发部</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">320</td>
+                                    <td class="p-2 text-right" rowspan="2">600</td>
+                                    <td class="p-2 text-center">53.3%</td>
+                                    <td class="p-2 text-right" rowspan="2">4,500.00</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">1,275.00</td>
                                 </tr>
-                                <tr class="highlight-row border-b border-gray-50 hover:bg-purple-50/30">
-                                    <td class="p-3 text-center text-[10px] text-gray-400">2</td>
-                                    <td class="p-3 font-bold text-gray-800">李四</td>
-                                    <td class="p-3">技术中心</td>
-                                    <td class="p-3 text-right">3,200.00</td>
-                                    <td class="p-3 text-center">176.0</td>
-                                    <td class="p-3 text-center font-bold text-purple-600">100.00%</td>
-                                    <td class="p-3 text-right bg-purple-50 font-bold text-purple-700">3,200.00</td>
+                                <!-- 张三 - 工业机器人控制系统 -->
+                                <tr class="border-b border-gray-100 bg-purple-50/30">
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">280</td>
+                                    <td class="p-2 text-center">46.7%</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">1,125.00</td>
                                 </tr>
+                                <!-- 李四 - 智能传感器研发 -->
+                                <tr class="border-b border-gray-100 bg-purple-50/20">
+                                    <td class="p-2 text-center" rowspan="2">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800" rowspan="2">李四</td>
+                                    <td class="p-2" rowspan="2">研发部</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">400</td>
+                                    <td class="p-2 text-right" rowspan="2">720</td>
+                                    <td class="p-2 text-center">55.6%</td>
+                                    <td class="p-2 text-right" rowspan="2">3,600.00</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">1,112.00</td>
+                                </tr>
+                                <!-- 李四 - 新能源材料研究 -->
+                                <tr class="border-b border-gray-100 bg-purple-50/20">
+                                    <td class="p-2">新能源材料研究</td>
+                                    <td class="p-2 text-right">320</td>
+                                    <td class="p-2 text-center">44.4%</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">888.00</td>
+                                </tr>
+                                <!-- 赵六 - 工业机器人控制系统 -->
+                                <tr class="border-b border-gray-100">
+                                    <td class="p-2 text-center">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800">赵六</td>
+                                    <td class="p-2">研发部</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">480</td>
+                                    <td class="p-2 text-right">480</td>
+                                    <td class="p-2 text-center">100%</td>
+                                    <td class="p-2 text-right">3,000.00</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">3,000.00</td>
+                                </tr>
+                                <!-- 合计行 -->
                                 <tr class="bg-gray-100 font-bold text-gray-800">
-                                    <td class="p-3 text-center text-[10px]" colspan="3">合计</td>
-                                    <td class="p-3 text-right">7,700.00</td>
-                                    <td class="p-3 text-center">281.6</td>
-                                    <td class="p-3 text-center">--</td>
-                                    <td class="p-3 text-right bg-purple-100 text-purple-700">5,900.00</td>
+                                    <td class="p-2 text-center" colspan="2">合计</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right">1,800</td>
+                                    <td class="p-2 text-right">1,800</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-right">11,100.00</td>
+                                    <td class="p-2 text-right bg-purple-100 text-purple-700">7,400.00</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -539,46 +640,84 @@
                             <i class="fa fa-university text-orange-500 text-sm"></i>
                             <span class="text-xs font-bold text-gray-700">研发人员公积金分摊表</span>
                         </div>
-                        <span class="text-[10px] text-gray-400">RD2024001 | 单位: 元</span>
+                        <span class="text-[10px] text-gray-400">2024-09 | 单位: 元</span>
                     </div>
                     <div class="table-fix-head flex-1">
                         <table class="w-full border-collapse text-xs">
                             <thead>
-                                <tr class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-wider">
-                                    <th class="border-b border-gray-200 p-2.5 w-12 text-center">序号</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-24 text-left">人员</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-24 text-left">部门</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 text-right">月公积金</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 text-center">研发工时</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 text-center">研发人工占比</th>
-                                    <th class="border-b border-gray-200 p-2.5 w-32 bg-orange-50 text-right font-bold">研发分摊金额</th>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">时间</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-left">员工姓名</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-left">部门</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 text-left">参与项目</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">项目工时</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">人员总工</th>
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">占比</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-right">月公积金</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 bg-orange-50 text-right font-bold">研发分摊金额</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-600">
-                                <tr class="highlight-row border-b border-gray-50 hover:bg-orange-50/30">
-                                    <td class="p-3 text-center text-[10px] text-gray-400">1</td>
-                                    <td class="p-3 font-bold text-gray-800">张三</td>
-                                    <td class="p-3">研发部</td>
-                                    <td class="p-3 text-right">1,200.00</td>
-                                    <td class="p-3 text-center">105.6</td>
-                                    <td class="p-3 text-center font-bold text-orange-600">60.00%</td>
-                                    <td class="p-3 text-right bg-orange-50 font-bold text-orange-700">720.00</td>
+                                <!-- 张三 - 智能传感器研发 -->
+                                <tr class="border-b border-gray-100 bg-orange-50/30">
+                                    <td class="p-2 text-center" rowspan="2">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800" rowspan="2">张三</td>
+                                    <td class="p-2" rowspan="2">研发部</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">320</td>
+                                    <td class="p-2 text-right" rowspan="2">600</td>
+                                    <td class="p-2 text-center">53.3%</td>
+                                    <td class="p-2 text-right" rowspan="2">1,200.00</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">339.00</td>
                                 </tr>
-                                <tr class="highlight-row border-b border-gray-50 hover:bg-orange-50/30">
-                                    <td class="p-3 text-center text-[10px] text-gray-400">2</td>
-                                    <td class="p-3 font-bold text-gray-800">李四</td>
-                                    <td class="p-3">技术中心</td>
-                                    <td class="p-3 text-right">960.00</td>
-                                    <td class="p-3 text-center">176.0</td>
-                                    <td class="p-3 text-center font-bold text-orange-600">100.00%</td>
-                                    <td class="p-3 text-right bg-orange-50 font-bold text-orange-700">960.00</td>
+                                <!-- 张三 - 工业机器人控制系统 -->
+                                <tr class="border-b border-gray-100 bg-orange-50/30">
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">280</td>
+                                    <td class="p-2 text-center">46.7%</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">261.00</td>
                                 </tr>
+                                <!-- 李四 - 智能传感器研发 -->
+                                <tr class="border-b border-gray-100 bg-orange-50/20">
+                                    <td class="p-2 text-center" rowspan="2">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800" rowspan="2">李四</td>
+                                    <td class="p-2" rowspan="2">研发部</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">400</td>
+                                    <td class="p-2 text-right" rowspan="2">720</td>
+                                    <td class="p-2 text-center">55.6%</td>
+                                    <td class="p-2 text-right" rowspan="2">960.00</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">296.00</td>
+                                </tr>
+                                <!-- 李四 - 新能源材料研究 -->
+                                <tr class="border-b border-gray-100 bg-orange-50/20">
+                                    <td class="p-2">新能源材料研究</td>
+                                    <td class="p-2 text-right">320</td>
+                                    <td class="p-2 text-center">44.4%</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">234.00</td>
+                                </tr>
+                                <!-- 赵六 - 工业机器人控制系统 -->
+                                <tr class="border-b border-gray-100">
+                                    <td class="p-2 text-center">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800">赵六</td>
+                                    <td class="p-2">研发部</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">480</td>
+                                    <td class="p-2 text-right">480</td>
+                                    <td class="p-2 text-center">100%</td>
+                                    <td class="p-2 text-right">800.00</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">800.00</td>
+                                </tr>
+                                <!-- 合计行 -->
                                 <tr class="bg-gray-100 font-bold text-gray-800">
-                                    <td class="p-3 text-center text-[10px]" colspan="3">合计</td>
-                                    <td class="p-3 text-right">2,160.00</td>
-                                    <td class="p-3 text-center">281.6</td>
-                                    <td class="p-3 text-center">--</td>
-                                    <td class="p-3 text-right bg-orange-100 text-orange-700">1,680.00</td>
+                                    <td class="p-2 text-center" colspan="2">合计</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right">1,800</td>
+                                    <td class="p-2 text-right">1,800</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-right">2,960.00</td>
+                                    <td class="p-2 text-right bg-orange-100 text-orange-700">1,930.00</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -658,6 +797,1627 @@
                     </div>
                 </div>
 
+                <!-- 设备折旧明细表 -->
+                <div id="panel-depr-detail" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-laptop text-orange-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">研发设备设施折旧明细表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-wider">
+                                    <th class="border-b border-gray-200 p-2 w-10 text-center">序号</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">资产编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-left">资产名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">购置日期</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">购买原值</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">月折旧额</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">累计折旧额</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">项目属性</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">设备属性</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-left">备注</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-orange-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">1</td>
+                                    <td class="p-2 text-center font-bold text-gray-800">TSDN</td>
+                                    <td class="p-2">台式电脑</td>
+                                    <td class="p-2 text-center">2021-10-14</td>
+                                    <td class="p-2 text-right">53,539.82</td>
+                                    <td class="p-2 text-right">0.00</td>
+                                    <td class="p-2 text-right">50,862.83</td>
+                                    <td class="p-2 text-center">研发专用</td>
+                                    <td class="p-2 text-center">专用设备</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-orange-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">2</td>
+                                    <td class="p-2 text-center font-bold text-gray-800">BJB</td>
+                                    <td class="p-2">笔记本</td>
+                                    <td class="p-2 text-center">2021-06-03</td>
+                                    <td class="p-2 text-right">4,246.46</td>
+                                    <td class="p-2 text-right">22.10</td>
+                                    <td class="p-2 text-right">3,704.05</td>
+                                    <td class="p-2 text-center">研发专用</td>
+                                    <td class="p-2 text-center">专用设备</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-orange-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">3</td>
+                                    <td class="p-2 text-center font-bold text-gray-800">0002</td>
+                                    <td class="p-2">笔记本电脑</td>
+                                    <td class="p-2 text-center">2021-11-20</td>
+                                    <td class="p-2 text-right">10,800.00</td>
+                                    <td class="p-2 text-right">75.27</td>
+                                    <td class="p-2 text-right">3,135.00</td>
+                                    <td class="p-2 text-center">研发专用</td>
+                                    <td class="p-2 text-center">专用设备</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-orange-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">4</td>
+                                    <td class="p-2 text-center font-bold text-gray-800">60021</td>
+                                    <td class="p-2">笔记本-ThinkPad</td>
+                                    <td class="p-2 text-center">2021-03-31</td>
+                                    <td class="p-2 text-right">4,793.00</td>
+                                    <td class="p-2 text-right">75.27</td>
+                                    <td class="p-2 text-right">4,327.30</td>
+                                    <td class="p-2 text-center">研发专用</td>
+                                    <td class="p-2 text-center">专用设备</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-orange-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">5</td>
+                                    <td class="p-2 text-center font-bold text-gray-800">KFDW1</td>
+                                    <td class="p-2">开发用电脑</td>
+                                    <td class="p-2 text-center">2024-04-20</td>
+                                    <td class="p-2 text-right">5,320.00</td>
+                                    <td class="p-2 text-right">147.78</td>
+                                    <td class="p-2 text-right">2,955.60</td>
+                                    <td class="p-2 text-center">研发专用</td>
+                                    <td class="p-2 text-center">专用设备</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center text-[10px]" colspan="6">合计</td>
+                                    <td class="p-2 text-right">64,984.78</td>
+                                    <td class="p-2 text-center" colspan="3">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 专用设备折旧分摊表 -->
+                <div id="panel-depr-allocation" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-pie-chart text-cyan-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">专用设备折旧项目分摊表</span>
+                        </div>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-wider">
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">时间</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-left">设备名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">项目编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-32 text-left">项目名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">生产工时</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">研发工时</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">设备总工时</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">研发占比</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">专用设备折旧额</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">项目分摊折旧额</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800">数控机床</td>
+                                    <td class="p-2 text-center">RD003</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-center">240</td>
+                                    <td class="p-2 text-center">80</td>
+                                    <td class="p-2 text-center">560</td>
+                                    <td class="p-2 text-center">14.3%</td>
+                                    <td class="p-2 text-right">770.12</td>
+                                    <td class="p-2 text-right">109.93</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center"></td>
+                                    <td class="p-2"></td>
+                                    <td class="p-2 text-center">RD004</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-center">180</td>
+                                    <td class="p-2 text-center">60</td>
+                                    <td class="p-2 text-center"></td>
+                                    <td class="p-2 text-center">10.7%</td>
+                                    <td class="p-2 text-right"></td>
+                                    <td class="p-2 text-right">82.40</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800">3D打印机</td>
+                                    <td class="p-2 text-center">RD003</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-center">320</td>
+                                    <td class="p-2 text-center">80</td>
+                                    <td class="p-2 text-center">400</td>
+                                    <td class="p-2 text-center">20.0%</td>
+                                    <td class="p-2 text-right">520.00</td>
+                                    <td class="p-2 text-right">104.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center">2024-09</td>
+                                    <td class="p-2 font-bold text-gray-800">光谱分析仪</td>
+                                    <td class="p-2 text-center">RD004</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-center">210</td>
+                                    <td class="p-2 text-center">70</td>
+                                    <td class="p-2 text-center">600</td>
+                                    <td class="p-2 text-center">11.7%</td>
+                                    <td class="p-2 text-right">380.00</td>
+                                    <td class="p-2 text-right">44.46</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center"></td>
+                                    <td class="p-2"></td>
+                                    <td class="p-2 text-center">RD003</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-center">180</td>
+                                    <td class="p-2 text-center">50</td>
+                                    <td class="p-2 text-center"></td>
+                                    <td class="p-2 text-center">8.3%</td>
+                                    <td class="p-2 text-right"></td>
+                                    <td class="p-2 text-right">31.54</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center"></td>
+                                    <td class="p-2"></td>
+                                    <td class="p-2 text-center">RD005</td>
+                                    <td class="p-2">新能源材料研究</td>
+                                    <td class="p-2 text-center">150</td>
+                                    <td class="p-2 text-center">40</td>
+                                    <td class="p-2 text-center"></td>
+                                    <td class="p-2 text-center">6.7%</td>
+                                    <td class="p-2 text-right"></td>
+                                    <td class="p-2 text-right">25.46</td>
+                                </tr>
+                                <!-- 合计行 -->
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="7">合计</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-right bg-cyan-50 text-cyan-700">1,670.12</td>
+                                    <td class="p-2 text-right">397.79</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="border-t border-gray-100 px-4 py-2 flex items-center justify-between text-[10px] text-gray-400">
+                        <span>制表人:</span>
+                        <span>审核人:</span>
+                        <span>财务经理:</span>
+                    </div>
+                </div>
+
+                <!-- 折旧费用 - 长期摊销明细表 -->
+                <div id="panel-depr-amortization" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-calendar-check-o text-indigo-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">长期摊销明细表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">日期</th>
+                                    <th class="border-b border-gray-200 p-2 w-18 text-center">费用编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-32 text-left">费用名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-center">费用类型</th>
+                                    <th class="border-b border-gray-200 p-2 w-32 text-left">所属项目</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-right">分摊金额</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">分摊比例</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <!-- LTA-001 研发实验室装修 -->
+                                <tr class="border-b border-gray-100 bg-indigo-50/30">
+                                    <td class="p-2 text-center" rowspan="3">2024-09</td>
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="3">LTA-001</td>
+                                    <td class="p-2 font-bold" rowspan="3">研发实验室装修</td>
+                                    <td class="p-2 text-center" rowspan="3">装修费</td>
+                                    <td class="p-2">智能客服系统1</td>
+                                    <td class="p-2 text-right">999.90</td>
+                                    <td class="p-2 text-center">30%</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-indigo-50/30">
+                                    <td class="p-2">智能客服系统2</td>
+                                    <td class="p-2 text-right">1,333.20</td>
+                                    <td class="p-2 text-center">40%</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-indigo-50/30">
+                                    <td class="p-2">智能客服系统3</td>
+                                    <td class="p-2 text-right">333.30</td>
+                                    <td class="p-2 text-center">10%</td>
+                                </tr>
+                                <!-- LTA-002 研发系统实施费 -->
+                                <tr class="border-b border-gray-100 bg-indigo-50/20">
+                                    <td class="p-2 text-center" rowspan="2">2024-09</td>
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="2">LTA-002</td>
+                                    <td class="p-2 font-bold" rowspan="2">研发系统实施费</td>
+                                    <td class="p-2 text-center" rowspan="2">软件实施费</td>
+                                    <td class="p-2">智能客服系统1</td>
+                                    <td class="p-2 text-right">833.50</td>
+                                    <td class="p-2 text-center">50%</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-indigo-50/20">
+                                    <td class="p-2">智能客服系统3</td>
+                                    <td class="p-2 text-right">833.50</td>
+                                    <td class="p-2 text-center">50%</td>
+                                </tr>
+                                <!-- LTA-004 办公楼装修 -->
+                                <tr class="border-b border-gray-100 bg-indigo-50/30">
+                                    <td class="p-2 text-center" rowspan="3">2024-09</td>
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="3">LTA-004</td>
+                                    <td class="p-2 font-bold" rowspan="3">办公楼装修</td>
+                                    <td class="p-2 text-center" rowspan="3">装修费</td>
+                                    <td class="p-2">智能客服系统1</td>
+                                    <td class="p-2 text-right">3,333.60</td>
+                                    <td class="p-2 text-center">60%</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-indigo-50/30">
+                                    <td class="p-2">智能客服系统2</td>
+                                    <td class="p-2 text-right">1,111.20</td>
+                                    <td class="p-2 text-center">20%</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-indigo-50/30">
+                                    <td class="p-2">智能客服系统4</td>
+                                    <td class="p-2 text-right">1,111.20</td>
+                                    <td class="p-2 text-center">20%</td>
+                                </tr>
+                                <!-- 合计行 -->
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-center" colspan="3">合计</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right bg-indigo-100 text-indigo-700">8,889.40</td>
+                                    <td class="p-2 text-center">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 直接投入 - 材料领用明细表 -->
+                <div id="panel-material-detail" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-file-text-o text-green-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">材料领用明细表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1 overflow-auto p-4">
+                        <!-- RD01项目 - 2024年09月领料单 -->
+                        <div class="border border-gray-300 rounded-lg mb-6 overflow-hidden">
+                            <!-- 领料单标题 -->
+                            <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+                                <div class="text-center">
+                                    <span class="text-sm font-bold text-gray-800">领 料 单</span>
+                                </div>
+                            </div>
+                            <!-- 领料单信息 -->
+                            <div class="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                                <div class="flex items-center space-x-6">
+                                    <span class="text-[10px] text-gray-600">领用部门: <span class="font-medium">研发部</span></span>
+                                    <span class="text-[10px] text-gray-600">2024年09月</span>
+                                    <span class="text-[10px] text-gray-600">项目编号: <span class="font-medium">RD01</span></span>
+                                    <span class="text-[10px] text-gray-600">项目名称: <span class="font-medium">智能传感器研发</span></span>
+                                </div>
+                                <span class="text-[10px] text-gray-600">NO. <span class="font-medium">LL-RD01-202409</span></span>
+                            </div>
+                            <!-- 领料内容 -->
+                            <table class="w-full border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                        <th class="border-b border-gray-200 p-2 w-24 text-center">品名</th>
+                                        <th class="border-b border-gray-200 p-2 w-16 text-center">规格</th>
+                                        <th class="border-b border-gray-200 p-2 w-12 text-center">单位</th>
+                                        <th class="border-b border-gray-200 p-2 w-16 text-right">数量</th>
+                                        <th class="border-b border-gray-200 p-2 w-16 text-right">单价</th>
+                                        <th class="border-b border-gray-200 p-2 w-20 text-right">金额</th>
+                                        <th class="border-b border-gray-200 p-2 w-24 text-left">备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-600">
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-2">研发用电路板</td>
+                                        <td class="p-2 text-center">PCB-001</td>
+                                        <td class="p-2 text-center">件</td>
+                                        <td class="p-2 text-right">50</td>
+                                        <td class="p-2 text-right">125.00</td>
+                                        <td class="p-2 text-right">6,250.00</td>
+                                        <td class="p-2">智能传感器研发项目</td>
+                                    </tr>
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-2">传感器模块</td>
+                                        <td class="p-2 text-center">SENSOR-02</td>
+                                        <td class="p-2 text-center">个</td>
+                                        <td class="p-2 text-right">20</td>
+                                        <td class="p-2 text-right">350.00</td>
+                                        <td class="p-2 text-right">7,000.00</td>
+                                        <td class="p-2">智能传感器研发项目</td>
+                                    </tr>
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-2">连接线材</td>
+                                        <td class="p-2 text-center">CAT6</td>
+                                        <td class="p-2 text-center">米</td>
+                                        <td class="p-2 text-right">100</td>
+                                        <td class="p-2 text-right">15.00</td>
+                                        <td class="p-2 text-right">1,500.00</td>
+                                        <td class="p-2">智能传感器研发项目</td>
+                                    </tr>
+                                    <tr class="bg-gray-100 font-bold text-gray-800">
+                                        <td class="p-2 text-center" colspan="5">合计</td>
+                                        <td class="p-2 text-right bg-green-50 text-green-700">14,750.00</td>
+                                        <td class="p-2">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- 签名栏 -->
+                            <div class="border-t border-gray-200 px-4 py-3 bg-gray-50 flex items-center justify-between">
+                                <div class="flex items-center space-x-12">
+                                    <div>
+                                        <span class="text-[10px] text-gray-500">领用人:</span>
+                                        <div class="border-b border-gray-300 w-24 mt-1"></div>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-gray-500">经理:</span>
+                                        <div class="border-b border-gray-300 w-24 mt-1"></div>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-gray-500">仓库管理员:</span>
+                                        <div class="border-b border-gray-300 w-24 mt-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RD02项目 - 2024年09月领料单 -->
+                        <div class="border border-gray-300 rounded-lg mb-6 overflow-hidden">
+                            <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+                                <div class="text-center">
+                                    <span class="text-sm font-bold text-gray-800">领 料 单</span>
+                                </div>
+                            </div>
+                            <div class="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                                <div class="flex items-center space-x-6">
+                                    <span class="text-[10px] text-gray-600">领用部门: <span class="font-medium">研发部</span></span>
+                                    <span class="text-[10px] text-gray-600">2024年09月</span>
+                                    <span class="text-[10px] text-gray-600">项目编号: <span class="font-medium">RD02</span></span>
+                                    <span class="text-[10px] text-gray-600">项目名称: <span class="font-medium">工业机器人控制系统</span></span>
+                                </div>
+                                <span class="text-[10px] text-gray-600">NO. <span class="font-medium">LL-RD02-202409</span></span>
+                            </div>
+                            <table class="w-full border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                        <th class="border-b border-gray-200 p-2 w-24 text-center">品名</th>
+                                        <th class="border-b border-gray-200 p-2 w-16 text-center">规格</th>
+                                        <th class="border-b border-gray-200 p-2 w-12 text-center">单位</th>
+                                        <th class="border-b border-gray-200 p-2 w-16 text-right">数量</th>
+                                        <th class="border-b border-gray-200 p-2 w-16 text-right">单价</th>
+                                        <th class="border-b border-gray-200 p-2 w-20 text-right">金额</th>
+                                        <th class="border-b border-gray-200 p-2 w-24 text-left">备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-600">
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-2">控制芯片</td>
+                                        <td class="p-2 text-center">STM32F4</td>
+                                        <td class="p-2 text-center">片</td>
+                                        <td class="p-2 text-right">10</td>
+                                        <td class="p-2 text-right">800.00</td>
+                                        <td class="p-2 text-right">8,000.00</td>
+                                        <td class="p-2">工业机器人控制系统</td>
+                                    </tr>
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-2">电源模块</td>
+                                        <td class="p-2 text-center">24V/10A</td>
+                                        <td class="p-2 text-center">个</td>
+                                        <td class="p-2 text-right">15</td>
+                                        <td class="p-2 text-right">200.00</td>
+                                        <td class="p-2 text-right">3,000.00</td>
+                                        <td class="p-2">工业机器人控制系统</td>
+                                    </tr>
+                                    <tr class="bg-gray-100 font-bold text-gray-800">
+                                        <td class="p-2 text-center" colspan="5">合计</td>
+                                        <td class="p-2 text-right bg-green-50 text-green-700">11,000.00</td>
+                                        <td class="p-2">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="border-t border-gray-200 px-4 py-3 bg-gray-50 flex items-center justify-between">
+                                <div class="flex items-center space-x-12">
+                                    <div>
+                                        <span class="text-[10px] text-gray-500">领用人:</span>
+                                        <div class="border-b border-gray-300 w-24 mt-1"></div>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-gray-500">经理:</span>
+                                        <div class="border-b border-gray-300 w-24 mt-1"></div>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-gray-500">仓库管理员:</span>
+                                        <div class="border-b border-gray-300 w-24 mt-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RD03项目 - 2024年09月领料单 -->
+                        <div class="border border-gray-300 rounded-lg overflow-hidden">
+                            <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+                                <div class="text-center">
+                                    <span class="text-sm font-bold text-gray-800">领 料 单</span>
+                                </div>
+                            </div>
+                            <div class="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                                <div class="flex items-center space-x-6">
+                                    <span class="text-[10px] text-gray-600">领用部门: <span class="font-medium">研发部</span></span>
+                                    <span class="text-[10px] text-gray-600">2024年09月</span>
+                                    <span class="text-[10px] text-gray-600">项目编号: <span class="font-medium">RD03</span></span>
+                                    <span class="text-[10px] text-gray-600">项目名称: <span class="font-medium">人脸识别系统</span></span>
+                                </div>
+                                <span class="text-[10px] text-gray-600">NO. <span class="font-medium">LL-RD03-202409</span></span>
+                            </div>
+                            <table class="w-full border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                        <th class="border-b border-gray-200 p-2 w-24 text-center">品名</th>
+                                        <th class="border-b border-gray-200 p-2 w-16 text-center">规格</th>
+                                        <th class="border-b border-gray-200 p-2 w-12 text-center">单位</th>
+                                        <th class="border-b border-gray-200 p-2 w-16 text-right">数量</th>
+                                        <th class="border-b border-gray-200 p-2 w-16 text-right">单价</th>
+                                        <th class="border-b border-gray-200 p-2 w-20 text-right">金额</th>
+                                        <th class="border-b border-gray-200 p-2 w-24 text-left">备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-600">
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-2">摄像头模组</td>
+                                        <td class="p-2 text-center">1080P</td>
+                                        <td class="p-2 text-center">套</td>
+                                        <td class="p-2 text-right">8</td>
+                                        <td class="p-2 text-right">500.00</td>
+                                        <td class="p-2 text-right">4,000.00</td>
+                                        <td class="p-2">人脸识别系统</td>
+                                    </tr>
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-2">图像处理板</td>
+                                        <td class="p-2 text-center">FPGA</td>
+                                        <td class="p-2 text-center">块</td>
+                                        <td class="p-2 text-right">5</td>
+                                        <td class="p-2 text-right">1,200.00</td>
+                                        <td class="p-2 text-right">6,000.00</td>
+                                        <td class="p-2">人脸识别系统</td>
+                                    </tr>
+                                    <tr class="bg-gray-100 font-bold text-gray-800">
+                                        <td class="p-2 text-center" colspan="5">合计</td>
+                                        <td class="p-2 text-right bg-green-50 text-green-700">10,000.00</td>
+                                        <td class="p-2">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="border-t border-gray-200 px-4 py-3 bg-gray-50 flex items-center justify-between">
+                                <div class="flex items-center space-x-12">
+                                    <div>
+                                        <span class="text-[10px] text-gray-500">领用人:</span>
+                                        <div class="border-b border-gray-300 w-24 mt-1"></div>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-gray-500">经理:</span>
+                                        <div class="border-b border-gray-300 w-24 mt-1"></div>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-gray-500">仓库管理员:</span>
+                                        <div class="border-b border-gray-300 w-24 mt-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 直接投入 - 研发领用材料领用汇总表 -->
+                <div id="panel-material-summary" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-file-text-o text-green-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">研发领用材料领用汇总表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-wider">
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">项目编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-36 text-left">项目名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 text-left">材料名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-12 text-center">单位</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">数量</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">单价</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">金额</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <!-- RD01项目 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="3">RD01</td>
+                                    <td class="p-2" rowspan="3">智能传感器研发</td>
+                                    <td class="p-2">研发用电路板</td>
+                                    <td class="p-2 text-center">件</td>
+                                    <td class="p-2 text-right">50</td>
+                                    <td class="p-2 text-right">125.00</td>
+                                    <td class="p-2 text-right">6,250.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2">传感器模块</td>
+                                    <td class="p-2 text-center">个</td>
+                                    <td class="p-2 text-right">20</td>
+                                    <td class="p-2 text-right">350.00</td>
+                                    <td class="p-2 text-right">7,000.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2">连接线材</td>
+                                    <td class="p-2 text-center">米</td>
+                                    <td class="p-2 text-right">100</td>
+                                    <td class="p-2 text-right">15.00</td>
+                                    <td class="p-2 text-right">1,500.00</td>
+                                </tr>
+                                <!-- RD01小计 -->
+                                <tr class="bg-orange-50 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="5">小计</td>
+                                    <td class="p-2 text-right">--</td>
+                                    <td class="p-2 text-right bg-orange-100 text-orange-700">14,750.00</td>
+                                </tr>
+                                <!-- RD02项目 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="2">RD02</td>
+                                    <td class="p-2" rowspan="2">工业机器人控制系统</td>
+                                    <td class="p-2">控制芯片</td>
+                                    <td class="p-2 text-center">片</td>
+                                    <td class="p-2 text-right">10</td>
+                                    <td class="p-2 text-right">800.00</td>
+                                    <td class="p-2 text-right">8,000.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2">电源模块</td>
+                                    <td class="p-2 text-center">个</td>
+                                    <td class="p-2 text-right">15</td>
+                                    <td class="p-2 text-right">200.00</td>
+                                    <td class="p-2 text-right">3,000.00</td>
+                                </tr>
+                                <!-- RD02小计 -->
+                                <tr class="bg-orange-50 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="5">小计</td>
+                                    <td class="p-2 text-right">--</td>
+                                    <td class="p-2 text-right bg-orange-100 text-orange-700">11,000.00</td>
+                                </tr>
+                                <!-- RD03项目 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="2">RD03</td>
+                                    <td class="p-2" rowspan="2">人脸识别系统</td>
+                                    <td class="p-2">摄像头模组</td>
+                                    <td class="p-2 text-center">套</td>
+                                    <td class="p-2 text-right">8</td>
+                                    <td class="p-2 text-right">500.00</td>
+                                    <td class="p-2 text-right">4,000.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2">图像处理板</td>
+                                    <td class="p-2 text-center">块</td>
+                                    <td class="p-2 text-right">5</td>
+                                    <td class="p-2 text-right">1,200.00</td>
+                                    <td class="p-2 text-right">6,000.00</td>
+                                </tr>
+                                <!-- RD03小计 -->
+                                <tr class="bg-orange-50 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="5">小计</td>
+                                    <td class="p-2 text-right">--</td>
+                                    <td class="p-2 text-right bg-orange-100 text-orange-700">10,000.00</td>
+                                </tr>
+                                <!-- 合计 -->
+                                <tr class="bg-yellow-50 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="6">合计</td>
+                                    <td class="p-2 text-right bg-yellow-100 text-yellow-700">35,750.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 直接投入 - 电费分摊表 -->
+                <div id="panel-material-electric" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-bolt text-yellow-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">电费分摊表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">2024-09 | 单位: 度/元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">设备编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-left">设备名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">时间</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">项目编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-32 text-left">项目名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">研发工时(小时)</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">生产工时(小时)</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">设备总工时(小时)</th>
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">研发占比</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">设备总能耗(度)</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">设备总能耗费用</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">研发分摊能耗(度)</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 bg-yellow-50 text-right font-bold">研发分摊能耗费用</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <!-- EQ-001 数控机床 -->
+                                <tr class="border-b border-gray-100 bg-yellow-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="3">EQ-001</td>
+                                    <td class="p-2 font-bold" rowspan="3">数控机床</td>
+                                    <td class="p-2 text-center" rowspan="3">2024-09</td>
+                                    <td class="p-2 text-center">RD01</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">120</td>
+                                    <td class="p-2 text-right">40</td>
+                                    <td class="p-2 text-right">160</td>
+                                    <td class="p-2 text-center">75.0%</td>
+                                    <td class="p-2 text-right">2,280.00</td>
+                                    <td class="p-2 text-right">1,368.00</td>
+                                    <td class="p-2 text-right">1,710.00</td>
+                                    <td class="p-2 text-right bg-yellow-50 font-bold text-yellow-700">1,026.00</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-yellow-50/30">
+                                    <td class="p-2 text-center">RD02</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">80</td>
+                                    <td class="p-2 text-right">30</td>
+                                    <td class="p-2 text-right">110</td>
+                                    <td class="p-2 text-center">72.7%</td>
+                                    <td class="p-2 text-right">2,280.00</td>
+                                    <td class="p-2 text-right">1,368.00</td>
+                                    <td class="p-2 text-right">1,657.50</td>
+                                    <td class="p-2 text-right bg-yellow-50 font-bold text-yellow-700">994.50</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-yellow-50/30">
+                                    <td class="p-2 text-center">RD03</td>
+                                    <td class="p-2">人脸识别系统</td>
+                                    <td class="p-2 text-right">60</td>
+                                    <td class="p-2 text-right">20</td>
+                                    <td class="p-2 text-right">80</td>
+                                    <td class="p-2 text-center">75.0%</td>
+                                    <td class="p-2 text-right">2,280.00</td>
+                                    <td class="p-2 text-right">1,368.00</td>
+                                    <td class="p-2 text-right">1,710.00</td>
+                                    <td class="p-2 text-right bg-yellow-50 font-bold text-yellow-700">1,026.00</td>
+                                </tr>
+                                <!-- EQ-015 3D打印机 -->
+                                <tr class="border-b border-gray-100 bg-yellow-50/20">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="4">EQ-015</td>
+                                    <td class="p-2 font-bold" rowspan="4">3D打印机</td>
+                                    <td class="p-2 text-center" rowspan="4">2024-09</td>
+                                    <td class="p-2 text-center">RD01</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">90</td>
+                                    <td class="p-2 text-right">50</td>
+                                    <td class="p-2 text-right">140</td>
+                                    <td class="p-2 text-center">64.3%</td>
+                                    <td class="p-2 text-right">1,260.00</td>
+                                    <td class="p-2 text-right">756.00</td>
+                                    <td class="p-2 text-right">809.40</td>
+                                    <td class="p-2 text-right bg-yellow-50 font-bold text-yellow-700">485.64</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-yellow-50/20">
+                                    <td class="p-2 text-center">RD02</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">100</td>
+                                    <td class="p-2 text-right">60</td>
+                                    <td class="p-2 text-right">160</td>
+                                    <td class="p-2 text-center">62.5%</td>
+                                    <td class="p-2 text-right">1,260.00</td>
+                                    <td class="p-2 text-right">756.00</td>
+                                    <td class="p-2 text-right">787.50</td>
+                                    <td class="p-2 text-right bg-yellow-50 font-bold text-yellow-700">472.50</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-yellow-50/20">
+                                    <td class="p-2 text-center">RD03</td>
+                                    <td class="p-2">人脸识别系统</td>
+                                    <td class="p-2 text-right">70</td>
+                                    <td class="p-2 text-right">40</td>
+                                    <td class="p-2 text-right">110</td>
+                                    <td class="p-2 text-center">63.6%</td>
+                                    <td class="p-2 text-right">1,260.00</td>
+                                    <td class="p-2 text-right">756.00</td>
+                                    <td class="p-2 text-right">801.36</td>
+                                    <td class="p-2 text-right bg-yellow-50 font-bold text-yellow-700">489.67</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-yellow-50/20">
+                                    <td class="p-2 text-center">RD04</td>
+                                    <td class="p-2">智能传感器研发二期</td>
+                                    <td class="p-2 text-right">50</td>
+                                    <td class="p-2 text-right">30</td>
+                                    <td class="p-2 text-right">80</td>
+                                    <td class="p-2 text-center">62.5%</td>
+                                    <td class="p-2 text-right">1,260.00</td>
+                                    <td class="p-2 text-right">756.00</td>
+                                    <td class="p-2 text-right">787.50</td>
+                                    <td class="p-2 text-right bg-yellow-50 font-bold text-yellow-700">472.50</td>
+                                </tr>
+                                <!-- 合计行 -->
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="3">合计</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right">570</td>
+                                    <td class="p-2 text-right">270</td>
+                                    <td class="p-2 text-right">840</td>
+                                    <td class="p-2 text-center">67.9%</td>
+                                    <td class="p-2 text-right">7,080.00</td>
+                                    <td class="p-2 text-right">4,248.00</td>
+                                    <td class="p-2 text-right">5,256.26</td>
+                                    <td class="p-2 text-right bg-yellow-100 text-yellow-700">3,153.81</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 直接投入 - 水费分摊表 -->
+                <div id="panel-material-water" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-droplet text-blue-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">水费分摊表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">2024-09 | 单位: 吨/元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">设备编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-left">设备名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">时间</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">项目编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-32 text-left">项目名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">研发工时(小时)</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">生产工时(小时)</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">设备总工时(小时)</th>
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">研发占比</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">设备总能耗(吨)</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">设备总能耗费用</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">研发分摊能耗(吨)</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 bg-blue-50 text-right font-bold">研发分摊能耗费用</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <!-- EQ-001 数控机床 -->
+                                <tr class="border-b border-gray-100 bg-blue-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="3">EQ-001</td>
+                                    <td class="p-2 font-bold" rowspan="3">数控机床</td>
+                                    <td class="p-2 text-center" rowspan="3">2024-09</td>
+                                    <td class="p-2 text-center">RD01</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">120</td>
+                                    <td class="p-2 text-right">40</td>
+                                    <td class="p-2 text-right">160</td>
+                                    <td class="p-2 text-center">75.0%</td>
+                                    <td class="p-2 text-right">80.00</td>
+                                    <td class="p-2 text-right">240.00</td>
+                                    <td class="p-2 text-right">60.00</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">180.00</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-blue-50/30">
+                                    <td class="p-2 text-center">RD02</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">80</td>
+                                    <td class="p-2 text-right">30</td>
+                                    <td class="p-2 text-right">110</td>
+                                    <td class="p-2 text-center">72.7%</td>
+                                    <td class="p-2 text-right">80.00</td>
+                                    <td class="p-2 text-right">240.00</td>
+                                    <td class="p-2 text-right">58.18</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">174.54</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-blue-50/30">
+                                    <td class="p-2 text-center">RD03</td>
+                                    <td class="p-2">人脸识别系统</td>
+                                    <td class="p-2 text-right">60</td>
+                                    <td class="p-2 text-right">20</td>
+                                    <td class="p-2 text-right">80</td>
+                                    <td class="p-2 text-center">75.0%</td>
+                                    <td class="p-2 text-right">80.00</td>
+                                    <td class="p-2 text-right">240.00</td>
+                                    <td class="p-2 text-right">60.00</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">180.00</td>
+                                </tr>
+                                <!-- EQ-015 3D打印机 -->
+                                <tr class="border-b border-gray-100 bg-blue-50/20">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="4">EQ-015</td>
+                                    <td class="p-2 font-bold" rowspan="4">3D打印机</td>
+                                    <td class="p-2 text-center" rowspan="4">2024-09</td>
+                                    <td class="p-2 text-center">RD01</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">90</td>
+                                    <td class="p-2 text-right">50</td>
+                                    <td class="p-2 text-right">140</td>
+                                    <td class="p-2 text-center">64.3%</td>
+                                    <td class="p-2 text-right">45.00</td>
+                                    <td class="p-2 text-right">135.00</td>
+                                    <td class="p-2 text-right">28.94</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">86.82</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-blue-50/20">
+                                    <td class="p-2 text-center">RD02</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">100</td>
+                                    <td class="p-2 text-right">60</td>
+                                    <td class="p-2 text-right">160</td>
+                                    <td class="p-2 text-center">62.5%</td>
+                                    <td class="p-2 text-right">45.00</td>
+                                    <td class="p-2 text-right">135.00</td>
+                                    <td class="p-2 text-right">28.13</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">84.38</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-blue-50/20">
+                                    <td class="p-2 text-center">RD03</td>
+                                    <td class="p-2">人脸识别系统</td>
+                                    <td class="p-2 text-right">70</td>
+                                    <td class="p-2 text-right">40</td>
+                                    <td class="p-2 text-right">110</td>
+                                    <td class="p-2 text-center">63.6%</td>
+                                    <td class="p-2 text-right">45.00</td>
+                                    <td class="p-2 text-right">135.00</td>
+                                    <td class="p-2 text-right">28.64</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">85.91</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-blue-50/20">
+                                    <td class="p-2 text-center">RD04</td>
+                                    <td class="p-2">智能传感器研发二期</td>
+                                    <td class="p-2 text-right">50</td>
+                                    <td class="p-2 text-right">30</td>
+                                    <td class="p-2 text-right">80</td>
+                                    <td class="p-2 text-center">62.5%</td>
+                                    <td class="p-2 text-right">45.00</td>
+                                    <td class="p-2 text-right">135.00</td>
+                                    <td class="p-2 text-right">28.13</td>
+                                    <td class="p-2 text-right bg-blue-50 font-bold text-blue-700">84.38</td>
+                                </tr>
+                                <!-- 合计行 -->
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="3">合计</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right">570</td>
+                                    <td class="p-2 text-right">270</td>
+                                    <td class="p-2 text-right">840</td>
+                                    <td class="p-2 text-center">67.9%</td>
+                                    <td class="p-2 text-right">250.00</td>
+                                    <td class="p-2 text-right">750.00</td>
+                                    <td class="p-2 text-right">183.89</td>
+                                    <td class="p-2 text-right bg-blue-100 text-blue-700">551.73</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 直接投入 - 燃料费分摊表 -->
+                <div id="panel-material-fuel" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-flame text-orange-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">燃料费分摊表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">2024-09 | 单位: 升/元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">设备编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-left">设备名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">时间</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">项目编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-32 text-left">项目名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">研发工时(小时)</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">生产工时(小时)</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">设备总工时(小时)</th>
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">研发占比</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">设备总能耗(升)</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">设备总能耗费用</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">研发分摊能耗(升)</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 bg-orange-50 text-right font-bold">研发分摊能耗费用</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <!-- EQ-008 柴油发电机 -->
+                                <tr class="border-b border-gray-100 bg-orange-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="2">EQ-008</td>
+                                    <td class="p-2 font-bold" rowspan="2">柴油发电机</td>
+                                    <td class="p-2 text-center" rowspan="2">2024-09</td>
+                                    <td class="p-2 text-center">RD01</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">100</td>
+                                    <td class="p-2 text-right">50</td>
+                                    <td class="p-2 text-right">150</td>
+                                    <td class="p-2 text-center">66.7%</td>
+                                    <td class="p-2 text-right">300.00</td>
+                                    <td class="p-2 text-right">2,100.00</td>
+                                    <td class="p-2 text-right">200.00</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">1,400.00</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-orange-50/30">
+                                    <td class="p-2 text-center">RD02</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">80</td>
+                                    <td class="p-2 text-right">40</td>
+                                    <td class="p-2 text-right">120</td>
+                                    <td class="p-2 text-center">66.7%</td>
+                                    <td class="p-2 text-right">300.00</td>
+                                    <td class="p-2 text-right">2,100.00</td>
+                                    <td class="p-2 text-right">200.00</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">1,400.00</td>
+                                </tr>
+                                <!-- EQ-012 燃油锅炉 -->
+                                <tr class="border-b border-gray-100 bg-orange-50/20">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="3">EQ-012</td>
+                                    <td class="p-2 font-bold" rowspan="3">燃油锅炉</td>
+                                    <td class="p-2 text-center" rowspan="3">2024-09</td>
+                                    <td class="p-2 text-center">RD01</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">120</td>
+                                    <td class="p-2 text-right">60</td>
+                                    <td class="p-2 text-right">180</td>
+                                    <td class="p-2 text-center">66.7%</td>
+                                    <td class="p-2 text-right">450.00</td>
+                                    <td class="p-2 text-right">3,150.00</td>
+                                    <td class="p-2 text-right">300.00</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">2,100.00</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-orange-50/20">
+                                    <td class="p-2 text-center">RD03</td>
+                                    <td class="p-2">人脸识别系统</td>
+                                    <td class="p-2 text-right">90</td>
+                                    <td class="p-2 text-right">45</td>
+                                    <td class="p-2 text-right">135</td>
+                                    <td class="p-2 text-center">66.7%</td>
+                                    <td class="p-2 text-right">450.00</td>
+                                    <td class="p-2 text-right">3,150.00</td>
+                                    <td class="p-2 text-right">300.00</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">2,100.00</td>
+                                </tr>
+                                <tr class="border-b border-gray-100 bg-orange-50/20">
+                                    <td class="p-2 text-center">RD04</td>
+                                    <td class="p-2">智能传感器研发二期</td>
+                                    <td class="p-2 text-right">60</td>
+                                    <td class="p-2 text-right">30</td>
+                                    <td class="p-2 text-right">90</td>
+                                    <td class="p-2 text-center">66.7%</td>
+                                    <td class="p-2 text-right">450.00</td>
+                                    <td class="p-2 text-right">3,150.00</td>
+                                    <td class="p-2 text-right">300.00</td>
+                                    <td class="p-2 text-right bg-orange-50 font-bold text-orange-700">2,100.00</td>
+                                </tr>
+                                <!-- 合计行 -->
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="3">合计</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right">450</td>
+                                    <td class="p-2 text-right">225</td>
+                                    <td class="p-2 text-right">675</td>
+                                    <td class="p-2 text-center">66.7%</td>
+                                    <td class="p-2 text-right">1,500.00</td>
+                                    <td class="p-2 text-right">10,500.00</td>
+                                    <td class="p-2 text-right">1,000.00</td>
+                                    <td class="p-2 text-right bg-orange-100 text-orange-700">7,000.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 无形资产 - 无形资产明细表 -->
+                <div id="panel-intangible-detail" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-copyright text-purple-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">无形资产明细表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-wider">
+                                    <th class="border-b border-gray-200 p-2 w-10 text-center">序号</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">资产编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-left">资产名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">购置日期</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">购买原值</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">月摊销额</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">累计摊销额</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">项目属性</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">资产属性</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-left">备注</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-purple-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">1</td>
+                                    <td class="p-2 text-center font-bold text-gray-800">CX001</td>
+                                    <td class="p-2">软件著作权-V1.0</td>
+                                    <td class="p-2 text-center">2024-03-15</td>
+                                    <td class="p-2 text-right">50,000.00</td>
+                                    <td class="p-2 text-right">1,388.89</td>
+                                    <td class="p-2 text-right">5,000.00</td>
+                                    <td class="p-2 text-center">研发专用</td>
+                                    <td class="p-2 text-center">软件著作权</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-purple-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">2</td>
+                                    <td class="p-2 text-center font-bold text-gray-800">FM001</td>
+                                    <td class="p-2">发明专利</td>
+                                    <td class="p-2 text-center">2023-11-20</td>
+                                    <td class="p-2 text-right">120,000.00</td>
+                                    <td class="p-2 text-right">500.00</td>
+                                    <td class="p-2 text-right">10,000.00</td>
+                                    <td class="p-2 text-center">研发专用</td>
+                                    <td class="p-2 text-center">发明专利</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-purple-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">3</td>
+                                    <td class="p-2 text-center font-bold text-gray-800">CX002</td>
+                                    <td class="p-2">研发管理系统V2.0</td>
+                                    <td class="p-2 text-center">2024-01-10</td>
+                                    <td class="p-2 text-right">30,000.00</td>
+                                    <td class="p-2 text-right">833.33</td>
+                                    <td class="p-2 text-right">6,666.67</td>
+                                    <td class="p-2 text-center">研发专用</td>
+                                    <td class="p-2 text-center">软件著作权</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center text-[10px]" colspan="2">合计</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-right">200,000.00</td>
+                                    <td class="p-2 text-right">2,722.22</td>
+                                    <td class="p-2 text-right">21,666.67</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 无形资产 - 无形资产摊销表 -->
+                <div id="panel-intangible-amortization" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-line-chart text-purple-600 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">无形资产摊销表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">2026.04 | 单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">时间</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-left">无形资产名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-18 text-center">无形资产编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 text-left">参与项目</th>
+                                    <th class="border-b border-gray-200 p-2 w-16 text-right">研发工时</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">无形资产总工时</th>
+                                    <th class="border-b border-gray-200 p-2 w-14 text-center">研发占比</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-right">无形资产月摊销额</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 bg-purple-50 text-right font-bold">项目分摊摊销额</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <!-- 设计软件A - 智能传感器研发 -->
+                                <tr class="border-b border-gray-100 bg-blue-50/30">
+                                    <td class="p-2 text-center" rowspan="2">2026.04</td>
+                                    <td class="p-2 font-bold text-gray-800" rowspan="2">设计软件A</td>
+                                    <td class="p-2 text-center font-bold" rowspan="2">IA-001</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">120</td>
+                                    <td class="p-2 text-right font-bold text-gray-800" rowspan="2">160</td>
+                                    <td class="p-2 text-center">75.0%</td>
+                                    <td class="p-2 text-right" rowspan="2">1,600.00</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">1,200.00</td>
+                                </tr>
+                                <!-- 设计软件A - 新能源材料研究 -->
+                                <tr class="border-b border-gray-100 bg-blue-50/30">
+                                    <td class="p-2">新能源材料研究</td>
+                                    <td class="p-2 text-right">80</td>
+                                    <td class="p-2 text-center">50.0%</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">800.00</td>
+                                </tr>
+                                <!-- 专利技术B - 智能传感器研发 -->
+                                <tr class="border-b border-gray-100 bg-green-50/30">
+                                    <td class="p-2 text-center">2026.04</td>
+                                    <td class="p-2 font-bold text-gray-800">专利技术B</td>
+                                    <td class="p-2 text-center font-bold">IA-002</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">90</td>
+                                    <td class="p-2 text-right font-bold text-gray-800">120</td>
+                                    <td class="p-2 text-center">75.0%</td>
+                                    <td class="p-2 text-right">2,400.00</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">1,800.00</td>
+                                </tr>
+                                <!-- 数据库C - 工业机器人控制系统 -->
+                                <tr class="border-b border-gray-100 bg-yellow-50/30">
+                                    <td class="p-2 text-center" rowspan="3">2026.04</td>
+                                    <td class="p-2 font-bold text-gray-800" rowspan="3">数据库C</td>
+                                    <td class="p-2 text-center font-bold" rowspan="3">IA-003</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-right">150</td>
+                                    <td class="p-2 text-right font-bold text-gray-800" rowspan="3">200</td>
+                                    <td class="p-2 text-center">75.0%</td>
+                                    <td class="p-2 text-right" rowspan="3">3,200.00</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">2,400.00</td>
+                                </tr>
+                                <!-- 数据库C - 智能传感器研发 -->
+                                <tr class="border-b border-gray-100 bg-yellow-50/30">
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-right">50</td>
+                                    <td class="p-2 text-center">25.0%</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">800.00</td>
+                                </tr>
+                                <!-- 数据库C - 新能源材料研究 -->
+                                <tr class="border-b border-gray-100 bg-yellow-50/30">
+                                    <td class="p-2">新能源材料研究</td>
+                                    <td class="p-2 text-right">0</td>
+                                    <td class="p-2 text-center">0.0%</td>
+                                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">0.00</td>
+                                </tr>
+                                <!-- 合计行 -->
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="2">合计</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right">590</td>
+                                    <td class="p-2 text-right">--</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-right">7,200.00</td>
+                                    <td class="p-2 text-right bg-purple-100 text-purple-700">7,000.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 其他相关 - 其他费用明细表 -->
+                <div id="panel-other-detail" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-plus-circle text-indigo-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">其他费用明细表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-wider">
+                                    <th class="border-b border-gray-200 p-2 w-10 text-center">序号</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 text-left">费用项目</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-center">费用类别</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-center">发生日期</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-left">备注</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">金额</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-indigo-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">1</td>
+                                    <td class="p-2">研发会议费</td>
+                                    <td class="p-2 text-center">会议费</td>
+                                    <td class="p-2 text-center">2024-09-15</td>
+                                    <td class="p-2">季度项目评审会议</td>
+                                    <td class="p-2 text-right">3,500.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-indigo-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">2</td>
+                                    <td class="p-2">专利申请费</td>
+                                    <td class="p-2 text-center">知识产权</td>
+                                    <td class="p-2 text-center">2024-09-20</td>
+                                    <td class="p-2">发明专利申请</td>
+                                    <td class="p-2 text-right">5,000.00</td>
+                                </tr>
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center text-[10px]" colspan="4">合计</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right bg-indigo-50 text-indigo-700">8,500.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 其他相关 - 其他费用分摊表 -->
+                <div id="panel-other-allocation" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-share-alt text-indigo-600 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">其他费用分摊表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">2024年9月 | 单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-wider">
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">项目编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-36 text-left">项目名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">差旅费</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">会议费</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">知识产权</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right">合计</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-indigo-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800">RD003</td>
+                                    <td class="p-2">赛事评分与运营综合管理系统</td>
+                                    <td class="p-2 text-right">1,000.00</td>
+                                    <td class="p-2 text-right">2,000.00</td>
+                                    <td class="p-2 text-right">3,000.00</td>
+                                    <td class="p-2 text-right bg-indigo-50 font-bold text-indigo-700">6,000.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-indigo-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800">RD004</td>
+                                    <td class="p-2">家校协同校车护航系统</td>
+                                    <td class="p-2 text-right">800.00</td>
+                                    <td class="p-2 text-right">1,500.00</td>
+                                    <td class="p-2 text-right">2,000.00</td>
+                                    <td class="p-2 text-right bg-indigo-50 font-bold text-indigo-700">4,300.00</td>
+                                </tr>
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="2">合计</td>
+                                    <td class="p-2 text-right">1,800.00</td>
+                                    <td class="p-2 text-right">3,500.00</td>
+                                    <td class="p-2 text-right">5,000.00</td>
+                                    <td class="p-2 text-right bg-indigo-100 text-indigo-700">10,300.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 装备调试与试验费用明细表 -->
+                <div id="panel-equipment-detail" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-wrench text-teal-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">装备调试与试验费用明细表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">2024-09 | 单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-12 text-center">序号</th>
+                                    <th class="border-b border-gray-200 p-2 w-36 text-left">关联项目</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-center">费用类型</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-right">费用金额</th>
+                                    <th class="border-b border-gray-200 p-2 w-40 text-left">备注</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">1</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-center">工装准备费</td>
+                                    <td class="p-2 text-right">15,000.00</td>
+                                    <td class="p-2">智能传感器生产线调试</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">2</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2 text-center">试验检验费</td>
+                                    <td class="p-2 text-right">8,500.00</td>
+                                    <td class="p-2">产品性能测试</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">3</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2 text-center">样品试制费</td>
+                                    <td class="p-2 text-right">12,000.00</td>
+                                    <td class="p-2">工业机器人控制系统样品制作</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">4</td>
+                                    <td class="p-2">人脸识别系统</td>
+                                    <td class="p-2 text-center">工装准备费</td>
+                                    <td class="p-2 text-right">6,000.00</td>
+                                    <td class="p-2">人脸识别系统测试设备调试</td>
+                                </tr>
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="3">合计</td>
+                                    <td class="p-2 text-right bg-teal-50 text-teal-700">41,500.00</td>
+                                    <td class="p-2">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 装备调试与试验费用分摊表 -->
+                <div id="panel-equipment-allocation" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-share-alt text-teal-600 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">试验费用分摊表</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">2024年9月 | 单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">项目编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-36 text-left">项目名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 text-center">费用类型</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-right">费用金额</th>
+                                    <th class="border-b border-gray-200 p-2 w-40 text-left">备注</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right font-bold">合计</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <!-- RD001 智能传感器研发 - 多个费用类型 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="3">RD001</td>
+                                    <td class="p-2" rowspan="3">智能传感器研发</td>
+                                    <td class="p-2 text-center">工装准备费</td>
+                                    <td class="p-2 text-right">8,000.00</td>
+                                    <td class="p-2">生产线调试</td>
+                                    <td class="p-2 text-right">8,000.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center">试验检验费</td>
+                                    <td class="p-2 text-right">4,500.00</td>
+                                    <td class="p-2">产品性能测试</td>
+                                    <td class="p-2 text-right">4,500.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center">临床试验费用</td>
+                                    <td class="p-2 text-right">3,000.00</td>
+                                    <td class="p-2">临床验证测试</td>
+                                    <td class="p-2 text-right">3,000.00</td>
+                                </tr>
+                                <!-- RD002 工业机器人控制系统 - 多个费用类型 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="2">RD002</td>
+                                    <td class="p-2" rowspan="2">工业机器人控制系统</td>
+                                    <td class="p-2 text-center">样品试制费</td>
+                                    <td class="p-2 text-right">7,000.00</td>
+                                    <td class="p-2">样品制作</td>
+                                    <td class="p-2 text-right">7,000.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center">现场试验费</td>
+                                    <td class="p-2 text-right">5,000.00</td>
+                                    <td class="p-2">现场测试</td>
+                                    <td class="p-2 text-right">5,000.00</td>
+                                </tr>
+                                <!-- RD003 人脸识别系统 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-teal-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800">RD003</td>
+                                    <td class="p-2">人脸识别系统</td>
+                                    <td class="p-2 text-center">试验检验费</td>
+                                    <td class="p-2 text-right">6,000.00</td>
+                                    <td class="p-2">算法验证测试</td>
+                                    <td class="p-2 text-right">6,000.00</td>
+                                </tr>
+                                <!-- 合计行 -->
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="2">合计</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-right">33,500.00</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right bg-teal-100 text-teal-700">33,500.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 田间费用 -->
+                <div id="panel-equipment-add" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-leaf text-green-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">田间费用</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">2024年9月 | 单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-16 text-center">项目编号</th>
+                                    <th class="border-b border-gray-200 p-2 w-36 text-left">项目名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-28 text-center">费用类型</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-right">费用金额</th>
+                                    <th class="border-b border-gray-200 p-2 w-40 text-left">备注</th>
+                                    <th class="border-b border-gray-200 p-2 w-20 text-right font-bold">合计</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <!-- RD004 农业物联网监测系统 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="2">RD004</td>
+                                    <td class="p-2" rowspan="2">农业物联网监测系统</td>
+                                    <td class="p-2 text-center">田间试验费</td>
+                                    <td class="p-2 text-right">12,000.00</td>
+                                    <td class="p-2">大田试验数据采集</td>
+                                    <td class="p-2 text-right">12,000.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2 text-center">田间管理费</td>
+                                    <td class="p-2 text-right">3,500.00</td>
+                                    <td class="p-2">试验田日常管理</td>
+                                    <td class="p-2 text-right">3,500.00</td>
+                                </tr>
+                                <!-- RD005 智能灌溉控制系统 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800" rowspan="2">RD005</td>
+                                    <td class="p-2" rowspan="2">智能灌溉控制系统</td>
+                                    <td class="p-2 text-center">田间测试费</td>
+                                    <td class="p-2 text-right">8,000.00</td>
+                                    <td class="p-2">实地灌溉效果测试</td>
+                                    <td class="p-2 text-right">8,000.00</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2 text-center">样品运输费</td>
+                                    <td class="p-2 text-right">2,000.00</td>
+                                    <td class="p-2">试验设备运输</td>
+                                    <td class="p-2 text-right">2,000.00</td>
+                                </tr>
+                                <!-- RD006 土壤传感器研发 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-green-50/30">
+                                    <td class="p-2 text-center font-bold text-gray-800">RD006</td>
+                                    <td class="p-2">土壤传感器研发</td>
+                                    <td class="p-2 text-center">田间试验费</td>
+                                    <td class="p-2 text-right">15,000.00</td>
+                                    <td class="p-2">多点土壤监测试验</td>
+                                    <td class="p-2 text-right">15,000.00</td>
+                                </tr>
+                                <!-- 合计行 -->
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center" colspan="2">合计</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-right">40,500.00</td>
+                                    <td class="p-2">--</td>
+                                    <td class="p-2 text-right bg-green-100 text-green-700">40,500.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 委托外部研发费用明细表 -->
+                <!-- 委托研发费用 -->
+                <div id="panel-outsource-detail" class="hidden flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-external-link text-cyan-500 text-sm"></i>
+                            <span class="text-xs font-bold text-gray-700">委托研发费用</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">2024-09 | 单位: 元</span>
+                    </div>
+                    <div class="table-fix-head flex-1">
+                        <table class="w-full border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-[10px] text-gray-500">
+                                    <th class="border-b border-gray-200 p-2 w-12 text-center">序号</th>
+                                    <th class="border-b border-gray-200 p-2 w-36 text-left">关联项目</th>
+                                    <th class="border-b border-gray-200 p-2 w-44 text-left">合同名称</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-center">委托类型</th>
+                                    <th class="border-b border-gray-200 p-2 w-24 text-right">开票金额</th>
+                                    <th class="border-b border-gray-200 p-2 w-32 text-left">备注</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600">
+                                <!-- RD001 智能传感器研发 - 多个合同 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">1</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2">传感器核心算法开发合同</td>
+                                    <td class="p-2 text-center">境内委托</td>
+                                    <td class="p-2 text-right">50,000.00</td>
+                                    <td class="p-2">北京科技研究院</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">2</td>
+                                    <td class="p-2">智能传感器研发</td>
+                                    <td class="p-2">传感器测试验证服务协议</td>
+                                    <td class="p-2 text-center">境内委托</td>
+                                    <td class="p-2 text-right">25,000.00</td>
+                                    <td class="p-2">深圳检测技术有限公司</td>
+                                </tr>
+                                <!-- RD002 工业机器人控制系统 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">3</td>
+                                    <td class="p-2">工业机器人控制系统</td>
+                                    <td class="p-2">工业机器人运动控制算法开发</td>
+                                    <td class="p-2 text-center">境内委托</td>
+                                    <td class="p-2 text-right">35,000.00</td>
+                                    <td class="p-2">上海技术服务有限公司</td>
+                                </tr>
+                                <!-- RD007 新能源材料研究 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">4</td>
+                                    <td class="p-2">新能源材料研究</td>
+                                    <td class="p-2">新型电池材料研发合作协议</td>
+                                    <td class="p-2 text-center">境外委托</td>
+                                    <td class="p-2 text-right">80,000.00</td>
+                                    <td class="p-2">美国硅谷创新实验室</td>
+                                </tr>
+                                <!-- RD003 人脸识别系统 -->
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">5</td>
+                                    <td class="p-2">人脸识别系统</td>
+                                    <td class="p-2">AI人脸识别算法优化合同</td>
+                                    <td class="p-2 text-center">境内委托</td>
+                                    <td class="p-2 text-right">45,000.00</td>
+                                    <td class="p-2">杭州人工智能研究院</td>
+                                </tr>
+                                <tr class="highlight-row border-b border-gray-50 hover:bg-cyan-50/30">
+                                    <td class="p-2 text-center text-[10px] text-gray-400">6</td>
+                                    <td class="p-2">人脸识别系统</td>
+                                    <td class="p-2">人脸数据库建设服务协议</td>
+                                    <td class="p-2 text-center">境内委托</td>
+                                    <td class="p-2 text-right">15,000.00</td>
+                                    <td class="p-2">广州数据科技有限公司</td>
+                                </tr>
+                                <!-- 合计行 -->
+                                <tr class="bg-gray-100 font-bold text-gray-800">
+                                    <td class="p-2 text-center text-[10px]" colspan="3">合计</td>
+                                    <td class="p-2 text-center">--</td>
+                                    <td class="p-2 text-right bg-cyan-50 text-cyan-700">250,000.00</td>
+                                    <td class="p-2">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -697,22 +2457,85 @@
         }
 
         function switchTab(tab) {
-            ['labor','material','depreciation','intangible','other'].forEach(t => {
+            ['labor','material','depreciation','intangible','other','equipment','outsource'].forEach(t => {
                 document.getElementById('tab-' + t).className = 'px-4 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-gray-50 rounded-t';
             });
             document.getElementById('tab-' + tab).className = 'px-4 py-2 text-xs font-bold text-primary border-b-2 border-primary bg-blue-50 rounded-t';
+            
+            // 隐藏所有子表按钮
+            ['workhour','social','fund','roster','material-detail','material-summary','material-electric','material-water','material-fuel','depr-detail','depr-allocation','depr-amortization','intangible-detail','intangible-amortization','other-detail','other-allocation','equipment-detail','equipment-allocation','equipment-add','outsource-detail'].forEach(s => {
+                document.getElementById('subtab-' + s).classList.add('hidden');
+            });
+            
+            // 根据费用类型显示对应的子表
+            if (tab === 'labor') {
+                // 人员人工
+                ['workhour','social','fund','roster'].forEach(s => {
+                    document.getElementById('subtab-' + s).classList.remove('hidden');
+                });
+                switchSubTab('workhour');
+            } else if (tab === 'material') {
+                // 直接投入
+                ['material-detail','material-summary','material-electric','material-water','material-fuel'].forEach(s => {
+                    document.getElementById('subtab-' + s).classList.remove('hidden');
+                });
+                switchSubTab('material-detail');
+            } else if (tab === 'depreciation') {
+                // 折旧费用
+                ['depr-detail','depr-allocation','depr-amortization'].forEach(s => {
+                    document.getElementById('subtab-' + s).classList.remove('hidden');
+                });
+                switchSubTab('depr-detail');
+            } else if (tab === 'intangible') {
+                // 无形资产
+                ['intangible-detail','intangible-amortization'].forEach(s => {
+                    document.getElementById('subtab-' + s).classList.remove('hidden');
+                });
+                switchSubTab('intangible-detail');
+            } else if (tab === 'other') {
+                // 其他相关
+                ['other-detail','other-allocation'].forEach(s => {
+                    document.getElementById('subtab-' + s).classList.remove('hidden');
+                });
+                switchSubTab('other-detail');
+            } else if (tab === 'equipment') {
+                // 装备调试与试验费用
+                ['equipment-detail','equipment-allocation','equipment-add'].forEach(s => {
+                    document.getElementById('subtab-' + s).classList.remove('hidden');
+                });
+                switchSubTab('equipment-detail');
+            } else if (tab === 'outsource') {
+                // 委托外部研究开发费用
+                ['outsource-detail'].forEach(s => {
+                    document.getElementById('subtab-' + s).classList.remove('hidden');
+                });
+                switchSubTab('outsource-detail');
+            }
         }
 
         function switchSubTab(sub) {
-            ['workhour','social','fund','roster'].forEach(s => {
-                document.getElementById('subtab-' + s).className = 'px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full';
+            // 重置所有子表按钮样式（保留hidden类）
+            ['workhour','social','fund','roster','material-detail','material-summary','material-electric','material-water','material-fuel','depr-detail','depr-allocation','depr-amortization','intangible-detail','intangible-amortization','other-detail','other-allocation','equipment-detail','equipment-allocation','equipment-add','outsource-detail'].forEach(s => {
+                const btn = document.getElementById('subtab-' + s);
+                const isHidden = btn.classList.contains('hidden');
+                btn.className = 'px-3 py-1 text-[10px] font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-full';
+                if (isHidden) btn.classList.add('hidden');
             });
             document.getElementById('subtab-' + sub).className = 'px-3 py-1 text-[10px] font-bold text-white bg-primary rounded-full';
             
-            ['panel-workhour','panel-social','panel-fund','panel-roster'].forEach(p => {
+            // 隐藏所有面板
+            ['panel-workhour','panel-social','panel-fund','panel-roster','panel-material-detail','panel-material-summary','panel-material-electric','panel-material-water','panel-material-fuel','panel-depr-detail','panel-depr-allocation','panel-depr-amortization','panel-intangible-detail','panel-intangible-amortization','panel-other-detail','panel-other-allocation','panel-equipment-detail','panel-equipment-allocation','panel-equipment-add','panel-outsource-detail'].forEach(p => {
                 document.getElementById(p).classList.add('hidden');
             });
             document.getElementById('panel-' + sub).classList.remove('hidden');
+            
+            // 设备折旧明细表不需要月份筛选
+            const monthFilter = document.getElementById('monthFilter');
+            if (sub === 'depr-detail') {
+                monthFilter.classList.add('hidden');
+            } else {
+                monthFilter.classList.remove('hidden');
+            }
         }
     </script>
 </body>

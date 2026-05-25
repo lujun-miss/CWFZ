@@ -517,7 +517,7 @@
                     <div class="bg-blue-50 p-4 rounded-lg mb-6 flex items-start">
                         <i class="fa fa-info-circle text-blue-500 mt-1 mr-3"></i>
                         <p class="text-sm text-blue-700">
-                            <b>关于撤回：</b> 撤回年度账套表将解锁该年度内所有的月度归集数据，允许您重新修正工时或费用。一旦撤回，对应的审计快照将失效，请谨慎操作。
+                            <b>关于撤回：</b> 撤回年度账套表将解锁该年度内所有的月度归集数据，允许您重新修正工时或费用。一旦撤回，对应的报表将失效，请谨慎操作。
                         </p>
                     </div>
 
@@ -908,7 +908,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h3 class="text-lg font-bold text-gray-800"><i class="fa fa-shield mr-2 text-blue-500"></i>全口径合规性体检</h3>
-                        <p class="text-xs text-gray-400 mt-1">系统正基于 <span id="activeCaliberCount" class="text-blue-600 font-bold">1</span> 套政策库对 <span id="activeProjectName" class="text-indigo-600 font-bold">所有已选项目</span> 进行穿透校验</p>
+                        <p class="text-xs text-gray-400 mt-1">系统正对全项目合并汇总进行穿透校验</p>
                     </div>
                     <a href="enterprise-info.html" class="px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg border border-gray-200 text-xs hover:bg-gray-100 transition-colors">
                         <i class="fa fa-cog mr-1"></i> 规则配置
@@ -976,9 +976,7 @@
                         <i class="fa fa-arrow-left mr-2"></i> 返回调整项目
                     </button>
                     <div class="flex space-x-3">
-                        <button onclick="window.print()" class="px-5 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                            <i class="fa fa-print mr-2"></i> 打印体检报告
-                        </button>
+
                         <button onclick="generateAccountTable()" class="px-8 py-2 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 shadow-lg shadow-green-100 flex items-center transition-all">
                             一键生成账套表 <i class="fa fa-magic ml-2"></i>
                         </button>
@@ -994,84 +992,13 @@
                         <i class="fa fa-check-circle text-green-500 text-2xl mr-3"></i>
                         <div>
                             <h4 class="text-green-800 font-medium">账套表生成成功！</h4>
-                            <p class="text-sm text-green-600">已为您成功生成以下账套表：</p>
-                            <div id="generatedTableName"></div>
+                            <p class="text-sm text-green-600">请通过左侧导航进入各报表页面查看和下载。</p>
                         </div>
                     </div>
-                </div>
-
-                <!-- 批量导出区域 -->
-                <div class="mb-8 p-6 bg-slate-50 rounded-xl border border-slate-200">
-                    <h4 class="text-sm font-bold text-slate-700 mb-4 flex items-center">
-                        <i class="fa fa-download mr-2"></i> 批量下载与导出
-                    </h4>
-                    <div id="batchExportList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- 动态生成的导出项 -->
-                    </div>
-                    <div class="mt-6 pt-6 border-t border-slate-200 flex justify-center">
-                        <button onclick="exportAllReports()" class="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center transition-all">
-                            <i class="fa fa-cloud-download mr-2 text-xl"></i> 一键打包下载所有报表 (ZIP)
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mb-4 border-b border-gray-200">
-                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" role="tablist">
-                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-blue-500 text-blue-600 rounded-t-lg active" data-tab="detail" onclick="switchResultTab('detail')"><i class="fa fa-list-ul mr-1"></i> 数据预览 (明细)</button></li>
-                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" data-tab="summary" onclick="switchResultTab('summary')"><i class="fa fa-bar-chart mr-1"></i> 数据预览 (汇总)</button></li>
-                        <li class="mr-2"><button class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" data-tab="comparison" onclick="switchResultTab('comparison')"><i class="fa fa-columns mr-1"></i> 多口径差异对比</button></li>
-                    </ul>
                 </div>
 
                 <div class="tab-content">
                     <div id="detail" class="tab-pane active">
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">项目编号</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">项目名称</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">费用类型</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">发生额</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">凭证号</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">日期</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">备注</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">RD02</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">人工智能项目</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">人员人工费用</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">¥580,000.00</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">记-001</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">2026-01-31</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">研发人员工资</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">RD02</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">人工智能项目</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">直接投入费用</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">¥320,000.00</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">记-002</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">2026-01-31</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">研发材料费</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">RD03</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">新能源项目</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">折旧费用</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">¥420,000.00</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">记-003</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">2026-01-31</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">研发设备折旧</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div id="summary" class="tab-pane hidden">
                         <div class="overflow-x-auto">
                             <table class="min-w-full border border-gray-200 rounded-lg">
                                 <thead class="bg-gray-50">
@@ -1229,15 +1156,8 @@
                     </div>
                 </div>
 
-                <div class="mt-6 flex justify-end space-x-3">
-                    <button onclick="exportAccountTable('pdf')" class="export-btn px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center"><i class="fa fa-file-pdf-o mr-2"></i> 导出PDF</button>
-                    <button onclick="exportAccountTable('xlsx')" class="export-btn px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center"><i class="fa fa-file-excel-o mr-2"></i> 导出Excel</button>
-                    <button onclick="exportAccountTable('csv')" class="export-btn px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center"><i class="fa fa-file-code-o mr-2"></i> 导出CSV</button>
-                </div>
-
                 <div class="mt-6 flex justify-between">
                     <button onclick="goToStep(3)" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center"><i class="fa fa-arrow-left mr-2"></i> 重新生成</button>
-                    <button onclick="printAccountTable()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center"><i class="fa fa-print mr-2"></i> 打印账套表</button>
                 </div>
             </div>
 
@@ -1727,6 +1647,19 @@
         let currentValidationCaliber = ''; // 当前正在查看的口径
         let currentValidationProject = ''; // 当前正在查看的项目 ID
 
+        function saveGeneratedTable(data) {
+            // 保存生成的表格数据到本地存储
+            const tableData = {
+                calibers: data.calibers,
+                year: data.year,
+                projects: data.projects,
+                validationResults: data.validationResults,
+                generatedAt: new Date().toISOString()
+            };
+            localStorage.setItem('generatedTableData', JSON.stringify(tableData));
+            console.log('表格数据已保存:', tableData);
+        }
+
         async function startValidation() {
             // 1. 同步规则
             await syncRulesFromConfig();
@@ -1767,11 +1700,13 @@
                 
                 projectContainer.innerHTML = tabsHtml;
                 
-                // 默认选择“全项目汇总”
+                // 初始化当前口径
+                currentValidationCaliber = selectedCalibers[0];
+                
+                // 默认选择"全项目汇总"
                 switchValidationProject('all');
             }
 
-            document.getElementById('activeCaliberCount').textContent = selectedCalibers.length;
             document.getElementById('validationProgress').classList.remove('hidden');
             document.getElementById('validationResults').classList.add('hidden');
             
@@ -2044,23 +1979,7 @@
 
             // 模拟根据口径生成特定的警告 (与 renderCaliberReport 中的剔除逻辑保持一致)
             const alerts = [];
-            if (caliber === 'financial') {
-                alerts.push({ 
-                    type: 'error', 
-                    title: '人员人工费用合规性冲突', 
-                    msg: DYNAMIC_RULES_CACHE.financial.labor.policy
-                });
-                alerts.push({ 
-                    type: 'warning', 
-                    title: '其他相关费用超限', 
-                    msg: DYNAMIC_RULES_CACHE.financial.otherLimit.policy
-                });
-                alerts.push({ 
-                    type: 'error', 
-                    title: '直接投入费用异常', 
-                    msg: DYNAMIC_RULES_CACHE.financial.material.policy
-                });
-            } else if (caliber === 'hiTech') {
+            if (caliber === 'hiTech') {
                 alerts.push({ 
                     type: 'error', 
                     title: '科技人员在司工时风险', 
@@ -2379,34 +2298,15 @@
                 dialog.classList.add('hidden');
                 const year = document.getElementById('yearSelect').value;
                 
-                // 更新已生成表格的标签显示
+                // 保存数据并切换到结果步骤
+                goToStep(4);
+                
+                // 显示生成结果信息
                 document.getElementById('generatedTableName').innerHTML = `
                     <div class="flex flex-wrap gap-2 mt-1">
-                        ${selectedCalibers.map(c => `<span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-md text-xs font-bold border border-blue-200">${year}年度 ${CALIBER_CONFIG[c].name}</span>`).join('')}
+                        ${selectedCalibers.map(c => `<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-md text-xs font-bold border border-green-200">${year}年度 ${CALIBER_CONFIG[c].name}</span>`).join('')}
                     </div>
                 `;
-
-                // 更新批量导出列表
-                const batchExportList = document.getElementById('batchExportList');
-                batchExportList.innerHTML = selectedCalibers.map(c => `
-                    <div class="bg-white p-4 rounded-lg border border-slate-200 flex items-center justify-between group hover:border-blue-300 transition-all">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 bg-${CALIBER_CONFIG[c].color}-100 rounded-lg flex items-center justify-center mr-3">
-                                <i class="fa ${c === 'financial' ? 'fa-calculator' : c === 'hiTech' ? 'fa-line-chart' : c === 'accounting' ? 'fa-book' : c === 'rd' ? 'fa-flask' : 'fa-bank'} text-${CALIBER_CONFIG[c].color}-600"></i>
-                            </div>
-                            <div>
-                                <h5 class="text-sm font-bold text-slate-800">${CALIBER_CONFIG[c].name}</h5>
-                                <p class="text-[10px] text-slate-400 uppercase font-mono">${year}年 包含明细账/汇总表/审计快照</p>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button onclick="exportSingleReport('${c}', 'pdf')" class="px-2 py-1 text-[10px] bg-slate-50 text-slate-600 border border-slate-200 rounded hover:bg-red-50 hover:text-red-600 transition-colors">PDF 审计版</button>
-                            <button onclick="exportSingleReport('${c}', 'xlsx')" class="px-2 py-1 text-[10px] bg-slate-50 text-slate-600 border border-slate-200 rounded hover:bg-green-50 hover:text-green-600 transition-colors">Excel 申报版</button>
-                        </div>
-                    </div>
-                `).join('');
-
-                goToStep(4);
             }, 500);
         }
 
