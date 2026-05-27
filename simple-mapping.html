@@ -510,6 +510,9 @@
                         </div>
                     </div>
                     <div class="flex-1 overflow-y-auto p-2" id="treeContent">
+                            <div class="bg-blue-50 p-3 rounded mb-3 text-xs text-blue-700 border border-blue-200">
+                                <i class="fa fa-info-circle mr-1"></i> 费用结构说明：一级费用为费用大类（如人员人工费用），二级费用为该大类下的具体费用项目（如工资薪金、社保等）。新增科目映射时，需选择二级费用作为目标类型，系统将根据识别关键词自动匹配凭证并归集到对应费用类别。
+                            </div>
                         <!-- 1. 人员人工费用 -->
                         <div class="tree-item parent" onclick="toggleExpand('cat1')">
                             <i class="fa fa-chevron-right tree-expand expanded" id="expand-cat1"></i>
@@ -619,6 +622,7 @@
                             <thead>
                                 <tr class="bg-gray-50 text-left">
                                     <th class="p-3 border-b border-gray-200 text-sm font-semibold text-gray-600">序号</th>
+                                    <th class="p-3 border-b border-gray-200 text-sm font-semibold text-gray-600">费用类型</th>
                                     <th class="p-3 border-b border-gray-200 text-sm font-semibold text-gray-600">科目代码</th>
                                     <th class="p-3 border-b border-gray-200 text-sm font-semibold text-gray-600">科目名称</th>
                                     <th class="p-3 border-b border-gray-200 text-sm font-semibold text-gray-600">识别关键词</th>
@@ -629,6 +633,7 @@
                             <tbody id="detailTable">
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="p-3 border-b border-gray-200 text-sm">1</td>
+                                    <td class="p-3 border-b border-gray-200 text-sm font-medium">人员人工费用</td>
                                     <td class="p-3 border-b border-gray-200 text-sm">6602.01</td>
                                     <td class="p-3 border-b border-gray-200 text-sm">工资</td>
                                     <td class="p-3 border-b border-gray-200 text-sm">
@@ -636,10 +641,25 @@
                                         <span class="keyword-tag">薪酬</span>
                                         <span class="keyword-tag">计提</span>
                                     </td>
-                                    <td class="p-3 border-b border-gray-200 text-sm text-gray-500">研发人员工资</td>
+                                    <td class="p-3 border-b border-gray-200 text-sm text-gray-500">研发人员基本工资</td>
                                     <td class="p-3 border-b border-gray-200 text-sm">
                                         <button class="text-primary hover:underline mr-3" onclick="openEditModal(1)">编辑</button>
                                         <button class="text-danger hover:underline" onclick="deleteRow(1)">删除</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="p-3 border-b border-gray-200 text-sm">2</td>
+                                    <td class="p-3 border-b border-gray-200 text-sm font-medium">人员人工费用</td>
+                                    <td class="p-3 border-b border-gray-200 text-sm">6602.02</td>
+                                    <td class="p-3 border-b border-gray-200 text-sm">奖金</td>
+                                    <td class="p-3 border-b border-gray-200 text-sm">
+                                        <span class="keyword-tag">奖金</span>
+                                        <span class="keyword-tag">绩效</span>
+                                    </td>
+                                    <td class="p-3 border-b border-gray-200 text-sm text-gray-500">研发人员绩效奖金</td>
+                                    <td class="p-3 border-b border-gray-200 text-sm">
+                                        <button class="text-primary hover:underline mr-3" onclick="openEditModal(2)">编辑</button>
+                                        <button class="text-danger hover:underline" onclick="deleteRow(2)">删除</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -663,32 +683,29 @@
                     <input type="text" id="expenseType" class="w-full p-2 border border-gray-300 rounded bg-gray-50 text-gray-500" readonly>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">识别关键词 <span class="text-red-500">*</span></label>
-                    <div id="keywordTags" class="flex flex-wrap gap-1 mb-2"></div>
-                    <div class="flex gap-2">
-                        <input type="text" id="keywordInput" placeholder="输入关键词后回车..." class="flex-1 p-2 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-primary" onkeyup="if(event.keyCode===13){addKeyword();}">
-                        <button class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm" onclick="addKeyword()">添加</button>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">会计科目 <span class="text-red-500">*</span></label>
-                    <div class="border border-gray-200 rounded overflow-hidden">
-                        <table class="w-full text-sm" id="accountTable">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="p-2 border-b border-gray-200 text-left w-12">序号</th>
-                                    <th class="p-2 border-b border-gray-200 text-left">科目代码</th>
-                                    <th class="p-2 border-b border-gray-200 text-left">科目名称</th>
-                                    <th class="p-2 border-b border-gray-200 text-center w-12">操作</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="p-2 border-b border-gray-100">1</td>
-                                    <td class="p-2 border-b border-gray-100"><input type="text" class="account-code w-full p-1 border border-gray-300 rounded" placeholder="代码"></td>
-                                    <td class="p-2 border-b border-gray-100"><input type="text" class="account-name w-full p-1 border border-gray-300 rounded" placeholder="名称"></td>
-                                    <td class="p-2 border-b border-gray-100 text-center"></td>
-                                </tr>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">会计科目 <span class="text-red-500">*</span></label>
+                        <p class="text-xs text-gray-500 mt-1 mb-2">说明：一个费用类型可包含多个会计科目，每个科目可设置独立的识别关键词和备注</p>
+                        <div class="border border-gray-200 rounded overflow-hidden">
+                            <table class="w-full text-sm" id="accountTable">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="p-2 border-b border-gray-200 text-left w-12">序号</th>
+                                        <th class="p-2 border-b border-gray-200 text-left">科目代码</th>
+                                        <th class="p-2 border-b border-gray-200 text-left">科目名称</th>
+                                        <th class="p-2 border-b border-gray-200 text-left">识别关键词</th>
+                                        <th class="p-2 border-b border-gray-200 text-left">备注</th>
+                                        <th class="p-2 border-b border-gray-200 text-center w-12">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="p-2 border-b border-gray-100">1</td>
+                                        <td class="p-2 border-b border-gray-100"><input type="text" class="account-code w-full p-1 border border-gray-300 rounded" placeholder="代码"></td>
+                                        <td class="p-2 border-b border-gray-100"><input type="text" class="account-name w-full p-1 border border-gray-300 rounded" placeholder="名称"></td>
+                                        <td class="p-2 border-b border-gray-100"><input type="text" class="account-keywords w-full p-1 border border-gray-300 rounded text-xs" placeholder="关键词，用分号分隔"></td>
+                                        <td class="p-2 border-b border-gray-100"><input type="text" class="account-remark w-full p-1 border border-gray-300 rounded text-xs" placeholder="备注"></td>
+                                        <td class="p-2 border-b border-gray-100 text-center"></td>
+                                    </tr>
                             </tbody>
                         </table>
                     </div>
@@ -757,8 +774,6 @@
         function openAddModal() {
             document.getElementById('modalTitle').textContent = '新增科目映射';
             document.getElementById('remark').value = '';
-            document.getElementById('keywordInput').value = '';
-            document.getElementById('keywordTags').innerHTML = '';
             
             const table = document.getElementById('accountTable').querySelector('tbody');
             table.innerHTML = `
@@ -766,6 +781,8 @@
                     <td class="p-2 border-b border-gray-100">1</td>
                     <td class="p-2 border-b border-gray-100"><input type="text" class="account-code w-full p-1 border border-gray-300 rounded" placeholder="代码" required></td>
                     <td class="p-2 border-b border-gray-100"><input type="text" class="account-name w-full p-1 border border-gray-300 rounded" placeholder="名称" required></td>
+                    <td class="p-2 border-b border-gray-100"><input type="text" class="account-keywords w-full p-1 border border-gray-300 rounded text-xs" placeholder="关键词，用分号分隔"></td>
+                    <td class="p-2 border-b border-gray-100"><input type="text" class="account-remark w-full p-1 border border-gray-300 rounded text-xs" placeholder="备注"></td>
                     <td class="p-2 border-b border-gray-100 text-center"></td>
                 </tr>
             `;
@@ -795,6 +812,8 @@
                 <td class="p-2 border-b border-gray-100">${rowCount}</td>
                 <td class="p-2 border-b border-gray-100"><input type="text" class="account-code w-full p-1 border border-gray-300 rounded" placeholder="代码"></td>
                 <td class="p-2 border-b border-gray-100"><input type="text" class="account-name w-full p-1 border border-gray-300 rounded" placeholder="名称"></td>
+                <td class="p-2 border-b border-gray-100"><input type="text" class="account-keywords w-full p-1 border border-gray-300 rounded text-xs" placeholder="关键词，用分号分隔"></td>
+                <td class="p-2 border-b border-gray-100"><input type="text" class="account-remark w-full p-1 border border-gray-300 rounded text-xs" placeholder="备注"></td>
                 <td class="p-2 border-b border-gray-100 text-center">
                     <button class="text-danger hover:text-red-700" onclick="removeAccountRow(this)"><i class="fa fa-minus-circle"></i></button>
                 </td>
@@ -815,22 +834,26 @@
 
         function saveMapping() {
             const expenseType = document.getElementById('expenseType').value;
-            const remark = document.getElementById('remark').value;
-            const keywords = Array.from(document.querySelectorAll('.keyword-tag')).map(tag => tag.textContent.replace('×', '').trim());
             
             const accounts = [];
+            let hasKeywords = false;
             document.querySelectorAll('#accountTable tbody tr').forEach(row => {
                 const code = row.querySelector('.account-code').value.trim();
                 const name = row.querySelector('.account-name').value.trim();
-                if (code || name) accounts.push({ code, name });
+                const keywords = row.querySelector('.account-keywords').value.trim();
+                const remark = row.querySelector('.account-remark').value.trim();
+                if (code || name) {
+                    accounts.push({ code, name, keywords, remark });
+                    if (keywords) hasKeywords = true;
+                }
             });
 
-            if (keywords.length === 0 || accounts.length === 0) {
-                alert('请填写必填项（识别关键词和至少一个会计科目）');
+            if (!hasKeywords || accounts.length === 0) {
+                alert('请填写必填项（至少为一个会计科目设置识别关键词）');
                 return;
             }
 
-            console.log('保存映射:', { expenseType, keywords, accounts, remark });
+            console.log('保存映射:', { expenseType, accounts });
             alert('保存成功！');
             closeModal();
         }
