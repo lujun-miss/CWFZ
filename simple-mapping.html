@@ -520,7 +520,6 @@
                             <div class="tree-item child" onclick="selectExpense('直接从事研发活动人员的基本养老保险费')">直接从事研发活动人员的基本养老保险费</div>
                             <div class="tree-item child" onclick="selectExpense('直接从事研发活动人员的基本医疗保险费')">直接从事研发活动人员的基本医疗保险费</div>
                             <div class="tree-item child" onclick="selectExpense('外聘研发人员的劳务费用')">外聘研发人员的劳务费用</div>
-                            <div class="tree-item child" onclick="selectExpense('从事研发活动人员的股权激励')">从事研发活动人员的股权激励</div>
                         </div>
 
                         <!-- 2. 直接投入费用 -->
@@ -530,10 +529,8 @@
                         </div>
                         <div id="cat2" class="tree-children hidden">
                             <div class="tree-item child" onclick="selectExpense('研发活动直接消耗的材料')">研发活动直接消耗的材料</div>
-                            <div class="tree-item child" onclick="selectExpense('研发活动直接消耗的燃料')">研发活动直接消耗的燃料</div>
-                            <div class="tree-item child" onclick="selectExpense('研发活动直接消耗的动力')">研发活动直接消耗的动力</div>
-                            <div class="tree-item child" onclick="selectExpense('用于中间试验和产品试制的模具')">用于中间试验和产品试制的模具</div>
-                            <div class="tree-item child" onclick="selectExpense('不构成固定资产的样品')">不构成固定资产的样品</div>
+                            <div class="tree-item child" onclick="selectExpense('研发活动直接消耗的燃动力')">研发活动直接消耗的燃动力</div>
+                            <div class="tree-item child" onclick="selectExpense('检查项目')">检查项目</div>
                             <div class="tree-item child" onclick="selectExpense('用于研发活动的仪器、设备的运行维护')">用于研发活动的仪器、设备的运行维护</div>
                             <div class="tree-item child" onclick="selectExpense('通过经营租赁方式租入的研发仪器、设备租赁费')">通过经营租赁方式租入的研发仪器、设备租赁费</div>
                         </div>
@@ -555,10 +552,7 @@
                             <span>无形资产摊销费用</span>
                         </div>
                         <div id="cat4" class="tree-children hidden">
-                            <div class="tree-item child" onclick="selectExpense('用于研发活动的软件摊销费用')">用于研发活动的软件摊销费用</div>
-                            <div class="tree-item child" onclick="selectExpense('用于研发活动的专利权摊销费用')">用于研发活动的专利权摊销费用</div>
-                            <div class="tree-item child" onclick="selectExpense('用于研发活动的非专利技术摊销费用')">用于研发活动的非专利技术摊销费用</div>
-                            <div class="tree-item child" onclick="selectExpense('用于研发活动的许可证摊销费用')">用于研发活动的许可证摊销费用</div>
+                            <div class="tree-item child" onclick="selectExpense('无形资产摊销费用')">无形资产摊销费用</div>
                         </div>
 
                         <!-- 5. 设计费用 -->
@@ -567,10 +561,7 @@
                             <span>设计费用</span>
                         </div>
                         <div id="cat5" class="tree-children hidden">
-                            <div class="tree-item child" onclick="selectExpense('新产品设计费')">新产品设计费</div>
-                            <div class="tree-item child" onclick="selectExpense('新工艺规程制定费')">新工艺规程制定费</div>
-                            <div class="tree-item child" onclick="selectExpense('新药研制的临床试验费')">新药研制的临床试验费</div>
-                            <div class="tree-item child" onclick="selectExpense('勘探开发技术的现场试验费')">勘探开发技术的现场试验费</div>
+                            <div class="tree-item child" onclick="selectExpense('设计费用')">设计费用</div>
                         </div>
 
                         <!-- 6. 装备调试费用与试验费用 -->
@@ -579,15 +570,15 @@
                             <span>装备调试费用与试验费用</span>
                         </div>
                         <div id="cat6" class="tree-children hidden">
-                            <div class="tree-item child" onclick="selectExpense('工装准备过程中发生的研发费用')">工装准备过程中发生的研发费用</div>
-                            <div class="tree-item child" onclick="selectExpense('装备调试过程中发生的研发费用')">装备调试过程中发生的研发费用</div>
-                            <div class="tree-item child" onclick="selectExpense('试生产过程中发生的研发费用')">试生产过程中发生的研发费用</div>
+                            <div class="tree-item child" onclick="selectExpense('装备调试费')">装备调试费</div>
+                            <div class="tree-item child" onclick="selectExpense('试验费')">试验费</div>
+                            <div class="tree-item child" onclick="selectExpense('田间试验费')">田间试验费</div>
                         </div>
 
-                        <!-- 7. 委托外部研究开发费用 -->
+                        <!-- 7. 委托研究开发费用 -->
                         <div class="tree-item parent mt-1" onclick="toggleExpand('cat7')">
                             <i class="fa fa-chevron-right tree-expand" id="expand-cat7"></i>
-                            <span>委托外部研究开发费用</span>
+                            <span>委托研究开发费用</span>
                         </div>
                         <div id="cat7" class="tree-children hidden">
                             <div class="tree-item child" onclick="selectExpense('境内委托外部机构研发费用')">境内委托外部机构研发费用</div>
@@ -751,7 +742,7 @@
             if (name.includes('软件') || name.includes('专利') || name.includes('技术') || name.includes('许可')) return '无形资产摊销费用';
             if (name.includes('设计') || name.includes('工艺') || name.includes('临床') || name.includes('现场试验')) return '设计费用';
             if (name.includes('工装') || name.includes('调试') || name.includes('试生产')) return '装备调试费用与试验费用';
-            if (name.includes('委托')) return '委托外部研究开发费用';
+            if (name.includes('委托')) return '委托研究开发费用';
             return '其他相关费用';
         }
 
