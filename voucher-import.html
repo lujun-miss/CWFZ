@@ -743,12 +743,13 @@
                             </p>
                             <ul class="mt-2 text-sm text-blue-700 list-disc list-inside space-y-1">
                                 <li>请确保上传的文件包含完整的凭证信息，包括凭证号、日期、摘要、科目、金额等</li>
-                                <li><strong>筛选规则：</strong>只导入借方金额 > 0 的凭证（贷方有值的结转凭证不导入）</li>
-                                <li><strong>增量导入与去重保护：</strong>系统以「凭证号」为唯一标识，自动处理新旧数据冲突。
+                                <li><strong>筛选规则：</strong>只导入借方金额 > 0 且凭证号不为空的凭证</li>
+                                <li><strong>重复导入判断：</strong>系统以「凭证号+科目代码+借贷方向」为判断依据，
+                                    检测到完全重复的数据时将跳过导入，存在差异时提示确认处理方式。
                                     <ul class="ml-5 mt-1 list-disc text-xs">
-                                        <li><strong>新凭证/未匹配：</strong>直接追加或覆盖更新旧有的凭证内容。</li>
-                                        <li><strong>已匹配凭证：</strong>保留原有项目匹配关系，仅更新金额、摘要等基础信息。</li>
-                                        <li><strong>已锁定凭证：</strong>报表已生成，系统将自动跳过，禁止覆盖。</li>
+                                        <li><strong>完全重复：</strong>跳过导入，提示"该凭证已存在"</li>
+                                        <li><strong>数据变更：</strong>提示用户选择"覆盖更新"或"保留原数据"</li>
+                                        <li><strong>新增分录：</strong>同一凭证新增的行项目，自动追加</li>
                                     </ul>
                                 </li>
                                 <li><strong>识别规则：</strong>系统使用「费用科目映射表」配置的规则进行凭证识别</li>
@@ -946,6 +947,7 @@
                 
                 this.addLog(`应用识别规则（从费用科目映射表读取）:`);
                 this.addLog(`  - 借方金额 > 0`);
+                this.addLog(`  - 凭证号不为空`);
                 this.addLog(`  - 科目代码匹配映射表配置`);
                 this.addLog(`  - 摘要包含映射表中配置的关键词`);
                 this.addLog(`  - 排除: ${excludeKeywords.join('、')}`);

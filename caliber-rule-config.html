@@ -57,6 +57,9 @@
             .detail-container { @apply transition-all duration-300 ease-in-out overflow-hidden; }
             .detail-container.collapsed { @apply max-h-0 opacity-0 mt-0; }
             .detail-container.expanded { @apply max-h-[500px] opacity-100 mt-3; }
+
+            /* 计算类型激活样式 */
+            .active-calc-type { @apply bg-white shadow-sm text-primary; }
         }
     </style>
     <style>
@@ -515,12 +518,6 @@
                     <div>
                         <h1 class="text-2xl font-bold text-gray-800">研发费用加计扣除</h1>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="rule-tag bg-blue-100 text-blue-600">15项核心规则</span>
-                        <button class="btn-primary flex items-center" onclick="addRule('deduction')">
-                            <i class="fa fa-plus mr-2"></i>新增规则
-                        </button>
-                    </div>
                 </div>
 
                 <!-- 筛选条件 -->
@@ -584,12 +581,12 @@
                     </div>
                 </div>
 
-                <!-- 系统预设规则（不可编辑） -->
+                <!-- 系统预设规则（允许编辑） -->
                 <div class="mb-8">
                     <div class="flex items-center mb-4">
                         <div class="w-2 h-6 bg-indigo-500 rounded mr-3"></div>
                         <h2 class="text-lg font-semibold text-gray-800">系统内置规则</h2>
-                        <span class="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">不可编辑</span>
+                        <span class="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">允许微调</span>
                     </div>
                     <div class="space-y-3">
                         <!-- 加计扣除口径 - 其他费用限额 -->
@@ -613,7 +610,7 @@
                                         <span>查看逻辑</span>
                                         <i class="fa fa-chevron-down ml-1 transition-transform"></i>
                                     </button>
-                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                    <button class="text-gray-400 hover:text-indigo-500" onclick="editRule('plus_other_limit')"><i class="fa fa-pencil"></i></button>
                                 </div>
                             </div>
                             <div id="detail-plus-other" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
@@ -637,7 +634,7 @@
                             </div>
                         </div>
 
-                        <!-- 高企认定口径 - 委托境内研发 -->
+                        <!-- 高企认定口径 - 委托境内研发 (高企) -->
                         <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-4 flex-1 overflow-hidden">
@@ -645,16 +642,16 @@
                                         <span class="rule-tag bg-purple-50 text-purple-600 text-[10px] w-fit mb-1">高企认定</span>
                                         <h3 class="font-semibold text-gray-800 text-sm">委托境内研发 (高企)</h3>
                                     </div>
-                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境内机构或个人进行研发活动所发生的费用，按照其实际发生额的80%计入</p>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境内机构或个人进行研发活动所发生的费用，按照境内实际发生额的80%计入</p>
                                     <div class="flex items-center space-x-3 shrink-0">
                                         <span class="rule-tag bg-gray-100 text-gray-600">委托外部研发</span>
                                         <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
-                                            实际发生 × 80%
+                                            境内实际发生额 × 80%
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex items-center ml-4 space-x-3">
-                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                    <button class="text-gray-400 hover:text-indigo-500" onclick="editRule('high_domestic_80')"><i class="fa fa-pencil"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -665,13 +662,13 @@
                                 <div class="flex items-center space-x-4 flex-1 overflow-hidden">
                                     <div class="flex flex-col min-w-[140px]">
                                         <span class="rule-tag bg-purple-50 text-purple-600 text-[10px] w-fit mb-1">高企认定</span>
-                                        <h3 class="font-semibold text-gray-800 text-sm">委托境外研发 (高企)</h3>
+                                        <h3 class="font-semibold text-gray-800 text-sm">委托外部研发 (高企)</h3>
                                     </div>
-                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境外机构研发费用按80%计入，且需满足境内占比≥60%及境外≤40%限额</p>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">委托外部研发费用按80%计入，且不超过研发总费用的40%。符合高新技术企业认定管理办法相关规定。</p>
                                     <div class="flex items-center space-x-3 shrink-0">
                                         <span class="rule-tag bg-gray-100 text-gray-600">委托外部研发</span>
                                         <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
-                                            综合限额计算
+                                            min(80%, 40%上限)
                                         </div>
                                     </div>
                                 </div>
@@ -680,7 +677,7 @@
                                         <span>展开详情</span>
                                         <i class="fa fa-chevron-down ml-1 transition-transform"></i>
                                     </button>
-                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                    <button class="text-gray-400 hover:text-indigo-500" onclick="editRule('high_overseas_limit')"><i class="fa fa-pencil"></i></button>
                                 </div>
                             </div>
                             <div id="detail-high-overseas" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
@@ -730,7 +727,7 @@
                                         <span>查看逻辑</span>
                                         <i class="fa fa-chevron-down ml-1 transition-transform"></i>
                                     </button>
-                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                    <button class="text-gray-400 hover:text-indigo-500" onclick="editRule('high_other_limit')"><i class="fa fa-pencil"></i></button>
                                 </div>
                             </div>
                             <div id="detail-high-other" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
@@ -775,7 +772,7 @@
                                         <span>查看逻辑</span>
                                         <i class="fa fa-chevron-down ml-1 transition-transform"></i>
                                     </button>
-                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                    <button class="text-gray-400 hover:text-indigo-500" onclick="editRule('high_183_days')"><i class="fa fa-pencil"></i></button>
                                 </div>
                             </div>
                             <div id="detail-high-183" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
@@ -795,24 +792,24 @@
                             </div>
                         </div>
 
-                        <!-- 加计扣除口径 - 委托境内×80% -->
+                        <!-- 加计扣除口径 - 委托境内研发 (加计) -->
                         <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-indigo-500 shadow-sm hover:shadow-md transition-shadow">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-4 flex-1 overflow-hidden">
                                     <div class="flex flex-col min-w-[140px]">
                                         <span class="rule-tag bg-blue-50 text-blue-600 text-[10px] w-fit mb-1">加计扣除</span>
-                                        <h3 class="font-semibold text-gray-800 text-sm">委托境内研发×80%</h3>
+                                        <h3 class="font-semibold text-gray-800 text-sm">委托境内研发 (加计)</h3>
                                     </div>
-                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境内机构或个人研发费用，按实际发生额的80%计入加计扣除基数</p>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境内机构或个人研发费用，按境内实际发生额的80%计入加计扣除基数</p>
                                     <div class="flex items-center space-x-3 shrink-0">
                                         <span class="rule-tag bg-gray-100 text-gray-600">委托外部研发</span>
                                         <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
-                                            实际发生 × 80%
+                                            境内实际发生额 × 80%
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex items-center ml-4 space-x-3">
-                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                    <button class="text-gray-400 hover:text-indigo-500" onclick="editRule('plus_domestic_80')"><i class="fa fa-pencil"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -823,13 +820,13 @@
                                 <div class="flex items-center space-x-4 flex-1 overflow-hidden">
                                     <div class="flex flex-col min-w-[140px]">
                                         <span class="rule-tag bg-blue-50 text-blue-600 text-[10px] w-fit mb-1">加计扣除</span>
-                                        <h3 class="font-semibold text-gray-800 text-sm">委托境外研发 (加计)</h3>
+                                        <h3 class="font-semibold text-gray-800 text-sm">委托境外机构研发 (加计)</h3>
                                     </div>
-                                    <p class="text-gray-500 text-xs flex-1 truncate">委托境外机构研发费用，按实际发生额 of 80% 计入，且不得超过境内费用的 2/3</p>
+                                    <p class="text-gray-500 text-xs flex-1 leading-relaxed">委托境外(不包括境外个人)进行研发活动所发生的费用，按照费用实际发生额的 80%计入委托方的委托境外研发费用。<br>委托境外研发费用不超过境内符合条件的研发费用三分之二的部分，可按规定在企业所得税前加计扣除。</p>
                                     <div class="flex items-center space-x-3 shrink-0">
                                         <span class="rule-tag bg-gray-100 text-gray-600">委托外部研发</span>
                                         <div class="bg-indigo-50 px-3 py-1 rounded-lg text-xs font-mono text-indigo-700">
-                                            min(80%, 2/3上限)
+                                            min(80%, 三分之二上限)
                                         </div>
                                     </div>
                                 </div>
@@ -838,7 +835,7 @@
                                         <span>查看逻辑</span>
                                         <i class="fa fa-chevron-down ml-1 transition-transform"></i>
                                     </button>
-                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                    <button class="text-gray-400 hover:text-indigo-500" onclick="editRule('plus_overseas_limit')"><i class="fa fa-pencil"></i></button>
                                 </div>
                             </div>
                             <div id="detail-plus-overseas" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
@@ -882,7 +879,7 @@
                                         <span>查看逻辑</span>
                                         <i class="fa fa-chevron-down ml-1 transition-transform"></i>
                                     </button>
-                                    <span class="text-gray-300"><i class="fa fa-lock"></i></span>
+                                    <button class="text-gray-400 hover:text-indigo-500" onclick="editRule('special_income_offset')"><i class="fa fa-pencil"></i></button>
                                 </div>
                             </div>
                             <div id="detail-special-income" class="detail-container collapsed pt-3 border-t border-indigo-100 mt-3">
@@ -907,13 +904,30 @@
                     </div>
                 </div>
 
-                <div>
-                    <div class="flex items-center mb-4">
-                        <div class="w-2 h-6 bg-green-500 rounded mr-3"></div>
-                        <h2 class="text-lg font-semibold text-gray-800">可调配政策规则</h2>
-                        <span class="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">系统预设，允许微调</span>
-                    </div>
+                <div class="mt-4">
                     <div class="space-y-3" id="rules-container">
+                        <!-- IPO口径 - 研发工时占比限制 -->
+                        <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-red-500 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 flex-1 overflow-hidden">
+                                    <div class="flex flex-col min-w-[140px]">
+                                        <span class="rule-tag bg-red-50 text-red-600 text-[10px] w-fit mb-1">IPO审查</span>
+                                        <h3 class="font-semibold text-gray-800 text-sm">研发工时占比硬约束</h3>
+                                    </div>
+                                    <p class="text-gray-500 text-xs flex-1 truncate">研发人员研发工时占其年度总工时的比例原则上不应低于 50%，否则不认定为研发人员</p>
+                                    <div class="flex items-center space-x-3 shrink-0">
+                                        <span class="rule-tag bg-gray-100 text-gray-600">人员人工</span>
+                                        <div class="bg-red-50 px-3 py-1 rounded-lg text-xs font-mono text-red-700">
+                                            研发工时 ≥ 50%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center ml-4 space-x-3">
+                                    <button class="text-gray-400 hover:text-red-500" onclick="alert('按钮点击测试'); editRule('ipo_rd_hours')"><i class="fa fa-pencil"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="rule-card bg-white rounded-xl p-4 border-l-4 border-warning shadow-sm hover:shadow-md transition-shadow">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-4 flex-1 overflow-hidden">
@@ -1018,7 +1032,7 @@
                     </div>
                     <div class="flex items-center space-x-2">
                         <span class="rule-tag bg-green-100 text-green-600">9项核心规则</span>
-                        <button class="btn-primary flex items-center" onclick="addRule('hitech')">
+                        <button class="btn-primary flex items-center" onclick="addRule('high_tech')">
                             <i class="fa fa-plus mr-2"></i>新增规则
                         </button>
                     </div>
@@ -1204,7 +1218,7 @@
                     </div>
                     <div class="flex items-center space-x-2">
                         <span class="rule-tag bg-cyan-100 text-cyan-600">3项核心规则</span>
-                        <button class="btn-primary flex items-center" onclick="addRule('rd')">
+                        <button class="btn-primary flex items-center" onclick="addRule('rd_statistics')">
                             <i class="fa fa-plus mr-2"></i>新增规则
                         </button>
                     </div>
@@ -1261,7 +1275,7 @@
                     </div>
                     <div class="flex items-center space-x-2">
                         <span class="rule-tag bg-purple-100 text-purple-600">8项核心规则</span>
-                        <button class="btn-primary flex items-center" onclick="addRule('ipo')">
+                        <button class="btn-primary flex items-center" onclick="addRule('ipo_review')">
                             <i class="fa fa-plus mr-2"></i>新增规则
                         </button>
                     </div>
@@ -1278,6 +1292,26 @@
                                 <p class="text-gray-500 text-sm mt-2">每笔费用需有完整的合同、发票、付款凭证等证据支撑</p>
                             </div>
                             <button class="text-gray-400 hover:text-purple-500"><i class="fa fa-pencil"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- IPO规则：研发工时占比限制 -->
+                    <div class="rule-card bg-white rounded-xl p-5 border-l-4 border-red-500 shadow-sm">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <div class="flex items-center">
+                                    <span class="rule-tag bg-red-500 text-white">IPO审查</span>
+                                    <h3 class="font-semibold text-gray-800 ml-2">研发工时占比硬约束</h3>
+                                </div>
+                                <p class="text-gray-500 text-sm mt-2">研发人员研发工时占其年度总工时的比例原则上不应低于 50%，否则不认定为研发人员。</p>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500"><i class="fa fa-pencil"></i></button>
+                        </div>
+                        <div class="mt-4 p-3 bg-red-50 rounded-lg">
+                            <div class="text-sm">
+                                <span class="text-red-700 font-medium">判定逻辑：</span>
+                                <span class="font-mono bg-white px-2 py-1 rounded text-red-600">研发工时 / 总工时 < 50% → 费用调出</span>
+                            </div>
                         </div>
                     </div>
 
@@ -1397,199 +1431,266 @@
 
     <!-- 新增/编辑规则弹窗 -->
     <div id="ruleModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 flex flex-col" style="max-height: 85vh;">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-5xl mx-4 flex flex-col" style="max-height: 90vh;">
             <!-- 标题栏 -->
             <div class="flex items-center justify-between p-4 border-b flex-shrink-0">
-                <h3 id="modalTitle" class="text-lg font-semibold text-gray-800">新增规则</h3>
+                <div class="flex items-center space-x-3">
+                    <h3 id="modalTitle" class="text-lg font-semibold text-gray-800">配置判定规则</h3>
+                </div>
                 <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
                     <i class="fa fa-times text-xl"></i>
                 </button>
             </div>
             
-            <!-- 内容区域（可滚动） -->
-            <div class="p-4 space-y-3 overflow-y-auto flex-1">
-                <!-- 预设模板快速选择 -->
-                <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label class="block text-sm font-medium text-gray-700">预设模板</label>
-                        <button type="button" onclick="saveAsTemplate()" class="text-xs text-primary hover:text-blue-600 flex items-center">
-                            <i class="fa fa-save mr-1"></i>保存当前为模板
-                        </button>
-                    </div>
-                    <!-- 系统预设模板 -->
-                    <div class="mb-3 hidden">
-                        <span class="text-xs text-gray-400 mb-1 block">系统预设（政策标准）</span>
-                        <div class="flex flex-wrap gap-2" id="systemTemplates">
-                            <!-- 动态生成 -->
+            <!-- 内容区域：三栏布局 -->
+            <div class="flex-1 overflow-hidden flex flex-col md:flex-row">
+                <!-- 左侧：作用对象 (30%) -->
+                <div class="w-full md:w-[28%] border-r border-gray-100 p-5 overflow-y-auto bg-gray-50/30">
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-900 mb-4 flex items-center">
+                                <span class="w-1 h-4 bg-primary rounded-full mr-2"></span>
+                                作用对象
+                            </h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wider">规则名称</label>
+                                    <input type="text" id="ruleName" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="如：其他费用10%限额">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wider">适用口径</label>
+                                    <select id="ruleCaliber" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" onchange="loadSubExpenseTypes()">
+                                        <option value="plus_deduction">加计扣除</option>
+                                        <option value="high_tech">高企认定</option>
+                                        <option value="accounting">会计口径</option>
+                                        <option value="rd_statistics">R&D统计</option>
+                                        <option value="ipo_review">IPO审查</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wider">判定主体</label>
+                                    <select id="ruleExpenseType" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" onchange="loadSubExpenseTypes()">
+                                        <option value="personnel_expense">人员人工费</option>
+                                        <option value="material_expense">直接投入费</option>
+                                        <option value="depreciation_expense">折旧费用</option>
+                                        <option value="intangible_expense">无形资产摊销</option>
+                                        <option value="design_expense">新产品设计费</option>
+                                        <option value="trial_expense">装备调试与试验费</option>
+                                        <option value="outsource_expense">委托研发费</option>
+                                        <option value="other_expense">其他相关费用</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wider">子费用类型</label>
+                                    <select id="ruleSubExpenseType" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+                                        <option value="">全部子项</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- 用户自定义模板 -->
-                    <div class="hidden">
-                        <span class="text-xs text-gray-400 mb-1 block">我的模板</span>
-                        <div class="flex flex-wrap gap-2" id="customTemplates">
-                            <!-- 动态生成 -->
-                        </div>
-                    </div>
-                </div>
 
-                <!-- 基本信息 -->
-                <!-- 1. 政策场景选择 (新增核心：引导式配置) -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">政策应用场景 <span class="text-xs text-primary font-normal">(推荐选择，自动配置逻辑)</span></label>
-                    <select id="policyScenario" class="w-full border-2 border-primary/20 bg-blue-50/30 rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-primary" onchange="applyScenario()">
-                        <option value="custom">-- 自定义配置规则 --</option>
-                        <option value="other_reverse">其他费用倒推限额 (加计10% / 高企20%)</option>
-                        <option value="person_days">人员年度在职天数硬门槛 (如183天)</option>
-                        <option value="device_ratio">共用设备研发工时占比预警 (如15%)</option>
-                        <option value="outsource_80">委托研发 80% 孰低原则归集</option>
-                        <option value="domestic_60">高企认定：境内研发占比 ≥ 60%</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">规则名称</label>
-                        <input type="text" id="ruleName" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">适用口径 <span class="text-red-500">*</span></label>
-                        <select id="ruleCaliber" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" onchange="loadSubExpenseTypes()">
-                            <option value="">请选择适用口径</option>
-                            <option value="plus_deduction">加计扣除</option>
-                            <option value="high_tech">高企认定</option>
-                            <option value="accounting">会计口径</option>
-                            <option value="rd_statistics">R&D统计</option>
-                            <option value="ipo_review">IPO审查</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- 规则条件 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">规则条件配置</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <select id="ruleExpenseType" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" onchange="loadSubExpenseTypes()">
-                            <option value="">请选择判定主体</option>
-                            <optgroup label="八大费用归集类别">
-                                <option value="personnel_expense">人员人工费</option>
-                                <option value="material_expense">直接投入费</option>
-                                <option value="depreciation_expense">折旧费用</option>
-                                <option value="intangible_expense">无形资产摊销</option>
-                                <option value="design_expense">新产品设计费</option>
-                                <option value="trial_expense">装备调试与试验费</option>
-                                <option value="outsource_expense">委托外部研发费</option>
-                                <option value="other_expense">其他相关费用</option>
-                            </optgroup>
-                            <optgroup label="政策判定综合指标">
-                                <option value="domestic_total">境内研发总额 (自主+委托境内×80%)</option>
-                                <option value="equipment_rd_hours">设备研发工时 (小时)</option>
-                                <option value="personnel_rd_hours">人员研发工时 (小时)</option>
-                                <option value="work_days">人员年度在职天数</option>
-                                <option value="high_tech_revenue">高新收入占比 (高新收入/总收入)</option>
-                                <option value="rd_investment_ratio">研发强度 (研发费用/营业收入)</option>
-                                <option value="staff_ratio">科技人员占比 (科技人员/职工总数)</option>
-                            </optgroup>
-                        </select>
-                        <select id="ruleSubExpenseType" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="">子费用类型（全部）</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- 是否需要数值限制 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">数值限制配置</label>
-                    <div class="flex items-center space-x-4">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" name="hasLimit" value="yes" checked onchange="toggleLimitFields()" class="w-4 h-4 text-primary">
-                            <span class="text-sm text-gray-700">需要数值限制</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" name="hasLimit" value="no" checked onchange="toggleLimitFields()" class="w-4 h-4 text-primary">
-                            <span class="text-sm text-gray-700">仅过滤费用项</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 操作符 -->
-                <div id="operatorSection">
-                    <label id="operatorLabel" class="block text-sm font-medium text-gray-700 mb-1">比较方式</label>
-                    <select id="ruleOperator" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option value="<=">≤</option>
-                        <option value="<"><</option>
-                        <option value=">">></option>
-                        <option value=">=">≥</option>
-                        <option value="=">等于 =</option>
-                    </select>
-                </div>
-
-                <!-- 计算基数 -->
-                <div id="baseSectionContainer">
-                    <label id="baseLabel" class="block text-sm font-medium text-gray-700 mb-1">规则计算逻辑</label>
-                    <div id="baseSection" class="grid grid-cols-3 gap-2">
-                        <!-- 1. 计算方法 (意图) -->
-                        <select id="ruleMethod" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="ratio_limit">比例限额 (%)</option>
-                            <option value="policy_reverse">政策倒推法</option>
-                            <option value="veto_access">准入判定 (一票否决)</option>
-                            <option value="amount_limit">绝对值限制</option>
-                            <option value="cap_min">孰低原则 (Min)</option>
-                        </select>
-                        
-                        <!-- 2. 计算基数 (参照) -->
-                        <select id="ruleBaseType" class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                            <optgroup label="费用基数">
-                                <option value="total_rd">研发费用总额</option>
-                                <option value="domestic_rd">境内研发费用</option>
-                                <option value="6_expense_sum">前6项费用之和</option>
-                                <option value="self_rd">自主研发费用</option>
-                            </optgroup>
-                            <optgroup label="业务基数">
-                                <option value="revenue_3yr">近三年平均营收</option>
-                                <option value="equipment_total_hours">设备总工时</option>
-                                <option value="personnel_total_hours">人员总工时</option>
-                                <option value="work_days">年度在职天数</option>
-                                <option value="fixed_value">固定数值</option>
-                            </optgroup>
-                        </select>
-
-                        <!-- 3. 数值/单位 (结果) -->
-                        <div class="flex items-center space-x-1">
-                            <span id="rulePrefix" class="text-gray-400 text-sm">×</span>
-                            <input type="number" id="ruleBasePercent" class="flex-1 border border-gray-300 rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="数值">
-                            <span id="ruleUnit" class="text-gray-400 text-sm">%</span>
+                        <div class="pt-4 border-t border-gray-100">
+                            <label class="block text-xs font-medium text-gray-500 mb-3 uppercase tracking-wider">排除项过滤</label>
+                            <div id="exclusionOptions" class="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+                                <span class="text-xs text-gray-400 italic">请先选择判定主体...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 排除项配置 -->
-                <div id="exclusionSection">
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">排除项配置 <span class="text-xs text-gray-400 font-normal">（勾选要从该费用中排除的子类型）</span></label>
-                    <div class="flex flex-wrap gap-2" id="exclusionOptions">
-                        <span class="text-xs text-gray-400" id="exclusionHint">请先选择费用类型</span>
+                <!-- 中间：策略配置 (44%) -->
+                <div class="w-full md:w-[44%] p-5 overflow-y-auto">
+                    <h4 class="text-sm font-bold text-gray-900 mb-5 flex items-center">
+                        <span class="w-1 h-4 bg-primary rounded-full mr-2"></span>
+                        策略配置
+                    </h4>
+
+                    <!-- 计算类型选择 (Segmented Control 风格) -->
+                    <div class="mb-8" id="calcTypeSelectorContainer">
+                        <label class="block text-xs font-medium text-gray-500 mb-3 uppercase tracking-wider">计算类型 (驱动视图)</label>
+                        <div class="flex p-1 bg-gray-100 rounded-xl" id="calcTypeSelector">
+                            <button onclick="switchCalcType('limit')" data-type="limit" class="flex-1 py-2 text-xs font-medium rounded-lg transition-all active-calc-type">限额控制</button>
+                            <button onclick="switchCalcType('formula')" data-type="formula" class="flex-1 py-2 text-xs font-medium rounded-lg transition-all text-gray-500 hover:text-gray-700">公式计算</button>
+                            <button onclick="switchCalcType('direct')" data-type="direct" class="flex-1 py-2 text-xs font-medium rounded-lg transition-all text-gray-500 hover:text-gray-700">直接计入</button>
+                            <button onclick="switchCalcType('exclude')" data-type="exclude" class="flex-1 py-2 text-xs font-medium rounded-lg transition-all text-gray-500 hover:text-gray-700">排除过滤</button>
+                        </div>
                     </div>
-                    <p class="mt-1 text-xs text-gray-500">根据政策2.0要求配置排除项，系统将从费用中扣除这些项目后再进行规则校验</p>
+
+                    <!-- 动态表单容器 -->
+                    <div id="dynamicFormContainer" class="space-y-6 min-h-[300px]">
+                        <!-- 默认：限额控制表单 -->
+                        <div id="form-limit" class="space-y-5 animate-in fade-in duration-300">
+                            <!-- 限额方式单独一行 -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1.5">限额方式</label>
+                                <select id="limitMethod" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20" onchange="updateFormulaPreview()">
+                                    <option value="ratio">按比例限制 (%)</option>
+                                    <option value="fixed">按固定金额 (元)</option>
+                                    <option value="threshold">阈值判定 (准入门槛)</option>
+                                    <option value="reverse_limit">政策倒推限额 (限额法)</option>
+                                </select>
+                            </div>
+                            <!-- 计算基数 + 比较方式 + 数值 在一行 -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1.5">判定阈值</label>
+                                <div class="flex items-center space-x-2">
+                                    <select id="ruleBaseType" class="w-48 border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-primary/20" onchange="updateFormulaPreview()">
+                                        <optgroup label="费用基数">
+                                            <option value="total_rd">研发费用总额</option>
+                                            <option value="6_expense_sum">前6项费用之和</option>
+                                            <option value="domestic_rd">境内研发费用总额</option>
+                                            <option value="outsource_domestic">境内实际发生额</option>
+                                            <option value="outsource_overseas">委托境外机构研发费用</option>
+                                        </optgroup>
+                                        <optgroup label="综合/业务指标">
+                                            <option value="revenue_3yr">近三年平均营收</option>
+                                            <option value="equipment_rd_hours">设备研发总工时</option>
+                                            <option value="personnel_rd_hours">人员研发总工时</option>
+                                            <option value="personnel_rd_ratio">人员研发工时占比 (%)</option>
+                                            <option value="work_days">人员年度在职天数</option>
+                                            <option value="fixed_value">固定数值 (手动输入)</option>
+                                        </optgroup>
+                                    </select>
+                                    <select id="ruleOperator" class="w-14 border border-gray-300 rounded-lg px-2 py-3 text-sm focus:ring-2 focus:ring-primary/20" onchange="updateFormulaPreview()">
+                                        <option value="=">=</option>
+                                        <option value="×">×</option>
+                                        <option value="<=">≤</option>
+                                        <option value="<"><</option>
+                                        <option value=">">></option>
+                                        <option value=">=">≥</option>
+                                    </select>
+                                    <div class="flex-1 min-w-[150px] relative">
+                                        <input type="number" id="ruleBasePercent" class="w-full border border-gray-300 rounded-lg px-5 py-3 text-2xl font-bold focus:ring-2 focus:ring-primary/20 pr-20" placeholder="80" oninput="updateFormulaPreview()">
+                                        <span class="absolute right-8 top-2.5 text-gray-400 text-xl font-normal" id="unitSpan">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 场景二：公式计算 -->
+                        <div id="form-formula" class="hidden space-y-5 animate-in fade-in duration-300">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1.5">公式模板库</label>
+                                <select id="formulaTemplate" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-blue-50/50 border-blue-100" onchange="applyFormulaTemplate()">
+                                    <option value="">-- 请选择预置公式 --</option>
+                                    <option value="min_outsource">MIN(实际发生额×80%, 境内费用×2/3)</option>
+                                    <option value="deduction_119_reverse">加计扣除-其他费用“倒推法” (119号文标准)</option>
+                                    <option value="ratio_step">阶梯式比例：[0-50w: 100%, >50w: 80%]</option>
+                                    <option value="custom">自定义高级公式</option>
+                                </select>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                                <label class="block text-xs font-medium text-gray-500 mb-3 uppercase">参数映射映射</label>
+                                <div id="formulaParams" class="space-y-3">
+                                    <p class="text-xs text-gray-400 italic">请先选择公式模板以映射参数...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 场景三：直接计入 -->
+                        <div id="form-direct" class="hidden space-y-5 animate-in fade-in duration-300">
+                            <div class="bg-green-50 p-4 rounded-xl border border-green-100 flex items-center space-x-4">
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                    <i class="fa fa-check-circle text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-green-800">直接计入模式</p>
+                                    <p class="text-xs text-green-600 mt-0.5">该费用项将不做数值限制，符合过滤条件的全部计入。</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-700">允许负向调整</p>
+                                    <p class="text-xs text-gray-500">允许系统在汇总时产生负向金额</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 场景四：仅排除过滤 -->
+                        <div id="form-exclude" class="hidden space-y-5 animate-in fade-in duration-300">
+                            <div class="bg-amber-50 p-4 rounded-xl border border-amber-100 flex items-center space-x-4">
+                                <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-600">
+                                    <i class="fa fa-filter text-xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-amber-800">仅排除过滤模式</p>
+                                    <p class="text-xs text-amber-600 mt-0.5">该模式下不执行任何金额限额判定，仅根据左侧勾选的“排除项”进行数据清洗。</p>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-xl border border-dashed border-gray-200 text-center">
+                                <p class="text-xs text-gray-500">请在左侧 <span class="font-bold text-gray-700">“排除项过滤”</span> 区域勾选需要扣除的子科目。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 策略说明区域 (共享) -->
+                    <div id="strategyDescription" class="mt-6 bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <i class="fa fa-lightbulb text-indigo-500"></i>
+                            <span class="text-xs font-medium text-indigo-700 uppercase tracking-wider">策略说明</span>
+                        </div>
+                        <p id="strategyDescriptionText" class="text-sm text-indigo-800 leading-relaxed">
+                            请选择限额方式和计算基数，系统将自动生成策略说明...
+                        </p>
+                    </div>
                 </div>
 
-                <!-- 规则描述预览 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">规则描述</label>
-                    <div id="ruleFormulaPreview" class="bg-blue-50 border border-blue-200 rounded-md px-3 py-2 text-sm text-blue-700">
-                        请选择费用类型和计算条件
-                    </div>
-                </div>
+                <!-- 右侧：可视化校验 (28%) -->
+                <div class="w-full md:w-[28%] border-l border-gray-100 p-5 bg-gray-50/30 overflow-y-auto">
+                    <h4 class="text-sm font-bold text-gray-900 mb-5 flex items-center">
+                        <span class="w-1 h-4 bg-primary rounded-full mr-2"></span>
+                        可视化预览
+                    </h4>
+                    
+                    <div class="space-y-6">
+                        <!-- 规则描述卡片 -->
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                            <label class="block text-xs font-bold text-gray-400 mb-3 uppercase">自然语言描述</label>
+                            <div id="ruleFormulaPreview" class="text-sm text-gray-700 leading-relaxed font-medium">
+                                请在左侧配置规则要素...
+                            </div>
+                        </div>
 
-                <!-- 错误提示 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">错误提示</label>
-                    <input type="text" id="ruleMessage" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="规则不合规时的提示信息">
+                        <!-- 逻辑流图预览 -->
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                            <label class="block text-xs font-bold text-gray-400 mb-4 uppercase">判定流程简图</label>
+                            <div class="space-y-3" id="logicFlow">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]">1</div>
+                                    <div class="flex-1 h-8 bg-gray-50 rounded flex items-center px-3 text-[11px] text-gray-500">读取原始凭证</div>
+                                </div>
+                                <div class="ml-3 border-l-2 border-dashed border-gray-200 h-4"></div>
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]">2</div>
+                                    <div class="flex-1 h-8 bg-gray-50 rounded flex items-center px-3 text-[11px] text-gray-500">过滤排除项</div>
+                                </div>
+                                <div class="ml-3 border-l-2 border-dashed border-gray-200 h-4"></div>
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">3</div>
+                                    <div class="flex-1 h-8 bg-blue-50 border border-blue-100 rounded flex items-center px-3 text-[11px] text-primary font-bold">执行策略判定</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 错误消息预览 -->
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase">合规性预警文案</label>
+                            <textarea id="ruleMessage" rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-primary/20" placeholder="当规则不通过时显示的提示..." oninput="markUserModified(this)"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <!-- 底部按钮区域（固定） -->
-            <div class="flex justify-end space-x-3 p-4 border-t flex-shrink-0 bg-white">
-                <button onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">取消</button>
-                <button onclick="saveRule()" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600">保存</button>
+            <!-- 底部按钮区域 (固定) -->
+            <div class="flex justify-end items-center p-4 border-t flex-shrink-0 bg-white rounded-b-xl">
+                <div class="flex space-x-3">
+                    <button onclick="closeModal()" class="px-6 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all">取消</button>
+                    <button onclick="saveRule()" class="px-8 py-2 text-sm font-medium bg-primary text-white rounded-lg hover:bg-blue-600 shadow-lg shadow-blue-500/30 transition-all">确认发布</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1597,60 +1698,167 @@
     <script>
         let currentCaliber = 'deduction';
         let currentRuleId = null;
+        let currentCalcType = 'limit'; // 默认为限额控制
 
-        /**
-         * 费用类型与计算基数说明（供开发人员理解规则配置）：
-         * 
-         * 【费用类型（expenseType）】
-         * 
-         * 1. domestic_total（境内研发费用）
-         *    计算公式：自主研发 + 委托境内研发×80%
-         *    说明：用于检查境内研发费用占研发总费用的比例（如≥60%）
-         *    使用场景：高企认定-境内研发占比≥60%规则
-         * 
-         * 【计算基数（baseType）】
-         * 
-         * 1. total_rd（研发费用总额）
-         *    计算公式：自主研发 + 委托境内研发×80% + 委托境外研发×80%
-         *    说明：委托境内外研发费用需按80%计入基数（这是政策规定的扣除比例）
-         * 
-         * 2. domestic_rd（境内研发费用）
-         *    计算公式：自主研发 + 委托境内研发×80%
-         *    说明：仅包含境内发生的研发费用，已包含委托境内×80%的调整
-         * 
-         * 3. self_rd（自主研发费用）
-         *    计算公式：自主研发费用（不做任何调整）
-         *    说明：企业自身进行的研发活动费用
-         * 
-         * 4. outsource_domestic（委托境内研发费用）
-         *    计算公式：委托境内研发费用×80%
-         *    说明：仅用于检查委托境内是否超过限额（如≤40%），基数是研发费用总额
-         * 
-         * 5. outsource_overseas（委托境外研发费用）
-         *    计算公式：委托境外研发费用×80%
-         *    说明：仅用于检查委托境外是否超过限额（如≤40%），基数是研发费用总额
-         * 
-         * 【高企认定-境内研发占比≥60%规则的实现】
-         * 规则配置：expenseType=domestic_total, baseType=total_rd, operator=>=, percent=60
-         * 计算公式：境内研发费用(自主+委托境内×80%) ≥ 研发费用总额 × 60%
-         * 
-         * 示例验证（用户提供的案例）：
-         * - 自主研发：20万
-         * - 委托境内：40万 → 40×80% = 32万
-         * - 委托境外：60万 → 60×80% = 48万
-         * - 研发费用总额 = 20 + 32 + 48 = 100万
-         * - 境内研发费用 = 20 + 32 = 52万
-         * - 规则检查：52 >= 100 × 60% → 52 >= 60 → 不达标
-         * - 结论：境外48万不可计入高企研发费用
-         */
         const SYSTEM_TEMPLATES = {
             'deduction_shared_device': { name: '加计-共用设备研发≤15%', expenseType: 'rd_hours', subExpenseType: '', operator: '<=', baseType: 'device_hours', percent: 15, timeDimension: 'monthly', severity: 'strong', message: '共用设备研发工时超过设备总工时的15%', caliber: 'plus_deduction' },
             'hitech_other': { name: '高企-其他费用≤20%', expenseType: 'other_expense', subExpenseType: '', operator: '<=', baseType: 'total_rd', percent: 20, timeDimension: 'yearly', severity: 'strong', message: '其他费用超过研发总费用的20%', caliber: 'high_tech' },
-            'hitech_outsource_domestic': { name: '高企-委托境内≤40%', expenseType: 'outsource_expense', subExpenseType: 'outsource_domestic', operator: '<=', baseType: 'total_rd', percent: 40, timeDimension: 'yearly', severity: 'medium', message: '委托境内研发费用超过研发总费用的40%', caliber: 'high_tech' },
-            'hitech_outsource_overseas': { name: '高企-委托境外≤40%', expenseType: 'outsource_expense', subExpenseType: 'outsource_overseas', operator: '<=', baseType: 'total_rd', percent: 40, timeDimension: 'yearly', severity: 'medium', message: '委托境外研发费用超过研发总费用的40%', caliber: 'high_tech' },
+            'hitech_outsource_domestic': { name: '高企-委托境内≤40%', expenseType: 'outsource_expense', subExpenseType: 'outsource_domestic', operator: '<=', baseType: 'total_rd', percent: 40, timeDimension: 'yearly', severity: 'medium', message: '委托境内研发费用总额超过研发总费用的40%', caliber: 'high_tech' },
+            'hitech_outsource_overseas': { name: '高企-委托境外机构≤40%', expenseType: 'outsource_expense', subExpenseType: 'outsource_overseas', operator: '<=', baseType: 'total_rd', percent: 40, timeDimension: 'yearly', severity: 'medium', message: '委托境外机构研发费用超过研发总费用的40%', caliber: 'high_tech' },
             'hitech_domestic_ratio': { name: '高企-境内研发≥60%', expenseType: 'domestic_total', subExpenseType: '', operator: '>=', baseType: 'total_rd', percent: 60, timeDimension: 'yearly', severity: 'strong', message: '境内研发费用占比不足60%，境外研发费用不可计入', caliber: 'high_tech' },
             'hitech_183days': { name: '高企-人员183天', expenseType: 'work_days', subExpenseType: '', operator: '>=', baseType: 'fixed_value', percent: 183, timeDimension: 'yearly', severity: 'strong', message: '研发人员年度在司时间不足183天', caliber: 'high_tech' },
             'deduction_direct_input_no_rental': { name: '加计-直接投入排除场地租赁', expenseType: 'material_expense', subExpenseType: '', operator: '>=', baseType: 'fixed_value', percent: 0, timeDimension: 'yearly', severity: 'medium', message: '加计扣除口径下的直接投入需排除场地租赁费', caliber: 'plus_deduction', exclusions: ['material_rent_site'] }
+        };
+
+        // 规则卡片数据映射
+        const RULE_CARD_DATA = {
+            'ipo_rd_hours': {
+                name: '研发工时占比硬约束',
+                caliber: 'ipo_review',
+                expenseType: 'personnel_expense',
+                calcType: 'limit',
+                limitMethod: 'ratio',
+                operator: '>=',
+                baseType: 'personnel_rd_ratio',
+                percent: 50,
+                exclusions: [],
+                description: '研发人员研发工时占其年度总工时的比例原则上不应低于 50%，否则不认定为研发人员'
+            },
+            'r15': {
+                name: '排除装备调试及田间试验费',
+                caliber: 'plus_deduction',
+                expenseType: 'trial_expense',
+                calcType: 'exclude',
+                exclusions: ['equipment_debug', 'trial_farm'],
+                description: '加计扣除口径下，不包含装备调试费用、田间试验费用'
+            },
+            'r13': {
+                name: '场地租赁费排除 (加计)',
+                caliber: 'plus_deduction',
+                expenseType: 'material_expense',
+                calcType: 'exclude',
+                exclusions: ['material_rent_site'],
+                description: '加计扣除口径下，直接投入不包含房屋/场地租赁费，仅允许仪器设备租赁费'
+            },
+            'r16': {
+                name: '共用设备研发工时限制',
+                caliber: 'plus_deduction',
+                expenseType: 'depreciation_expense',
+                calcType: 'limit',
+                limitMethod: 'ratio',
+                operator: '<=',
+                baseType: 'equipment_rd_hours',
+                percent: 15,
+                exclusions: [],
+                description: '生产与研发共用设备，研发工时占比不得超过设备年度总工时的15%'
+            },
+            'r14': {
+                name: '排除长期待摊费用',
+                caliber: 'plus_deduction',
+                expenseType: 'depreciation_expense',
+                calcType: 'exclude',
+                exclusions: ['depreciation_long_term'],
+                description: '加计扣除、会计口径、R&D统计下，折旧费用不含长期待摊费'
+            },
+            // 系统内置规则（原不可编辑，现已改为可编辑）
+            'plus_other_limit': {
+                name: '其他费用限额',
+                caliber: 'plus_deduction',
+                expenseType: 'other_expense',
+                calcType: 'limit',
+                limitMethod: 'reverse_limit',
+                operator: '<=',
+                baseType: 'total_rd',
+                percent: 10,
+                exclusions: [],
+                description: '与研发活动直接相关的其他费用，总额不得超过可加计扣除研发费用总额的10%'
+            },
+            'high_domestic_80': {
+                name: '委托境内研发 (高企)',
+                caliber: 'high_tech',
+                expenseType: 'outsource_expense',
+                calcType: 'limit',
+                limitMethod: 'ratio',
+                operator: '×',
+                baseType: 'outsource_domestic',
+                percent: 80,
+                exclusions: [],
+                description: '委托境内机构或个人进行研发活动所发生的费用，按照境内实际发生额的 80%计入'
+            },
+            'high_overseas_limit': {
+                name: '委托外部研发 (高企)',
+                caliber: 'high_tech',
+                expenseType: 'outsource_expense',
+                subExpenseType: 'outsource_overseas',
+                calcType: 'limit',
+                percent80: 80,
+                percent: 40,
+                exclusions: ['outsource_domestic', 'outsource_individual'],
+                description: '委托外部研发费用按80%计入，且不超过研发总费用的40%。符合高新技术企业认定管理办法相关规定。'
+            },
+            'high_other_limit': {
+                name: '其他费用限额 (高企)',
+                caliber: 'high_tech',
+                expenseType: 'other_expense',
+                calcType: 'limit',
+                limitMethod: 'reverse_limit',
+                operator: '<=',
+                baseType: 'total_rd',
+                percent: 20,
+                exclusions: [],
+                description: '与研发活动直接相关的其他费用，一般不得超过研发总费用的20%'
+            },
+            'high_183_days': {
+                name: '科技人员在司工时限制',
+                caliber: 'high_tech',
+                expenseType: 'personnel_expense',
+                calcType: 'limit',
+                limitMethod: 'threshold',
+                operator: '>=',
+                baseType: 'work_days',
+                percent: 183,
+                exclusions: [],
+                description: '科技人员实际年度工作时间需累计满183天以上（按实际考勤工作日）'
+            },
+            'plus_domestic_80': {
+                name: '委托境内研发 (加计)',
+                caliber: 'plus_deduction',
+                expenseType: 'outsource_expense',
+                subExpenseType: 'outsource_domestic',
+                calcType: 'limit',
+                limitMethod: 'ratio',
+                operator: '×',
+                baseType: 'outsource_domestic',
+                percent: 80,
+                exclusions: [],
+                description: '企业委托境内的外部机构或个人进行研发活动发生的费用，按照境内实际发生额的 80%计入委托方研发费用并按规定计算加计扣除'
+            },
+            'plus_overseas_limit': {
+                name: '委托境外机构研发 (加计)',
+                caliber: 'plus_deduction',
+                expenseType: 'outsource_expense',
+                subExpenseType: 'outsource_overseas',
+                calcType: 'limit',
+                limitMethod: 'ratio',
+                operator: '×',
+                baseType: 'outsource_overseas',
+                percent: 80,
+                limitRatio: 66.7,
+                exclusions: ['outsource_individual'],
+                description: '委托境外(不包括境外个人)进行研发活动所发生的费用，按照费用实际发生额的80%计入委托方的委托境外研发费用。委托境外研发费用不超过境内符合条件的研发费用三分之二的部分，可按规定在企业所得税前加计扣除。'
+            },
+            'special_income_offset': {
+                name: '特殊收入冲减研发费',
+                caliber: 'plus_deduction',
+                expenseType: 'special_income',
+                calcType: 'limit',
+                limitMethod: 'ratio',
+                operator: '=',
+                baseType: 'special_income',
+                percent: 100,
+                exclusions: [],
+                description: '下脚料、试制产品销售等特殊收入应全额冲减对应项目的研发费用'
+            }
         };
 
         function showCaliber(caliberId) {
@@ -1668,51 +1876,7 @@
             event.target.classList.remove('text-gray-700');
         }
 
-        function addRule(caliber) {
-            currentCaliber = caliber;
-            currentRuleId = null;
-            document.getElementById('modalTitle').textContent = '新增规则';
-            document.getElementById('ruleName').value = '';
-            document.getElementById('ruleCaliber').value = caliber === 'plus_deduction' || caliber === 'high_tech' ? caliber : '';
-            document.getElementById('ruleExpenseType').value = '';
-            document.getElementById('ruleOperator').value = '<=';
-            document.getElementById('ruleBaseType').value = 'total_rd';
-            document.getElementById('ruleBasePercent').value = '100';
-            document.getElementById('ruleMessage').value = '';
-            document.getElementById('ruleFormulaPreview').textContent = '请选择费用类型和计算条件';
-            // 设置复选框初始状态（都选中）
-            document.querySelectorAll('input[name="hasLimit"]').forEach(cb => cb.checked = true);
-            document.getElementById('ruleModal').classList.remove('hidden');
-            renderTemplates();
-            toggleLimitFields();
-            loadSubExpenseTypes();
-        }
-
-        function editRule(ruleId) {
-            currentRuleId = ruleId;
-            document.getElementById('modalTitle').textContent = '编辑规则';
-            document.getElementById('ruleName').value = '其他费用限额';
-            document.getElementById('ruleCaliber').value = 'plus_deduction';
-            document.getElementById('ruleExpenseType').value = 'other_expense';
-            document.getElementById('ruleOperator').value = '<=';
-            document.getElementById('ruleBaseType').value = 'total_rd';
-            document.getElementById('ruleBasePercent').value = '10';
-            document.getElementById('ruleMessage').value = '其他费用超过研发费用总额的10%';
-            document.getElementById('ruleFormulaPreview').textContent = '其他费用 ≤ 研发费用总额 × 10%';
-            // 设置复选框初始状态（都选中）
-            document.querySelectorAll('input[name="hasLimit"]').forEach(cb => cb.checked = true);
-            document.getElementById('ruleModal').classList.remove('hidden');
-            renderTemplates();
-            toggleLimitFields();
-            loadSubExpenseTypes();
-        }
-
-        function closeModal() {
-            document.getElementById('ruleModal').classList.add('hidden');
-        }
-
         function filterRules(timeType) {
-            // 更新筛选按钮状态
             document.querySelectorAll('[id^="filter-"]').forEach(btn => {
                 btn.classList.remove('active-filter');
                 if (btn.id === 'filter-' + timeType) {
@@ -1720,7 +1884,6 @@
                 }
             });
 
-            // 显示/隐藏规则卡片
             document.querySelectorAll('.rule-card').forEach(card => {
                 if (timeType === 'all') {
                     card.classList.remove('hidden');
@@ -1758,19 +1921,73 @@
 
         function filterRulesByCaliber(caliber) {
             filterCaliber = caliber;
-            // 更新筛选按钮状态
             document.querySelectorAll('[id^="filter-caliber-"]').forEach(btn => {
                 btn.classList.remove('active-filter');
                 if (btn.id === 'filter-caliber-' + caliber) {
                     btn.classList.add('active-filter');
                 }
             });
+            
+            // 根据口径过滤费用类别按钮
+            filterExpenseTypesByCaliber(caliber);
+            
             applyFilters();
+        }
+        
+        function filterExpenseTypesByCaliber(caliber) {
+            // 费用类型映射
+            const expenseTypeMap = {
+                'personnel_expense': 'personnel',
+                'material_expense': 'direct',
+                'depreciation_expense': 'depreciation',
+                'intangible_expense': 'amortization',
+                'design_expense': 'design',
+                'trial_expense': 'commissioning',
+                'outsource_expense': 'outsourced',
+                'other_expense': 'other'
+            };
+            
+            // 获取当前口径下有规则的费用类型
+            const expenseTypesWithRules = new Set();
+            
+            if (caliber === 'all') {
+                // 全部口径：显示所有费用类别
+                expenseTypesWithRules.add('personnel');
+                expenseTypesWithRules.add('direct');
+                expenseTypesWithRules.add('depreciation');
+                expenseTypesWithRules.add('amortization');
+                expenseTypesWithRules.add('design');
+                expenseTypesWithRules.add('commissioning');
+                expenseTypesWithRules.add('outsourced');
+                expenseTypesWithRules.add('other');
+            } else if (caliber === 'accounting' || caliber === 'rd_statistics') {
+                // 会计口径和R&D统计口径：主要对应折旧与长期待摊费用
+                expenseTypesWithRules.add('depreciation');
+            } else {
+                // 指定口径：只显示该口径下有规则的费用类别
+                Object.values(RULE_CARD_DATA).forEach(function(rule) {
+                    if (rule.caliber === caliber) {
+                        const mappedType = expenseTypeMap[rule.expenseType];
+                        if (mappedType) {
+                            expenseTypesWithRules.add(mappedType);
+                        }
+                    }
+                });
+            }
+            
+            // 更新费用类别按钮的显示状态
+            document.querySelectorAll('[id^="filter-expense-"]').forEach(btn => {
+                const btnType = btn.id.replace('filter-expense-', '');
+                if (btnType === 'all') {
+                    btn.style.display = 'block'; // 始终显示"全部费用"
+                } else {
+                    btn.style.display = expenseTypesWithRules.has(btnType) ? 'block' : 'none';
+                }
+            });
         }
 
         function filterRulesByExpenseType(expenseType) {
             filterExpenseType = expenseType;
-            // 更新筛选按钮状态
             document.querySelectorAll('[id^="filter-expense-"]').forEach(btn => {
                 btn.classList.remove('active-filter');
                 if (btn.id === 'filter-expense-' + expenseType) {
@@ -1781,7 +1998,6 @@
         }
 
         function applyFilters() {
-            // 显示/隐藏规则卡片
             document.querySelectorAll('.rule-card').forEach(card => {
                 const tags = Array.from(card.querySelectorAll('.rule-tag')).map(t => t.textContent.trim());
                 const cardTitle = card.querySelector('h3')?.textContent.trim() || "";
@@ -1792,7 +2008,6 @@
 
                 if (!caliberMatch) {
                     const caliberLabel = caliberMap[filterCaliber];
-                    // 支持多口径标签匹配 (如 "加计,会计,R&D")
                     caliberMatch = tags.some(text => {
                         const parts = text.split(/[，,]/);
                         return parts.some(p => p.trim().includes(caliberLabel) || caliberLabel.includes(p.trim()));
@@ -1802,8 +2017,6 @@
                 if (!expenseMatch) {
                     const searchPattern = expenseMap[filterExpenseType];
                     const keywords = searchPattern.split('|');
-                    
-                    // 支持多关键词匹配（只要命中其中一个即可）
                     expenseMatch = keywords.some(keyword => {
                         return tags.some(text => text.includes(keyword)) || 
                                cardTitle.includes(keyword) || 
@@ -1819,64 +2032,126 @@
             });
         }
 
-        function updateFormulaPreview() {
-            const caliber = document.getElementById('ruleCaliber');
-            const expenseType = document.getElementById('ruleExpenseType');
-            const operator = document.getElementById('ruleOperator');
-            const baseType = document.getElementById('ruleBaseType');
-            const percent = document.getElementById('ruleBasePercent');
-            const method = document.getElementById('ruleMethod');
-            const prefix = document.getElementById('rulePrefix');
-            const unit = document.getElementById('ruleUnit');
-            const operatorLabel = document.getElementById('operatorLabel');
-            const baseLabel = document.getElementById('baseLabel');
-            const checkboxes = document.querySelectorAll('input[name="hasLimit"]:checked');
-            const hasLimitChecked = Array.from(checkboxes).some(cb => cb.value === 'yes');
-            const preview = document.getElementById('ruleFormulaPreview');
+        /**
+         * 切换计算类型并渲染对应表单
+         */
+        function switchCalcType(type) {
+            currentCalcType = type;
+            
+            // 更新按钮样式
+            const buttons = document.querySelectorAll('#calcTypeSelector button');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-type') === type) {
+                    btn.classList.add('active-calc-type', 'bg-white', 'shadow-sm', 'text-primary');
+                    btn.classList.remove('text-gray-500');
+                } else {
+                    btn.classList.remove('active-calc-type', 'bg-white', 'shadow-sm', 'text-primary');
+                    btn.classList.add('text-gray-500');
+                }
+            });
 
-            // 动态调整 UI 标签与语义 (核心灵活性体现)
-            switch (method.value) {
-                case 'ratio_limit':
-                    operatorLabel.textContent = '比较方式';
-                    baseLabel.textContent = '计算基数与比例';
-                    prefix.textContent = '×';
-                    unit.textContent = '%';
-                    percent.disabled = false;
-                    break;
-                case 'veto_access':
-                case 'amount_limit':
-                    operatorLabel.textContent = '判定方向';
-                    baseLabel.textContent = method.value === 'veto_access' ? '准入门槛设定' : '限制数值设定';
-                    prefix.textContent = '：';
-                    // 根据主体自动切换单位
-                    if (expenseType.value.includes('hours')) unit.textContent = '小时';
-                    else if (expenseType.value.includes('days')) unit.textContent = '天';
-                    else if (expenseType.value.includes('ratio') || expenseType.value.includes('revenue')) unit.textContent = '%';
-                    else unit.textContent = '值';
-                    percent.disabled = false;
-                    break;
-                case 'policy_reverse':
-                    operatorLabel.textContent = '计算逻辑';
-                    baseLabel.textContent = '政策限额比例';
-                    prefix.textContent = '限额';
-                    unit.textContent = '%';
-                    // 根据口径自动推荐比例
-                    if (!percent.value || percent.disabled) {
-                        percent.value = caliber.value === 'high_tech' ? '20' : '10';
+            // 切换表单显示
+            const forms = ['limit', 'formula', 'direct', 'exclude'];
+            forms.forEach(f => {
+                const el = document.getElementById('form-' + f);
+                if (el) {
+                    if (f === type) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
                     }
-                    percent.disabled = false;
-                    break;
-                case 'cap_min':
-                    operatorLabel.textContent = '比对方式';
-                    baseLabel.textContent = '限额计算基准';
-                    prefix.textContent = '×';
-                    unit.textContent = '%';
-                    percent.disabled = false;
-                    break;
+                }
+            });
+
+            // 联动左侧排除项：如果是 exclude 类型，可能需要强调排除项配置
+            const exclusionSection = document.getElementById('exclusionOptions');
+            if (type === 'exclude') {
+                exclusionSection.closest('div').classList.add('ring-2', 'ring-primary/20', 'bg-blue-50/30', 'p-3', 'rounded-xl');
+            } else {
+                exclusionSection.closest('div').classList.remove('ring-2', 'ring-primary/20', 'bg-blue-50/30', 'p-3', 'rounded-xl');
             }
 
-            if (!expenseType.value) {
-                preview.textContent = '请选择判定主体';
+            updateFormulaPreview();
+        }
+
+        /**
+         * 应用公式模板
+         */
+        function applyFormulaTemplate() {
+            const template = document.getElementById('formulaTemplate').value;
+            const paramsContainer = document.getElementById('formulaParams');
+            
+            if (!template) {
+                paramsContainer.innerHTML = '<p class="text-xs text-gray-400 italic">请先选择公式模板以映射参数...</p>';
+                return;
+            }
+
+            let paramsHtml = '';
+            if (template === 'min_outsource') {
+                paramsHtml = `
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">参数 A (实际发生额)</span>
+                            <select class="text-xs border rounded p-1"><option>当前费用项发生额</option></select>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">参数 B (境内费用)</span>
+                            <select class="text-xs border rounded p-1"><option>境内研发费用总额</option></select>
+                        </div>
+                    </div>
+                `;
+            } else if (template === 'deduction_119_reverse') {
+                paramsHtml = `
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">前 6 项费用合计</span>
+                            <select class="text-xs border rounded p-1"><option>系统自动汇总 (前6项)</option></select>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">限额比例</span>
+                            <div class="flex items-center space-x-1">
+                                <input type="number" class="w-12 text-xs border rounded p-1" value="10">
+                                <span class="text-[10px] text-gray-400">%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (template === 'ratio_step') {
+                paramsHtml = `
+                    <div class="space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[10px] text-gray-400 w-12">阶梯1</span>
+                            <input type="number" class="w-16 text-xs border rounded p-1" value="500000">
+                            <span class="text-[10px] text-gray-400">元以内，比例</span>
+                            <input type="number" class="w-12 text-xs border rounded p-1" value="100">
+                            <span class="text-[10px] text-gray-400">%</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[10px] text-gray-400 w-12">阶梯2</span>
+                            <span class="w-16 text-xs p-1">超出部分</span>
+                            <span class="text-[10px] text-gray-400">，比例</span>
+                            <input type="number" class="w-12 text-xs border rounded p-1" value="80">
+                            <span class="text-[10px] text-gray-400">%</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                paramsHtml = '<textarea class="w-full text-xs border rounded p-2 h-20" placeholder="请输入自定义公式，如：x * 0.8 + y * 0.2"></textarea>';
+            }
+            
+            paramsContainer.innerHTML = paramsHtml;
+            updateFormulaPreview();
+        }
+
+        // 修改原有的 updateFormulaPreview 以支持新逻辑
+        function updateFormulaPreview() {
+            const preview = document.getElementById('ruleFormulaPreview');
+            const expenseType = document.getElementById('ruleExpenseType').value;
+            const subType = document.getElementById('ruleSubExpenseType').value;
+            const caliber = document.getElementById('ruleCaliber').value;
+            
+            if (!expenseType) {
+                preview.innerHTML = '<span class="text-gray-400 italic">请在左侧选择判定主体...</span>';
                 return;
             }
 
@@ -1887,188 +2162,946 @@
                 'intangible_expense': '无形资产摊销',
                 'design_expense': '新产品设计费',
                 'trial_expense': '装备调试与试验费',
-                'outsource_expense': '委托外部研发费',
-                'other_expense': '其他相关费用',
-                'domestic_total': '境内研发总额',
-                'equipment_rd_hours': '设备研发工时',
-                'personnel_rd_hours': '人员研发工时',
-                'work_days': '人员年度在职天数',
-                'high_tech_revenue': '高新收入占比',
-                'rd_investment_ratio': '研发强度',
-                'staff_ratio': '科技人员占比'
+                'outsource_expense': '委托研发费',
+                'other_expense': '其他相关费用'
             };
 
             const baseLabels = {
-                'total_rd': '研发费用总额 (政策口径)',
-                'domestic_rd': '境内研发费用 (政策口径)',
+                'total_rd': '研发费用总额',
                 '6_expense_sum': '前6项费用之和',
-                'self_rd': '自主研发费用 (原始)',
+                'domestic_rd': '境内研发费用总额',
+                'outsource_domestic': '境内实际发生额',
+                'outsource_overseas': '委托境外机构研发费用',
                 'revenue_3yr': '近三年平均营收',
-                'total_assets': '总资产',
-                'net_assets': '净资产',
-                'equipment_total_hours': '设备总工时',
-                'personnel_total_hours': '人员总工时',
-                'work_days': '年度在职天数',
+                'equipment_rd_hours': '设备研发总工时',
+                'personnel_rd_hours': '人员研发总工时',
+                'personnel_rd_ratio': '人员研发工时占比',
+                'work_days': '人员年度在职天数',
                 'fixed_value': '固定数值'
             };
 
-            const operatorLabels = {
-                '<=': '≤',
-                '<': '<',
-                '>': '>',
-                '>=': '≥',
-                '=': '='
+            const caliberLabels = {
+                'plus_deduction': '加计扣除',
+                'high_tech': '高企认定',
+                'accounting': '会计口径',
+                'rd_statistics': 'R&D统计',
+                'ipo_review': 'IPO审查'
             };
 
-            if (!hasLimitChecked) {
-                preview.innerHTML = `<span class="text-blue-600 font-medium">${subjectLabels[expenseType.value]}</span>：仅执行费用项过滤逻辑`;
-                return;
-            }
+            let subjectText = subjectLabels[expenseType] || expenseType;
+            let caliberText = caliberLabels[caliber] || caliber;
+            let formulaHtml = '';
 
-            let formula = '';
-            const subject = `<span class="text-blue-600 font-medium">${subjectLabels[expenseType.value]}</span>`;
-            const base = `<span class="text-indigo-600 font-medium">${baseLabels[baseType.value]}</span>`;
-            const op = `<span class="text-red-500 font-bold mx-1">${operatorLabels[operator.value]}</span>`;
-            const pct = `<span class="text-green-600 font-medium">${percent.value}${unit.textContent}</span>`;
+            // 获取排除项
+            const checkedExclusions = [];
+            document.querySelectorAll('.exclusion-item input[type="checkbox"]:checked').forEach(cb => {
+                const label = cb.closest('.exclusion-item').querySelector('span');
+                if (label) checkedExclusions.push(label.textContent);
+            });
 
-            // 3. 语义化预览生成
-            switch (method.value) {
-                case 'ratio_limit':
-                    formula = `${subject} ${op} ${base} × ${pct}`;
-                    break;
-                case 'policy_reverse':
-                    const p = parseFloat(percent.value) || 10;
-                    const idealTotal = `<span class="text-purple-600 font-medium">( ${base} / ${100 - p}% )</span>`;
-                    formula = `<div class="font-bold text-indigo-700">[政策倒推] ${subject} 限额 = ${idealTotal} × ${p}%</div>
-                               <div class="text-[10px] text-gray-400 mt-1">※ 逻辑：先由前6项倒推理想研发总额，再计算${p}%的限额上限</div>`;
-                    break;
-                case 'veto_access':
-                    const vetoBase = baseType.value === 'fixed_value' ? `<span class="text-green-600 font-medium">${percent.value} ${unit.textContent}</span>` : base;
-                    formula = `<span class="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">准入判定</span>：${subject} 必须 ${op} ${vetoBase}，否则口径判定失败`;
-                    break;
-                case 'cap_min':
-                    formula = `${subject} 取值 = <span class="bg-blue-50 text-blue-700 px-1 rounded">Min</span> ( ${subject}, ${base} × ${pct} )`;
-                    break;
-                default: // amount_limit
-                    if (baseType.value === 'fixed_value') {
-                        formula = `${subject} ${op} ${pct}`;
+            const exclusionTag = checkedExclusions.length > 0 ? 
+                `<div class="mt-2 text-[11px] text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-100 flex items-center">
+                    <i class="fa fa-filter mr-1"></i> 排除：${checkedExclusions.join('、')}
+                </div>` : '';
+
+            if (currentCalcType === 'limit') {
+                // 特殊规则：委托境内研发×80%，直接显示为"境内实际发生额 × 80%"
+                if (currentRuleId === 'plus_overseas_limit' || currentRuleId === 'high_overseas_limit') {
+                const isPlus = currentRuleId === 'plus_overseas_limit';
+                const percent80 = document.getElementById('ruleBasePercent')?.value || '80';
+                
+                let ratioDisplay = '';
+                if (isPlus) {
+                    const numInput = document.getElementById('overseas-numerator');
+                    const denInput = document.getElementById('overseas-denominator');
+                    if (numInput && denInput) {
+                        const n = numInput.value;
+                        const d = denInput.value;
+                        ratioDisplay = (n == '2' && d == '3') ? '三分之二' : `${n}/${d}`;
                     } else {
-                        formula = `${subject} ${op} ${base}`;
+                        const limitRatioInput = document.getElementById('overseas-limit-ratio-hidden');
+                        const limitRatio = limitRatioInput ? limitRatioInput.value : '66.7';
+                        ratioDisplay = (limitRatio == '66.7' || limitRatio == '66.67') ? '三分之二' : (limitRatio + '%');
                     }
-            }
+                } else {
+                    const limitRatioInput = document.getElementById('overseas-limit-ratio');
+                    ratioDisplay = (limitRatioInput ? limitRatioInput.value : '40') + '%';
+                }
+                
+                const step2Base = isPlus ? '境内符合条件费用' : '研发费用总额';
+                const step1Base = isPlus ? '境外实际发生额' : '外部研发费用';
 
-            preview.innerHTML = formula;
-        }
-
-        function applyTemplate(template) {
-            // 设置费用类型
-            document.getElementById('ruleExpenseType').value = template.expenseType;
-            
-            // 设置比较操作符
-            document.getElementById('ruleOperator').value = template.operator;
-            
-            // 设置计算基数类型
-            document.getElementById('ruleBaseType').value = template.baseType;
-            
-            // 设置百分比值
-            document.getElementById('ruleBasePercent').value = template.percent;
-            
-            // 设置提示消息
-            document.getElementById('ruleMessage').value = template.message;
-            
-            // 设置规则名称
-            document.getElementById('ruleName').value = template.name || '';
-            
-            // 设置适用口径（如果模板中定义了）
-            if (template.caliber) {
-                document.getElementById('ruleCaliber').value = template.caliber;
-            }
-            
-            // 预设模板默认同时勾选"需要数值限制"和"仅过滤费用项"
-            document.querySelector('input[name="hasLimit"][value="yes"]').checked = true;
-            document.querySelector('input[name="hasLimit"][value="no"]').checked = true;
-            
-            toggleLimitFields();
-            loadSubExpenseTypes(template.exclusions || null);
-            
-            // 设置默认子费用类型
-            if (template.subExpenseType) {
-                document.getElementById('ruleSubExpenseType').value = template.subExpenseType;
-            }
-            
-            // 更新公式预览
-            updateFormulaPreview();
-        }
-
-        function saveAsTemplate() {
-            const templateName = prompt('请输入模板名称:', '自定义模板');
-            if (!templateName) return;
-
-            const template = {
-                id: 'custom_' + Date.now(),
-                name: templateName,
-                expenseType: document.getElementById('ruleExpenseType').value,
-                operator: document.getElementById('ruleOperator').value,
-                baseType: document.getElementById('ruleBaseType').value,
-                percent: parseFloat(document.getElementById('ruleBasePercent').value),
-                caliber: document.getElementById('ruleCaliber').value,
-                message: document.getElementById('ruleMessage').value
-            };
-
-            const customTemplates = getCustomTemplates();
-            customTemplates.push(template);
-            localStorage.setItem('ruleTemplates', JSON.stringify(customTemplates));
-            renderTemplates();
-            alert('模板保存成功！');
-        }
-
-        function deleteCustomTemplate(templateId) {
-            if (!confirm('确定要删除这个模板吗？')) return;
-            let customTemplates = getCustomTemplates();
-            customTemplates = customTemplates.filter(t => t.id !== templateId);
-            localStorage.setItem('ruleTemplates', JSON.stringify(customTemplates));
-            renderTemplates();
-        }
-
-        function getCustomTemplates() {
-            return JSON.parse(localStorage.getItem('ruleTemplates') || '[]');
-        }
-
-        function renderTemplates() {
-            const systemContainer = document.getElementById('systemTemplates');
-            const customContainer = document.getElementById('customTemplates');
-
-            // 渲染系统预设模板
-            systemContainer.innerHTML = '';
-            Object.keys(SYSTEM_TEMPLATES).forEach(key => {
-                const template = SYSTEM_TEMPLATES[key];
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-lg hover:bg-blue-100 transition-colors border border-blue-200';
-                btn.innerHTML = template.name + ' <i class="fa fa-star-o text-xs"></i>';
-                btn.onclick = () => applyTemplate(template);
-                systemContainer.appendChild(btn);
-            });
-
-            // 渲染用户自定义模板
-            const customTemplates = getCustomTemplates();
-            customContainer.innerHTML = '';
-            
-            if (customTemplates.length === 0) {
-                customContainer.innerHTML = '<span class="text-xs text-gray-400">暂无自定义模板，配置规则后可保存为模板</span>';
+                formulaHtml = `
+                    <div class="text-gray-900 leading-relaxed">
+                        计算公式：<br>
+                        <span class="font-bold text-indigo-700">min</span>(
+                        <span class="text-blue-600 font-bold">${step1Base}</span> × <span class="text-green-600 font-bold">${percent80}%</span>, 
+                        <span class="text-blue-600 font-bold">${step2Base}</span> × <span class="text-green-600 font-bold">${ratioDisplay}</span>
+                        )
+                    </div>
+                    <p class="mt-2 text-[11px] text-gray-500 italic">系统将自动取上述两项计算结果的较小值作为最终计入金额。</p>
+                    ${exclusionTag}
+                `;
+                preview.innerHTML = formulaHtml;
+                generateStrategyDescription();
                 return;
             }
 
-            customTemplates.forEach(template => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'px-2.5 py-1 bg-gray-50 text-gray-700 text-xs rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-1';
-                btn.innerHTML = template.name + ' <i class="fa fa-trash-o text-red-400 hover:text-red-600" style="cursor: pointer;" onclick="event.stopPropagation(); deleteCustomTemplate(\'' + template.id + '\')"></i>';
-                btn.onclick = () => applyTemplate(template);
-                customContainer.appendChild(btn);
+            if (currentRuleId === 'plus_domestic_80' || currentRuleId === 'high_domestic_80') {
+                const val = document.getElementById('ruleBasePercent').value || '80';
+                document.getElementById('unitSpan').textContent = '%';
+                formulaHtml = `
+                    <div class="text-gray-900">
+                        计算 <span class="text-blue-600 font-bold">境内实际发生额</span> 
+                        <span class="text-red-500 font-bold mx-1">×</span> 
+                        <span class="text-green-600 font-bold text-xl">${val}%</span>
+                    </div>
+                    <p class="mt-2 text-[11px] text-amber-600 font-medium bg-amber-50 p-2 rounded border border-amber-100 italic">
+                        <i class="fa fa-info-circle"></i> 委托境内研发费用按其境内实际发生额的${val}%计入研发费用基数。
+                    </p>
+                    ${exclusionTag}
+                `;
+                preview.innerHTML = formulaHtml;
+                generateStrategyDescription();
+                return;
+            }
+
+                const method = document.getElementById('limitMethod').value;
+                const op = document.getElementById('ruleOperator').value;
+                const base = document.getElementById('ruleBaseType').value;
+                const val = document.getElementById('ruleBasePercent').value || '0';
+                
+                // 动态单位逻辑
+                let unit = '%'; // 默认显示百分比
+                if (method === 'threshold') {
+                    if (base === 'work_days') unit = '天';
+                    else if (base.includes('hours')) unit = '小时';
+                    else if (base.includes('ratio')) unit = '%';
+                    else if (base === 'fixed_value') unit = '值';
+                    else unit = '';
+                } else if (method === 'fixed') {
+                    // 固定值类型显示"元"
+                    unit = '元';
+                }
+                document.getElementById('unitSpan').textContent = unit;
+
+                const baseText = baseLabels[base] || base;
+                
+                if (method === 'threshold') {
+                    const opText = {
+                        '>=': '不低于',
+                        '<=': '不超过',
+                        '>': '大于',
+                        '<': '小于',
+                        '=': '等于'
+                    }[op] || op;
+                    
+                    formulaHtml = `
+                        <div class="text-gray-900">
+                            准入判定：要求 <span class="text-indigo-600 font-bold">${baseText}</span> 
+                            <span class="text-red-500 font-bold mx-1">${opText}</span> 
+                            <span class="text-green-600 font-bold">${val} ${unit}</span>
+                        </div>
+                        <p class="mt-2 text-[11px] text-amber-600 font-medium bg-amber-50 p-2 rounded border border-amber-100 italic">
+                            <i class="fa fa-info-circle"></i> 不满足该阈值的人员费用将无法计入<span class="text-blue-600 font-bold">${subjectText}</span>。
+                        </p>
+                        ${exclusionTag}
+                    `;
+                } else if (method === 'reverse_limit') {
+                    const ratio = parseFloat(val) / 100;
+                    const denominator = (1 - ratio).toFixed(2);
+                    formulaHtml = `
+                        <div class="text-gray-900">
+                            判定 <span class="text-blue-600 font-bold">${subjectText}</span> 
+                            <span class="text-red-500 font-bold mx-1">${op}</span> 
+                            ( <span class="text-indigo-600">${baseText}</span> / <span class="text-purple-600 font-bold">${denominator}</span> ) × <span class="text-green-600">${val}%</span>
+                        </div>
+                        <div class="mt-3 p-3 bg-blue-50/50 rounded-lg border border-blue-100 space-y-2">
+                            <p class="text-[10px] font-bold text-blue-400 uppercase tracking-wider">倒推法逻辑说明：</p>
+                            <p class="text-[11px] text-gray-600 leading-relaxed">
+                                1. 以 <span class="font-medium">${baseText}</span> 作为 <span class="font-medium">${(ratio * 100).toFixed(0)}%</span> 限额外的基数 (即占总额的 <span class="font-medium">${(denominator * 100).toFixed(0)}%</span>)<br>
+                                2. 倒推理想总额 = ${baseText} ÷ ${denominator}<br>
+                                3. 计算最终限额 = 理想总额 × ${val}%
+                            </p>
+                        </div>
+                        ${exclusionTag}
+                    `;
+                } else {
+                    const opText = {
+                        '>=': '≥',
+                        '<=': '≤',
+                        '>': '>',
+                        '<': '<',
+                        '=': '='
+                    }[op] || op;
+                    
+                    formulaHtml = `
+                        <div class="text-gray-900">
+                            判定 <span class="text-blue-600 font-bold">${subjectText}</span> 
+                            <span class="text-red-500 font-bold mx-1">${opText}</span> 
+                            ${method === 'ratio' ? `<span class="text-indigo-600">${baseText}</span> × <span class="text-green-600">${val}%</span>` : `<span class="text-green-600">${val} 元</span>`}
+                        </div>
+                        <p class="mt-2 text-[11px] text-gray-500 italic">超限部分将自动进行调减处理</p>
+                        ${exclusionTag}
+                    `;
+                }
+            } else if (currentCalcType === 'formula') {
+                const template = document.getElementById('formulaTemplate').value;
+                let templateText = '自定义复杂逻辑';
+                let extraLogic = '';
+                
+                if (template === 'min_outsource') {
+                    templateText = 'MIN(实际发生额×80%, 境内费用×2/3)';
+                } else if (template === 'ratio_step') {
+                    templateText = '阶梯式比例归集';
+                } else if (template === 'deduction_119_reverse') {
+                    templateText = '加计扣除“倒推法”限额判定';
+                    extraLogic = `
+                        <div class="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                            <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">计算逻辑拆解 (119号文标准)：</p>
+                            <div class="space-y-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                <div class="flex items-center text-[11px]">
+                                    <span class="w-4 h-4 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-2">1</span>
+                                    <span class="text-gray-600">计算前 6 项费用合计 (占比 90%)</span>
+                                </div>
+                                <div class="flex items-center text-[11px]">
+                                    <span class="w-4 h-4 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-2">2</span>
+                                    <span class="text-gray-600">倒推理想研发总额 = 前 6 项合计 / 0.9</span>
+                                </div>
+                                <div class="flex items-center text-[11px]">
+                                    <span class="w-4 h-4 bg-blue-600 text-white rounded-full flex items-center justify-center mr-2">3</span>
+                                    <span class="text-blue-700 font-bold">其他费用上限 = 理想总额 × 10%</span>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-amber-600 italic">※ 当实际发生额 > 上限时，按上限金额计入研发费用。</p>
+                        </div>
+                    `;
+                }
+
+                formulaHtml = `
+                    <div class="text-gray-900">
+                        按公式 <span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-100">${templateText}</span> 
+                        对 <span class="text-blue-600 font-bold">${subjectText}</span> 进行计算归集
+                    </div>
+                    ${extraLogic}
+                    ${exclusionTag}
+                `;
+            } else if (currentCalcType === 'direct') {
+                formulaHtml = `
+                    <div class="text-gray-900 font-bold">
+                        <i class="fa fa-long-arrow-right text-green-500 mr-1"></i>
+                        ${subjectText} 直接全额计入
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">不设数值上限，仅执行基础过滤条件。</p>
+                    ${exclusionTag}
+                `;
+            } else if (currentCalcType === 'exclude') {
+                formulaHtml = `
+                    <div class="text-gray-900">
+                        在 <span class="text-indigo-600 font-bold">${caliberText}</span> 口径下，
+                        对 <span class="text-blue-600 font-bold">${subjectText}</span> 
+                        进行 <span class="text-amber-600 font-bold">排除过滤</span>
+                    </div>
+                    ${exclusionTag || '<p class="mt-2 text-xs text-red-400">请在左侧勾选具体要排除的子项</p>'}
+                    ${checkedExclusions.length > 0 ? `
+                        <p class="mt-2 text-[11px] text-gray-500 italic">
+                            排除的子项将不计入${caliberText}口径下的研发费用。
+                        </p>
+                    ` : ''}
+                `;
+            }
+
+            preview.innerHTML = formulaHtml;
+
+            // 自动生成规则说明
+            autoGenerateRuleDescription();
+            
+            // 自动生成策略说明
+            generateStrategyDescription();
+        }
+        
+        // 生成策略说明
+        function generateStrategyDescription() {
+            const strategyTextEl = document.getElementById('strategyDescriptionText');
+            if (!strategyTextEl) return;
+
+            const val = document.getElementById('ruleBasePercent')?.value || '0';
+            const caliber = document.getElementById('ruleCaliber').value;
+            
+            const caliberLabels = {
+                'plus_deduction': '加计扣除',
+                'high_tech': '高企认定',
+                'accounting': '会计口径',
+                'rd_statistics': 'R&D统计',
+                'ipo_review': 'IPO审查'
+            };
+            const caliberText = caliberLabels[caliber] || caliber;
+
+            // 获取当前选中的排除项
+            const checkedExclusions = [];
+            document.querySelectorAll('.exclusion-item input[type="checkbox"]:checked').forEach(cb => {
+                const label = cb.closest('.exclusion-item').querySelector('span');
+                if (label) checkedExclusions.push(label.textContent);
             });
+            const exclusionListText = checkedExclusions.length > 0 ? checkedExclusions.join('、') : '';
+
+            // 检查是否是特定规则，使用自定义策略说明
+            if (currentRuleId === 'plus_domestic_80' || currentRuleId === 'high_domestic_80') {
+                strategyTextEl.textContent = `企业委托境内的外部机构或个人进行研发活动发生的费用，按照费用实际发生额的 ${val}%计入委托方研发费用并按规定计算加计扣除`;
+                return;
+            }
+
+            if (currentRuleId === 'plus_overseas_limit' || currentRuleId === 'high_overseas_limit') {
+                const isPlus = currentRuleId === 'plus_overseas_limit';
+                const percent80 = document.getElementById('ruleBasePercent')?.value || '80';
+                
+                // 获取当前选中的排除项
+                const checkedExclusions = [];
+                document.querySelectorAll('.exclusion-item input[type="checkbox"]:checked').forEach(cb => {
+                    const label = cb.closest('.exclusion-item').querySelector('span');
+                    if (label) checkedExclusions.push(label.textContent);
+                });
+                const exclusionListText = checkedExclusions.length > 0 ? checkedExclusions.join('、') : '';
+                const exclusionText = exclusionListText ? `(不包括${exclusionListText})` : '';
+
+                let ratioDisplay = '';
+                if (isPlus) {
+                    const numInput = document.getElementById('overseas-numerator');
+                    const denInput = document.getElementById('overseas-denominator');
+                    if (numInput && denInput) {
+                        const n = numInput.value;
+                        const d = denInput.value;
+                        ratioDisplay = (n == '2' && d == '3') ? '三分之二' : `${n}/${d}`;
+                    } else {
+                        const limitRatioInput = document.getElementById('overseas-limit-ratio-hidden');
+                        const limitRatio = limitRatioInput ? limitRatioInput.value : '66.7';
+                        ratioDisplay = (limitRatio == '66.7' || limitRatio == '66.67') ? '三分之二' : (limitRatio + '%');
+                    }
+                } else {
+                    const limitRatioInput = document.getElementById('overseas-limit-ratio');
+                    ratioDisplay = (limitRatioInput ? limitRatioInput.value : '40') + '%';
+                }
+                
+                const step2Base = isPlus ? '境内符合条件费用' : '研发费用总额';
+                const policyName = isPlus ? '委托境外研发 (加计)' : '委托外部研发 (高企)';
+
+                strategyTextEl.innerHTML = isPlus 
+                    ? `委托境外${exclusionText}进行研发活动所发生的费用，按照费用实际发生额的${percent80}%计入委托方的委托境外研发费用。<br><br>委托境外研发费用不超过境内符合条件的研发费用${ratioDisplay}的部分，可按规定在企业所得税前加计扣除。<br><br><span class="text-[10px] text-amber-600 font-bold"><i class="fa fa-shield"></i> 系统已自动锁定：判定主体为“委托境外机构研发”，且已自动排除“委托境外个人”及“委托境内研发”。</span>`
+                    : `委托外部研发${exclusionText}费用按${percent80}%计入，且不超过研发总费用的${ratioDisplay}。符合高新技术企业认定管理办法相关规定。<br><br><span class="text-[10px] text-amber-600 font-bold"><i class="fa fa-shield"></i> 系统已自动锁定：判定主体为“委托境外机构研发”，且已自动排除“委托境外个人”及“委托境内研发”。</span>`;
+                return;
+            }
+
+            const expenseType = document.getElementById('ruleExpenseType').value;
+            const method = document.getElementById('limitMethod')?.value;
+            const op = document.getElementById('ruleOperator')?.value;
+            const base = document.getElementById('ruleBaseType')?.value;
+            // 移除重复声明的 val，直接使用函数开头已获取的 val
+            
+            const subjectLabels = {
+                'personnel_expense': '人员人工费',
+                'material_expense': '直接投入费',
+                'depreciation_expense': '折旧费用',
+                'intangible_expense': '无形资产摊销',
+                'design_expense': '新产品设计费',
+                'trial_expense': '装备调试与试验费',
+                'outsource_expense': '委托研发费',
+                'other_expense': '其他相关费用'
+            };
+            
+            const baseLabels = {
+                'total_rd': caliber === 'plus_deduction' ? '可加计扣除研发费用总额' : (caliber === 'high_tech' ? '研发总费用' : '研发费用总额'),
+                '6_expense_sum': '前6项费用之和',
+                'domestic_rd': '境内研发费用总额',
+                'outsource_domestic': '境内实际发生额',
+                'outsource_overseas': '委托境外机构研发费用',
+                'revenue_3yr': '近三年平均营收',
+                'equipment_rd_hours': '设备研发总工时',
+                'personnel_rd_hours': '人员研发总工时',
+                'personnel_rd_ratio': '人员研发工时占比',
+                'work_days': '年度在职天数',
+                'fixed_value': '固定数值'
+            };
+            
+            const subjectText = subjectLabels[expenseType] || expenseType;
+            const baseText = baseLabels[base] || base;
+            
+            let description = '';
+
+            if (currentCalcType === 'exclude') {
+                if (currentRuleId === 'r15' || currentRuleId === 'r13' || currentRuleId === 'r14') {
+                    description = `${caliberText}口径下，不包含${exclusionListText || '相关子项'}`;
+                } else {
+                    description = `该规则为“仅排除过滤”模式。系统将对 ${subjectText} 执行数据清洗，${exclusionListText ? `仅剔除：${exclusionListText}` : '仅剔除左侧勾选的特定子科目'}，不对剩余金额设限。`;
+                }
+            } else if (currentCalcType === 'direct') {
+                description = `该规则为“直接计入”模式。符合条件的 ${subjectText} 将不做任何数值比例限制，全额计入对应的研发费用基数中。`;
+            } else if (currentCalcType === 'formula') {
+                const template = document.getElementById('formulaTemplate').value;
+                if (template === 'deduction_119_reverse') {
+                    description = `执行加计扣除“倒推法”判定：首先计算前6项费用之和，再按 10% 比例反推计算 ${subjectText} 的计入上限。`;
+                } else if (template === 'min_outsource') {
+                    description = `执行委托境外研发“孰低法”判定：取（实际发生额 × 80%）与（境内费用 × 2/3）两者的较小值计入。`;
+                } else {
+                    description = `该规则采用“公式计算”模式。系统将根据预设的数学模型对 ${subjectText} 进行逻辑判定和金额归集。`;
+                }
+            } else if (method === 'reverse_limit') {
+                // 倒推法
+                description = `与研发活动直接相关的${subjectText}，总额不得超过${baseText}的${val}%`;
+            } else if (method === 'threshold') {
+                // 阈值判定
+                const opText = {
+                    '>=': '不低于',
+                    '<=': '不超过',
+                    '>': '大于',
+                    '<': '小于',
+                    '=': '等于'
+                }[op] || op;
+                
+                if (base === 'work_days') {
+                    description = `科技人员${baseText}${opText}${val}天，否则不认定为科技人员`;
+                } else if (base === 'personnel_rd_ratio') {
+                    description = `研发人员研发工时占其年度总工时的比例${opText}${val}%，否则不认定为研发人员`;
+                } else {
+                    description = `${subjectText}的${baseText}${opText}${val}`;
+                }
+            } else if (method === 'ratio') {
+                // 按比例限制
+                const opText = {
+                    '>=': '不低于',
+                    '<=': '不超过',
+                    '>': '大于',
+                    '<': '小于',
+                    '=': '等于'
+                }[op] || op;
+                description = `${subjectText}总额${opText}${baseText}的${val}%`;
+            } else if (method === 'fixed') {
+                // 固定金额
+                const opText = {
+                    '>=': '不低于',
+                    '<=': '不超过',
+                    '>': '大于',
+                    '<': '小于',
+                    '=': '等于'
+                }[op] || op;
+                description = `${subjectText}总额${opText}${val}元`;
+            } else {
+                description = '请选择限额方式和计算基数，系统将自动生成策略说明...';
+            }
+            
+            strategyTextEl.textContent = description;
         }
 
+        /**
+         * 自动生成规则说明
+         */
+        function autoGenerateRuleDescription() {
+            const expenseType = document.getElementById('ruleExpenseType').value;
+            const caliber = document.getElementById('ruleCaliber').value;
+            
+            if (!expenseType) return;
+
+            const subjectLabels = {
+                'personnel_expense': '人员人工费',
+                'material_expense': '直接投入费',
+                'depreciation_expense': '折旧费用',
+                'intangible_expense': '无形资产摊销',
+                'design_expense': '新产品设计费',
+                'trial_expense': '装备调试与试验费',
+                'outsource_expense': '委托研发费',
+                'other_expense': '其他相关费用'
+            };
+
+            const caliberLabels = {
+                'plus_deduction': '加计扣除',
+                'high_tech': '高企认定',
+                'accounting': '会计口径',
+                'rd_statistics': 'R&D统计',
+                'ipo_review': 'IPO审查'
+            };
+
+            let subjectText = subjectLabels[expenseType] || expenseType;
+            let caliberText = caliberLabels[caliber] || caliber;
+            let description = '';
+
+            // 获取排除项
+            const checkedExclusions = [];
+            document.querySelectorAll('.exclusion-item input[type="checkbox"]:checked').forEach(cb => {
+                const label = cb.closest('.exclusion-item').querySelector('span');
+                if (label) checkedExclusions.push(label.textContent);
+            });
+
+            if (currentCalcType === 'limit') {
+                const method = document.getElementById('limitMethod').value;
+                const op = document.getElementById('ruleOperator').value;
+                const base = document.getElementById('ruleBaseType').value;
+                const val = document.getElementById('ruleBasePercent').value || '0';
+
+                const opText = {
+                    '>=': '≥',
+                    '<=': '≤',
+                    '>': '>',
+                    '<': '<',
+                    '=': '='
+                }[op] || op;
+
+                const baseLabels = {
+                    'total_rd': '研发费用总额',
+                    '6_expense_sum': '前6项费用之和',
+                    'domestic_rd': '境内研发费用总额',
+                    'outsource_domestic': '委托境内研发费用总额',
+                    'outsource_overseas': '委托境外机构研发费用',
+                    'revenue_3yr': '近三年平均营收',
+                    'equipment_rd_hours': '设备研发总工时',
+                    'personnel_rd_hours': '人员研发总工时',
+                    'personnel_rd_ratio': '人员研发工时占比',
+                    'work_days': '人员年度在职天数',
+                    'fixed_value': '固定数值'
+                };
+                const baseText = baseLabels[base] || base;
+
+                let unit = method === 'ratio' ? '%' : '元';
+                if (method === 'threshold') {
+                    if (base === 'work_days') unit = '天';
+                    else if (base.includes('hours')) unit = '小时';
+                    else if (base.includes('ratio')) unit = '%';
+                    else unit = '';
+                }
+
+                if (method === 'threshold') {
+                    description = `${caliberText}口径下，${subjectText}需满足${baseText}${opText}${val}${unit}，否则不计入研发费用。`;
+                } else if (method === 'reverse_limit') {
+                    description = `${caliberText}口径下，${subjectText}采用倒推法计算限额，上限为${val}%。`;
+                } else if (method === 'ratio') {
+                    description = `${caliberText}口径下，${subjectText}不得超过${baseText}的${val}%，超限部分调减。`;
+                } else {
+                    description = `${caliberText}口径下，${subjectText}限额为${val}元，超限部分调减。`;
+                }
+            } else if (currentCalcType === 'exclude') {
+                if (checkedExclusions.length > 0) {
+                    description = `${caliberText}口径下，${subjectText}不包含${checkedExclusions.join('、')}。`;
+                } else {
+                    description = `${caliberText}口径下，${subjectText}将根据左侧勾选的排除项进行过滤。`;
+                }
+            } else if (currentCalcType === 'direct') {
+                description = `${caliberText}口径下，${subjectText}直接全额计入研发费用。`;
+            } else if (currentCalcType === 'formula') {
+                const template = document.getElementById('formulaTemplate').value;
+                if (template === 'min_outsource') {
+                    description = `${caliberText}口径下，委托研发费用按MIN(实际发生额×80%, 境内费用×2/3)计算。`;
+                } else if (template === 'deduction_119_reverse') {
+                    description = `${caliberText}口径下，其他相关费用采用119号文倒推法计算限额。`;
+                } else {
+                    description = `${caliberText}口径下，${subjectText}按自定义公式进行计算归集。`;
+                }
+            }
+
+            // 只有在用户没有手动修改过的情况下才自动填充
+            const msgInput = document.getElementById('ruleMessage');
+            if (!msgInput.dataset.userModified) {
+                msgInput.value = description;
+            }
+        }
+
+        // 标记用户已修改规则说明
+        function markUserModified(element) {
+            element.dataset.userModified = 'true';
+        }
+
+        // 覆盖原有的 addRule 和 editRule 以适应新布局
+        function addRule(caliber) {
+            currentCaliber = caliber;
+            currentRuleId = null;
+            document.getElementById('modalTitle').textContent = '新增判定规则';
+            document.getElementById('ruleName').value = '';
+            document.getElementById('ruleCaliber').value = caliber;
+            document.getElementById('ruleExpenseType').value = '';
+            
+            // 显示计算类型选择器（新增规则时可选择类型）
+            document.getElementById('calcTypeSelectorContainer').style.display = 'block';
+            
+            // 确保判定主体字段可用
+            document.getElementById('ruleExpenseType').disabled = false;
+            document.getElementById('ruleExpenseType').classList.remove('bg-gray-100', 'cursor-not-allowed');
+            // 重置排除项和限额表单显示状态
+            const exclusionOptions = document.getElementById('exclusionOptions');
+            if (exclusionOptions) {
+                exclusionOptions.closest('div.pt-4').classList.remove('hidden');
+                // 恢复排除项的可选状态
+                exclusionOptions.querySelectorAll('input').forEach(input => {
+                    input.disabled = false;
+                    input.closest('.exclusion-item')?.classList.remove('bg-amber-50', 'border-amber-200');
+                });
+            }
+            const limitForm = document.getElementById('form-limit');
+            if (limitForm) limitForm.classList.remove('hidden');
+            
+            // 重置计算类型
+            switchCalcType('limit');
+            
+            document.getElementById('ruleModal').classList.remove('hidden');
+            loadSubExpenseTypes();
+        }
+
+        function editRule(ruleId) {
+            console.log('editRule called with:', ruleId);
+            
+            currentRuleId = ruleId;
+            document.getElementById('modalTitle').textContent = '编辑判定规则';
+            
+            // 获取规则数据
+            const ruleData = RULE_CARD_DATA[ruleId];
+            console.log('编辑规则:', ruleId, ruleData);
+            
+            // 隐藏计算类型选择器（编辑模式下不可切换规则类型）
+            const calcContainer = document.getElementById('calcTypeSelectorContainer');
+            console.log('calcTypeSelectorContainer:', calcContainer);
+            if (calcContainer) {
+                calcContainer.style.display = 'none';
+                console.log('隐藏计算类型选择器成功');
+            }
+            
+            // 编辑模式下禁用判定主体选择（规则类型不可更改）
+            const expenseTypeSelect = document.getElementById('ruleExpenseType');
+            console.log('ruleExpenseType:', expenseTypeSelect);
+            if (expenseTypeSelect) {
+                expenseTypeSelect.disabled = true;
+                expenseTypeSelect.classList.add('bg-gray-100', 'cursor-not-allowed');
+                console.log('禁用判定主体选择成功');
+            }
+            
+            // 禁用适用口径选择（规则的适用口径不可更改）
+            const caliberSelect = document.getElementById('ruleCaliber');
+            console.log('ruleCaliber:', caliberSelect);
+            if (caliberSelect) {
+                caliberSelect.disabled = true;
+                caliberSelect.classList.add('bg-gray-100', 'cursor-not-allowed');
+                console.log('禁用适用口径选择成功');
+            }
+            
+            // 子费用类型选择器处理：委托研发费需要显示子类型
+            const subExpenseTypeSelect = document.getElementById('ruleSubExpenseType');
+            if (subExpenseTypeSelect) {
+                const subExpenseContainer = subExpenseTypeSelect.closest('div');
+                if (subExpenseContainer) {
+                    // 如果是委托研发费，显示子费用类型下拉框
+                    if (ruleData && ruleData.expenseType === 'outsource_expense') {
+                        subExpenseContainer.style.display = 'block';
+                        // 加载子费用类型选项
+                        loadSubExpenseTypes();
+                        // 选中对应的子类型
+                        if (ruleData.subExpenseType) {
+                            subExpenseTypeSelect.value = ruleData.subExpenseType;
+                        }
+                        // 禁用子费用类型选择（编辑模式下不允许更改）
+                        subExpenseTypeSelect.disabled = true;
+                        subExpenseTypeSelect.classList.add('bg-gray-100', 'cursor-not-allowed');
+                    } else {
+                        subExpenseContainer.style.display = 'none';
+                    }
+                }
+            }
+            
+            if (ruleData) {
+                // 填充基本信息
+                document.getElementById('ruleName').value = ruleData.name;
+                document.getElementById('ruleCaliber').value = ruleData.caliber;
+                document.getElementById('ruleExpenseType').value = ruleData.expenseType;
+                
+                // 切换计算类型（编辑模式下强制使用规则的原始类型）
+                switchCalcType(ruleData.calcType);
+                
+                // 如果是限额类型，填充相关字段
+                if (ruleData.calcType === 'limit') {
+                    // 特殊规则：plus_domestic_80 和 high_domestic_80
+                    if (ruleId === 'plus_domestic_80' || ruleId === 'high_domestic_80') {
+                        // 统一使用标准样式配置，不再使用特殊的 formulaCard
+                        document.getElementById('limitMethod').value = 'ratio';
+                        document.getElementById('ruleOperator').value = '×';
+                        document.getElementById('ruleBaseType').value = 'outsource_domestic';
+                        document.getElementById('ruleBasePercent').value = ruleData.percent || 80;
+
+                        // 锁定并隐藏子费用类型
+                        const subExpenseTypeSelect = document.getElementById('ruleSubExpenseType');
+                        if (subExpenseTypeSelect) {
+                            subExpenseTypeSelect.value = 'outsource_domestic';
+                            subExpenseTypeSelect.disabled = true;
+                            const subExpenseContainer = subExpenseTypeSelect.closest('div');
+                            if (subExpenseContainer) subExpenseContainer.style.display = 'none';
+                        }
+                        
+                        // 强制处理排除项：锁定排除“委托境外机构研发”和“委托境外个人”
+                        setTimeout(() => {
+                            ['outsource_overseas', 'outsource_individual'].forEach(val => {
+                                const checkbox = document.querySelector(`.exclusion-item input[value="${val}"]`);
+                                if (checkbox) {
+                                    checkbox.checked = true;
+                                    checkbox.disabled = true; 
+                                    checkbox.closest('.exclusion-item').classList.add('bg-amber-50', 'border-amber-200');
+                                }
+                            });
+                        }, 150);
+
+                        // 确保所有标准控件可见并统一样式
+                        const limitMethod = document.getElementById('limitMethod');
+                        const ruleOperator = document.getElementById('ruleOperator');
+                        const ruleBaseType = document.getElementById('ruleBaseType');
+                        const inputContainer = document.querySelector('#form-limit .flex.items-center.space-x-2');
+                        
+                        [limitMethod, ruleOperator, ruleBaseType].forEach(el => {
+                            if (el) {
+                                el.classList.add('hidden');
+                                el.disabled = true;
+                                el.classList.add('bg-gray-100', 'cursor-not-allowed');
+                            }
+                        });
+
+                        // 确保输入框容器可见，用于修改 80%
+                        if (inputContainer) {
+                            inputContainer.classList.remove('hidden');
+                            // 移除子元素的 hidden 类（如果有）
+                            inputContainer.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
+                        }
+
+                        const currentVal = ruleData.percent || 80;
+                        // 监听原始输入框变化
+                        const percentInput = document.getElementById('ruleBasePercent');
+                        if (percentInput) {
+                            percentInput.value = currentVal;
+                            percentInput.oninput = function() {
+                                updateFormulaPreview();
+                                generateStrategyDescription();
+                            };
+                        }
+
+                        // 立即更新预览和说明
+                        generateStrategyDescription();
+                        updateFormulaPreview();
+                    } else if (ruleId === 'plus_overseas_limit' || ruleId === 'high_overseas_limit') {
+                        // 委托境外机构研发特殊配置 (80% + 2/3或40%限额)
+                        
+                        // 强制切换到限额表单，即使数据类型可能不匹配
+                        switchCalcType('limit');
+                        
+                        const limitMethod = document.getElementById('limitMethod');
+                        const ruleOperator = document.getElementById('ruleOperator');
+                        const ruleBaseType = document.getElementById('ruleBaseType');
+                        const inputContainer = document.querySelector('#form-limit .flex.items-center.space-x-2');
+                        
+                        // 隐藏不需要的下拉框和标签
+                        [limitMethod, ruleOperator, ruleBaseType].forEach(el => {
+                            if (el) {
+                                el.classList.add('hidden');
+                                el.disabled = true;
+                            }
+                        });
+                        if (inputContainer) inputContainer.classList.add('hidden');
+                        
+                        const thresholdLabel = document.querySelector('#form-limit label.block:nth-of-type(1)');
+                        if (thresholdLabel && thresholdLabel.textContent.includes('判定阈值')) {
+                            thresholdLabel.classList.add('hidden');
+                        }
+
+                        // 确保子费用类型选中“委托境外机构研发”并隐藏
+                        const subExpenseTypeSelect = document.getElementById('ruleSubExpenseType');
+                        if (subExpenseTypeSelect) {
+                            subExpenseTypeSelect.value = 'outsource_overseas';
+                            subExpenseTypeSelect.disabled = true;
+                            const subExpenseContainer = subExpenseTypeSelect.closest('div');
+                            if (subExpenseContainer) subExpenseContainer.style.display = 'none';
+                        }
+                        
+                        // 强制处理排除项：锁定排除“委托境内研发”和“委托境外个人”
+                        setTimeout(() => {
+                            ['outsource_domestic', 'outsource_individual'].forEach(val => {
+                                const checkbox = document.querySelector(`.exclusion-item input[value="${val}"]`);
+                                if (checkbox) {
+                                    checkbox.checked = true;
+                                    checkbox.disabled = true; // 锁定不可更改
+                                    checkbox.closest('.exclusion-item').classList.add('bg-amber-50', 'border-amber-200');
+                                }
+                            });
+                        }, 150);
+
+                        // 显示专门的双重限额配置界面
+                        const formulaCard = document.createElement('div');
+                        formulaCard.id = 'special-formula-card';
+                        formulaCard.className = 'bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-100 mt-2 mb-6 shadow-inner';
+                        
+                        const isPlus = ruleId === 'plus_overseas_limit';
+                        const val80 = ruleData.percent80 || 80;
+                        const valLimit = isPlus ? (ruleData.limitRatio || 66.7) : (ruleData.percent || 40);
+                        
+                        const step2Title = isPlus ? '判定政策上限 (默认2/3)' : '判定政策上限 (默认40%)';
+                        const step2Base = isPlus ? '境内符合条件费用' : '研发费用总额';
+
+                        // 初始解析分子分母 (仅针对 plus)
+                        let num = ruleData.limitNumerator || 2;
+                        let den = ruleData.limitDenominator || 3;
+
+                        formulaCard.innerHTML = `
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-2 tracking-tight">第一步：计算计入基数 (默认80%)</label>
+                                    <div class="flex items-center justify-center space-x-4 bg-white/50 p-3 rounded-xl border border-indigo-100/50">
+                                        <span class="text-blue-700 font-bold">境外实际发生额</span>
+                                        <span class="text-gray-400">×</span>
+                                        <div class="relative">
+                                            <input type="number" id="inline-percent-80" 
+                                                class="w-20 bg-white border border-indigo-200 rounded-lg px-2 py-1 text-xl font-bold text-indigo-600 text-center outline-none" 
+                                                value="${val80}">
+                                            <span class="absolute -right-5 top-1 text-indigo-400 font-bold">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-center space-x-3 text-xs text-gray-400">
+                                    <div class="h-px bg-gray-200 flex-1"></div>
+                                    <span class="font-medium">${step2Title}</span>
+                                    <div class="h-px bg-gray-200 flex-1"></div>
+                                </div>
+                                <div class="flex items-center justify-center space-x-4 bg-white/50 p-3 rounded-xl border border-green-100/50">
+                                    <span class="text-green-700 font-bold">${step2Base}</span>
+                                    <span class="text-gray-400">×</span>
+                                    ${isPlus ? `
+                                    <div class="flex items-center bg-white border border-green-200 rounded-lg p-1 shadow-sm">
+                                        <input type="number" id="overseas-numerator" 
+                                            class="w-14 text-xl font-bold text-green-600 text-center outline-none" 
+                                            value="${num}" title="分子">
+                                        <div class="text-gray-300 font-light text-xl px-1">/</div>
+                                        <input type="number" id="overseas-denominator" 
+                                            class="w-14 text-xl font-bold text-green-600 text-center outline-none" 
+                                            value="${den}" title="分母">
+                                    </div>
+                                    ` : `
+                                    <div class="relative">
+                                        <input type="number" id="overseas-limit-ratio" 
+                                            class="w-20 bg-white border border-green-200 rounded-lg px-2 py-1 text-xl font-bold text-green-600 text-center outline-none" 
+                                            value="${valLimit}">
+                                        <span class="absolute -right-5 top-1 text-green-400 font-bold">%</span>
+                                    </div>
+                                    `}
+                                    <input type="hidden" id="overseas-limit-ratio-hidden" value="${valLimit}">
+                                </div>
+                                <p class="text-[10px] text-gray-400 italic text-center">注：系统将取上述两项计算结果的较小值计入研发费用基数。</p>
+                            </div>
+                        `;
+                        const thresholdContainer = document.querySelector('#form-limit label.block');
+                        thresholdContainer.after(formulaCard);
+
+                        // 同步到原始输入框 (percent80 存放在 ruleBasePercent)
+                        document.getElementById('ruleBasePercent').value = val80;
+
+                        // 监听输入
+                        document.getElementById('inline-percent-80').addEventListener('input', function() {
+                            document.getElementById('ruleBasePercent').value = this.value || '0';
+                            generateStrategyDescription();
+                            updateFormulaPreview();
+                        });
+
+                        if (isPlus) {
+                            const updateRatio = () => {
+                                const n = parseFloat(document.getElementById('overseas-numerator').value) || 0;
+                                const d = parseFloat(document.getElementById('overseas-denominator').value) || 1;
+                                const ratio = (n / d * 100).toFixed(2);
+                                document.getElementById('overseas-limit-ratio-hidden').value = ratio;
+                                generateStrategyDescription();
+                                updateFormulaPreview();
+                            };
+                            document.getElementById('overseas-numerator').addEventListener('input', updateRatio);
+                            document.getElementById('overseas-denominator').addEventListener('input', updateRatio);
+                        } else {
+                            document.getElementById('overseas-limit-ratio').addEventListener('input', function() {
+                                document.getElementById('overseas-limit-ratio-hidden').value = this.value || '0';
+                                generateStrategyDescription();
+                                updateFormulaPreview();
+                            });
+                        }
+
+                        generateStrategyDescription();
+                        updateFormulaPreview();
+                    } else {
+                        document.getElementById('limitMethod').value = ruleData.limitMethod || 'ratio';
+                        document.getElementById('ruleOperator').value = ruleData.operator || '>=';
+                        document.getElementById('ruleBaseType').value = ruleData.baseType || 'fixed_value';
+                        document.getElementById('ruleBasePercent').value = ruleData.percent || '';
+
+                        // 禁用策略配置中的下拉框（只允许修改数值）
+                        const limitMethod = document.getElementById('limitMethod');
+                        const ruleOperator = document.getElementById('ruleOperator');
+                        const ruleBaseType = document.getElementById('ruleBaseType');
+                        [limitMethod, ruleOperator, ruleBaseType].forEach(el => {
+                            if (el) {
+                                el.disabled = true;
+                                el.classList.add('bg-gray-100', 'cursor-not-allowed');
+                            }
+                        });
+                    }
+
+                    // 隐藏/显示排除项配置区域
+                    const exclusionOptions = document.getElementById('exclusionOptions');
+                    if (exclusionOptions) {
+                        const exclusionContainer = exclusionOptions.closest('div.pt-4');
+                        // 如果是特定规则，或者规则本身定义了排除项，则显示排除项区域
+                        if (ruleId === 'plus_domestic_80' || ruleId === 'high_domestic_80' || ruleId === 'plus_overseas_limit' || ruleId === 'high_overseas_limit' || (ruleData.exclusions && ruleData.exclusions.length > 0)) {
+                            exclusionContainer.classList.remove('hidden');
+                        } else {
+                            exclusionContainer.classList.add('hidden');
+                        }
+                    }
+                } else if (ruleData.calcType === 'exclude') {
+                    // 排除类型规则，隐藏数值配置区域
+                    const limitForm = document.getElementById('form-limit');
+                    if (limitForm) limitForm.classList.add('hidden');
+                    // 显示排除项区域
+                    const exclusionOptions = document.getElementById('exclusionOptions');
+                    if (exclusionOptions) {
+                        exclusionOptions.closest('div.pt-4').classList.remove('hidden');
+                    }
+                }
+                
+                // 设置规则描述（自动生成）
+                document.getElementById('ruleMessage').value = ruleData.description || '';
+            } else {
+                // 默认数据
+                document.getElementById('ruleName').value = '其他费用限额';
+                document.getElementById('ruleCaliber').value = 'plus_deduction';
+                document.getElementById('ruleExpenseType').value = 'other_expense';
+                // 未识别的规则也启用判定主体字段，允许用户编辑
+                document.getElementById('ruleExpenseType').disabled = false;
+                document.getElementById('ruleExpenseType').classList.remove('bg-gray-100', 'cursor-not-allowed');
+                switchCalcType('limit');
+                document.getElementById('ruleBasePercent').value = '10';
+            }
+            
+            // 打开弹窗
+            const ruleModal = document.getElementById('ruleModal');
+            console.log('ruleModal:', ruleModal);
+            if (ruleModal) {
+                ruleModal.classList.remove('hidden');
+                console.log('弹窗已打开');
+            } else {
+                console.error('弹窗元素未找到！');
+            }
+            loadSubExpenseTypes();
+            
+            // 延迟执行以确保DOM已更新
+            setTimeout(() => {
+                // 勾选排除项
+                if (ruleData && ruleData.exclusions) {
+                    ruleData.exclusions.forEach(exclusionId => {
+                        const checkbox = document.querySelector(`.exclusion-item input[value="${exclusionId}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+                // 更新规则说明预览
+                updateFormulaPreview();
+            }, 100);
+        }
+
+        // 原有的其他函数保持不变，但需要确保 loadSubExpenseTypes 能正常工作
+        // 已经检查过 loadSubExpenseTypes 依赖于 exclusionOptions 等 ID，新布局中已保留这些 ID。
+
+
+        // 子费用类型定义
         const SUB_EXPENSE_TYPES = {
             'personnel_expense': [
                 { value: 'personnel_wages', label: '人工费-应发工资 (含奖金、劳务费)' },
@@ -2155,38 +3188,12 @@
             ],
             'outsource_expense': [
                 { value: 'outsource_domestic', label: '委托境内研发' },
-                { value: 'outsource_overseas', label: '委托境外研发' },
-                { value: 'outsource_domestic_overseas', label: '境内+境外研发' },
+                { value: 'outsource_overseas', label: '委托境外机构研发' },
                 { value: 'outsource_individual', label: '委托境外个人' }
             ]
         };
 
-        function toggleLimitFields() {
-            const checkboxes = document.querySelectorAll('input[name="hasLimit"]:checked');
-            const hasLimitChecked = Array.from(checkboxes).some(cb => cb.value === 'yes');
-            const hasFilterChecked = Array.from(checkboxes).some(cb => cb.value === 'no');
-            const operatorSection = document.getElementById('operatorSection');
-            const baseSection = document.getElementById('baseSection');
-            const exclusionSection = document.getElementById('exclusionSection');
-            
-            // 控制数值限制相关字段
-            if (!hasLimitChecked) {
-                operatorSection.style.display = 'none';
-                baseSection.style.display = 'none';
-            } else {
-                operatorSection.style.display = 'block';
-                baseSection.style.display = 'grid';
-            }
-            
-            // 控制排除项配置：只有勾选"仅过滤费用项"时才显示
-            if (!hasFilterChecked) {
-                exclusionSection.style.display = 'none';
-            } else {
-                exclusionSection.style.display = 'block';
-            }
-            
-            updateFormulaPreview();
-        }
+
 
         function loadSubExpenseTypes(selectedExclusions = null) {
             const expenseType = document.getElementById('ruleExpenseType').value;
@@ -2196,37 +3203,27 @@
             const operator = document.getElementById('ruleOperator');
             const baseType = document.getElementById('ruleBaseType');
             const percent = document.getElementById('ruleBasePercent');
-            const method = document.getElementById('ruleMethod');
             
-            // 智能预设逻辑：根据判定主体自动调整操作符和基数
-            if (expenseType === 'work_days') {
-                operator.value = '>=';
-                baseType.value = 'fixed_value';
-                percent.value = '183';
-                method.value = 'veto_access';
-            } else if (expenseType === 'high_tech_revenue') {
-                operator.value = '>=';
-                baseType.value = 'fixed_value';
-                percent.value = '60';
-                method.value = 'ratio_limit';
-            } else if (expenseType === 'other_expense') {
+            // 智能预设逻辑：仅在非编辑模式下，根据判定主体自动调整操作符和基数
+            if (!currentRuleId && expenseType === 'other_expense') {
                 operator.value = '<=';
-                baseType.value = '6_expense_sum';
-                method.value = 'policy_reverse';
-            } else if (expenseType === 'equipment_rd_hours') {
-                operator.value = '<=';
-                baseType.value = 'equipment_total_hours';
-                percent.value = '15';
-                method.value = 'ratio_limit';
+                // 根据口径预设基数和比例
+                if (caliber === 'high_tech') {
+                    baseType.value = 'total_rd';
+                    percent.value = '20';
+                } else {
+                    baseType.value = '6_expense_sum';
+                    percent.value = '10';
+                }
             }
             
-            subSelect.innerHTML = '<option value="">子费用类型（全部）</option>';
+            subSelect.innerHTML = '';
             
             // 立即更新公式预览
             updateFormulaPreview();
             
             if (!expenseType || !SUB_EXPENSE_TYPES[expenseType]) {
-                exclusionContainer.innerHTML = '<span class="text-xs text-gray-400" id="exclusionHint">请先选择费用类型</span>';
+                exclusionContainer.innerHTML = '&lt;span class="text-xs text-gray-400" id="exclusionHint"&gt;请先选择费用类型&lt;/span&gt;';
                 return;
             }
             
@@ -2315,6 +3312,11 @@
             });
             
             updateExclusionPreview();
+            
+            // 默认选中第一个子费用类型
+            if (subSelect.options.length > 0) {
+                subSelect.selectedIndex = 0;
+            }
         }
         
         function toggleCategoryChildren(checkbox) {
@@ -2327,15 +3329,82 @@
         }
 
         function updateExclusionPreview() {
-            const checkedExclusions = [];
-            document.querySelectorAll('.exclusion-item input[type="checkbox"]:checked').forEach(cb => {
-                const label = cb.closest('.exclusion-item').querySelector('span');
-                if (label) checkedExclusions.push(label.textContent);
+            // 直接调用全量更新预览逻辑
+            updateFormulaPreview();
+        }
+
+        function closeModal() {
+            document.getElementById('ruleModal').classList.add('hidden');
+            currentRuleId = null;
+            // 重置计算类型选择器显示状态
+            document.getElementById('calcTypeSelectorContainer').style.display = 'block';
+            // 重置判定主体字段状态
+            document.getElementById('ruleExpenseType').disabled = false;
+            document.getElementById('ruleExpenseType').classList.remove('bg-gray-100', 'cursor-not-allowed');
+            // 重置标签显示
+            document.querySelectorAll('#form-limit label.block').forEach(label => label.classList.remove('hidden'));
+            // 重置适用口径字段状态
+            const caliberSelect = document.getElementById('ruleCaliber');
+            if (caliberSelect) {
+                caliberSelect.disabled = false;
+                caliberSelect.classList.remove('bg-gray-100', 'cursor-not-allowed');
+            }
+            // 重置策略配置下拉框状态
+            const limitMethod = document.getElementById('limitMethod');
+            const ruleOperator = document.getElementById('ruleOperator');
+            const ruleBaseType = document.getElementById('ruleBaseType');
+            [limitMethod, ruleOperator, ruleBaseType].forEach(el => {
+                if (el) {
+                    el.disabled = false;
+                    el.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                }
             });
-            
-            const previewDiv = document.getElementById('ruleFormulaPreview');
-            const exclusionText = checkedExclusions.length > 0 ? '\n排除项: ' + checkedExclusions.join(', ') : '';
-            previewDiv.textContent = previewDiv.textContent.split('\n排除项:')[0] + exclusionText;
+            // 重置子费用类型选择器显示状态
+            const subExpenseTypeSelect = document.getElementById('ruleSubExpenseType');
+            if (subExpenseTypeSelect) {
+                const subExpenseContainer = subExpenseTypeSelect.closest('div');
+                if (subExpenseContainer) {
+                    subExpenseContainer.style.display = 'block';
+                }
+                // 重置禁用状态
+                subExpenseTypeSelect.disabled = false;
+                subExpenseTypeSelect.classList.remove('bg-gray-100', 'cursor-not-allowed');
+            }
+            // 重置排除项和限额表单显示状态
+            const exclusionOptions = document.getElementById('exclusionOptions');
+            if (exclusionOptions) {
+                exclusionOptions.closest('div.pt-4').classList.remove('hidden');
+            }
+            const limitForm = document.getElementById('form-limit');
+            if (limitForm) limitForm.classList.remove('hidden');
+            // 清理动态创建的公式卡片
+            const formulaCards = limitForm?.querySelectorAll('.bg-indigo-50.p-4.rounded-xl.border-indigo-200, #special-formula-card');
+            formulaCards?.forEach(card => card.remove());
+            // 重置控件显示
+            const thresholdRow = limitForm?.querySelector('.flex.items-center.space-x-2');
+            if (thresholdRow) thresholdRow.classList.remove('hidden');
+            const thresholdContent = limitForm?.querySelector('label.block');
+            if (thresholdContent) {
+                const next = thresholdContent.nextElementSibling;
+                if (next && !next.classList.contains('flex')) {
+                    next.classList.remove('hidden');
+                }
+            }
+            // 恢复被隐藏的下拉框
+            document.getElementById('ruleBaseType')?.classList.remove('hidden');
+            document.getElementById('ruleOperator')?.classList.remove('hidden');
+            // 清除用户修改标记
+            const msgInput = document.getElementById('ruleMessage');
+            delete msgInput.dataset.userModified;
+        }
+
+        function saveAsTemplate() {
+            const name = document.getElementById('ruleName').value;
+            if (!name) {
+                alert('请先填写规则名称再保存为模板');
+                return;
+            }
+            alert('模板 "' + name + '" 已保存至本地库');
         }
 
         function saveRule() {
@@ -2343,6 +3412,8 @@
             const caliber = document.getElementById('ruleCaliber').value;
             const expenseType = document.getElementById('ruleExpenseType').value;
             const formula = document.getElementById('ruleFormulaPreview').textContent;
+            const percent = document.getElementById('ruleBasePercent').value;
+            const description = document.getElementById('ruleMessage').value;
             
             if (!name) {
                 alert('请填写规则名称');
@@ -2362,13 +3433,107 @@
                                caliber === 'accounting' ? '会计口径' : 
                                caliber === 'rd_statistics' ? 'R&D统计' : 
                                caliber === 'ipo_review' ? 'IPO审查' : '';
+            
+            // 如果是编辑模式，更新页面上的规则卡片
+            if (currentRuleId) {
+                // 更新规则数据
+                if (RULE_CARD_DATA[currentRuleId]) {
+                    RULE_CARD_DATA[currentRuleId].name = name;
+                    RULE_CARD_DATA[currentRuleId].percent = parseFloat(percent);
+                    RULE_CARD_DATA[currentRuleId].description = description;
+                    // 新增：捕获境外限额比例（支持分子分母或百分比）
+                    if (currentRuleId === 'plus_overseas_limit' || currentRuleId === 'high_overseas_limit') {
+                        const isPlus = currentRuleId === 'plus_overseas_limit';
+                        const numInput = document.getElementById('overseas-numerator');
+                        const denInput = document.getElementById('overseas-denominator');
+                        const limitRatioInput = document.getElementById(isPlus ? 'overseas-limit-ratio-hidden' : 'overseas-limit-ratio');
+                        
+                        if (isPlus && numInput && denInput) {
+                            RULE_CARD_DATA[currentRuleId].limitNumerator = parseFloat(numInput.value);
+                            RULE_CARD_DATA[currentRuleId].limitDenominator = parseFloat(denInput.value);
+                            RULE_CARD_DATA[currentRuleId].limitRatio = parseFloat(limitRatioInput.value);
+                            
+                            const n = numInput.value;
+                            const d = denInput.value;
+                            const ratioDisplay = (n == '2' && d == '3') ? '三分之二' : `${n}/${d}`;
+                            description = `委托境外(不包括境外个人)进行研发活动所发生的费用，按照费用实际发生额的${percent}%计入委托方的委托境外研发费用。委托境外研发费用不超过境内符合条件的研发费用${ratioDisplay}的部分，可按规定在企业所得税前加计扣除。`;
+                        } else if (!isPlus && limitRatioInput) {
+                            RULE_CARD_DATA[currentRuleId].percentLimit = parseFloat(limitRatioInput.value);
+                            description = `委托外部研发费用按${percent}%计入，且不超过研发总费用的${limitRatioInput.value}%。符合高新技术企业认定管理办法相关规定。`;
+                        }
+                    }
+                }
+                
+                // 更新页面上的规则卡片显示
+                updateRuleCardDisplay(currentRuleId, name, percent, description);
+            }
+            
             alert(`规则${currentRuleId ? '更新' : '新增'}成功！\n名称: ${name}\n适用口径: ${caliberText}\n公式: ${formula}`);
             closeModal();
         }
+        
+        // 更新规则卡片显示
+        function updateRuleCardDisplay(ruleId, name, percent, description) {
+            // 找到规则卡片
+            const ruleCards = document.querySelectorAll('.rule-card');
+            ruleCards.forEach(card => {
+                const editBtn = card.querySelector('button[onclick*="' + ruleId + '"]');
+                if (editBtn) {
+                    // 更新规则名称
+                    const nameEl = card.querySelector('h3.font-semibold');
+                    if (nameEl) nameEl.textContent = name;
+                    
+                    // 更新规则描述
+                    const descEl = card.querySelector('p.text-gray-500');
+                    if (descEl && description) descEl.textContent = description;
+                    
+                    // 更新数值显示
+                    const valueEl = card.querySelector('div.bg-indigo-50, div.bg-red-50, div.bg-green-50, div.bg-gray-50');
+                    if (valueEl && percent) {
+                        const ruleData = RULE_CARD_DATA[ruleId];
+                        if (ruleData) {
+                            if (ruleData.calcType === 'limit') {
+                                if (ruleData.baseType === 'work_days') {
+                                    valueEl.textContent = `在司工时 ≥ ${percent}天`;
+                                } else if (ruleId === 'plus_domestic_80') {
+                                    valueEl.textContent = `境内实际发生额 × ${percent}%`;
+                                } else {
+                                    valueEl.textContent = `${percent}%`;
+                                }
+                            } else if (ruleId === 'plus_overseas_limit') {
+                                const n = ruleData.limitNumerator || 2;
+                                const d = ruleData.limitDenominator || 3;
+                                const ratioDisplay = (n == 2 && d == 3) ? '三分之二' : `${n}/${d}`;
+                                valueEl.textContent = `min(${percent}%, ${ratioDisplay}上限)`;
+                                
+                                // 同时更新卡片上的描述文本
+                                const descEl = card.querySelector('p.text-gray-500');
+                                if (descEl) {
+                                    descEl.textContent = `委托境外(不包括境外个人)进行研发活动所发生的费用，按照费用实际发生额的${percent}%计入委托方的委托境外研发费用。委托境外研发费用不超过境内符合条件的研发费用${ratioDisplay}的部分，可按规定在企业所得税前加计扣除。`;
+                                }
+                            } else if (ruleId === 'high_overseas_limit') {
+                                const limit = ruleData.percentLimit || 40;
+                                valueEl.textContent = `min(${percent}%, ${limit}%上限)`;
+                                
+                                // 同时更新卡片上的描述文本
+                                const descEl = card.querySelector('p.text-gray-500');
+                                if (descEl) {
+                                    descEl.textContent = `委托外部研发费用按${percent}%计入，且不超过研发总费用的${limit}%。符合高新技术企业认定管理办法相关规定。`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // 调试信息
+            console.log('RULE_CARD_DATA loaded:', typeof RULE_CARD_DATA !== 'undefined' ? 'OK' : 'MISSING');
+            console.log('RULE_CARD_DATA keys:', Object.keys(RULE_CARD_DATA || {}));
+            
             // 监听所有输入框变化，实时更新预览
-            const inputs = ['ruleExpenseType', 'ruleOperator', 'ruleBaseType', 'ruleBasePercent', 'ruleMethod', 'ruleCaliber'];
+            const inputs = ['ruleExpenseType', 'ruleOperator', 'ruleBaseType', 'ruleBasePercent', 'ruleCaliber', 'limitMethod', 'formulaTemplate'];
             inputs.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
@@ -2376,68 +3541,7 @@
                     if (el.tagName === 'INPUT') el.addEventListener('input', updateFormulaPreview);
                 }
             });
-            
-            // 监听复选框变化
-            document.querySelectorAll('input[name="hasLimit"]').forEach(cb => {
-                cb.addEventListener('change', updateFormulaPreview);
-            });
         });
-
-        function applyScenario() {
-            const scenario = document.getElementById('policyScenario').value;
-            if (scenario === 'custom') return;
-
-            const name = document.getElementById('ruleName');
-            const caliber = document.getElementById('ruleCaliber');
-            const subject = document.getElementById('ruleExpenseType');
-            const method = document.getElementById('ruleMethod');
-            const base = document.getElementById('ruleBaseType');
-            const op = document.getElementById('ruleOperator');
-            const val = document.getElementById('ruleBasePercent');
-
-            switch (scenario) {
-                case 'other_reverse':
-                    name.value = '其他费用限额 (倒推法)';
-                    subject.value = 'other_expense';
-                    method.value = 'policy_reverse';
-                    base.value = '6_expense_sum';
-                    val.value = '10';
-                    break;
-                case 'person_days':
-                    name.value = '研发人员年度在职天数要求';
-                    subject.value = 'work_days';
-                    method.value = 'veto_access';
-                    base.value = 'fixed_value';
-                    op.value = '>=';
-                    val.value = '183';
-                    break;
-                case 'device_ratio':
-                    name.value = '共用设备研发工时占比预警';
-                    subject.value = 'equipment_rd_hours';
-                    method.value = 'ratio_limit';
-                    base.value = 'equipment_total_hours';
-                    op.value = '<=';
-                    val.value = '15';
-                    break;
-                case 'outsource_80':
-                    name.value = '委托外部研发80%限额归集';
-                    subject.value = 'outsource_expense';
-                    method.value = 'cap_min';
-                    base.value = 'self_rd'; 
-                    val.value = '80';
-                    break;
-                case 'domestic_60':
-                    name.value = '高企认定-境内研发占比要求';
-                    caliber.value = 'high_tech';
-                    subject.value = 'domestic_total';
-                    method.value = 'veto_access';
-                    base.value = 'total_rd';
-                    op.value = '>=';
-                    val.value = '60';
-                    break;
-            }
-            updateFormulaPreview();
-        }
 
         function loadPage(e, pageUrl) {
             if (e && e.preventDefault) e.preventDefault();
