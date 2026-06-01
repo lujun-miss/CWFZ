@@ -558,10 +558,7 @@
                         <option value="2023">2023年</option>
                         <option value="2022">2022年</option>
                     </select>
-                    <button id="generate-report" class="ml-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-sm">
-                        <i class="fa fa-refresh mr-1"></i> 生成报表
-                    </button>
-                    <button id="top-export-btn" class="ml-auto px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors shadow-sm flex items-center">
+                    <button id="top-export-btn" class="ml-4 px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors shadow-sm flex items-center">
                         <i class="fa fa-download mr-1"></i> 导出报表
                     </button>
                 </div>
@@ -586,8 +583,12 @@
                         </ul>
                     </div>
                     
-                    <!-- 导出按钮 -->
-                    <div class="mb-4 flex justify-end">
+                    <!-- 导出按钮和保存按钮 -->
+                    <div class="mb-4 flex justify-end items-center gap-4">
+                        <span id="save-status" class="text-sm text-gray-500 hidden"></span>
+                        <button onclick="saveForm()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition">
+                            保存修改
+                        </button>
                     </div>
                     
                     <!-- 标签页内容 -->
@@ -659,11 +660,18 @@
                                                 <td class="px-2 py-2 border-b text-right">5,000.00</td>
                                                 <td class="px-2 py-2 border-b border-r text-right">195,000.00</td>
                                                 <td class="px-2 py-2 border-b border-l text-right">15,000.00</td>
-                                                <td class="px-2 py-2 border-b border-r text-right">15,000.00</td>
+                                                <td class="px-2 py-2 border-b border-r">
+                                                    <input type="number" value="15000.00" class="w-full text-right border border-gray-300 rounded px-1 py-1 text-sm focus:ring-1 focus:ring-blue-500 other-cost-adjusted-input" data-project="RD02" onchange="validateOtherCostTotal(this)" step="0.01">
+                                                    <div class="text-xs text-gray-400 mt-1">年度限额: ¥84,222.22</div>
+                                                </td>
                                                 <td class="px-2 py-2 border-b border-l text-right">0.00</td>
+                                                <td class="px-2 py-2 border-b">
+                                                    <input type="number" value="0.00" class="w-full text-right border border-gray-300 rounded px-1 py-1 text-sm focus:ring-1 focus:ring-blue-500" step="0.01">
+                                                </td>
                                                 <td class="px-2 py-2 border-b text-right">0.00</td>
-                                                <td class="px-2 py-2 border-b text-right">0.00</td>
-                                                <td class="px-2 py-2 border-b text-right">0.00</td>
+                                                <td class="px-2 py-2 border-b">
+                                                    <input type="number" value="0.00" class="w-full text-right border border-gray-300 rounded px-1 py-1 text-sm focus:ring-1 focus:ring-blue-500" step="0.01">
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="px-2 py-2 border-b">RD03</td>
@@ -680,11 +688,18 @@
                                                 <td class="px-2 py-2 border-b text-right">8,000.00</td>
                                                 <td class="px-2 py-2 border-b border-r text-right">253,000.00</td>
                                                 <td class="px-2 py-2 border-b border-l text-right">17,000.00</td>
-                                                <td class="px-2 py-2 border-b border-r text-right">17,000.00</td>
+                                                <td class="px-2 py-2 border-b border-r">
+                                                    <input type="number" value="17000.00" class="w-full text-right border border-gray-300 rounded px-1 py-1 text-sm focus:ring-1 focus:ring-blue-500 other-cost-adjusted-input" data-project="RD03" onchange="validateOtherCostTotal(this)" step="0.01">
+                                                    <div class="text-xs text-gray-400 mt-1">年度限额: ¥84,222.22</div>
+                                                </td>
                                                 <td class="px-2 py-2 border-b border-l text-right">0.00</td>
+                                                <td class="px-2 py-2 border-b">
+                                                    <input type="number" value="0.00" class="w-full text-right border border-gray-300 rounded px-1 py-1 text-sm focus:ring-1 focus:ring-blue-500" step="0.01">
+                                                </td>
                                                 <td class="px-2 py-2 border-b text-right">0.00</td>
-                                                <td class="px-2 py-2 border-b text-right">0.00</td>
-                                                <td class="px-2 py-2 border-b text-right">0.00</td>
+                                                <td class="px-2 py-2 border-b">
+                                                    <input type="number" value="0.00" class="w-full text-right border border-gray-300 rounded px-1 py-1 text-sm focus:ring-1 focus:ring-blue-500" step="0.01">
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="px-2 py-2 border-b">RD04</td>
@@ -701,11 +716,18 @@
                                                 <td class="px-2 py-2 border-b text-right">10,000.00</td>
                                                 <td class="px-2 py-2 border-b border-r text-right">310,000.00</td>
                                                 <td class="px-2 py-2 border-b border-l text-right">20,000.00</td>
-                                                <td class="px-2 py-2 border-b border-r text-right">20,000.00</td>
+                                                <td class="px-2 py-2 border-b border-r">
+                                                    <input type="number" value="20000.00" class="w-full text-right border border-gray-300 rounded px-1 py-1 text-sm focus:ring-1 focus:ring-blue-500 other-cost-adjusted-input" data-project="RD04" onchange="validateOtherCostTotal(this)" step="0.01">
+                                                    <div class="text-xs text-gray-400 mt-1">年度限额: ¥84,222.22</div>
+                                                </td>
                                                 <td class="px-2 py-2 border-b border-l text-right">0.00</td>
+                                                <td class="px-2 py-2 border-b">
+                                                    <input type="number" value="0.00" class="w-full text-right border border-gray-300 rounded px-1 py-1 text-sm focus:ring-1 focus:ring-blue-500" step="0.01">
+                                                </td>
                                                 <td class="px-2 py-2 border-b text-right">0.00</td>
-                                                <td class="px-2 py-2 border-b text-right">0.00</td>
-                                                <td class="px-2 py-2 border-b text-right">0.00</td>
+                                                <td class="px-2 py-2 border-b">
+                                                    <input type="number" value="0.00" class="w-full text-right border border-gray-300 rounded px-1 py-1 text-sm focus:ring-1 focus:ring-blue-500" step="0.01">
+                                                </td>
                                             </tr>
                                             <tr class="bg-gray-50 font-medium">
                                                 <td class="px-2 py-2 border-b text-sm" colspan="4">资本化金额小计</td>
@@ -733,7 +755,7 @@
                                                 <td class="px-2 py-2 border-b text-sm text-right font-bold">23,000.00</td>
                                                 <td class="px-2 py-2 border-b border-r text-sm text-right font-bold">758,000.00</td>
                                                 <td class="px-2 py-2 border-b border-l text-sm text-right font-bold">52,000.00</td>
-                                                <td class="px-2 py-2 border-b border-r text-sm text-right font-bold">52,000.00</td>
+                                                <td class="px-2 py-2 border-b border-r text-sm text-right font-bold">¥84,222.22</td>
                                                 <td class="px-2 py-2 border-b border-l text-sm text-right font-bold">0.00</td>
                                                 <td class="px-2 py-2 border-b text-sm text-right font-bold">0.00</td>
                                                 <td class="px-2 py-2 border-b text-sm text-right font-bold">0.00</td>
@@ -766,7 +788,7 @@
                                                 <td class="px-2 py-2 border-b text-sm text-right font-bold">23,000.00</td>
                                                 <td class="px-2 py-2 border-b border-r text-sm text-right font-bold">758,000.00</td>
                                                 <td class="px-2 py-2 border-b border-l text-sm text-right font-bold">52,000.00</td>
-                                                <td class="px-2 py-2 border-b border-r text-sm text-right font-bold">52,000.00</td>
+                                                <td class="px-2 py-2 border-b border-r text-sm text-right font-bold">¥84,222.22</td>
                                                 <td class="px-2 py-2 border-b border-l text-sm text-right font-bold">0.00</td>
                                                 <td class="px-2 py-2 border-b text-sm text-right font-bold">0.00</td>
                                                 <td class="px-2 py-2 border-b text-sm text-right font-bold">0.00</td>
@@ -976,7 +998,7 @@
                                             <tr>
                                                 <td class="px-4 py-3 border-b">34</td>
                                                 <td class="px-4 py-3 border-b">（七）经限额调整后的其他相关费用<span class="help-icon" onclick="showHelpTip(this)" title="数据来源：支出汇总表中的「经限额调整后的其他相关费用」列金额合计">?</span></td>
-                                                <td class="px-4 py-3 border-b text-right">¥52,000.00</td>
+                                                <td class="px-4 py-3 border-b text-right" id="detail-other-cost-total">¥52,000.00</td>
                                             </tr>
                                             <tr>
                                                 <td class="px-4 py-3 border-b">35</td>
@@ -1085,14 +1107,6 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div>
-                                
-                                <!-- 保存按钮 -->
-                                <div class="mt-4 flex justify-end items-center gap-4">
-                                    <span id="save-status" class="text-sm text-gray-500 hidden"></span>
-                                    <button onclick="saveForm()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition">
-                                        保存修改
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1348,6 +1362,52 @@
             }
         }
         
+        // 验证其他相关费用限额
+        function validateOtherCostTotal(input) {
+            const ANNUAL_MAX_LIMIT = 84222.22; // 年度总限额 = 前五项费用之和 ÷ 9
+            
+            // 计算所有项目其他相关费用的总和
+            const inputs = document.querySelectorAll('.other-cost-adjusted-input');
+            let total = 0;
+            inputs.forEach(inp => {
+                if (inp !== input) {
+                    total += parseFloat(inp.value) || 0;
+                }
+            });
+            
+            const newValue = parseFloat(input.value) || 0;
+            const newTotal = total + newValue;
+            
+            if (newTotal > ANNUAL_MAX_LIMIT) {
+                // 计算当前项目最多能输入多少
+                const maxForThisProject = ANNUAL_MAX_LIMIT - total;
+                input.value = maxForThisProject.toFixed(2);
+                input.classList.add('border-red-500', 'bg-red-50');
+                alert('超出年度限额！\n\n年度总限额: ¥' + ANNUAL_MAX_LIMIT.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '\n已使用: ¥' + total.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '\n本项目最多可输入: ¥' + maxForThisProject.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+            } else {
+                input.classList.remove('border-red-500', 'bg-red-50');
+            }
+            
+            updateOtherCostTotal();
+        }
+        
+        // 更新其他相关费用总额
+        function updateOtherCostTotal() {
+            const inputs = document.querySelectorAll('.other-cost-adjusted-input');
+            let total = 0;
+            inputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+            
+            const formattedTotal = '¥' + total.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            // 更新明细表中的值（实际调整后的总和）
+            const detailTotalCell = document.getElementById('detail-other-cost-total');
+            if (detailTotalCell) {
+                detailTotalCell.textContent = formattedTotal;
+            }
+        }
+        
         // 页面加载功能
         function loadPage(page) {
             window.location.href = page;
@@ -1383,19 +1443,6 @@
                     this.classList.add('border-blue-500', 'text-blue-600');
                     this.setAttribute('aria-selected', 'true');
                 });
-            });
-            
-            // 生成报表按钮点击事件
-            document.getElementById('generate-report').addEventListener('click', function() {
-                const year = document.getElementById('year-select').value;
-                const activeTab = document.querySelector('.tab-pane:not(.hidden)');
-                const activeTabId = activeTab ? activeTab.id : 'financial-detail';
-                const tabTitleMap = {
-                    'financial-detail': '财务加计扣除辅助账明细表',
-                    'financial-summary': '财务加计扣除辅助账汇总表',
-                    'financial-voucher': '序时记账凭证一览表'
-                };
-                alert(year + '年度 ' + tabTitleMap[activeTabId] + ' 报表已生成');
             });
             
             // 导出按钮点击事件
