@@ -1695,9 +1695,11 @@
                     }
 
                         const finalVal = bookVal + adjVal;
-                        const status = adjVal < 0 ? 
-                            '<span class="px-2 py-0.5 bg-red-50 text-red-700 rounded-full text-[10px] border border-red-100 font-bold">已剔除</span>' : 
-                            '<span class="px-2 py-0.5 bg-green-50 text-green-700 rounded-full text-[10px] border border-green-100">全额计入</span>';
+                        const status = cat.id === 'externalOverseasCost' || cat.id === 'otherCost' ? 
+                            '<span class="px-2 py-0.5 bg-yellow-50 text-yellow-700 rounded-full text-[10px] border border-yellow-100">限额控制</span>' : 
+                            (adjVal < 0 ? 
+                                '<span class="px-2 py-0.5 bg-red-50 text-red-700 rounded-full text-[10px] border border-red-100 font-bold">已剔除</span>' : 
+                                '<span class="px-2 py-0.5 bg-green-50 text-green-700 rounded-full text-[10px] border border-green-100">全额计入</span>');
 
                         tbody.innerHTML += `
                             <tr class="hover:bg-gray-50 transition-all border-b border-gray-50 last:border-0 ${cat.name.includes('人员人工费用') && adjVal < 0 ? 'cursor-pointer' : ''}" ${cat.name.includes('人员人工费用') && adjVal < 0 ? `onclick="openExclusionDrawer('${cat.name}', getExcludedPersons('人员人工费用'), '${caliber}')"` : ''}>
@@ -1706,7 +1708,7 @@
                                     ${cat.name}
                                 </td>
                                 <td class="px-4 py-3 text-right font-mono text-gray-400">¥${bookVal.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-                                <td class="px-4 py-3 text-right font-mono ${adjVal < 0 ? 'text-red-500 font-bold' : 'text-gray-300'}">${adjVal === 0 ? '-' : adjVal.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                                <td class="px-4 py-3 text-right font-mono ${cat.id === 'externalOverseasCost' || cat.id === 'otherCost' ? 'text-gray-500' : (adjVal < 0 ? 'text-red-500 font-bold' : 'text-gray-300')}">${cat.id === 'externalOverseasCost' || cat.id === 'otherCost' ? '年度限额控制' : (adjVal === 0 ? '-' : adjVal.toLocaleString(undefined, {minimumFractionDigits: 2}))}</td>
                                 <td class="px-4 py-3 text-right font-bold text-gray-900 font-mono">¥${finalVal.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
                                 ${isAllProjects ? '' : `
                                 <td class="px-4 py-3 text-left text-[11px] leading-relaxed">
