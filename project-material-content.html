@@ -532,8 +532,9 @@
             document.body.classList.add('parent-iframe');
         }
 
-        function loadPage(e, pageUrl) {
-            if (e && e.preventDefault) e.preventDefault();
+        function loadPage(arg1, arg2) {
+            const pageUrl = (typeof arg1 === 'string') ? arg1 : arg2;
+            if (!pageUrl) return;
             window.location.href = pageUrl;
         }
         

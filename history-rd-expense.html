@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>试生产管理 - 制造业研发费用辅助账管理系统</title>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>历史研发费用管理 - 研知π</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -13,50 +13,54 @@
                     colors: {
                         primary: '#3b82f6',
                         secondary: '#10b981',
-                        warning: '#f59e0b',
+                        accent: '#6366f1',
                         danger: '#ef4444',
-                        dark: '#1e293b',
+                        warning: '#f59e0b',
+                        info: '#3b82f6',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
                     },
-                },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
             }
         }
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .nav-item-active {
-                @apply bg-primary text-white;
-            }
-            .nav-item-hover:hover {
-                @apply bg-gray-100;
-            }
-            .btn-primary {
-                @apply bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors;
-            }
-            .btn-secondary {
-                @apply bg-secondary text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors;
-            }
-            .btn-warning {
-                @apply bg-warning text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-colors;
-            }
-            .btn-danger {
-                @apply bg-danger text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors;
-            }
-            .form-input {
-                @apply border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary;
-            }
-            .table-row-hover:hover {
-                @apply bg-gray-50;
-            }
+            .content-auto { content-visibility: auto; }
+            .nav-item-active { @apply bg-primary text-white; }
+            .nav-item-hover { @apply hover:bg-blue-100 transition-colors duration-200; }
         }
     </style>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; overflow-x: hidden; }
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .nav-item { transition: all 0.2s ease; }
+        .nav-item:hover { transform: translateX(4px); }
+        .menu-toggle { cursor: pointer; transition: all 0.2s ease; display: flex; justify-content: space-between; align-items: center; }
+        .menu-toggle:hover { background-color: rgba(59, 130, 246, 0.1); }
+        .sub-menu { max-height: 500px; overflow: hidden; transition: max-height 0.3s ease; }
+        .sub-menu.collapsed { max-height: 0; }
+        .menu-arrow { transition: transform 0.3s ease; }
+        .menu-arrow.collapsed { transform: rotate(-90deg); }
+        .btn-add { background: #3b82f6; color: white; padding: 8px 16px; border-radius: 6px; font-weight: 500; transition: all 0.2s; }
+        .btn-add:hover { background: #2563eb; }
+        .btn-save { background: #10b981; color: white; padding: 10px 24px; border-radius: 6px; font-weight: 500; transition: all 0.2s; }
+        .btn-save:hover { background: #059669; }
+        .btn-delete { color: #ef4444; cursor: pointer; padding: 6px; border-radius: 4px; transition: all 0.2s; }
+        .btn-delete:hover { background: #fee2e2; }
+        .input-field { border: 1px solid #d1d5db; border-radius: 6px; padding: 8px 12px; font-size: 14px; }
+        .input-field:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .info-box { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0; }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50">
     <div class="flex h-screen overflow-hidden">
         <!-- 左侧导航栏 -->
-        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto" style="max-height: 100vh;">
+        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto flex-none fixed left-0 top-0 h-screen" style="max-height: 100vh;">
             <!-- 系统标题 -->
             <div class="p-4 border-b border-gray-200">
                 <h1 class="text-xl font-bold text-primary flex items-center">
@@ -65,7 +69,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                                                                <!-- 导航菜单 -->
+                                    <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -446,254 +450,179 @@
                 </ul>
             </nav>
         </div>
-        <!-- 主内容区 -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- 顶部导航栏 -->
-            <header class="bg-white border-b border-gray-200 py-4 px-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <button class="mr-4 text-gray-600" onclick="toggleSidebar()">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                        <h2 class="text-xl font-semibold text-gray-800">试生产管理</h2>
+
+        <!-- 右侧主内容区 -->
+        <div class="flex-1 overflow-y-auto ml-64">
+            <div class="p-6">
+                <!-- 页面标题 -->
+                <div class="mb-6 flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+                            <i class="fa fa-history text-primary mr-3"></i>
+                            历史研发费用管理
+                        </h1>
+                        <p class="text-gray-500 mt-1">录入系统启用前各年度的研发费用总额（可录入任意年度），用于首页趋势分析对比</p>
                     </div>
-                    <div class="flex items-center space-x-4">
-                        <button class="text-gray-600 hover:text-primary">
-                            <i class="fa fa-bell"></i>
-                        </button>
-                        <button class="text-gray-600 hover:text-primary">
-                            <i class="fa fa-cog"></i>
-                        </button>
-                    </div>
+                    <button onclick="addRow()" class="btn-add flex items-center">
+                        <i class="fa fa-plus mr-2"></i> 新增年度数据
+                    </button>
                 </div>
-            </header>
-            <!-- 内容区 -->
-            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
-                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-medium text-gray-800">试生产计划管理</h3>
-                        <button class="btn-primary">新增计划</button>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-4 mb-6">
-                        <div class="flex items-center">
-                            <label class="text-gray-700 mr-2">计划编号：</label>
-                            <input type="text" class="form-input" placeholder="请输入计划编号">
-                        </div>
-                        <div class="flex items-center">
-                            <label class="text-gray-700 mr-2">项目名称：</label>
-                            <input type="text" class="form-input" placeholder="请输入项目名称">
-                        </div>
-                        <div class="flex items-center">
-                            <label class="text-gray-700 mr-2">状态：</label>
-                            <select class="form-input">
-                                <option value="">全部</option>
-                                <option value="pending">待执行</option>
-                                <option value="in_progress">执行中</option>
-                                <option value="completed">已完成</option>
-                            </select>
-                        </div>
-                        <button class="btn-primary">查询</button>
-                        <button class="btn-secondary">重置</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">计划编号</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">项目名称</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">计划数量</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">计划开始日期</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">计划完成日期</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">状态</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
+
+                <!-- 数据表格 -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-200">
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">年度</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">研发费用总额（万元）</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">备注说明</th>
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-gray-500">操作</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <tr class="table-row-hover">
-                                    <td class="px-4 py-3 border-b">PILOT-2024-001</td>
-                                    <td class="px-4 py-3 border-b">新型智能传感器研发</td>
-                                    <td class="px-4 py-3 border-b">50</td>
-                                    <td class="px-4 py-3 border-b">2024-02-01</td>
-                                    <td class="px-4 py-3 border-b">2024-02-15</td>
-                                    <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">执行中</span></td>
-                                    <td class="px-4 py-3 border-b">
-                                        <div class="flex space-x-2">
-                                            <button class="text-primary hover:text-blue-700">
-                                                <i class="fa fa-edit"></i>
-                                            </button>
-                                            <button class="text-secondary hover:text-green-700">
-                                                <i class="fa fa-play"></i>
-                                            </button>
-                                            <button class="text-danger hover:text-red-700">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="table-row-hover">
-                                    <td class="px-4 py-3 border-b">PILOT-2024-002</td>
-                                    <td class="px-4 py-3 border-b">高精度测量仪器研发</td>
-                                    <td class="px-4 py-3 border-b">30</td>
-                                    <td class="px-4 py-3 border-b">2024-02-20</td>
-                                    <td class="px-4 py-3 border-b">2024-03-05</td>
-                                    <td class="px-4 py-3 border-b"><span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">待执行</span></td>
-                                    <td class="px-4 py-3 border-b">
-                                        <div class="flex space-x-2">
-                                            <button class="text-primary hover:text-blue-700">
-                                                <i class="fa fa-edit"></i>
-                                            </button>
-                                            <button class="text-secondary hover:text-green-700">
-                                                <i class="fa fa-play"></i>
-                                            </button>
-                                            <button class="text-danger hover:text-red-700">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tbody id="dataTable">
                             </tbody>
                         </table>
-                    </div>
-                    <div class="flex items-center justify-between mt-4">
-                        <div class="text-sm text-gray-600">
-                            显示 1 至 2 条，共 2 条
-                        </div>
-                        <div class="flex space-x-1">
-                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">上一页</button>
-                            <button class="px-3 py-1 border border-primary bg-primary text-white rounded-md">1</button>
-                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">下一页</button>
+
+                        <div class="mt-6 flex justify-end">
+                            <button onclick="saveData()" class="btn-save flex items-center">
+                                <i class="fa fa-save mr-2"></i> 保存年度费用配置
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-medium text-gray-800">试生产成本管理</h3>
-                        <button class="btn-primary">新增成本记录</button>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-4 mb-6">
-                        <div class="flex items-center">
-                            <label class="text-gray-700 mr-2">项目名称：</label>
-                            <input type="text" class="form-input" placeholder="请输入项目名称">
-                        </div>
-                        <div class="flex items-center">
-                            <label class="text-gray-700 mr-2">成本类型：</label>
-                            <select class="form-input">
-                                <option value="">全部</option>
-                                <option value="material">物料成本</option>
-                                <option value="labor">人工成本</option>
-                                <option value="equipment">设备成本</option>
-                                <option value="other">其他成本</option>
-                            </select>
-                        </div>
-                        <div class="flex items-center">
-                            <label class="text-gray-700 mr-2">日期范围：</label>
-                            <input type="date" class="form-input mr-2">
-                            <span class="text-gray-500">至</span>
-                            <input type="date" class="form-input ml-2">
-                        </div>
-                        <button class="btn-primary">查询</button>
-                        <button class="btn-secondary">重置</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">项目名称</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">成本类型</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">金额</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">日期</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">备注</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">操作</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <tr class="table-row-hover">
-                                    <td class="px-4 py-3 border-b">新型智能传感器研发</td>
-                                    <td class="px-4 py-3 border-b">物料成本</td>
-                                    <td class="px-4 py-3 border-b">¥120,000</td>
-                                    <td class="px-4 py-3 border-b">2024-02-05</td>
-                                    <td class="px-4 py-3 border-b">传感器芯片采购</td>
-                                    <td class="px-4 py-3 border-b">
-                                        <div class="flex space-x-2">
-                                            <button class="text-primary hover:text-blue-700">
-                                                <i class="fa fa-edit"></i>
-                                            </button>
-                                            <button class="text-danger hover:text-red-700">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="table-row-hover">
-                                    <td class="px-4 py-3 border-b">新型智能传感器研发</td>
-                                    <td class="px-4 py-3 border-b">人工成本</td>
-                                    <td class="px-4 py-3 border-b">¥80,000</td>
-                                    <td class="px-4 py-3 border-b">2024-02-10</td>
-                                    <td class="px-4 py-3 border-b">生产线工人工资</td>
-                                    <td class="px-4 py-3 border-b">
-                                        <div class="flex space-x-2">
-                                            <button class="text-primary hover:text-blue-700">
-                                                <i class="fa fa-edit"></i>
-                                            </button>
-                                            <button class="text-danger hover:text-red-700">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="flex items-center justify-between mt-4">
-                        <div class="text-sm text-gray-600">
-                            显示 1 至 2 条，共 2 条
-                        </div>
-                        <div class="flex space-x-1">
-                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">上一页</button>
-                            <button class="px-3 py-1 border border-primary bg-primary text-white rounded-md">1</button>
-                            <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">下一页</button>
-                        </div>
-                    </div>
+
+                <!-- 提示说明 -->
+                <div class="mt-6 info-box">
+                    <h4 class="font-medium text-blue-800 mb-2 flex items-center">
+                        <i class="fa fa-info-circle mr-2"></i> 提示说明
+                    </h4>
+                    <ul class="text-sm text-blue-700 space-y-1">
+                        <li><i class="fa fa-check-circle mr-2"></i> 此处录入的数据将直接影响首页"年度研发费用与营收对比趋势"图表</li>
+                        <li><i class="fa fa-check-circle mr-2"></i> 可录入任意年度数据，包括系统启用后中断使用期间的年度</li>
+                        <li><i class="fa fa-check-circle mr-2"></i> 如果该年度在系统中已有归集数据，系统将优先使用系统计算的实时数据</li>
+                        <li><i class="fa fa-check-circle mr-2"></i> 录入金额单位为：万元</li>
+                    </ul>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
+
     <script>
-        function loadPage(pageUrl) {
-            try {
-                console.log('准备跳转到页面:', pageUrl);
-                window.location.assign(pageUrl);
-            } catch (error) {
-                console.error('页面跳转失败:', error);
-                alert('页面跳转失败，请检查文件是否存在: ' + pageUrl);
+        // 数据存储
+        let dataList = [
+            { id: 1, year: '2025', amount: '28.50', remark: '系统启用前历史归集' },
+            { id: 2, year: '2024', amount: '25.00', remark: '审计报告数据' },
+            { id: 3, year: '2023', amount: '25.00', remark: '审计报告数据' }
+        ];
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+        });
+
+        // 渲染表格
+        function renderTable() {
+            const table = document.getElementById('dataTable');
+            
+            // 按年份降序排列
+            dataList.sort((a, b) => b.year - a.year);
+            
+            table.innerHTML = dataList.map(item => `
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="px-4 py-3">
+                        <input type="text" class="input-field w-24" value="${item.year}" data-id="${item.id}" data-field="year">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="number" step="0.01" min="0" class="input-field w-40" value="${item.amount}" data-id="${item.id}" data-field="amount">
+                    </td>
+                    <td class="px-4 py-3">
+                        <input type="text" class="input-field w-64" value="${item.remark}" data-id="${item.id}" data-field="remark">
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        <button onclick="deleteRow(${item.id})" class="btn-delete" title="删除">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 添加行
+        function addRow() {
+            const newId = Date.now();
+            const lastYear = dataList.length > 0 ? parseInt(dataList[0].year) - 1 : new Date().getFullYear() - 1;
+            
+            dataList.unshift({
+                id: newId,
+                year: lastYear.toString(),
+                amount: '',
+                remark: ''
+            });
+            
+            renderTable();
+        }
+
+        // 删除行
+        function deleteRow(id) {
+            if (dataList.length <= 1) {
+                alert('至少保留一条记录');
+                return;
+            }
+            
+            if (confirm('确定要删除这条记录吗？')) {
+                dataList = dataList.filter(item => item.id !== id);
+                renderTable();
             }
         }
 
+        // 保存数据
+        function saveData() {
+            // 收集表格数据
+            const inputs = document.querySelectorAll('.input-field');
+            inputs.forEach(input => {
+                const id = parseInt(input.dataset.id);
+                const field = input.dataset.field;
+                const value = input.value;
+                
+                const item = dataList.find(item => item.id === id);
+                if (item) {
+                    item[field] = value;
+                }
+            });
+            
+            // 验证数据
+            const validData = dataList.filter(item => item.year && item.amount);
+            if (validData.length === 0) {
+                alert('请至少填写一条有效的年度数据');
+                return;
+            }
+            
+            // 检查年份是否重复
+            const years = dataList.map(item => item.year);
+            const uniqueYears = [...new Set(years)];
+            if (years.length !== uniqueYears.length) {
+                alert('存在重复的年度，请检查');
+                return;
+            }
+            
+            // 保存到 localStorage
+            localStorage.setItem('historyRdExpense', JSON.stringify(dataList));
+            
+            alert('保存成功！');
+        }
+
+        // 菜单切换
         function toggleMenu(element) {
             const subMenu = element.nextElementSibling;
             const arrow = element.querySelector('.menu-arrow');
-            if (subMenu.classList.contains('hidden')) {
-                subMenu.classList.remove('hidden');
-                arrow.classList.remove('fa-chevron-right');
-                arrow.classList.add('fa-chevron-down');
-            } else {
-                subMenu.classList.add('hidden');
-                arrow.classList.remove('fa-chevron-down');
-                arrow.classList.add('fa-chevron-right');
-            }
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
         }
 
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.w-64');
-            if (sidebar.classList.contains('w-64')) {
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-0');
-                sidebar.classList.add('hidden');
-            } else {
-                sidebar.classList.remove('w-0');
-                sidebar.classList.remove('hidden');
-                sidebar.classList.add('w-64');
-            }
+        // 页面跳转
+        function loadPage(page) {
+            window.location.href = page;
         }
     </script>
 </body>

@@ -140,11 +140,11 @@
                 </h1>
             </div>
             
-            <!-- 导航菜单 -->
+                                    <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
-                        <a href="dashboard.html" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700">
+                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
                             <i class="fa fa-home w-6"></i>
                             <span>首页</span>
                         </a>
@@ -230,15 +230,21 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-cube w-6"></i>
-                                    <span>物料管理</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
                                     <i class="fa fa-user-o w-6"></i>
                                     <span>研发人员档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('revenue-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>营业收入管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('attendance-rules.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>考勤规则设置</span>
                                 </a>
                             </li>
                         </ul>
@@ -390,11 +396,11 @@
                             <li>
                                 <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-flask w-6"></i>
-                                    <span>统计局R&D口径</span>
+                                    <span>R&D统计</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="ipo-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600 bg-blue-50 text-blue-600">
+                                <a href="ipo-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-line-chart w-6"></i>
                                     <span>IPO审查</span>
                                 </a>
@@ -410,8 +416,6 @@
                                     <i class="fa fa-cogs w-6"></i>
                                     <span>口径规则配置</span>
                                 </a>
-                            </li>
-                            <li>
                             </li>
                         </ul>
                     </li>
@@ -512,12 +516,6 @@
                                     <span>分摊规则配置</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('data-dictionary.html')">
-                                    <i class="fa fa-book w-6"></i>
-                                    <span>数据字典管理</span>
-                                </a>
-                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -536,7 +534,7 @@
                         <i class="fa fa-bell"></i>
                     </button>
                     <div class="flex items-center">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="用户头像" class="w-8 h-8 rounded-full">
                         <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
                         <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
                     </div>

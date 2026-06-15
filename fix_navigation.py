@@ -95,6 +95,12 @@ navigation_template = """            <!-- 导航菜单 -->
                                     <span>研发人员档案</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('revenue-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>营业收入管理</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>

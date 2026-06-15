@@ -114,7 +114,7 @@
                 </h1>
             </div>
             
-            <!-- 导航菜单 -->
+                                    <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -204,21 +204,21 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-active flex items-center px-4 py-2 text-gray-600" onclick="loadPage('instrument-management.html')">
-                                    <i class="fa fa-gauge w-6"></i>
-                                    <span>仪表档案</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('instrument-reading.html')">
-                                    <i class="fa fa-calendar-check-o w-6"></i>
-                                    <span>仪表抄表管理</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
                                     <i class="fa fa-user-o w-6"></i>
                                     <span>研发人员档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('revenue-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>营业收入管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('attendance-rules.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>考勤规则设置</span>
                                 </a>
                             </li>
                         </ul>
@@ -335,7 +335,7 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
                                     <i class="fa fa-trash w-6"></i>
-                                    <span>物料报废管理</span>
+                                    <span>特殊收入管理</span>
                                 </a>
                             </li>
                         </ul>
@@ -383,6 +383,12 @@
                                 <a href="generate-account-table.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-magic w-6"></i>
                                     <span>账套表生成</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-rule-config.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>口径规则配置</span>
                                 </a>
                             </li>
                         </ul>
@@ -447,6 +453,41 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('enterprise-info.html')">
                                     <i class="fa fa-info-circle w-6"></i>
                                     <span>企业基础信息维护</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('user.html')">
+                                    <i class="fa fa-user-o w-6"></i>
+                                    <span>用户管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('role.html')">
+                                    <i class="fa fa-shield w-6"></i>
+                                    <span>角色管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-database w-6"></i>
+                                <span>系统设置</span>
+                            </div>
+                            <i class="fa fa-chevron-right menu-arrow"></i>
+                        </div>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-type.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>费用类型管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('allocation-rule.html')">
+                                    <i class="fa fa-random w-6"></i>
+                                    <span>分摊规则配置</span>
                                 </a>
                             </li>
                         </ul>

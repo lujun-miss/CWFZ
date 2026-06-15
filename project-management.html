@@ -104,7 +104,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                                        <!-- 导航菜单 -->
+                                                                                                                                                                                                                                                <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -197,6 +197,18 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
                                     <i class="fa fa-user-o w-6"></i>
                                     <span>研发人员档案</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('revenue-management.html')">
+                                    <i class="fa fa-money w-6"></i>
+                                    <span>营业收入管理</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('attendance-rules.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>考勤规则设置</span>
                                 </a>
                             </li>
                         </ul>
@@ -363,6 +375,12 @@
                                     <span>账套表生成</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-rule-config.html')">
+                                    <i class="fa fa-cogs w-6"></i>
+                                    <span>口径规则配置</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -501,15 +519,49 @@
                 <!-- 页面标题 -->
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-bold text-gray-800">项目管理</h1>
-                    <div class="flex space-x-2">
+                    <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors flex items-center" onclick="loadPage('project-create.html')">
+                        <i class="fa fa-plus mr-2"></i>
+                        新建项目
+                    </button>
+                </div>
+
+                <!-- 搜索区域 -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        <!-- 关键词搜索 -->
                         <div class="relative">
-                            <input type="text" placeholder="搜索项目..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                            <input type="text" placeholder="搜索项目名称/编号..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                             <i class="fa fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
-                        <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors flex items-center" onclick="loadPage('project-create.html')">
-                            <i class="fa fa-plus mr-2"></i>
-                            新建项目
-                        </button>
+
+                        <!-- 项目状态 -->
+                        <select class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option>全部状态</option>
+                            <option>进行中</option>
+                            <option>已完成</option>
+                            <option>已暂停</option>
+                        </select>
+
+                        <!-- 开始日期 -->
+                        <div class="relative">
+                            <input type="date" placeholder="开始日期" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+
+                        <!-- 结束日期 -->
+                        <div class="relative">
+                            <input type="date" placeholder="结束日期" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+
+                        <!-- 搜索按钮 -->
+                        <div class="flex space-x-2">
+                            <button class="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors flex items-center justify-center">
+                                <i class="fa fa-search mr-2"></i>
+                                搜索
+                            </button>
+                            <button class="px-4 py-2 border border-gray-300 text-gray-600 rounded-md hover:bg-gray-50 transition-colors">
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 

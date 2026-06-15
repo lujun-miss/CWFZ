@@ -3,134 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>首页 - 研知π</title>
+    <title>首页 - 研知π研发费用管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3b82f6',
-                        secondary: '#10b981',
-                        accent: '#6366f1',
-                        danger: '#ef4444',
-                        warning: '#f59e0b',
-                        info: '#3b82f6',
-                        light: '#f3f4f6',
-                        dark: '#1f2937'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .nav-item-active {
-                @apply bg-primary text-white;
-            }
-            .nav-item-hover {
-                @apply hover:bg-blue-100 transition-colors duration-200;
-            }
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .nav-item-hover:hover {
+            background-color: #f3f4f6;
         }
-        html, body {
-            width: 100%;
-            overflow-x: hidden;
-        }
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        .nav-item {
-            transition: all 0.2s ease;
-        }
-        .nav-item:hover {
-            transform: translateX(4px);
-        }
-        .nav-item.active {
-            border-left: 4px solid #3b82f6;
-        }
-        .menu-toggle {
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .menu-toggle:hover {
-            background-color: rgba(59, 130, 246, 0.1);
-        }
-        .sub-menu {
-            max-height: 500px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .sub-menu.collapsed {
-            max-height: 0;
+        .collapsed {
+            display: none;
         }
         .menu-arrow {
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
         .menu-arrow.collapsed {
             transform: rotate(-90deg);
         }
-        .card {
-            transition: all 0.3s ease;
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .stat-card {
-            transition: all 0.2s ease;
-        }
-        .stat-card:hover {
-            transform: scale(1.02);
+        .animate-pulse-soft {
+            animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 font-sans">
     <div class="flex h-screen overflow-hidden">
-        <!-- 左侧导航栏 -->
-        <div class="w-64 bg-white shadow-md z-10 overflow-y-auto" style="max-height: 100vh;">
-            <!-- 系统标题 -->
-            <div class="p-4 border-b border-gray-200">
-                <h1 class="text-xl font-bold text-primary flex items-center">
-                    <i class="fa fa-cogs mr-2"></i>
-                    <span>研知π</span>
-                </h1>
+        <!-- 侧边栏导航 -->
+        <div class="w-64 bg-white shadow-lg flex-shrink-0 z-10 flex flex-col">
+            <div class="p-6 border-b flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fa fa-pie-chart text-white"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">研知π</h1>
+                </div>
             </div>
             
-                                                                                                                                                                                                            <!-- 导航菜单 -->
-            <nav class="mt-4">
-                <ul>
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1 px-3">
                     <li>
-                        <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-3 text-gray-700" onclick="loadPage('dashboard.html')">
-                            <i class="fa fa-home w-6"></i>
+                        <a href="javascript:void(0)" class="nav-item flex items-center px-4 py-3 text-blue-600 bg-blue-50 rounded-lg font-medium" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-th-large w-6"></i>
                             <span>首页</span>
                         </a>
                     </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+                    
+                    <!-- 项目管理 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-folder-open w-6"></i>
                                 <span>项目管理</span>
                             </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
@@ -171,19 +100,21 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('audit-documents.html')">
                                     <i class="fa fa-archive w-6"></i>
-                                    <span>备案资料</span>
+                                    <span>备查资料</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+
+                    <!-- 基础数据维护 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-database w-6"></i>
                                 <span>基础数据维护</span>
                             </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('position.html')">
@@ -222,33 +153,29 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-fee-category.html')">
-                                    <i class="fa fa-list-ul w-6"></i>
-                                    <span>其他费用类别维护</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('revenue-management.html')">
                                     <i class="fa fa-money w-6"></i>
                                     <span>营业收入管理</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('annual-rd-expense.html')">
-                                    <i class="fa fa-history w-6"></i>
-                                    <span>历史研发费用管理</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('attendance-rules.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>考勤规则设置</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+
+                    <!-- 资产管理 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-cubes w-6"></i>
                                 <span>资产管理</span>
                             </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('asset-management.html')">
@@ -265,13 +192,13 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
-                                    <span>设备能源类型管理</span>
+                                    <span>设备能源消耗档案</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
                                     <i class="fa fa-money w-6"></i>
-                                    <span>设备能源单价管理</span>
+                                    <span>能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -282,14 +209,16 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+
+                    <!-- 费用归集 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-cogs w-6"></i>
                                 <span>费用归集</span>
                             </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('labor-cost-allocation.html')">
@@ -341,14 +270,16 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+
+                    <!-- 特殊收入管理 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-cube w-6"></i>
                                 <span>特殊收入管理</span>
                             </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-scrap.html')">
@@ -358,49 +289,51 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+
+                    <!-- 多口径报表 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-file-text-o w-6"></i>
+                                <i class="fa fa-bar-chart w-6"></i>
                                 <span>多口径报表</span>
                             </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="generate-account-table.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
-                                    <i class="fa fa-magic w-6"></i>
-                                    <span>账套表生成</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('financial-caliber-report.html')">
                                     <i class="fa fa-calculator w-6"></i>
-                                    <span>加计扣除</span>
+                                    <span>财务加计扣除</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="hi-tech-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('hi-tech-caliber-report.html')">
                                     <i class="fa fa-certificate w-6"></i>
                                     <span>高企认定</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="accounting-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('accounting-caliber-report.html')">
                                     <i class="fa fa-book w-6"></i>
                                     <span>会计口径</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="rd-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('rd-caliber-report.html')">
                                     <i class="fa fa-flask w-6"></i>
                                     <span>R&D统计</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="ipo-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('ipo-caliber-report.html')">
                                     <i class="fa fa-line-chart w-6"></i>
                                     <span>IPO审查</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('generate-account-table.html')">
+                                    <i class="fa fa-magic w-6"></i>
+                                    <span>账套表生成</span>
                                 </a>
                             </li>
                             <li>
@@ -410,17 +343,23 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('warning-rules-config.html')">
+                                    <i class="fa fa-bell w-6"></i>
+                                    <span>预警规则配置</span>
+                                </a>
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+
+                    <!-- 凭证管理 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-file-text w-6"></i>
                                 <span>凭证管理</span>
                             </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('voucher-import.html')">
@@ -460,14 +399,16 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+
+                    <!-- 企业档案 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
                             <div class="flex items-center">
                                 <i class="fa fa-building w-6"></i>
                                 <span>企业档案</span>
                             </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('enterprise-info.html')">
@@ -489,14 +430,16 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <div class="menu-toggle flex items-center px-4 py-3 text-gray-700 font-medium" onclick="toggleMenu(this)">
+
+                    <!-- 系统设置 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
                             <div class="flex items-center">
-                                <i class="fa fa-database w-6"></i>
+                                <i class="fa fa-cog w-6"></i>
                                 <span>系统设置</span>
                             </div>
-                            <i class="fa fa-chevron-right menu-arrow"></i>
-                        </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
                         <ul class="ml-6 sub-menu">
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('expense-type.html')">
@@ -508,6 +451,12 @@
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('allocation-rule.html')">
                                     <i class="fa fa-random w-6"></i>
                                     <span>分摊规则配置</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('data-dictionary.html')">
+                                    <i class="fa fa-book w-6"></i>
+                                    <span>数据字典管理</span>
                                 </a>
                             </li>
                         </ul>
@@ -528,7 +477,7 @@
                         <i class="fa fa-bell"></i>
                     </button>
                     <div class="flex items-center">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="用户头像" class="w-8 h-8 rounded-full">
                         <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
                         <i class="fa fa-chevron-down ml-1 text-xs text-gray-500"></i>
                     </div>
@@ -536,7 +485,95 @@
             </header>
             
             <!-- 主内容 -->
-            <main class="flex-1 overflow-auto p-6">
+            <main class="flex-1 overflow-auto p-6 relative">
+                <!-- 资深 UI 设计师优化版：明亮品牌蓝状态面板 (大气放大版) -->
+                <div class="mb-10 bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 border border-blue-400/30 rounded-3xl p-8 flex flex-wrap lg:flex-nowrap items-center justify-between shadow-2xl shadow-blue-500/30 relative overflow-visible z-10 group hover:shadow-blue-500/40 transition-all duration-500">
+                    <!-- 背景装饰：柔和光影 (同步放大) -->
+                    <div class="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl -mr-40 -mt-40"></div>
+                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/15 rounded-full blur-3xl -ml-32 -mb-32"></div>
+                    
+                    <!-- 1. 订阅状态 (左侧) -->
+                    <div class="flex items-center space-x-6 px-6 border-r border-white/20 min-w-max relative z-10">
+                        <div class="w-20 h-20 bg-white/15 backdrop-blur-md text-white rounded-2xl flex items-center justify-center border border-white/30 shadow-lg group-hover:bg-white/25 transition-all duration-500">
+                            <i class="fa fa-vcard-o text-3xl"></i>
+                        </div>
+                        <div class="flex flex-col space-y-2">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-3 py-1 bg-white/20 text-white text-xs font-black rounded-lg uppercase tracking-widest border border-white/30">研发费上限: 500万</span>
+                                <div class="flex items-center px-2 py-1 bg-emerald-400/20 border border-emerald-400/40 rounded-lg text-xs text-emerald-300 font-bold">
+                                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse mr-2 shadow-[0_0_8px_#34d399]"></span> 服务正常
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 gap-1">
+                                <p class="text-sm text-blue-50 font-medium tracking-wide">生效时间: <span class="text-white font-black ml-1">2026-06-05</span></p>
+                                <p class="text-sm text-blue-50 font-medium tracking-wide">到期时间: <span class="text-white font-black ml-1">2027-06-05</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. 归集进度 (中间) -->
+                    <div class="flex-1 px-14 min-w-[400px] relative z-10">
+                        <div class="flex items-end justify-between mb-4">
+                            <div>
+                                <h5 class="text-sm font-black text-white uppercase tracking-widest opacity-95">研发费归集进度概览</h5>
+                                <p class="text-xs text-blue-100 mt-1 font-medium">当前归集金额：<span class="text-white font-black text-lg mx-1">¥25.00万</span> / ¥500.00万</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-4xl font-black text-white tabular-nums drop-shadow-md">5.0<span class="text-lg ml-1 text-blue-100">%</span></span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-blue-950/30 rounded-full h-4 overflow-hidden p-[3px] border border-white/10 shadow-inner">
+                            <div class="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-400 h-full rounded-full shadow-[0_0_15px_rgba(52,211,153,0.5)] transition-all duration-1000" style="width: 5%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 操作与预警 (右侧) -->
+                    <div class="flex items-center space-x-4 px-6 border-l border-white/20 min-w-max relative z-10">
+                        <!-- 操作说明 -->
+                        <button onclick="showHelp('operation')" class="flex flex-col items-center justify-center w-28 h-28 bg-white/10 hover:bg-white text-white hover:text-blue-600 rounded-2xl transition-all duration-300 border border-white/20 hover:border-white shadow-xl group/btn">
+                            <i class="fa fa-book text-2xl mb-2 group-hover/btn:scale-125 transition-transform"></i>
+                            <span class="text-xs font-black tracking-tighter">操作说明书</span>
+                        </button>
+                        
+                        <!-- 政策文档 -->
+                        <button onclick="showHelp('policy')" class="flex flex-col items-center justify-center w-28 h-28 bg-white/10 hover:bg-white text-white hover:text-blue-600 rounded-2xl transition-all duration-300 border border-white/20 hover:border-white shadow-xl group/btn">
+                            <i class="fa fa-gavel text-2xl mb-2 group-hover/btn:scale-125 transition-transform"></i>
+                            <span class="text-xs font-black tracking-tighter">政策法规库</span>
+                        </button>
+
+                        <!-- 指标预警 (由固定定位移动到此处并排) -->
+                        <div class="relative group/alert">
+                            <button id="warningIcon" class="flex flex-col items-center justify-center w-28 h-28 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-white hover:to-white text-white hover:text-orange-500 rounded-2xl transition-all duration-300 border border-white/30 hover:border-white shadow-xl group/btn">
+                                <i class="fa fa-warning text-2xl mb-2 group-hover/btn:scale-125 transition-transform"></i>
+                                <span class="text-xs font-black tracking-tighter">预警指标</span>
+                                <span class="absolute top-2 right-2 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full border-2 border-white shadow-lg flex items-center justify-center" id="warningBadge"></span>
+                            </button>
+                            <!-- 悬浮预警详情 -->
+                            <div class="absolute right-0 top-full mt-4 w-[420px] bg-white border border-slate-100 shadow-2xl rounded-3xl p-6 opacity-0 group-hover/alert:opacity-100 transition-all duration-300 pointer-events-none z-[1001] transform translate-y-4 group-hover/alert:translate-y-0">
+                                <div class="flex items-center mb-4 border-b border-slate-50 pb-4">
+                                    <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mr-4 shadow-inner">
+                                        <i class="fa fa-exclamation-triangle text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-black text-slate-800 uppercase tracking-widest">关键合规指标预警</span>
+                                        <p class="text-xs text-slate-400 font-medium mt-0.5" id="warningTime">检测时间: --</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-3 max-h-[280px] overflow-y-auto" id="warningList">
+                                    <!-- 预警内容将动态生成 -->
+                                    <div class="text-xs text-slate-400 italic py-4 text-center">暂无预警信息</div>
+                                </div>
+                                <div class="mt-4 flex justify-between items-center border-t border-slate-50 pt-4">
+                                    <span class="text-xs text-slate-400 italic" id="warningCount">共 0 条待处理异常</span>
+                                    <button onclick="window.location.href='warning-rules-config.html'" class="text-xs font-black text-blue-600 hover:text-blue-700 pointer-events-auto flex items-center group/link transition-all">
+                                        查看规则配置 <i class="fa fa-arrow-right ml-2 group-hover/link:translate-x-2 transition-transform"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 页面标题 -->
                 <div class="mb-6">
                     <div class="flex items-center justify-between">
@@ -599,119 +636,134 @@
                 </div>
                 
                 <!-- 核心指标卡片 -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <!-- 年度研发费用总额 -->
-                    <div class="bg-white rounded-lg shadow p-6 relative">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500" id="expenseTitle">年度研发费用（真实发生）</p>
-                                <h3 class="text-2xl font-bold text-gray-800" id="expenseAmount">¥25.00万</h3>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 relative group hover:shadow-md transition-all duration-300">
+                        <!-- 预警图标：设计师款 -->
+                        <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <div class="bg-amber-50 text-amber-600 text-[9px] font-bold px-1.5 py-0.5 rounded border border-amber-100 flex items-center shadow-sm">
+                                <i class="fa fa-exclamation-triangle mr-1"></i> 待完善
                             </div>
-                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-line-chart text-primary text-xl"></i>
+                        </div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5" id="expenseTitle">年度研发费用（真实发生）</p>
+                                <h3 class="text-xl font-black text-slate-800" id="expenseAmount">¥25.00万</h3>
+                            </div>
+                            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500 shadow-inner">
+                                <i class="fa fa-line-chart text-lg"></i>
                             </div>
                         </div>
                         <!-- 当前状态提示 -->
-                        <div class="mt-3 flex items-center text-xs">
-                            <span class="text-blue-500 mr-1"><i class="fa fa-info-circle"></i></span>
-                            <span class="text-gray-500">当前状态：未进行年度合规调整</span>
-                        </div>
-                        <div class="mt-1 flex items-center text-xs">
-                            <span class="text-gray-400">预计年底统一进行各口径调整</span>
+                        <div class="pt-3 border-t border-slate-50 flex items-center text-[10px]">
+                            <span class="w-1 h-1 bg-blue-400 rounded-full mr-2"></span>
+                            <span class="text-slate-500 font-medium truncate">状态：<span class="text-slate-700">未进行年度合规调整</span></span>
                         </div>
                     </div>
                     
                     <!-- 研发费用占营收比例 -->
-                    <div class="bg-white rounded-lg shadow p-6 relative">
-                        <div class="flex items-center justify-between">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 relative group hover:shadow-md transition-all duration-300">
+                        <div class="flex items-start justify-between mb-3">
                             <div>
-                                <p class="text-sm font-medium text-gray-500">本年度费用占营收比例</p>
-                                <h3 class="text-2xl font-bold text-gray-800" id="revenueRatio">6.00%</h3>
-                                <p class="text-sm text-green-600 flex items-center mt-1">
+                                <p class="text-[11px] font-semibold text-slate-400 mb-0.5">本年度费用占营收比例</p>
+                                <h3 class="text-xl font-black text-slate-800" id="revenueRatio">6.00%</h3>
+                                <p class="text-[11px] text-green-600 flex items-center mt-1 font-bold">
                                     <i class="fa fa-check-circle mr-1"></i>
                                     <span>高企达标</span>
                                 </p>
                             </div>
-                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-percent text-secondary text-xl"></i>
+                            <div class="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center border border-green-100 shadow-inner">
+                                <i class="fa fa-percent text-green-500 text-base font-bold"></i>
                             </div>
                         </div>
-                        <div class="mt-3 flex items-center text-xs text-gray-500">
-                            <span>高企标准：5%</span>
-                            <span class="ml-auto text-green-600">已达标</span>
-                        </div>
-                        <!-- 数据完整性提示 -->
-                        <div id="revenueDataHint" class="mt-2 flex items-center text-xs text-orange-500">
-                            <i class="fa fa-info-circle mr-1"></i>
-                            <span>数据来源：本年度已归集费用 / 本年度已录入营收</span>
+                        
+                        <div class="pt-3 border-t border-slate-50">
+                            <div class="flex items-center justify-between text-[10px] text-gray-500 mb-1">
+                                <span>高企标准：5%</span>
+                                <span class="text-green-600 font-bold">已达标</span>
+                            </div>
+                            <div id="revenueDataHint" class="flex items-start text-[9px] text-orange-500 leading-tight">
+                                <i class="fa fa-info-circle mr-1 mt-0.5"></i>
+                                <span class="truncate">来源：本年度已归集费用 / 本年度已录入营收</span>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- 本月已归集费用 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 relative group hover:shadow-md transition-all duration-300">
+                        <div class="flex items-center justify-between mb-3">
                             <div>
-                                <p class="text-sm font-medium text-gray-500">本月已归集费用</p>
-                                <h3 class="text-2xl font-bold text-gray-800">¥3,333</h3>
+                                <p class="text-[11px] font-semibold text-slate-400 mb-0.5">本月已归集费用</p>
+                                <h3 class="text-xl font-black text-slate-800">¥3,333</h3>
                             </div>
-                            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-plus-circle text-warning text-xl"></i>
+                            <div class="w-10 h-10 bg-yellow-50 text-yellow-600 rounded-lg flex items-center justify-center group-hover:bg-yellow-500 group-hover:text-white transition-colors duration-500 shadow-inner">
+                                <i class="fa fa-plus-circle text-lg"></i>
                             </div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-50 flex items-center text-[10px]">
+                            <span class="w-1 h-1 bg-yellow-400 rounded-full mr-2"></span>
+                            <span class="text-slate-500">最近录入：2026-06-05</span>
                         </div>
                     </div>
                     
                     <!-- 项目进展概览 -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center justify-between">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 relative group hover:shadow-md transition-all duration-300">
+                        <div class="flex items-center justify-between mb-3">
                             <div>
-                                <p class="text-sm font-medium text-gray-500">本年度项目</p>
-                                <h3 class="text-2xl font-bold text-gray-800">14个</h3>
-                                <p class="text-sm text-blue-600 flex items-center mt-1">
-                                    <i class="fa fa-spinner mr-1"></i>
-                                    <span>进行中: 8个</span>
-                                </p>
+                                <p class="text-[11px] font-semibold text-slate-400 mb-0.5">本年度项目概览</p>
+                                <div class="flex items-baseline">
+                                    <h3 class="text-xl font-black text-slate-800">14<span class="text-xs ml-0.5 font-normal text-slate-400">个</span></h3>
+                                    <span class="ml-2 text-[10px] text-blue-600 font-bold">8个进行中</span>
+                                </div>
                             </div>
-                            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                                <i class="fa fa-tasks text-accent text-xl"></i>
+                            <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors duration-500 shadow-inner">
+                                <i class="fa fa-tasks text-lg"></i>
                             </div>
                         </div>
-                        <div class="mt-3 flex items-center text-xs text-gray-500">
-                            <span>已完成: 5个</span>
-                            <span class="ml-auto">规划中: 1个</span>
+                        <div class="pt-3 border-t border-slate-50 grid grid-cols-2 gap-2 text-[10px]">
+                            <div class="flex items-center text-slate-500">
+                                <span class="w-1 h-1 bg-green-400 rounded-full mr-1.5"></span>
+                                <span>已完成: 5个</span>
+                            </div>
+                            <div class="flex items-center text-slate-500">
+                                <span class="w-1 h-1 bg-slate-300 rounded-full mr-1.5"></span>
+                                <span>规划中: 1个</span>
+                            </div>
                         </div>
                     </div>
-                    
-                    
                 </div>
                 
                 <!-- 图表区域 -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
                     <!-- 研发费用与营收对比趋势 -->
-                    <div class="bg-white rounded-lg shadow p-6 relative">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 relative hover:shadow-md transition-all">
                         <div class="mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800" id="trendTitle">年度研发费用与营收对比趋势</h3>
+                            <h3 class="text-sm font-bold text-gray-800" id="trendTitle">年度研发费用与营收对比趋势</h3>
+                            <span class="text-xs text-gray-400 ml-2 cursor-help" title="数据来源说明：系统启用前的年度取历史研发费用模块手动录入数据；系统启用后的年度取系统自动归集的实时数据。如果某年度同时存在两类数据，系统优先使用实时归集数据。">
+                                <i class="fa fa-info-circle"></i>
+                            </span>
                         </div>
-                        <div class="h-80">
+                        <div class="h-64">
                             <canvas id="monthlyAmountChart"></canvas>
                         </div>
                     </div>
                     
                     <!-- 年度费用结构分析 -->
-                    <div class="bg-white rounded-lg shadow p-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 hover:shadow-md transition-all">
                         <div class="mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800" id="expenseTypeTitle">年度费用结构分析</h3>
+                            <h3 class="text-sm font-bold text-gray-800" id="expenseTypeTitle">年度费用结构分析</h3>
                         </div>
-                        <div class="h-80">
+                        <div class="h-64">
                             <canvas id="expenseTypeChart"></canvas>
                         </div>
                     </div>
                 </div>
                 
                 <!-- 多口径费用对比（历史数据）- 移至底部 -->
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">多口径费用对比</h3>
-                    <div class="text-sm text-gray-500 mb-4">
-                        <i class="fa fa-info-circle mr-1"></i>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 mb-6 hover:shadow-md transition-all">
+                    <h3 class="text-sm font-bold text-gray-800 mb-4">多口径费用对比</h3>
+                    <div class="text-[11px] text-gray-500 mb-4 flex items-center">
+                        <i class="fa fa-info-circle mr-1.5 text-blue-500"></i>
                         <span>展示历史年度各口径调整结果，当前年度数据将在年底统一调整</span>
                     </div>
                     <div class="overflow-x-auto">
@@ -771,6 +823,24 @@
             </main>
         </div>
     </div>
+
+    <!-- 帮助说明弹窗 -->
+    <div id="helpModal" class="fixed inset-0 bg-black/50 z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div class="px-6 py-4 border-b flex items-center justify-between bg-gray-50">
+                <h3 id="helpTitle" class="text-lg font-bold text-gray-800 flex items-center"></h3>
+                <button onclick="closeHelp()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="helpContent" class="p-6 text-sm text-gray-600 leading-relaxed max-h-[60vh] overflow-y-auto">
+                <!-- 内容动态填充 -->
+            </div>
+            <div class="px-6 py-4 border-t bg-gray-50 flex justify-end">
+                <button onclick="closeHelp()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">我知道了</button>
+            </div>
+        </div>
+    </div>
     
     <script>
         // 全局变量定义
@@ -783,6 +853,52 @@
             '2025': [3700, 1200, 1300, 800, 500, 600, 2000],
             '2026': [3900, 1300, 1400, 850, 550, 650, 2100]
         };
+
+        function showHelp(type) {
+            const modal = document.getElementById('helpModal');
+            const title = document.getElementById('helpTitle');
+            const content = document.getElementById('helpContent');
+            
+            if (type === 'operation') {
+                title.innerHTML = '<i class="fa fa-book mr-2 text-blue-500"></i>操作说明';
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <section>
+                            <h4 class="font-bold text-gray-800 mb-1">1. 数据归集流程</h4>
+                            <p>进入“费用归集”模块，按照人工、折旧、材料等分类录入研发活动产生的原始凭证或分摊数据。</p>
+                        </section>
+                        <section>
+                            <h4 class="font-bold text-gray-800 mb-1">2. 多口径调整</h4>
+                            <p>系统支持会计口径、加计扣除、高企認定等多种规则。您可以在“口径规则配置”中自定义分摊比例。</p>
+                        </section>
+                        <section>
+                            <h4 class="font-bold text-gray-800 mb-1">3. 报表导出</h4>
+                            <p>所有数据归集完成后，可在“多口径报表”模块一键生成符合税务和高企审计要求的辅助账表。</p>
+                        </section>
+                    </div>
+                `;
+            } else if (type === 'policy') {
+                title.innerHTML = '<i class="fa fa-gavel mr-2 text-blue-500"></i>政策说明';
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
+                            <h4 class="font-bold text-blue-800 mb-1">高新技术企业認定政策</h4>
+                            <p class="text-blue-700 text-xs text-justify">企业近三个会计年度的研究开发费用总额占同期销售收入总额的比例符合：最近一年销售收入在5,000万元以下的，比例不低于5%。</p>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-400">
+                            <h4 class="font-bold text-green-800 mb-1">研发费用加计扣除</h4>
+                            <p class="text-green-700 text-xs text-justify">企业开展研发活动中实际发生的研发费用，未形成无形资产计入当期损益的，在按规定据实扣除的基础上，自2023年1月1日起，再按实际发生额的100%在税前加计扣除。</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeHelp() {
+            document.getElementById('helpModal').style.display = 'none';
+        }
 
         function loadPage(pageUrl) {
             try {
@@ -839,328 +955,121 @@
             
             const comparisonData = {
                 '2024': { accounting: '¥25.00万', deduction: '¥23.50万', hiTech: '¥24.20万', rd: '¥23.80万', ipo: '¥24.80万', status: 'completed' },
-                '2025': { accounting: '¥28.50万', deduction: '¥26.80万', hiTech: '¥27.50万', rd: '¥27.00万', ipo: '¥28.10万', status: 'completed' },
+                '2025': { accounting: '¥28.50万', deduction: '¥26.80万', hiTech: '¥27.50万', rd: '¥27.20万', ipo: '¥28.00万', status: 'completed' },
                 '2026': { accounting: '¥30.00万', deduction: '--', hiTech: '--', rd: '--', ipo: '--', status: 'pending' }
             };
-            
-            // 年度研发费用与营收对比趋势数据
-            const annualComparisonData = {
-                labels: ['2022年度', '2023年度', '2024年度', '2025年度', '2026年度'],
-                datasets: [{
-                    label: '年度研发费用 (万)',
-                    data: [18.50, 22.00, 25.00, 28.50, 30.00],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#3b82f6',
-                    pointBorderWidth: 2,
-                    pointHoverRadius: 8,
-                    pointHoverBorderWidth: 3,
-                    pointRadius: 6,
-                    tension: 0.4,
-                    fill: true,
-                    yAxisID: 'y'
-                }, {
-                    label: '年度营业收入 (万)',
-                    data: [320, 360, 400, 450, 500],
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#10b981',
-                    pointBorderWidth: 2,
-                    pointHoverRadius: 8,
-                    pointHoverBorderWidth: 3,
-                    pointRadius: 6,
-                    tension: 0.4,
-                    fill: true,
-                    yAxisID: 'y1'
-                }]
-            };
-            
-            // 获取当前月份（用于显示已归集月份范围）
-            function getCurrentMonthRange() {
-                const now = new Date();
-                const month = now.getMonth() + 1;
-                return `1-${month}月`;
+
+            function updateDashboard() {
+                // 更新时间范围显示
+                if (currentTimeDimension === 'month') {
+                    timeRange.textContent = `${currentYear}年${currentMonth}月`;
+                    expenseTitle.textContent = '本月研发费用（真实发生）';
+                    expenseAmount.textContent = expenseData[currentYear].month;
+                } else if (currentTimeDimension === 'quarter') {
+                    timeRange.textContent = `${currentYear}年${currentQuarter}`;
+                    expenseTitle.textContent = '本季研发费用（真实发生）';
+                    expenseAmount.textContent = expenseData[currentYear].quarter;
+                } else {
+                    timeRange.textContent = `${currentYear}年度`;
+                    expenseTitle.textContent = '年度研发费用（真实发生）';
+                    expenseAmount.textContent = expenseData[currentYear].year;
+                }
+
+                // 更新营收占比（模拟计算）
+                const currentRevenue = revenueData[currentYear][currentTimeDimension];
+                const currentExpenseStr = expenseData[currentYear][currentTimeDimension];
+                const currentExpense = parseFloat(currentExpenseStr.replace('¥', '').replace('万', ''));
+                const ratio = ((currentExpense / currentRevenue) * 100).toFixed(2);
+                document.getElementById('revenueRatio').textContent = ratio + '%';
+
+                // 更新多口径对比表
+                updateComparisonTable();
+                
+                // 更新图表
+                updateCharts();
             }
-            
-            // 研发费用与营收对比趋势图表
-            const monthlyAmountCtx = document.getElementById('monthlyAmountChart').getContext('2d');
-            let monthlyAmountChart = new Chart(monthlyAmountCtx, {
+
+            function updateComparisonTable() {
+                comparisonTable.innerHTML = '';
+                // 显示当前年份和前一年
+                const years = [parseInt(currentYear) - 1, parseInt(currentYear)];
+                years.forEach(year => {
+                    const data = comparisonData[year.toString()];
+                    if (data) {
+                        const tr = document.createElement('tr');
+                        tr.className = 'border-b border-gray-100';
+                        tr.innerHTML = `
+                            <td class="px-4 py-3 text-gray-800 font-medium">${year}年度</td>
+                            <td class="px-4 py-3 text-right text-gray-800">${data.accounting}</td>
+                            <td class="px-4 py-3 text-right ${data.deduction === '--' ? 'text-gray-400' : 'text-green-600'}">${data.deduction}</td>
+                            <td class="px-4 py-3 text-right ${data.hiTech === '--' ? 'text-gray-400' : 'text-blue-600'}">${data.hiTech}</td>
+                            <td class="px-4 py-3 text-right ${data.rd === '--' ? 'text-gray-400' : 'text-orange-600'}">${data.rd}</td>
+                            <td class="px-4 py-3 text-right ${data.ipo === '--' ? 'text-gray-400' : 'text-purple-600'}">${data.ipo}</td>
+                        `;
+                        comparisonTable.appendChild(tr);
+                    }
+                });
+            }
+
+            // 初始化趋势图
+            const trendCtx = document.getElementById('monthlyAmountChart').getContext('2d');
+            const trendChart = new Chart(trendCtx, {
                 type: 'line',
-                data: annualComparisonData,
+                data: {
+                    labels: ['2021', '2022', '2023', '2024', '2025', '2026'],
+                    datasets: [
+                        {
+                            label: '研发费用 (万元)',
+                            data: [28, 32, 38, 42, 48, 33],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: '营业收入 (万元)',
+                            data: [420, 480, 520, 580, 650, 450],
+                            borderColor: '#10b981',
+                            backgroundColor: 'transparent',
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
+                    ]
+                },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
                     plugins: {
                         legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += '¥' + context.parsed.y + '万';
-                                    }
-                                    return label;
-                                }
-                            }
+                            position: 'bottom'
                         }
                     },
                     scales: {
                         y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: {
-                                display: true,
-                                text: '研发费用 (万)',
-                                color: '#3b82f6',
-                                font: {
-                                    size: 12,
-                                    weight: 'bold'
-                                }
-                            },
-                            beginAtZero: true,
-                            max: 100, // 调大最大值，使研发费用折线保持在图表下半部分
-                            grid: {
-                                drawOnChartArea: true,
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            title: {
-                                display: true,
-                                text: '营业收入 (万)',
-                                color: '#10b981',
-                                font: {
-                                    size: 12,
-                                    weight: 'bold'
-                                }
-                            },
-                            beginAtZero: true,
-                            max: 600, // 明确最大值，将营收折线推向中上部，与研发费用拉开距离
-                            grid: {
-                                drawOnChartArea: false, // 只有左侧 Y 轴显示网格线
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
+                            beginAtZero: true
                         }
                     }
                 }
             });
-            
-            // 更新趋势图表 - 现在显示的是跨年度对比，不再随年份选择而切换数据
-            function updateTrendChart() {
-                // 不再根据 currentYear 切换数据，因为现在是年度对比趋势
-                // 可以考虑在图表上突出显示当前选中的年份
-                const chartData = monthlyAmountChart.data;
-                const yearIndex = annualComparisonData.labels.indexOf(`${currentYear}年度`);
-                
-                // 刷新图表
-                monthlyAmountChart.update();
-                
-                // 仅更新标题（不再包含年份）
-                document.getElementById('trendTitle').textContent = `年度研发费用与营收对比趋势`;
-                
-                // 更新显示范围
-                 document.querySelector('#monthlyAmountChart').parentElement.previousElementSibling.querySelector('.text-xs.text-gray-500').textContent = '2022-2026';
-             }
-            
-            function updateTimeRange() {
-                const year = currentYear;
-                switch(currentTimeDimension) {
-                    case 'month':
-                        timeRange.textContent = year + '年' + currentMonth + '月';
-                        break;
-                    case 'quarter':
-                        timeRange.textContent = year + '年' + currentQuarter;
-                        break;
-                    case 'year':
-                        timeRange.textContent = year + '年度';
-                        break;
-                }
-            }
-            
-            function updateSelectors() {
-                // 年份选择器始终显示
-                yearSelector.style.display = 'flex';
-                
-                // 根据时间维度显示对应的选择器
-                if (currentTimeDimension === 'month') {
-                    monthSelector.style.display = 'flex';
-                    quarterSelector.style.display = 'none';
-                } else if (currentTimeDimension === 'quarter') {
-                    monthSelector.style.display = 'none';
-                    quarterSelector.style.display = 'flex';
-                } else {
-                    monthSelector.style.display = 'none';
-                    quarterSelector.style.display = 'none';
-                }
-            }
-            
-            function updateDashboardContent() {
-                // 更新核心指标卡片标题
-                const titleLabels = {
-                    month: '月度研发费用（真实发生）',
-                    quarter: '季度研发费用（真实发生）',
-                    year: '年度研发费用（真实发生）'
-                };
-                expenseTitle.textContent = titleLabels[currentTimeDimension];
-                
-                // 更新核心指标卡片金额
-                expenseAmount.textContent = expenseData[currentYear][currentTimeDimension];
-                
-                // 计算并更新占营收比例（始终使用年度数据，高企认定按年度考核）
-                const expenseValue = parseFloat(expenseData[currentYear]['year'].replace(/[^\d.-]/g, ''));
-                const revenueValue = revenueData[currentYear]['year'];
-                const ratio = revenueValue > 0 ? (expenseValue / revenueValue * 100).toFixed(2) + '%' : '0.00%';
-                document.getElementById('revenueRatio').textContent = ratio;
-                
-                // 更新多口径对比表格
-                let tableHtml = '';
-                for (let year of ['2024', '2025', '2026']) {
-                    const data = comparisonData[year];
-                    tableHtml += `
-                        <tr${year === '2024' || year === '2025' ? ' class="border-b border-gray-100"' : ''}>
-                            <td class="px-4 py-3 text-gray-800 font-medium">${year}年度</td>
-                            <td class="px-4 py-3 text-right text-gray-800">${data.accounting}</td>
-                            <td class="px-4 py-3 text-right ${data.status === 'completed' ? 'text-green-600' : 'text-gray-400'}">${data.deduction}</td>
-                            <td class="px-4 py-3 text-right ${data.status === 'completed' ? 'text-blue-600' : 'text-gray-400'}">${data.hiTech}</td>
-                            <td class="px-4 py-3 text-right ${data.status === 'completed' ? 'text-orange-600' : 'text-gray-400'}">${data.rd}</td>
-                            <td class="px-4 py-3 text-right ${data.status === 'completed' ? 'text-purple-600' : 'text-gray-400'}">${data.ipo}</td>
-                        </tr>
-                    `;
-                }
-                comparisonTable.innerHTML = tableHtml;
-                
-                // 更新费用类型趋势图表
-                updateTrendChart();
 
-                // 更新费用结构分析图表 (饼图) - 仅随年度变化
-                if (typeof expenseTypeChart !== 'undefined') {
-                    expenseTypeChart.data.datasets[0].data = annualExpenseStructureData[currentYear];
-                    expenseTypeChart.update();
-                    
-                    // 更新饼图标题，包含年份
-                    const expenseTypeTitle = document.getElementById('expenseTypeTitle');
-                    if (expenseTypeTitle) {
-                        expenseTypeTitle.textContent = `${currentYear}年度费用结构分析`;
-                    }
-                }
-            }
-            
-            function setActiveBtn(activeBtn) {
-                [timeMonthBtn, timeQuarterBtn, timeYearBtn].forEach(btn => {
-                    btn.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
-                    btn.classList.add('text-gray-600');
-                });
-                activeBtn.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
-                activeBtn.classList.remove('text-gray-600');
-            }
-            
-            timeMonthBtn.addEventListener('click', function() {
-                currentTimeDimension = 'month';
-                setActiveBtn(timeMonthBtn);
-                updateTimeRange();
-                updateSelectors();
-                updateDashboardContent();
-            });
-            
-            timeQuarterBtn.addEventListener('click', function() {
-                currentTimeDimension = 'quarter';
-                setActiveBtn(timeQuarterBtn);
-                updateTimeRange();
-                updateSelectors();
-                updateDashboardContent();
-            });
-            
-            timeYearBtn.addEventListener('click', function() {
-                currentTimeDimension = 'year';
-                setActiveBtn(timeYearBtn);
-                updateTimeRange();
-                updateSelectors();
-                updateDashboardContent();
-            });
-            
-            yearSelect.addEventListener('change', function() {
-                currentYear = this.value;
-                updateTimeRange();
-                updateDashboardContent();
-            });
-            
-            monthSelect.addEventListener('change', function() {
-                currentMonth = this.value;
-                updateTimeRange();
-                updateDashboardContent(); // 添加联动更新
-            });
-            
-            quarterSelect.addEventListener('change', function() {
-                currentQuarter = this.value;
-                updateTimeRange();
-                updateDashboardContent(); // 添加联动更新
-            });
-            
-            // 初始化选择器状态
-            updateSelectors();
-            
-            const projectSubmenu = document.getElementById('project-submenu');
-            if (projectSubmenu) {
-                projectSubmenu.classList.remove('collapsed');
-            }
-            const salarySubmenu = document.getElementById('salary-submenu');
-            if (salarySubmenu) {
-                salarySubmenu.classList.remove('collapsed');
-            }
-
-            // 初始化各口径研发费用类型占比分析图表 - 3D效果
-            const expenseTypeCtx = document.getElementById('expenseTypeChart').getContext('2d');
-            expenseTypeChart = new Chart(expenseTypeCtx, {
+            // 初始化结构图
+            const typeCtx = document.getElementById('expenseTypeChart').getContext('2d');
+            expenseTypeChart = new Chart(typeCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['人员人工费用', '直接投入费用', '折旧长期待摊费用', '无形资产摊销费用', '设计与试验费用', '其他相关费用', '委托研发费用'],
+                    labels: ['人员人工', '直接投入', '折旧费用', '无形资产摊销', '新产品设计', '其他费用'],
                     datasets: [{
-                        data: annualExpenseStructureData[currentYear], // 使用当前选定年度的数据
+                        data: annualExpenseStructureData[currentYear],
                         backgroundColor: [
-                            'rgba(59, 130, 246, 0.95)',
-                            'rgba(16, 185, 129, 0.95)',
-                            'rgba(245, 158, 11, 0.95)',
-                            'rgba(99, 102, 241, 0.95)',
-                            'rgba(239, 68, 68, 0.95)',
-                            'rgba(139, 92, 246, 0.95)',
-                            'rgba(236, 72, 153, 0.95)'
-                        ],
-                        borderColor: [
-                            '#2563eb',
-                            '#059669',
-                            '#d97706',
-                            '#4f46e5',
-                            '#dc2626',
-                            '#7c3aed',
-                            '#db2777'
+                            '#3b82f6',
+                            '#10b981',
+                            '#f59e0b',
+                            '#8b5cf6',
+                            '#ec4899',
+                            '#6b7280'
                         ],
                         borderWidth: 2,
-                        hoverOffset: 15
+                        borderColor: '#ffffff'
                     }]
                 },
                 options: {
@@ -1169,35 +1078,385 @@
                     cutout: '60%',
                     plugins: {
                         legend: {
-                            position: 'bottom',
+                            position: 'right',
                             labels: {
                                 padding: 20,
                                 usePointStyle: true,
-                                pointStyle: 'circle'
+                                font: {
+                                    size: 12
+                                },
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels && data.datasets.length) {
+                                        return data.labels.map((label, i) => {
+                                            const meta = chart.getDatasetMeta(0);
+                                            const style = meta.controller.getStyle(i, true);
+                                            const value = data.datasets[0].data[i];
+                                            const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                            const percentage = ((value / total) * 100).toFixed(1);
+                                            return {
+                                                text: label + ' (' + percentage + '%)',
+                                                fillStyle: style.backgroundColor,
+                                                strokeStyle: style.borderColor,
+                                                lineWidth: style.borderWidth,
+                                                hidden: !chart.getDataVisibility(i),
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
                             }
                         },
                         tooltip: {
-                            backgroundColor: 'rgba(31, 41, 55, 0.95)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            padding: 12,
-                            cornerRadius: 8,
                             callbacks: {
                                 label: function(context) {
-                                    const value = context.raw;
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${context.label}: ¥${value}万 (${percentage}%)`;
+                                    const percentage = ((context.raw / total) * 100).toFixed(1);
+                                    return context.label + ': ¥' + context.raw + ' (' + percentage + '%)';
                                 }
                             }
                         }
-                    },
-                    animation: {
-                        animateRotate: true,
-                        animateScale: true
                     }
                 }
             });
+
+            function updateCharts() {
+                // 更新结构图数据
+                expenseTypeChart.data.datasets[0].data = annualExpenseStructureData[currentYear];
+                expenseTypeChart.update();
+            }
+
+            // 绑定事件
+            timeMonthBtn.addEventListener('click', function() {
+                currentTimeDimension = 'month';
+                this.className = 'px-3 py-1 text-sm font-medium text-blue-600 bg-white rounded-md shadow-sm';
+                timeQuarterBtn.className = 'px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-800';
+                timeYearBtn.className = 'px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-800';
+                monthSelector.style.display = 'flex';
+                quarterSelector.style.display = 'none';
+                updateDashboard();
+            });
+
+            timeQuarterBtn.addEventListener('click', function() {
+                currentTimeDimension = 'quarter';
+                this.className = 'px-3 py-1 text-sm font-medium text-blue-600 bg-white rounded-md shadow-sm';
+                timeMonthBtn.className = 'px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-800';
+                timeYearBtn.className = 'px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-800';
+                monthSelector.style.display = 'none';
+                quarterSelector.style.display = 'flex';
+                updateDashboard();
+            });
+
+            timeYearBtn.addEventListener('click', function() {
+                currentTimeDimension = 'year';
+                this.className = 'px-3 py-1 text-sm font-medium text-blue-600 bg-white rounded-md shadow-sm';
+                timeMonthBtn.className = 'px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-800';
+                timeQuarterBtn.className = 'px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-800';
+                monthSelector.style.display = 'none';
+                quarterSelector.style.display = 'none';
+                updateDashboard();
+            });
+
+            yearSelect.addEventListener('change', function() {
+                currentYear = this.value;
+                updateDashboard();
+            });
+
+            monthSelect.addEventListener('change', function() {
+                currentMonth = this.value;
+                updateDashboard();
+            });
+
+            quarterSelect.addEventListener('change', function() {
+                currentQuarter = this.value;
+                updateDashboard();
+            });
+
+            // 初始加载
+            updateDashboard();
+            
+            // 初始化预警检测
+            checkWarnings();
+        });
+        
+        // ========== 预警检测功能 ==========
+        
+        // 默认预警规则配置
+        const defaultWarningRules = {
+            enterpriseType: 'manufacturing',
+            rules: [
+                { id: 'rule1', name: '科技人员占比预警', caliber: '高企口径', enabled: true, threshold: 50 },
+                { id: 'rule2', name: '直接投入占比预警', caliber: '高企口径', enabled: true, threshold: 80 },
+                { id: 'rule3', name: '单个项目费用上限', caliber: '高企口径', enabled: true, threshold: 100 },
+                { id: 'rule4', name: '制造业费用结构标准', caliber: '高企口径', enabled: true, 
+                  personMin: 30, personMax: 40, inputMin: 30, inputMax: 40, 
+                  depreciationMin: 10, depreciationMax: 20, otherMax: 10 },
+                { id: 'rule5', name: '软件开发企业费用结构标准', caliber: '高企口径', enabled: true,
+                  personMin: 70, personMax: 80, depreciation: 10, otherMax: 10 },
+                { id: 'rule6', name: '加计扣除比例限制', caliber: '加计扣除口径', enabled: true, threshold: 70 }
+            ]
+        };
+        
+        // 模拟报表数据（用于预警检测）
+        const mockReportData = {
+            '2026': {
+                hiTech: {
+                    techPersonRatio: 55,  // 科技人员占比 55%
+                    directInputRatio: 85, // 直接投入占比 85%
+                    projectExpenses: [120, 80, 150], // 单个项目费用（万元）
+                    personCostRatio: 35, // 人员人工费用占比
+                    inputCostRatio: 42,  // 直接投入费用占比
+                    depreciationRatio: 15, // 折旧费用占比
+                    otherCostRatio: 8    // 其他费用占比
+                },
+                deduction: {
+                    deductibleRatio: 72  // 加计扣除比例 72%
+                }
+            }
+        };
+        
+        // 获取预警规则配置
+        function getWarningRules() {
+            const savedConfig = localStorage.getItem('warningRulesConfig');
+            if (savedConfig) {
+                return JSON.parse(savedConfig);
+            }
+            return defaultWarningRules;
+        }
+        
+        // 检测预警
+        function checkWarnings() {
+            const rules = getWarningRules();
+            const warnings = [];
+            const year = '2026'; // 当前年份
+            
+            // 获取报表数据（实际应从后端获取）
+            const reportData = mockReportData[year];
+            
+            if (!reportData) {
+                updateWarningDisplay([]);
+                return;
+            }
+            
+            // 检测高企口径预警
+            if (reportData.hiTech) {
+                const hiTech = reportData.hiTech;
+                
+                // 规则1：科技人员占比预警
+                const rule1 = rules.rules.find(r => r.id === 'rule1');
+                if (rule1 && rule1.enabled) {
+                    if (hiTech.techPersonRatio > rule1.threshold) {
+                        warnings.push({
+                            caliber: '高企口径',
+                            name: '科技人员占比预警',
+                            value: `${hiTech.techPersonRatio}%`,
+                            threshold: `${rule1.threshold}%`,
+                            message: `科技人员占比全体人员${hiTech.techPersonRatio}%超过阈值${rule1.threshold}%，可能引起税务问询`,
+                            level: 'high',
+                            targetPage: 'personnel-library.html'
+                        });
+                    }
+                }
+                
+                // 规则2：直接投入占比预警
+                const rule2 = rules.rules.find(r => r.id === 'rule2');
+                if (rule2 && rule2.enabled) {
+                    if (hiTech.directInputRatio > rule2.threshold) {
+                        warnings.push({
+                            caliber: '高企口径',
+                            name: '直接投入占比预警',
+                            value: `${hiTech.directInputRatio}%`,
+                            threshold: `${rule2.threshold}%`,
+                            message: `直接投入费用占比${hiTech.directInputRatio}%超过阈值${rule2.threshold}%，结构异常可能引起税务问询`,
+                            level: 'high',
+                            targetPage: 'material-cost-allocation.html'
+                        });
+                    }
+                }
+                
+                // 规则3：单个项目费用上限
+                const rule3 = rules.rules.find(r => r.id === 'rule3');
+                if (rule3 && rule3.enabled) {
+                    const overLimitProjects = hiTech.projectExpenses.filter(e => e > rule3.threshold);
+                    if (overLimitProjects.length > 0) {
+                        warnings.push({
+                            caliber: '高企口径',
+                            name: '单个项目费用上限',
+                            value: `${overLimitProjects.join('/')}万`,
+                            threshold: `${rule3.threshold}万`,
+                            message: `${overLimitProjects.length}个自立研发项目费用超过${rule3.threshold}万，建议合理拆分项目`,
+                            level: 'medium',
+                            targetPage: 'project-management.html'
+                        });
+                    }
+                }
+                
+                // 规则4/5：费用结构标准（根据企业类型）
+                if (rules.enterpriseType === 'manufacturing') {
+                    const rule4 = rules.rules.find(r => r.id === 'rule4');
+                    if (rule4 && rule4.enabled) {
+                        const structureWarnings = [];
+                        if (hiTech.personCostRatio < rule4.personMin || hiTech.personCostRatio > rule4.personMax) {
+                            structureWarnings.push(`人员人工${hiTech.personCostRatio}%不在${rule4.personMin}-${rule4.personMax}%范围`);
+                        }
+                        if (hiTech.inputCostRatio < rule4.inputMin || hiTech.inputCostRatio > rule4.inputMax) {
+                            structureWarnings.push(`直接投入${hiTech.inputCostRatio}%不在${rule4.inputMin}-${rule4.inputMax}%范围`);
+                        }
+                        if (hiTech.depreciationRatio < rule4.depreciationMin || hiTech.depreciationRatio > rule4.depreciationMax) {
+                            structureWarnings.push(`折旧费用${hiTech.depreciationRatio}%不在${rule4.depreciationMin}-${rule4.depreciationMax}%范围`);
+                        }
+                        if (hiTech.otherCostRatio > rule4.otherMax) {
+                            structureWarnings.push(`其他费用${hiTech.otherCostRatio}%超过上限${rule4.otherMax}%`);
+                        }
+                        if (structureWarnings.length > 0) {
+                            warnings.push({
+                                caliber: '高企口径',
+                                name: '制造业费用结构标准',
+                                value: '偏离标准',
+                                threshold: '标准范围',
+                                message: `费用结构偏离制造业标准：${structureWarnings.join('；')}`,
+                                level: 'medium',
+                                targetPage: 'labor-cost-allocation.html'
+                            });
+                        }
+                    }
+                } else if (rules.enterpriseType === 'software') {
+                    const rule5 = rules.rules.find(r => r.id === 'rule5');
+                    if (rule5 && rule5.enabled) {
+                        const structureWarnings = [];
+                        if (hiTech.personCostRatio < rule5.personMin || hiTech.personCostRatio > rule5.personMax) {
+                            structureWarnings.push(`人员人工${hiTech.personCostRatio}%不在${rule5.personMin}-${rule5.personMax}%范围`);
+                        }
+                        if (Math.abs(hiTech.depreciationRatio - rule5.depreciation) > 5) {
+                            structureWarnings.push(`折旧费用${hiTech.depreciationRatio}%偏离标准${rule5.depreciation}%`);
+                        }
+                        if (hiTech.otherCostRatio > rule5.otherMax) {
+                            structureWarnings.push(`其他费用${hiTech.otherCostRatio}%超过上限${rule5.otherMax}%`);
+                        }
+                        if (structureWarnings.length > 0) {
+                            warnings.push({
+                                caliber: '高企口径',
+                                name: '软件开发企业费用结构标准',
+                                value: '偏离标准',
+                                threshold: '标准范围',
+                                message: `费用结构偏离软件开发企业标准：${structureWarnings.join('；')}`,
+                                level: 'medium',
+                                targetPage: 'labor-cost-allocation.html'
+                            });
+                        }
+                    }
+                }
+            }
+            
+            // 检测加计扣除口径预警
+            if (reportData.deduction) {
+                const deduction = reportData.deduction;
+                
+                // 规则6：加计扣除比例限制
+                const rule6 = rules.rules.find(r => r.id === 'rule6');
+                if (rule6 && rule6.enabled) {
+                    if (deduction.deductibleRatio > rule6.threshold) {
+                        warnings.push({
+                            caliber: '加计扣除口径',
+                            name: '加计扣除比例限制',
+                            value: `${deduction.deductibleRatio}%`,
+                            threshold: `${rule6.threshold}%`,
+                            message: `允许加计扣除的研发费用${deduction.deductibleRatio}%超过上限${rule6.threshold}%，需调整口径`,
+                            level: 'high',
+                            targetPage: 'caliber-rule-config.html'
+                        });
+                    }
+                }
+            }
+            
+            // 更新预警显示
+            updateWarningDisplay(warnings);
+        }
+        
+        // 更新预警显示
+        function updateWarningDisplay(warnings) {
+            const warningIcon = document.getElementById('warningIcon');
+            const warningBadge = document.getElementById('warningBadge');
+            const warningList = document.getElementById('warningList');
+            const warningCount = document.getElementById('warningCount');
+            const warningTime = document.getElementById('warningTime');
+            const warningIndicator = document.getElementById('warningIndicator');
+            
+            // 更新检测时间
+            const now = new Date();
+            warningTime.textContent = `检测时间: ${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            
+            if (warnings.length === 0) {
+                // 无预警
+                warningIcon.classList.remove('animate-pulse');
+                warningBadge.style.display = 'none';
+                warningList.innerHTML = '<div class="text-xs text-slate-400 italic py-4 text-center">暂无预警信息</div>';
+                warningCount.textContent = '共 0 条待处理异常';
+            } else {
+                // 有预警
+                warningIcon.classList.add('animate-pulse');
+                warningBadge.style.display = 'block';
+                warningBadge.textContent = warnings.length;
+                
+                // 生成预警列表
+                let warningHtml = '';
+                const currentYear = document.getElementById('yearSelect').value;
+                
+                warnings.forEach((w, index) => {
+                    const levelColor = w.level === 'high' ? 'red' : 'orange';
+                    const caliberColor = w.caliber === '高企口径' ? 'yellow' : 'green';
+                    warningHtml += `
+                        <div class="p-3 bg-${levelColor === 'red' ? 'red' : 'orange'}-50 rounded-xl border border-${levelColor === 'red' ? 'red' : 'orange'}-100 shadow-sm">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <div class="flex items-center">
+                                    <span class="px-1.5 py-0.5 bg-slate-200 text-slate-700 text-[10px] font-bold rounded mr-1.5">${currentYear}年度</span>
+                                    <span class="px-1.5 py-0.5 bg-${caliberColor}-100 text-${caliberColor}-700 text-[10px] rounded mr-1.5">${w.caliber}</span>
+                                    <span class="text-xs font-bold text-slate-700">${w.name}</span>
+                                </div>
+                                <span class="text-xs font-black text-${levelColor}-600 bg-${levelColor}-50 px-2 py-0.5 rounded">${w.value}</span>
+                            </div>
+                            <div class="flex justify-between items-end">
+                                <p class="text-xs text-slate-600 leading-relaxed pr-4">${w.message}</p>
+                                <a href="javascript:void(0)" onclick="handleWarningJump('${w.targetPage || 'warning-rules-config.html'}')" class="text-[10px] font-bold text-blue-600 hover:underline whitespace-nowrap">去处理</a>
+                            </div>
+                        </div>
+                    `;
+                });
+                warningList.innerHTML = warningHtml;
+                warningCount.textContent = `共 ${warnings.length} 条待处理异常`;
+            }
+        }
+
+        // 预警跳转处理
+        function handleWarningJump(page) {
+            // 在跳转前可以记录一些状态，比如从预警跳转过去的
+            localStorage.setItem('from_warning', 'true');
+            window.location.href = page;
+        }
+
+        // 预警图标点击事件 - 切换预警面板显示
+        const warningIcon = document.getElementById('warningIcon');
+        const warningPanelContainer = warningIcon.parentElement; // 获取按钮所在的相对定位容器
+        
+        warningIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const panel = warningPanelContainer.querySelector('div.bg-white.border.border-slate-100');
+            if (panel) {
+                panel.classList.toggle('opacity-100');
+                panel.classList.toggle('translate-y-0');
+                panel.classList.toggle('pointer-events-auto');
+            }
+        });
+
+        // 点击页面其他地方关闭预警面板
+        document.addEventListener('click', function(e) {
+            if (!warningPanelContainer.contains(e.target)) {
+                const panel = warningPanelContainer.querySelector('div.opacity-100');
+                if (panel) {
+                    panel.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                }
+            }
         });
     </script>
 </body>

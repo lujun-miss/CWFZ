@@ -145,7 +145,7 @@
                 </h1>
             </div>
             
-                                                                                                                                                                                                                        <!-- 导航菜单 -->
+                                                                                                                                                                                                                                                <!-- 导航菜单 -->
             <nav class="mt-4">
                 <ul>
                     <li>
@@ -199,12 +199,6 @@
                                     <span>项目过程文档</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('audit-documents.html')">
-                                    <i class="fa fa-archive w-6"></i>
-                                    <span>备案资料</span>
-                                </a>
-                            </li>
                         </ul>
                     </li>
                     <li>
@@ -241,21 +235,9 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('material-info.html')">
-                                    <i class="fa fa-cube w-6"></i>
-                                    <span>物料管理</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('personnel-library.html')">
                                     <i class="fa fa-user-o w-6"></i>
                                     <span>研发人员档案</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('other-fee-category.html')">
-                                    <i class="fa fa-list-ul w-6"></i>
-                                    <span>其他费用类别维护</span>
                                 </a>
                             </li>
                             <li>
@@ -265,9 +247,9 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('annual-rd-expense.html')">
-                                    <i class="fa fa-history w-6"></i>
-                                    <span>历史研发费用管理</span>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('attendance-rules.html')">
+                                    <i class="fa fa-calendar-check-o w-6"></i>
+                                    <span>考勤规则设置</span>
                                 </a>
                             </li>
                         </ul>
@@ -296,13 +278,13 @@
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('equipment-energy-consumption.html')">
                                     <i class="fa fa-bolt w-6"></i>
-                                    <span>设备能源类型管理</span>
+                                    <span>设备能源消耗档案</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('energy-price-management.html')">
                                     <i class="fa fa-money w-6"></i>
-                                    <span>设备能源单价管理</span>
+                                    <span>能源单价管理</span>
                                 </a>
                             </li>
                             <li>
@@ -399,15 +381,9 @@
                         </div>
                         <ul class="ml-6 sub-menu">
                             <li>
-                                <a href="generate-account-table.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
-                                    <i class="fa fa-magic w-6"></i>
-                                    <span>账套表生成</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="financial-caliber-report.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
                                     <i class="fa fa-calculator w-6"></i>
-                                    <span>加计扣除</span>
+                                    <span>财务加计扣除</span>
                                 </a>
                             </li>
                             <li>
@@ -435,12 +411,16 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="generate-account-table.html" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600">
+                                    <i class="fa fa-magic w-6"></i>
+                                    <span>账套表生成</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('caliber-rule-config.html')">
                                     <i class="fa fa-cogs w-6"></i>
                                     <span>口径规则配置</span>
                                 </a>
-                            </li>
-                            <li>
                             </li>
                         </ul>
                     </li>
@@ -1113,15 +1093,15 @@
         // 动态规则缓存，用于存储从 caliber-rule-config.html 抓取的政策文本和逻辑
         const DYNAMIC_RULES_CACHE = {
             financial: {
-                labor: { policy: '人员人工费：直接从事研发活动人员的工资薪金、五险一金等 (财税[2015]119号)' },
+                labor: { policy: '人员人工费:直接从事研发活动人员的工资薪金、五险一金等;' },
                 material: { policy: '直接投入：研发活动直接消耗的材料、燃料、动力费用，不包含房屋/场地租赁费，仅允许仪器设备租赁费 (财税[2015]119号)' },
-                depreciation: { policy: '折旧费用：用于研发活动的仪器、设备的折旧费，不含长期待摊费用 (财税[2015]119号)' },
-                intangible: { policy: '无形资产摊销：用于研发活动的软件、专利权、非专利技术摊销 (财税[2015]119号)' },
-                design: { policy: '新产品设计费：新产品设计、工艺规程制定、新药研制的临床试验费等 (财税[2015]119号)' },
-                commission: { policy: '装备调试费/田间试验费：加计扣除口径不包含此项费用 (财税[2015]119号)' },
-                externalDomestic: { policy: '委托境内机构或个人研发费用，按实际发生额的80%计入加计扣除基数' },
-                externalOverseas: { policy: '委托境外机构研发费用，按实际发生额 of 80% 计入，且不得超过境内费用的 2/3' },
-                otherLimit: { threshold: 0.10, policy: '其他相关费用：总额不得超过可加计扣除研发费用总额的10%', logic: '' }
+                depreciation: { policy: '用于研发活动的仪器、设备的折旧费，不含长期待摊费用' },
+                intangible: { policy: '无形资产摊销:用于研发活动的软件、专利权、非专利技术摊销；' },
+                design: { policy: '包含：新产品设计费:新产品设计、工艺规程制定、新药研制的临床试验费等；' },
+                commission: { policy: '加计扣除口径不包含装备调试及田间试验费；' },
+                externalDomestic: { policy: '按实际发生额的80%计入加计扣除；' },
+                externalOverseas: { policy: ':按80%计入，且不得超过境内费用的2/3；' },
+                otherLimit: { threshold: 0.10, policy: '与研发活动直接相关的其他费用，总额不得超过可加计扣除研发费用总额的10%' }
             },
             hiTech: {
                 labor183: { policy: '科技人员在司工时限制：累计实际工作时间必须满 183 天以上 (高企指引)', logic: '' },
@@ -1589,24 +1569,24 @@
                         if (caliber === 'financial') {
                             if (cat.id === 'laborCost') {
                                 adjVal = -150000; 
-                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除行政/财务/销售兼职人员工资。依据：${DYNAMIC_RULES_CACHE.financial.labor.policy}`;
+                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除行政/财务/销售兼职人员工资。依据:${DYNAMIC_RULES_CACHE.financial.labor.policy}`;
                             } else if (cat.id === 'materialCost') {
                                 adjVal = -42000;
-                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除包含的场地租赁费（加计扣除仅允许仪器设备租赁）。依据：${DYNAMIC_RULES_CACHE.financial.material.policy}`;
+                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除包含的场地租赁费(加计扣除仅允许仪器设备租赁)。`;
                             } else if (cat.id === 'depreciationCost') {
                                 adjVal = -15000;
-                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除共用设备超限额(15%)及长期待摊费。依据：${DYNAMIC_RULES_CACHE.financial.depreciation.policy}`;
+                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除长期待摊费,${DYNAMIC_RULES_CACHE.financial.depreciation.policy}`;
                             } else if (cat.id === 'intangibleCost') {
-                                reason = `<span class="text-green-600">合规：</span>${DYNAMIC_RULES_CACHE.financial.intangible.policy}`;
+                                reason = `${DYNAMIC_RULES_CACHE.financial.intangible.policy}`;
                             } else if (cat.id === 'designCost') {
                                 adjVal = -20000;
-                                reason = `<span class="text-red-600 font-medium">调减理由：</span>剔除已计入成本的非新产品设计费。依据：${DYNAMIC_RULES_CACHE.financial.design.policy}`;
+                                reason = `${DYNAMIC_RULES_CACHE.financial.design.policy}`;
                             } else if (cat.id === 'commissionCost') {
                                 adjVal = -bookVal;
-                                reason = `<span class="text-red-600 font-medium">全额剔除：</span>加计扣除口径不包含装备调试及田间试验费。依据：${DYNAMIC_RULES_CACHE.financial.commission.policy}`;
+                                reason = `${DYNAMIC_RULES_CACHE.financial.commission.policy}`;
                             } else if (cat.id === 'externalDomesticCost') {
                                 adjVal = -(bookVal * 0.2); 
-                                reason = `<span class="text-red-600 font-medium">比例剔除：</span>${DYNAMIC_RULES_CACHE.financial.externalDomestic.policy}`;
+                                reason = `${DYNAMIC_RULES_CACHE.financial.externalDomestic.policy}`;
                             } else if (cat.id === 'externalOverseasCost') {
                                 // 委托境外限额逻辑：按 80% 计入，且不得超过境内费用的 2/3
                                 const domesticLimit = (MOCK_COST_DATA.laborCost - 150000 + MOCK_COST_DATA.materialCost - 42000 + MOCK_COST_DATA.depreciationCost + MOCK_COST_DATA.intangibleCost + MOCK_COST_DATA.designCost - 20000 + MOCK_COST_DATA.commissionCost + (MOCK_COST_DATA.externalDomesticCost * 0.8)) * (2/3);
@@ -1614,10 +1594,10 @@
                                 const baseVal = bookVal * 0.8;
                                 if (baseVal > domesticLimit) {
                                     adjVal = -(bookVal - domesticLimit);
-                                    reason = `<span class="text-red-600 font-medium">限额剔除：</span>${DYNAMIC_RULES_CACHE.financial.externalOverseas.policy} (境内 2/3 限额: ¥${domesticLimit.toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
+                                    reason = `${DYNAMIC_RULES_CACHE.financial.externalOverseas.policy} (境内 2/3 限额: ¥${domesticLimit.toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
                             } else {
                                 adjVal = -currentAdj;
-                                reason = `<span class="text-red-600 font-medium">比例剔除：</span>按 80% 计入。依据：${DYNAMIC_RULES_CACHE.financial.externalOverseas.policy}`;
+                                reason = `${DYNAMIC_RULES_CACHE.financial.externalOverseas.policy}`;
                             }
                         } else if (cat.id === 'otherCost') {
                             // 动态计算前 7 项之和 (已考虑各分类的独立剔除逻辑)
@@ -1634,9 +1614,9 @@
                             const limit = currentTotal / 0.9 * 0.1;
                             if (bookVal > limit) {
                                 adjVal = -(bookVal - limit);
-                                reason = `<span class="text-red-600 font-medium">超额剔除：</span>超出 10% 限额部分调减。依据：${DYNAMIC_RULES_CACHE.financial.otherLimit.policy}`;
+                                reason = `${DYNAMIC_RULES_CACHE.financial.otherLimit.policy}`;
                             } else {
-                                reason = `<span class="text-green-600">合规：</span>占比未超 10%。依据：${DYNAMIC_RULES_CACHE.financial.otherLimit.policy}`;
+                                reason = `${DYNAMIC_RULES_CACHE.financial.otherLimit.policy}`;
                             }
                         }
                     } else if (caliber === 'hiTech') {
