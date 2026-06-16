@@ -546,26 +546,20 @@
                             <span class="text-sm font-medium text-blue-800">优先级说明：</span>
                         </div>
                         <div class="mt-1 text-xs text-blue-700">
-                            <span class="inline-flex items-center px-2 py-0.5 bg-blue-100 rounded mr-1">人员单独设置</span>
+                            <span class="inline-flex items-center px-2 py-0.5 bg-blue-100 rounded mr-1">人员设置（含批量）</span>
                             <span class="text-blue-600 mx-1">＞</span>
                             <span class="inline-flex items-center px-2 py-0.5 bg-green-100 rounded mr-1">月度设置</span>
                             <span class="text-blue-600 mx-1">＞</span>
                             <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 rounded">公司基准</span>
                         </div>
+                        <p class="mt-2 text-xs text-blue-600">
+                            <i class="fa fa-lightbulb text-yellow-500 mr-1"></i>
+                            批量设置（按部门/人员）会直接写入人员级别数据，优先于月度和公司基准
+                        </p>
                     </div>
                 </div>
 
-                <!-- 操作栏 -->
-                <div class="flex flex-wrap gap-4 mb-6">
-                    <div class="flex items-center gap-3">
-                        <label class="text-sm font-medium text-gray-700">选择年份</label>
-                        <select id="yearSelect" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="loadYearData()">
-                            <option value="2024">2024年</option>
-                            <option value="2025">2025年</option>
-                            <option value="2026" selected>2026年</option>
-                        </select>
-                    </div>
-                </div>
+                
 
                 <!-- 公司基准设置 -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
@@ -597,14 +591,18 @@
                         </div>
                     </div>
                     
-                    <div class="flex items-center gap-4">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div class="flex items-center gap-3">
+                            <label class="text-sm font-medium text-gray-700">应用到年份</label>
+                            <select id="yearSelect" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="loadYearData()">
+                                <option value="2024">2024年</option>
+                                <option value="2025">2025年</option>
+                                <option value="2026" selected>2026年</option>
+                            </select>
+                        </div>
                         <button onclick="saveAnnualBaseline()" class="bg-primary hover:bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium transition-colors flex items-center">
                             <i class="fa fa-save mr-2"></i>
                             保存并应用到全年
-                        </button>
-                        <button onclick="resetToDefault()" class="border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2.5 rounded-lg font-medium transition-colors" title="把公司基准重置为每月22天、每天8小时">
-                            <i class="fa fa-refresh mr-1"></i>
-                            恢复默认值
                         </button>
                     </div>
                 </div>
@@ -629,7 +627,7 @@
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-gray-500">
                                 <i class="fa fa-info-circle text-gray-400 mr-1"></i>
-                                点击数字可直接编辑，灰色代表使用年度基准
+                                点击数字可直接编辑，灰色代表使用年度基准 | 重置：恢复为公司基准值
                             </span>
                         </div>
                     </div>
@@ -679,6 +677,10 @@
                                     <option value="市场部">市场部</option>
                                 </select>
                             </div>
+                            <button onclick="showBatchSetModal()" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
+                                <i class="fa fa-batch-processing mr-1"></i>
+                                批量设置
+                            </button>
                             <span class="text-xs text-gray-500">
                                 <i class="fa fa-info-circle text-gray-400 mr-1"></i>
                                 蓝色字体为天数，橙色字体为每日工时，点击可编辑
@@ -758,6 +760,185 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- 批量设置模态框 -->
+    <div id="batchSetModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800">
+                    <i class="fa fa-batch-processing text-primary mr-2"></i>
+                    批量设置人员出勤
+                </h3>
+                <button onclick="closeBatchSetModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <!-- 设置范围 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">设置范围</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">选择部门</label>
+                            <select id="batchDeptSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="">全部部门</option>
+                                <option value="研发部">研发部</option>
+                                <option value="财务部">财务部</option>
+                                <option value="人事部">人事部</option>
+                                <option value="市场部">市场部</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">选择月份</label>
+                            <select id="batchMonthSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="all">全年（1-12月）</option>
+                                <option value="1">1月</option>
+                                <option value="2">2月</option>
+                                <option value="3">3月</option>
+                                <option value="4">4月</option>
+                                <option value="5">5月</option>
+                                <option value="6">6月</option>
+                                <option value="7">7月</option>
+                                <option value="8">8月</option>
+                                <option value="9">9月</option>
+                                <option value="10">10月</option>
+                                <option value="11">11月</option>
+                                <option value="12">12月</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 设置内容 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">设置内容</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">应出勤天数</label>
+                            <input type="number" id="batchWorkDays" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="留空则使用基准值" min="0">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">日均工时（小时）</label>
+                            <input type="number" id="batchWorkHours" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="留空则使用基准值" min="0" step="0.5">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用范围 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">应用范围</label>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="applyScope" value="onlySelected" checked class="text-primary focus:ring-primary">
+                            <span class="ml-2 text-sm text-gray-700">仅设置范围内人员</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="applyScope" value="overrideAll" class="text-primary focus:ring-primary">
+                            <span class="ml-2 text-sm text-gray-700">覆盖范围内所有已有设置</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 预览信息 -->
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-info-circle text-blue-500"></i>
+                        <span class="text-sm text-blue-800">
+                            <span id="previewCount">0</span> 名人员将被批量设置
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeBatchSetModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                    取消
+                </button>
+                <button onclick="applyBatchSetting()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center">
+                    <i class="fa fa-check mr-2"></i>
+                    确认批量设置
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 月度批量设置模态框 -->
+    <div id="monthBatchModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800">
+                    <i class="fa fa-users text-primary mr-2"></i>
+                    批量设置 <span id="monthBatchTitle">1月</span> 人员出勤
+                </h3>
+                <button onclick="closeMonthBatchModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <!-- 设置方式切换 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">设置方式</label>
+                    <div class="flex items-center gap-6">
+                        <label class="flex items-center">
+                            <input type="radio" name="monthBatchType" value="department" checked class="text-primary focus:ring-primary" onchange="toggleMonthBatchType()">
+                            <span class="ml-2 text-sm text-gray-700">按部门设置</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="monthBatchType" value="personnel" class="text-primary focus:ring-primary" onchange="toggleMonthBatchType()">
+                            <span class="ml-2 text-sm text-gray-700">按人员设置</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 部门选择 -->
+                <div id="monthBatchDeptSection">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">选择部门</label>
+                    <select id="monthBatchDeptSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="">全部部门</option>
+                        <option value="研发部">研发部</option>
+                        <option value="财务部">财务部</option>
+                        <option value="人事部">人事部</option>
+                        <option value="市场部">市场部</option>
+                    </select>
+                </div>
+
+                <!-- 人员选择 -->
+                <div id="monthBatchPersonnelSection" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">选择人员</label>
+                    <div class="border border-gray-300 rounded-lg p-3 max-h-40 overflow-y-auto">
+                        <div id="personnelCheckboxes" class="space-y-2">
+                            <!-- 动态生成人员复选框 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 设置内容 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">设置内容</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">应出勤天数</label>
+                            <input type="number" id="monthBatchWorkDays" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="留空则使用基准值" min="0">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">日均工时（小时）</label>
+                            <input type="number" id="monthBatchWorkHours" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="留空则使用基准值" min="0" step="0.5">
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+            <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeMonthBatchModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                    取消
+                </button>
+                <button onclick="applyMonthBatchSetting()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center">
+                    <i class="fa fa-check mr-2"></i>
+                    确认批量设置
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -864,6 +1045,7 @@
             const year = document.getElementById('yearSelect').value;
             const data = attendanceData[year];
             const monthlyBaselineDays = data.monthlyWorkDays;
+            const dailyBaselineHours = data.dailyWorkHours;
             
             const tbody = document.getElementById('monthlyTableBody');
             tbody.innerHTML = '';
@@ -872,45 +1054,65 @@
             
             for (let i = 1; i <= 12; i++) {
                 const monthData = data.months[i];
-                const isUsingBaseline = monthData.workDays === null;
+                const daysModified = monthData.workDays !== null;
+                const hoursModified = monthData.workHours !== null;
+                const hasCustomDays = daysModified && monthData.workDays !== monthlyBaselineDays;
+                const hasCustomHours = hoursModified && monthData.workHours !== dailyBaselineHours;
+                const isCustomized = daysModified || hoursModified;
+                const isCompletelyDefault = !daysModified && !hoursModified;
                 
                 const tr = document.createElement('tr');
-                tr.className = 'table-row-hover border-b border-gray-100';
+                tr.className = `table-row-hover border-b border-gray-100 ${isCustomized ? 'bg-orange-50/50' : ''}`;
                 tr.innerHTML = `
                     <td class="px-4 py-3 font-medium text-gray-800">${monthNames[i-1]} (${i}月)</td>
                     <td class="px-4 py-3 text-center">
                         <input type="number" 
-                               class="editable-input w-20 text-center rounded px-2 py-1 ${isUsingBaseline ? 'text-gray-400 bg-gray-50' : 'text-gray-800 bg-white border border-gray-200'}" 
+                               class="editable-input w-20 text-center rounded px-2 py-1 ${hasCustomDays ? 'text-orange-600 font-bold bg-orange-50 border border-orange-200' : isCompletelyDefault ? 'text-gray-400 bg-gray-50' : 'text-gray-800 bg-white border border-gray-200'}" 
                                value="${monthData.workDays || monthlyBaselineDays}" 
                                data-month="${i}" 
                                data-type="days"
                                onfocus="prepareEdit(this)"
                                onblur="saveMonthData(this)"
                                placeholder="${monthlyBaselineDays}">
+                        ${hasCustomDays ? '<span class="text-orange-500 text-xs ml-1">*</span>' : ''}
                     </td>
                     <td class="px-4 py-3 text-center">
                         <input type="number" 
-                               class="editable-input w-20 text-center rounded px-2 py-1 ${isUsingBaseline ? 'text-gray-400 bg-gray-50' : 'text-gray-800 bg-white border border-gray-200'}" 
-                               value="${monthData.workHours || data.dailyWorkHours}" 
+                               class="editable-input w-20 text-center rounded px-2 py-1 ${hasCustomHours ? 'text-orange-600 font-bold bg-orange-50 border border-orange-200' : isCompletelyDefault ? 'text-gray-400 bg-gray-50' : 'text-gray-800 bg-white border border-gray-200'}" 
+                               value="${monthData.workHours || dailyBaselineHours}" 
                                data-month="${i}" 
                                data-type="hours"
                                onfocus="prepareEdit(this)"
                                onblur="saveMonthData(this)"
-                               placeholder="${data.dailyWorkHours}"
+                               placeholder="${dailyBaselineHours}"
                                step="0.5">
+                        ${hasCustomHours ? '<span class="text-orange-500 text-xs ml-1">*</span>' : ''}
                     </td>
                     <td class="px-4 py-3 text-center">
-                        ${isUsingBaseline ? 
-                            '<span class="inline-flex items-center gap-1 text-xs text-gray-500"><i class="fa fa-link"></i> 公司基准</span>' : 
-                            '<span class="inline-flex items-center gap-1 text-xs text-blue-600"><i class="fa fa-pencil"></i> 已定制</span>'
+                        ${isCompletelyDefault ? 
+                            '<span class="inline-flex items-center gap-1 text-xs text-gray-500"><i class="fa fa-check-circle"></i> 默认</span>' : 
+                            (daysModified && hoursModified ? 
+                                '<span class="inline-flex items-center gap-1 text-xs text-orange-600 font-bold"><i class="fa fa-pencil"></i> 天数+工时</span>' : 
+                                (daysModified ? 
+                                    '<span class="inline-flex items-center gap-1 text-xs text-blue-600 font-bold"><i class="fa fa-calendar"></i> 仅天数</span>' : 
+                                    '<span class="inline-flex items-center gap-1 text-xs text-green-600 font-bold"><i class="fa fa-clock-o"></i> 仅工时</span>'
+                                )
+                            )
                         }
                     </td>
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-4 py-3 text-center flex items-center justify-center gap-2">
+                        <button onclick="showMonthBatchModal(${i})" 
+                                class="text-gray-500 hover:text-primary transition-colors"
+                                title="批量设置该月人员出勤">
+                            <i class="fa fa-users"></i>
+                            <span class="text-xs ml-1">人员</span>
+                        </button>
                         <button onclick="resetMonthToBaseline(${i})" 
-                                class="text-gray-400 hover:text-red-500 transition-colors ${isUsingBaseline ? 'opacity-30 cursor-not-allowed' : ''}"
-                                ${isUsingBaseline ? 'disabled' : ''}>
+                                class="${isCompletelyDefault ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-red-500 transition-colors'}"
+                                ${isCompletelyDefault ? 'disabled' : ''}
+                                title="重置为公司基准">
                             <i class="fa fa-undo"></i>
-                            <span class="text-xs ml-1">重置</span>
+                            <span class="text-xs ml-1">${isCompletelyDefault ? '-' : '重置'}</span>
                         </button>
                     </td>
                 `;
@@ -1139,6 +1341,216 @@
                 toast.style.transform = 'translateY(-10px)';
                 setTimeout(() => toast.remove(), 300);
             }, 2500);
+        }
+
+        // 批量设置相关函数
+        function showBatchSetModal() {
+            updateBatchPreview();
+            document.getElementById('batchSetModal').classList.remove('hidden');
+        }
+
+        function closeBatchSetModal() {
+            document.getElementById('batchSetModal').classList.add('hidden');
+            // 清空表单
+            document.getElementById('batchDeptSelect').value = '';
+            document.getElementById('batchMonthSelect').value = 'all';
+            document.getElementById('batchWorkDays').value = '';
+            document.getElementById('batchWorkHours').value = '';
+            document.querySelector('input[name="applyScope"][value="onlySelected"]').checked = true;
+        }
+
+        function updateBatchPreview() {
+            const deptFilter = document.getElementById('batchDeptSelect').value;
+            const filteredPersonnel = deptFilter 
+                ? personnelList.filter(p => p.department === deptFilter)
+                : personnelList;
+            document.getElementById('previewCount').textContent = filteredPersonnel.length;
+        }
+
+        // 监听部门选择变化，更新预览计数
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('batchDeptSelect').addEventListener('change', updateBatchPreview);
+        });
+
+        // 当前选中的月份（用于月度批量设置）
+        let currentMonthForBatch = 1;
+
+        // 月度批量设置相关函数
+        function showMonthBatchModal(month) {
+            currentMonthForBatch = month;
+            document.getElementById('monthBatchTitle').textContent = `${month}月`;
+            // 默认选中按部门设置
+            document.querySelector('input[name="monthBatchType"][value="department"]').checked = true;
+            toggleMonthBatchType();
+            document.getElementById('monthBatchModal').classList.remove('hidden');
+        }
+
+        function closeMonthBatchModal() {
+            document.getElementById('monthBatchModal').classList.add('hidden');
+            // 清空表单
+            document.getElementById('monthBatchDeptSelect').value = '';
+            document.getElementById('monthBatchWorkDays').value = '';
+            document.getElementById('monthBatchWorkHours').value = '';
+            document.querySelector('input[name="monthBatchType"][value="department"]').checked = true;
+        }
+
+        function toggleMonthBatchType() {
+            const batchType = document.querySelector('input[name="monthBatchType"]:checked').value;
+            const deptSection = document.getElementById('monthBatchDeptSection');
+            const personnelSection = document.getElementById('monthBatchPersonnelSection');
+            
+            if (batchType === 'department') {
+                deptSection.classList.remove('hidden');
+                personnelSection.classList.add('hidden');
+            } else {
+                deptSection.classList.add('hidden');
+                personnelSection.classList.remove('hidden');
+                generatePersonnelCheckboxes();
+            }
+        }
+
+        function generatePersonnelCheckboxes() {
+            const container = document.getElementById('personnelCheckboxes');
+            container.innerHTML = '';
+            
+            personnelList.forEach(person => {
+                const checkbox = document.createElement('label');
+                checkbox.className = 'flex items-center gap-2 cursor-pointer';
+                checkbox.innerHTML = `
+                    <input type="checkbox" name="monthBatchPersonnel" value="${person.id}" class="text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">${person.name} (${person.department})</span>
+                `;
+                container.appendChild(checkbox);
+            });
+            
+            // 添加全选/全不选功能
+            const selectAll = document.createElement('div');
+            selectAll.className = 'pb-2 border-b border-gray-200 mb-2';
+            selectAll.innerHTML = `
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="selectAllPersonnel" class="text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-600 font-medium">全选/全不选</span>
+                </label>
+            `;
+            container.insertBefore(selectAll, container.firstChild);
+            
+            document.getElementById('selectAllPersonnel').addEventListener('change', function(e) {
+                const checkboxes = document.querySelectorAll('input[name="monthBatchPersonnel"]');
+                checkboxes.forEach(cb => cb.checked = e.target.checked);
+            });
+        }
+
+        function applyMonthBatchSetting() {
+            const year = document.getElementById('yearSelect').value;
+            const month = currentMonthForBatch;
+            const batchType = document.querySelector('input[name="monthBatchType"]:checked').value;
+            const workDays = parseFloat(document.getElementById('monthBatchWorkDays').value) || null;
+            const workHours = parseFloat(document.getElementById('monthBatchWorkHours').value) || null;
+
+            // 验证输入
+            if (workDays === null && workHours === null) {
+                showToast('请至少设置应出勤天数或日均工时', 'error');
+                return;
+            }
+
+            // 筛选人员
+            let filteredPersonnel = [];
+            if (batchType === 'department') {
+                const deptFilter = document.getElementById('monthBatchDeptSelect').value;
+                filteredPersonnel = deptFilter 
+                    ? personnelList.filter(p => p.department === deptFilter)
+                    : personnelList;
+            } else {
+                const checkedIds = Array.from(document.querySelectorAll('input[name="monthBatchPersonnel"]:checked'))
+                    .map(cb => parseInt(cb.value));
+                filteredPersonnel = personnelList.filter(p => checkedIds.includes(p.id));
+                
+                if (filteredPersonnel.length === 0) {
+                    showToast('请至少选择一名人员', 'error');
+                    return;
+                }
+            }
+
+            // 应用设置（直接覆盖）
+            let count = 0;
+            filteredPersonnel.forEach(person => {
+                if (workDays !== null) {
+                    attendanceData[year].personnel[person.id][month].workDays = workDays;
+                }
+                if (workHours !== null) {
+                    attendanceData[year].personnel[person.id][month].workHours = workHours;
+                }
+                count++;
+            });
+
+            // 关闭模态框并刷新表格
+            closeMonthBatchModal();
+            renderPersonnelTable();
+            showToast(`成功设置 ${count} 名人员${month}月出勤记录`, 'success');
+        }
+
+        function applyBatchSetting() {
+            const year = document.getElementById('yearSelect').value;
+            const deptFilter = document.getElementById('batchDeptSelect').value;
+            const monthSelect = document.getElementById('batchMonthSelect').value;
+            const workDays = parseFloat(document.getElementById('batchWorkDays').value) || null;
+            const workHours = parseFloat(document.getElementById('batchWorkHours').value) || null;
+            const applyScope = document.querySelector('input[name="applyScope"]:checked').value;
+
+            // 验证输入
+            if (workDays === null && workHours === null) {
+                showToast('请至少设置应出勤天数或日均工时', 'error');
+                return;
+            }
+
+            // 确定月份范围
+            let months = [];
+            if (monthSelect === 'all') {
+                months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            } else {
+                months = [parseInt(monthSelect)];
+            }
+
+            // 筛选人员
+            const filteredPersonnel = deptFilter 
+                ? personnelList.filter(p => p.department === deptFilter)
+                : personnelList;
+
+            // 应用设置
+            let count = 0;
+            filteredPersonnel.forEach(person => {
+                months.forEach(month => {
+                    const existingData = attendanceData[year].personnel[person.id][month];
+                    
+                    // 根据应用范围决定是否跳过已有设置
+                    if (applyScope === 'onlySelected') {
+                        // 仅设置尚未自定义的人员月份
+                        if (existingData.workDays === null && existingData.workHours === null) {
+                            if (workDays !== null) {
+                                attendanceData[year].personnel[person.id][month].workDays = workDays;
+                            }
+                            if (workHours !== null) {
+                                attendanceData[year].personnel[person.id][month].workHours = workHours;
+                            }
+                            count++;
+                        }
+                    } else {
+                        // 覆盖所有设置
+                        if (workDays !== null) {
+                            attendanceData[year].personnel[person.id][month].workDays = workDays;
+                        }
+                        if (workHours !== null) {
+                            attendanceData[year].personnel[person.id][month].workHours = workHours;
+                        }
+                        count++;
+                    }
+                });
+            });
+
+            // 关闭模态框并刷新表格
+            closeBatchSetModal();
+            renderPersonnelTable();
+            showToast(`成功设置 ${count} 条人员出勤记录`, 'success');
         }
     </script>
 </body>
