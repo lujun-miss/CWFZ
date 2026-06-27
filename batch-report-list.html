@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量报工记录 - 研知π</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .sub-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .sub-menu.expanded {
+            max-height: 500px;
+        }
+        .sub-menu.collapsed {
+            max-height: 0;
+        }
+        .menu-arrow {
+            transition: transform 0.3s ease;
+        }
+        .menu-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        .nav-item-hover:hover {
+            background-color: #f3f4f6;
+        }
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+        }
+        .status-submitted {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+        .status-draft {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航 -->
+        <div class="w-64 bg-white shadow-lg flex-shrink-0 z-10 flex flex-col">
+            <div class="p-6 border-b flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fa fa-pie-chart text-white"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">研知π</h1>
+                </div>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1 px-3">
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-th-large w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
+                        <ul class="ml-6 sub-menu collapsed">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目要素</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-clock-o w-6"></i>
+                                <span>盯一下报工</span>
+                            </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow"></i>
+                        </button>
+                        <ul class="ml-6 sub-menu expanded">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('realtime-work-reporting.html')">
+                                    <i class="fa fa-pencil-square-o w-6"></i>
+                                    <span>实时报工</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('batch-work-reporting.html')">
+                                    <i class="fa fa-upload w-6"></i>
+                                    <span>批量报工</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-blue-600 bg-blue-50 font-medium" onclick="loadPage('batch-report-list.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>报工记录</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="p-4 border-t">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                        <i class="fa fa-user text-gray-500"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium text-gray-800">张三</div>
+                        <div class="text-xs text-gray-500">研发工程师</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white shadow-sm px-6 py-4 flex items-center justify-between">
+                <h2 class="text-xl font-semibold text-gray-800">批量报工记录</h2>
+                <div class="flex items-center space-x-4">
+                    <button onclick="loadPage('batch-work-reporting.html')" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
+                        <i class="fa fa-plus mr-1"></i>新建批量报工
+                    </button>
+                </div>
+            </header>
+            
+            <main class="flex-1 overflow-auto p-6">
+                <!-- 筛选区 -->
+                <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">报工月份</label>
+                            <input type="month" id="filterMonth" class="w-full px-3 py-2 border rounded-md text-sm" onchange="filterRecords()">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">人员</label>
+                            <select id="filterPerson" class="w-full px-3 py-2 border rounded-md text-sm" onchange="filterRecords()">
+                                <option value="">全部人员</option>
+                                <option value="p1">张三</option>
+                                <option value="p2">李四</option>
+                                <option value="p3">王五</option>
+                                <option value="p4">赵六</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">状态</label>
+                            <select id="filterStatus" class="w-full px-3 py-2 border rounded-md text-sm" onchange="filterRecords()">
+                                <option value="">全部状态</option>
+                                <option value="submitted">已提交</option>
+                                <option value="draft">草稿</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="resetFilter()" class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md text-sm hover:bg-gray-300">
+                                <i class="fa fa-refresh mr-1"></i>重置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 记录列表 -->
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">报工月份</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">涉及人员</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">涉及项目</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">总工时</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">状态</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">提交时间</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="recordsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 空状态 -->
+                    <div id="emptyState" class="text-center py-12 hidden">
+                        <i class="fa fa-inbox text-4xl text-gray-300 mb-3"></i>
+                        <p class="text-gray-500">暂无报工记录</p>
+                        <button onclick="loadPage('batch-work-reporting.html')" class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
+                            <i class="fa fa-plus mr-1"></i>新建批量报工
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 详情弹窗 -->
+                <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                    <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+                        <div class="px-6 py-4 border-b flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-800">报工详情</h3>
+                            <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                        <div id="detailContent" class="p-6">
+                        </div>
+                        <div class="px-6 py-4 border-t flex justify-end space-x-3">
+                            <button onclick="closeDetailModal()" class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md text-sm hover:bg-gray-300">
+                                关闭
+                            </button>
+                            <button onclick="editRecord()" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
+                                <i class="fa fa-edit mr-1"></i>重新编辑
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function loadPage(pageUrl) {
+            try {
+                console.log('准备跳转到页面:', pageUrl);
+                window.location.assign(pageUrl);
+            } catch (error) {
+                console.error('页面跳转失败:', error);
+                alert('页面跳转失败，请检查文件是否存在: ' + pageUrl);
+            }
+        }
+
+        function toggleMenu(button) {
+            const menuGroup = button.closest('.menu-group');
+            const subMenu = menuGroup.querySelector('.sub-menu');
+            const arrow = button.querySelector('.menu-arrow');
+            
+            subMenu.classList.toggle('expanded');
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+        }
+
+        // 模拟报工记录数据
+        const mockRecords = [
+            {
+                id: 'r1',
+                month: '2026-06',
+                persons: ['张三', '李四'],
+                projects: ['智能传感器研发', '新材料开发', 'AI算法优化'],
+                totalHours: 352.5,
+                status: 'submitted',
+                submitTime: '2026-06-26 14:30:00',
+                details: {
+                    '张三': { '智能传感器研发': 80, '新材料开发': 60, 'AI算法优化': 40 },
+                    '李四': { '智能传感器研发': 90, '新材料开发': 50, 'AI算法优化': 72.5 }
+                }
+            },
+            {
+                id: 'r2',
+                month: '2026-05',
+                persons: ['张三', '王五', '赵六'],
+                projects: ['智能传感器研发', '新材料开发'],
+                totalHours: 480,
+                status: 'submitted',
+                submitTime: '2026-05-28 16:45:00',
+                details: {
+                    '张三': { '智能传感器研发': 120, '新材料开发': 80 },
+                    '王五': { '智能传感器研发': 100, '新材料开发': 60 },
+                    '赵六': { '智能传感器研发': 80, '新材料开发': 120 }
+                }
+            },
+            {
+                id: 'r3',
+                month: '2026-06',
+                persons: ['王五'],
+                projects: ['智能传感器研发', 'AI算法优化'],
+                totalHours: 168,
+                status: 'draft',
+                submitTime: null,
+                details: {
+                    '王五': { '智能传感器研发': 88, 'AI算法优化': 80 }
+                }
+            }
+        ];
+
+        let currentRecordId = null;
+
+        // 初始化页面
+        function initPage() {
+            renderRecords(mockRecords);
+            
+            // 设置默认月份为当前月
+            const now = new Date();
+            document.getElementById('filterMonth').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        // 渲染记录列表
+        function renderRecords(records) {
+            const tbody = document.getElementById('recordsTableBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (records.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            tbody.innerHTML = records.map(record => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3">
+                        <div class="text-sm font-medium text-gray-900">${record.month}</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="text-sm text-gray-900">${record.persons.join('、')}</div>
+                        <div class="text-xs text-gray-500">${record.persons.length} 人</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="text-sm text-gray-900">${record.projects.slice(0, 2).join('、')}${record.projects.length > 2 ? '...' : ''}</div>
+                        <div class="text-xs text-gray-500">${record.projects.length} 个项目</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="text-sm font-medium text-blue-600">${record.totalHours}h</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="status-badge ${record.status === 'submitted' ? 'status-submitted' : 'status-draft'}">
+                            ${record.status === 'submitted' ? '已提交' : '草稿'}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="text-sm text-gray-900">${record.submitTime || '-'}</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center space-x-2">
+                            <button onclick="viewDetail('${record.id}')" class="text-blue-600 hover:text-blue-800 text-sm">
+                                <i class="fa fa-eye mr-1"></i>查看
+                            </button>
+                            <button onclick="viewDetail('${record.id}')" class="text-gray-600 hover:text-gray-800 text-sm">
+                                <i class="fa fa-edit mr-1"></i>编辑
+                            </button>
+                            <button onclick="deleteRecord('${record.id}')" class="text-red-600 hover:text-red-800 text-sm">
+                                <i class="fa fa-trash mr-1"></i>删除
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 筛选记录
+        function filterRecords() {
+            const month = document.getElementById('filterMonth').value;
+            const person = document.getElementById('filterPerson').value;
+            const status = document.getElementById('filterStatus').value;
+            
+            let filtered = mockRecords;
+            
+            if (month) {
+                filtered = filtered.filter(r => r.month === month);
+            }
+            
+            if (person) {
+                const personNames = {
+                    'p1': '张三',
+                    'p2': '李四',
+                    'p3': '王五',
+                    'p4': '赵六'
+                };
+                filtered = filtered.filter(r => r.persons.includes(personNames[person]));
+            }
+            
+            if (status) {
+                filtered = filtered.filter(r => r.status === status);
+            }
+            
+            renderRecords(filtered);
+        }
+
+        // 重置筛选
+        function resetFilter() {
+            document.getElementById('filterMonth').value = '';
+            document.getElementById('filterPerson').value = '';
+            document.getElementById('filterStatus').value = '';
+            renderRecords(mockRecords);
+        }
+
+        // 查看详情
+        function viewDetail(recordId) {
+            currentRecordId = recordId;
+            const record = mockRecords.find(r => r.id === recordId);
+            
+            const content = document.getElementById('detailContent');
+            content.innerHTML = `
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="text-xs text-gray-500">报工月份</label>
+                        <div class="text-sm font-medium text-gray-900">${record.month}</div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">状态</label>
+                        <span class="status-badge ${record.status === 'submitted' ? 'status-submitted' : 'status-draft'}">
+                            ${record.status === 'submitted' ? '已提交' : '草稿'}
+                        </span>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">提交时间</label>
+                        <div class="text-sm text-gray-900">${record.submitTime || '-'}</div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">总工时</label>
+                        <div class="text-sm font-medium text-blue-600">${record.totalHours}h</div>
+                    </div>
+                </div>
+                
+                <h4 class="text-sm font-semibold text-gray-800 mb-3">人员工时分配明细</h4>
+                
+                ${record.persons.map(person => `
+                    <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+                        <div class="font-medium text-gray-800 mb-2">${person}</div>
+                        <div class="grid grid-cols-3 gap-3">
+                            ${Object.entries(record.details[person]).map(([project, hours]) => `
+                                <div>
+                                    <div class="text-xs text-gray-500">${project}</div>
+                                    <div class="text-sm font-medium text-gray-900">${hours}h</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+            
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        // 关闭详情弹窗
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+            currentRecordId = null;
+        }
+
+        // 编辑记录
+        function editRecord() {
+            // 跳转到批量报工页面，带上记录ID参数
+            loadPage(`batch-work-reporting.html?recordId=${currentRecordId}`);
+        }
+
+        // 删除记录
+        function deleteRecord(recordId) {
+            if (confirm('确定要删除这条报工记录吗？删除后无法恢复。')) {
+                const index = mockRecords.findIndex(r => r.id === recordId);
+                if (index > -1) {
+                    mockRecords.splice(index, 1);
+                    renderRecords(mockRecords);
+                }
+            }
+        }
+
+        // 页面加载完成后初始化
+        window.onload = initPage;
+    </script>
+</body>
+</html>

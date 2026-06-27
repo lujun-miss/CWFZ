@@ -1967,7 +1967,167 @@
             }
         }
 
+        // 检查是否已存在报表
+        function checkExistingReport(year, projectIds) {
+            // 模拟已存在的报表数据（包含报表类型）
+            const existingReports = {
+                '2025_RD01': { 
+                    status: 'reviewed', 
+                    createTime: '2025-06-15 10:30', 
+                    updateTime: '2025-06-18 14:20', 
+                    projectName: '智能传感器研发',
+                    reportTypes: ['加计扣除', '高企认定']  // 报表类型
+                },
+                '2025_RD02': { 
+                    status: 'audited', 
+                    createTime: '2025-06-10 09:00', 
+                    updateTime: '2025-06-12 16:45', 
+                    projectName: '工业机器人控制系统',
+                    reportTypes: ['加计扣除', 'RD账套表']
+                },
+                '2025_RD03': { 
+                    status: 'allocated', 
+                    createTime: '2025-05-20 11:00', 
+                    updateTime: '2025-05-25 15:30', 
+                    projectName: '新能源项目',
+                    reportTypes: ['加计扣除', '高企认定', 'RD账套表']
+                }
+            };
+
+            // 检查所有选中的项目
+            const duplicates = [];
+            projectIds.forEach(projectId => {
+                const key = `${year}_${projectId}`;
+                if (existingReports[key]) {
+                    duplicates.push({
+                        projectId: projectId,
+                        projectName: existingReports[key].projectName,
+                        ...existingReports[key]
+                    });
+                }
+            });
+
+            return duplicates.length > 0 ? duplicates : null;
+        }
+
+        // 显示重复警告弹窗
+        function showDuplicateWarning(year, duplicates) {
+            // 获取状态显示文本
+            const statusText = {
+                'draft': '草稿',
+                'reviewed': '已审核',
+                'audited': '已审计',
+                'allocated': '已归集'
+            };
+
+            const statusLabels = {
+                'draft': 'bg-gray-100 text-gray-600',
+                'reviewed': 'bg-blue-100 text-blue-600',
+                'audited': 'bg-green-100 text-green-600',
+                'allocated': 'bg-purple-100 text-purple-600'
+            };
+
+            // 检查是否有已归集的项目
+            const hasAllocated = duplicates.some(d => d.status === 'allocated');
+
+            // 生成项目列表HTML（包含报表类型，去掉状态显示）
+            const projectListHTML = duplicates.map(d => `
+                <div style="padding: 12px 0; border-bottom: 1px solid #f3f4f6;">
+                    <div style="margin-bottom: 8px;">
+                        <span style="font-size: 14px; font-weight: 500; color: #1f2937;">${d.projectName}</span>
+                        <span style="font-size: 12px; color: #6b7280; margin-left: 8px;">(${d.projectId})</span>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                        <span style="font-size: 12px; color: #6b7280;">报表类型：</span>
+                        ${d.reportTypes.map(type => `
+                            <span style="font-size: 12px; padding: 2px 8px; background-color: #eff6ff; color: #2563eb; border-radius: 4px;">${type}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            const modalHTML = `
+                <div id="duplicateWarningModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+                    <div style="background-color: white; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); padding: 24px; width: 90%; max-width: 500px; margin: 0 20px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                            <div style="width: 40px; height: 40px; background-color: #fef3c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                <i class="fa fa-exclamation-triangle" style="color: #d97706; font-size: 20px;"></i>
+                            </div>
+                            <h3 style="font-size: 18px; font-weight: 600; color: #1f2937;">检测到已存在报表</h3>
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <p style="font-size: 14px; color: #4b5563; margin-bottom: 12px;">所选年度${year}年，所选项目中已存在相应的账套表：</p>
+                            ${projectListHTML}
+                        </div>
+
+                        <div style="padding: 12px; background-color: #fef3c7; border-radius: 8px; margin-bottom: 16px;">
+                            <p style="font-size: 14px; color: #92400e; margin: 0;">
+                                <i class="fa ${hasAllocated ? 'fa-ban' : 'fa-warning'} mr-2"></i>
+                                ${hasAllocated ? '部分报表已归集，无法直接覆盖。如需重新生成，请先撤回已存在的报表。' : '覆盖后原报表将被替换，此操作不可撤销。'}
+                            </p>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                            <button onclick="document.getElementById('duplicateWarningModal').remove()" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; color: #374151; font-size: 14px; cursor: pointer; background-color: white;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='white'">
+                                取消
+                            </button>
+                            ${!hasAllocated ? `
+                                <button onclick="confirmOverrideReport()" style="padding: 8px 16px; background-color: #d97706; border: none; border-radius: 6px; color: white; font-size: 14px; cursor: pointer;" onmouseover="this.style.backgroundColor='#b45309'" onmouseout="this.style.backgroundColor='#d97706'">
+                                    确认覆盖
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        // 确认覆盖报表
+        function confirmOverrideReport() {
+            // 移除警告弹窗
+            const modal = document.getElementById('duplicateWarningModal');
+            if (modal) modal.remove();
+            
+            // 设置跳过检测标记
+            window._skipReportCheck = true;
+            
+            // 调用原始生成逻辑（使用更可靠的方式）
+            const generateBtn = document.querySelector('button[onclick="generateAccountTable()"]') || 
+                               document.querySelector('.bg-green-600');
+            
+            if (generateBtn) {
+                const event = new Event('click');
+                generateBtn.dispatchEvent(event);
+            } else {
+                // 如果找不到按钮，直接调用函数
+                generateAccountTable();
+            }
+        }
+
         async function generateAccountTable() {
+            // 0. 检查是否已存在报表（跳过标记为true时不检查）
+            if (!window._skipReportCheck) {
+                const year = document.getElementById('yearSelect').value;
+                
+                // 获取选中的项目
+                const checkboxes = document.querySelectorAll('.project-checkbox:checked');
+                const selectedProjectIds = Array.from(checkboxes).map(cb => cb.value);
+                
+                const duplicates = checkExistingReport(year, selectedProjectIds);
+                
+                if (duplicates) {
+                    // 显示确认覆盖弹窗
+                    showDuplicateWarning(year, duplicates);
+                    return;
+                }
+            } else {
+                // 重置跳过标记
+                window._skipReportCheck = false;
+            }
+
             // 1. 初始化批处理 UI
             const dialog = document.getElementById('loadingDialog');
             const taskList = document.getElementById('batchTaskList');

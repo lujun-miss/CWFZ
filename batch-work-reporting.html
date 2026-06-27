@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量报工 - 研知π研发费用管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .nav-item-hover:hover {
+            background-color: #f3f4f6;
+        }
+        .collapsed {
+            display: none;
+        }
+        .menu-arrow {
+            transition: transform 0.3s;
+        }
+        .menu-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .input-group label {
+            width: 80px;
+            margin-right: 8px;
+            font-size: 0.75rem;
+            color: #4b5563;
+            white-space: nowrap;
+        }
+        .input-group input, .input-group select {
+            flex: 1;
+            padding: 0.375rem 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+        }
+        .project-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            padding: 0.625rem;
+            background: white;
+            transition: all 0.2s;
+        }
+        .project-card.active {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        .project-card.warning {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .project-card.disabled {
+            opacity: 0.5;
+            background: #f9fafb;
+        }
+        .device-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            padding: 0.625rem;
+            background: white;
+            transition: all 0.2s;
+        }
+        .device-card:hover {
+            border-color: #10b981;
+        }
+        .device-percent-input {
+            width: 50px;
+            padding: 0.125rem 0.25rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+        }
+        .device-project-inputs {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .allocation-table-wrapper {
+            overflow-x: auto;
+            max-width: 100%;
+            border-radius: 0.25rem;
+            border: 1px solid #e5e7eb;
+        }
+        .allocation-table {
+            width: max-content;
+            min-width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+        }
+        .allocation-table th,
+        .allocation-table td {
+            padding: 0.375rem 0.5rem;
+            border: 1px solid #e5e7eb;
+            white-space: nowrap;
+        }
+        .allocation-table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            font-size: 0.65rem;
+        }
+        .allocation-table th.sticky-left,
+        .allocation-table td.sticky-left {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 10;
+            min-width: 100px;
+            width: 100px;
+            border-right: 2px solid #d1d5db;
+        }
+        .allocation-table thead th.sticky-left {
+            background: #f9fafb;
+        }
+        .allocation-table tfoot td.sticky-left {
+            background: #f9fafb;
+        }
+        .allocation-table tbody tr:hover td.sticky-left {
+            background: #f9fafb;
+        }
+        .allocation-input {
+            width: 60px;
+            padding: 0.125rem 0.25rem;
+            font-size: 0.65rem;
+            text-align: center;
+            border: 1px solid #d1d5db;
+            border-radius: 0.125rem;
+        }
+        .allocation-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .allocation-input.disabled {
+            background: #f3f4f6;
+            color: #9ca3af;
+            border-color: #e5e7eb;
+        }
+        .summary-card {
+            border-radius: 0.25rem;
+            padding: 0.625rem;
+        }
+        .percentage-input {
+            width: 50px;
+            padding: 0.125rem 0.25rem;
+            font-size: 0.75rem;
+            text-align: center;
+            border: 1px solid #d1d5db;
+            border-radius: 0.125rem;
+        }
+        .percentage-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .percentage-input.disabled {
+            background: #f3f4f6;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航 -->
+        <div class="w-64 bg-white shadow-lg flex-shrink-0 z-10 flex flex-col">
+            <div class="p-6 border-b flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fa fa-pie-chart text-white"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">研知π</h1>
+                </div>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1 px-3">
+                    <li>
+                        <a href="javascript:void(0)" class="nav-item flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg" onclick="loadPage('dashboard.html')">
+                            <i class="fa fa-th-large w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-folder-open w-6"></i>
+                                <span>项目管理</span>
+                            </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('project-management.html')">
+                                    <i class="fa fa-file-text-o w-6"></i>
+                                    <span>项目要素</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('task-management.html')">
+                                    <i class="fa fa-tasks w-6"></i>
+                                    <span>任务管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-clock-o w-6"></i>
+                                <span>盯一下报工</span>
+                            </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow"></i>
+                        </button>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('realtime-work-reporting.html')">
+                                    <i class="fa fa-pencil-square-o w-6"></i>
+                                    <span>实时报工</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-blue-600 bg-blue-50 font-medium" onclick="loadPage('batch-work-reporting.html')">
+                                    <i class="fa fa-upload w-6"></i>
+                                    <span>批量报工</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('batch-report-list.html')">
+                                    <i class="fa fa-list w-6"></i>
+                                    <span>报工记录</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="flex-1 flex flex-col">
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+                <div class="flex items-center">
+                    <h2 id="page-title" class="text-lg font-medium text-gray-800">批量报工</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-bell"></i>
+                    </button>
+                    <div class="flex items-center cursor-pointer">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-sm font-medium text-gray-700">管理员</span>
+                    </div>
+                </div>
+            </header>
+            
+            <main class="flex-1 overflow-auto p-4">
+                <!-- 顶部筛选区 -->
+                <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-3">批量报工</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div class="input-group">
+                            <label for="batchReportMonth">报工月份:</label>
+                            <input type="month" id="batchReportMonth" class="w-full">
+                        </div>
+                        <div class="input-group">
+                            <label for="personSelect">选择人员:</label>
+                            <select id="personSelect" class="w-full">
+                                <option value="">-- 全部人员 --</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2 flex items-end space-x-2">
+                            <button onclick="loadBatchData()" class="px-4 py-1.5 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700">
+                                <i class="fa fa-play mr-1"></i>开始分配
+                            </button>
+                            <button onclick="resetForm()" class="px-4 py-1.5 bg-gray-200 text-gray-600 rounded-md text-xs hover:bg-gray-300">
+                                <i class="fa fa-refresh mr-1"></i>重置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab切换区 -->
+                <div id="workTypeTabSection" class="bg-white rounded-lg shadow-sm mb-4 hidden">
+                    <div class="flex border-b">
+                        <button id="tabPersonnel" class="px-6 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50" onclick="switchWorkTypeTab('personnel')">
+                            <i class="fa fa-user mr-1"></i>人工工时
+                        </button>
+                        <button id="tabDevice" class="px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700" onclick="switchWorkTypeTab('device')">
+                            <i class="fa fa-cogs mr-1"></i>设备工时
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 人工工时Tab内容 -->
+                <div id="personnelWorkTab" class="tab-work-content">
+                    <!-- 项目占比设置区 -->
+                    <div id="projectAllocationSection" class="bg-white rounded-lg shadow-sm p-4 mb-4 hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-semibold text-gray-800"><i class="fa fa-sliders mr-1"></i>项目占比设置</h3>
+                            <div class="text-xs">
+                                <span class="font-medium text-gray-700">总占比：</span>
+                                <span id="totalPercentage" class="font-bold text-blue-600">0%</span>
+                            </div>
+                        </div>
+                        
+                        <div id="projectAllocationCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
+                        </div>
+                        
+                        <div id="percentageStatus" class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg mb-3">
+                            <div id="percentageWarning" class="hidden">
+                                <span class="text-xs text-yellow-600"><i class="fa fa-exclamation-triangle mr-1"></i>总占比不足100%，剩余工时将无法分配</span>
+                            </div>
+                            <div id="percentageOk" class="hidden">
+                                <span class="text-xs text-green-600"><i class="fa fa-check-circle mr-1"></i>占比配置合理</span>
+                            </div>
+                        </div>
+                        
+                        <div class="text-right">
+                            <button onclick="applyAllocation()" class="px-4 py-1.5 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700">
+                                <i class="fa fa-magic mr-1"></i>应用智能分配
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 人工分配结果区 -->
+                    <div id="allocationResultSection" class="bg-white rounded-lg shadow-sm p-4 mb-4 hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-semibold text-gray-800"><i class="fa fa-table mr-1"></i>人工分配结果</h3>
+                        </div>
+                        
+                        <div class="mb-3 p-2 bg-blue-50 rounded-lg text-xs text-blue-700">
+                            <i class="fa fa-info-circle mr-1"></i>
+                            <strong>说明：</strong>系统根据考勤打卡记录自动计算每日工时，按项目占比智能分配，可手动调整各项目工时。<span class="text-gray-500 ml-2">灰色表示当天无考勤打卡</span>
+                        </div>
+                        
+                        <div id="allocationResultContent">
+                            <div class="text-center text-gray-400 py-8">
+                                <i class="fa fa-bar-chart-o text-4xl mb-2"></i>
+                                <p class="text-sm">暂无分配结果</p>
+                                <p class="text-xs">请先设置项目占比并点击"应用智能分配"</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 统计汇总 -->
+                        <div id="projectSummarySection" class="mt-4 p-3 bg-gray-50 rounded-lg hidden">
+                            <h4 class="text-xs font-medium text-gray-700 mb-2">项目分配汇总</h4>
+                            <div id="projectSummary" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 设备工时Tab内容 -->
+                <div id="deviceWorkTab" class="tab-work-content hidden">
+                    <!-- 设备列表区 -->
+                    <div id="deviceAllocationSection" class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-semibold text-gray-800"><i class="fa fa-list mr-1"></i>设备列表</h3>
+                            <div class="text-xs">
+                                <span class="font-medium text-gray-700">企业作息：</span>
+                                <select id="workScheduleType" class="ml-2 px-2 py-1 border rounded text-xs" onchange="updateDeviceAvailability()">
+                                    <option value="double_rest">双休企业（8h/天）</option>
+                                    <option value="single_rest">单休企业（8h/天）</option>
+                                    <option value="continuous_24h">24小时不停机</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 p-2 bg-green-50 rounded-lg text-xs text-green-700">
+                            <i class="fa fa-info-circle mr-1"></i>
+                            <strong>说明：</strong>勾选本月使用的设备，设置各项目的分配比例。设备工时上限根据企业作息自动计算。
+                        </div>
+                        
+                        <div id="deviceAllocationCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
+                            <div class="text-center text-gray-400 py-8">
+                                <i class="fa fa-cogs text-4xl mb-2"></i>
+                                <p class="text-sm">请先选择月份并点击"开始分配"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="text-right">
+                            <button onclick="applyDeviceAllocation()" class="px-4 py-1.5 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700">
+                                <i class="fa fa-magic mr-1"></i>应用设备分配
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 设备分配结果区 -->
+                    <div id="deviceAllocationResultSection" class="bg-white rounded-lg shadow-sm p-4 mb-4 hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-semibold text-gray-800"><i class="fa fa-table mr-1"></i>设备分配结果</h3>
+                        </div>
+                        
+                        <div id="deviceAllocationResultContent">
+                            <div class="text-center text-gray-400 py-8">
+                                <i class="fa fa-bar-chart-o text-4xl mb-2"></i>
+                                <p class="text-sm">暂无分配结果</p>
+                                <p class="text-xs">请先设置设备项目占比并点击"应用设备分配"</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 设备统计汇总 -->
+                        <div id="deviceSummarySection" class="mt-4 p-3 bg-gray-50 rounded-lg hidden">
+                            <h4 class="text-xs font-medium text-gray-700 mb-2">设备分配汇总</h4>
+                            <div id="deviceSummary" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提交按钮 -->
+                <div id="submitSection" class="text-right hidden">
+                    <button onclick="submitBatchReport()" class="px-6 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
+                        <i class="fa fa-upload mr-1"></i>提交批量报工
+                    </button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function loadPage(pageUrl) {
+            try {
+                console.log('准备跳转到页面:', pageUrl);
+                window.location.assign(pageUrl);
+            } catch (error) {
+                console.error('页面跳转失败:', error);
+                alert('页面跳转失败，请检查文件是否存在: ' + pageUrl);
+            }
+        }
+
+        function toggleMenu(element) {
+            const subMenu = element.nextElementSibling;
+            const arrow = element.querySelector('.menu-arrow');
+
+            subMenu.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+        }
+
+        // ==================== 数据定义 ====================
+        
+        // 项目数据（带周期）
+        const mockProjectData = [
+            { 
+                id: 'proj1', 
+                name: '智能传感器研发', 
+                startDate: '2026-06-01', 
+                endDate: '2026-06-30',
+                color: '#3b82f6'
+            },
+            { 
+                id: 'proj2', 
+                name: '工业机器人控制系统', 
+                startDate: '2026-05-01', 
+                endDate: '2026-06-15',
+                color: '#10b981'
+            },
+            { 
+                id: 'proj3', 
+                name: '新能源材料研究', 
+                startDate: '2026-06-10', 
+                endDate: '2026-07-31',
+                color: '#f59e0b'
+            },
+            { 
+                id: 'proj4', 
+                name: '人工智能算法优化', 
+                startDate: '2026-01-01', 
+                endDate: '2026-05-31',
+                color: '#ef4444'
+            }
+        ];
+
+        // 人员数据
+        const mockPersonnelData = [
+            { id: 'p1', name: '张三', position: '高级工程师' },
+            { id: 'p2', name: '李四', position: '工程师' },
+            { id: 'p3', name: '王五', position: '技术员' },
+        ];
+
+        // 模拟考勤数据（按人员ID存储每天的考勤工时）
+        // 0 表示未打卡
+        function generateMockAttendanceData(personId, year, month) {
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const data = {};
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dateObj = new Date(date);
+                const dayOfWeek = dateObj.getDay();
+                
+                // 周末随机一些天有工时（加班）
+                if (dayOfWeek === 0 || dayOfWeek === 6) {
+                    data[date] = Math.random() > 0.5 ? Math.floor(Math.random() * 4 + 4) : 0;
+                } else {
+                    // 工作日，大部分有考勤，偶尔缺勤
+                    data[date] = Math.random() > 0.1 ? Math.floor(Math.random() * 2 + 7) : 0;
+                }
+            }
+            return data;
+        }
+
+        // 项目占比设置
+        let projectAllocations = {};
+
+        // 当前选中的月份
+        let currentYear = 0;
+        let currentMonth = 0;
+
+        // 当前选中的人员
+        let currentPersonId = '';
+
+        // 考勤数据缓存
+        let attendanceDataCache = {};
+
+        // 分配结果缓存
+        let allocationResults = {};
+
+        // 设备占比设置
+        let deviceAllocations = {};
+
+        // 设备分配结果缓存
+        let deviceAllocationResults = {};
+
+        // 设备模拟数据
+        const mockDeviceData = [
+            { id: 'd1', name: '高精度数控机床A001', type: 'production', color: '#10b981', depreciation: 50000, maintenanceHours: 20 },
+            { id: 'd2', name: '实验离心机B002', type: 'experiment', color: '#8b5cf6', depreciation: 15000, maintenanceHours: 8 },
+            { id: 'd3', name: '光谱分析仪C001', type: 'analysis', color: '#f59e0b', depreciation: 25000, maintenanceHours: 0 },
+            { id: 'd4', name: '激光切割机D001', type: 'production', color: '#ef4444', depreciation: 40000, maintenanceHours: 12 },
+            { id: 'd5', name: '材料测试机E001', type: 'experiment', color: '#06b6d4', depreciation: 30000, maintenanceHours: 16 }
+        ];
+
+        // ==================== 初始化 ====================
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // 设置默认月份为当前月份
+            const today = new Date();
+            currentYear = today.getFullYear();
+            currentMonth = today.getMonth() + 1;
+            document.getElementById('batchReportMonth').value = `${currentYear}-${String(currentMonth).padStart(2, '0')}`;
+            
+            // 加载人员下拉框
+            loadPersonSelect();
+            
+            // 初始化项目占比设置
+            initProjectAllocations();
+        });
+
+        function loadPersonSelect() {
+            const select = document.getElementById('personSelect');
+            select.innerHTML = '<option value="">-- 全部人员 --</option>';
+            
+            mockPersonnelData.forEach(person => {
+                select.innerHTML += `<option value="${person.id}">${person.name} (${person.position})</option>`;
+            });
+            
+            select.addEventListener('change', () => {
+                currentPersonId = select.value;
+            });
+        }
+
+        // ==================== 项目占比设置 ====================
+        
+        function initProjectAllocations() {
+            const container = document.getElementById('projectAllocationCards');
+            container.innerHTML = '';
+            
+            mockProjectData.forEach(project => {
+                const effectiveDays = calculateProjectEffectiveDays(project);
+                const isDisabled = effectiveDays === 0;
+                
+                const card = document.createElement('div');
+                card.className = `project-card ${isDisabled ? 'disabled' : ''}`;
+                card.id = `project-card-${project.id}`;
+                card.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <div class="w-3 h-3 rounded mr-1.5" style="background-color: ${project.color}"></div>
+                        <span class="text-sm font-medium text-gray-800 truncate">${project.name}</span>
+                        ${isDisabled ? '<span class="text-[10px] ml-2 text-gray-400">(已结项)</span>' : ''}
+                    </div>
+                    <div class="text-[10px] text-gray-500 mb-2">
+                        ${formatDateShort(project.startDate)} ~ ${formatDateShort(project.endDate)}
+                    </div>
+                    <div class="flex items-center">
+                        <label class="text-xs text-gray-600 mr-1.5">占比:</label>
+                        <input type="number" 
+                            id="project-percent-${project.id}"
+                            class="percentage-input ${isDisabled ? 'disabled' : ''}" 
+                            min="0" max="100" step="5" value="0"
+                            ${isDisabled ? 'disabled' : ''}
+                            onchange="updateProjectPercentage('${project.id}')">
+                        <span class="text-xs text-gray-600">%</span>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+                
+                // 初始化占比对象
+                projectAllocations[project.id] = {
+                    percentage: 0,
+                    effectiveDays: effectiveDays
+                };
+            });
+        }
+
+        function calculateProjectEffectiveDays(project) {
+            const year = currentYear;
+            const month = currentMonth;
+            const daysInMonth = new Date(year, month, 0).getDate();
+            
+            const monthStart = new Date(year, month - 1, 1);
+            const monthEnd = new Date(year, month, daysInMonth);
+            const projectStart = new Date(project.startDate);
+            const projectEnd = new Date(project.endDate);
+            
+            // 计算重叠天数
+            const effectiveStart = projectStart > monthStart ? projectStart : monthStart;
+            const effectiveEnd = projectEnd < monthEnd ? projectEnd : monthEnd;
+            
+            if (effectiveStart > effectiveEnd) {
+                return 0;
+            }
+            
+            const diffTime = effectiveEnd - effectiveStart;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            return diffDays;
+        }
+
+        function updateProjectPercentage(projectId) {
+            const input = document.getElementById(`project-percent-${projectId}`);
+            const percentage = parseInt(input.value) || 0;
+            
+            projectAllocations[projectId].percentage = percentage;
+            
+            // 检查占比设置
+            checkPercentageWarning();
+        }
+
+        function checkPercentageWarning() {
+            let totalPercentage = 0;
+            let activeProjects = 0;
+            let allProjects = 0;
+            
+            for (const projectId in projectAllocations) {
+                const allocation = projectAllocations[projectId];
+                allProjects++;
+                
+                if (allocation.effectiveDays > 0) {
+                    totalPercentage += allocation.percentage;
+                    activeProjects++;
+                }
+            }
+
+            document.getElementById('totalPercentage').textContent = `${totalPercentage}%`;
+
+            const warningDiv = document.getElementById('percentageWarning');
+            const okDiv = document.getElementById('percentageOk');
+            
+            if (totalPercentage < 100) {
+                warningDiv.classList.remove('hidden');
+                okDiv.classList.add('hidden');
+            } else if (totalPercentage === 100) {
+                warningDiv.classList.add('hidden');
+                okDiv.classList.remove('hidden');
+            } else {
+                warningDiv.classList.remove('hidden');
+                warningDiv.querySelector('span').textContent = `总占比超过100%，请调整`;
+                okDiv.classList.add('hidden');
+            }
+        }
+
+        function formatDateShort(dateStr) {
+            return dateStr.substring(5).replace('-', '.');
+        }
+
+        // ==================== 加载考勤数据 ====================
+        
+        function loadBatchData() {
+            const monthInput = document.getElementById('batchReportMonth').value;
+            
+            if (!monthInput) {
+                alert('请选择报工月份！');
+                return;
+            }
+            
+            // 解析月份
+            const [year, month] = monthInput.split('-').map(Number);
+            currentYear = year;
+            currentMonth = month;
+            
+            console.log('===== 开始分配 =====');
+            console.log('选择的月份:', `${year}-${month}`);
+            console.log('全局变量 currentYear:', currentYear);
+            console.log('全局变量 currentMonth:', currentMonth);
+            
+            // 重新初始化项目占比
+            initProjectAllocations();
+            
+            // 初始化设备列表
+            initDeviceAllocationCards();
+            
+            // 加载考勤数据
+            loadAttendanceData();
+            
+            // 显示Tab切换区和各个区域
+            document.getElementById('workTypeTabSection').classList.remove('hidden');
+            document.getElementById('projectAllocationSection').classList.remove('hidden');
+            
+            checkPercentageWarning();
+        }
+
+        function loadAttendanceData() {
+            // 获取选中的人员
+            const personId = document.getElementById('personSelect').value;
+            const personsToLoad = personId ? [mockPersonnelData.find(p => p.id === personId)] : mockPersonnelData;
+            
+            // 清除缓存
+            attendanceDataCache = {};
+            allocationResults = {};
+            
+            // 生成考勤数据
+            personsToLoad.forEach(person => {
+                if (person) {
+                    attendanceDataCache[person.id] = generateMockAttendanceData(person.id, currentYear, currentMonth);
+                }
+            });
+            
+            // 初始化分配结果结构
+            initAllocationResults();
+            
+            // 显示项目占比设置区域
+            document.getElementById('projectAllocationSection').classList.remove('hidden');
+        }
+
+        // ==================== 智能分配 ====================
+        
+        function initAllocationResults() {
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            const personId = document.getElementById('personSelect').value;
+            const personsToProcess = personId ? [personId] : Object.keys(attendanceDataCache);
+            
+            allocationResults = {};
+            
+            personsToProcess.forEach(pid => {
+                allocationResults[pid] = {};
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    allocationResults[pid][date] = {};
+                    
+                    // 初始化各项目分配为0
+                    mockProjectData.forEach(project => {
+                        allocationResults[pid][date][project.id] = 0;
+                    });
+                }
+            });
+        }
+
+        function applyAllocation() {
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            const personId = document.getElementById('personSelect').value;
+            const personsToProcess = personId ? [personId] : Object.keys(attendanceDataCache);
+            
+            // 检查占比设置
+            let totalPercentage = 0;
+            for (const projectId in projectAllocations) {
+                if (projectAllocations[projectId].effectiveDays > 0) {
+                    totalPercentage += projectAllocations[projectId].percentage;
+                }
+            }
+            
+            if (totalPercentage < 100) {
+                if (!confirm(`总占比为${totalPercentage}%，不足100%。剩余工时将无法分配。是否继续？`)) {
+                    return;
+                }
+            }
+            
+            // 清除之前的分配结果
+            initAllocationResults();
+            
+            // 按日期进行分配
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dateObj = new Date(currentYear, currentMonth - 1, day);
+                const dayOfWeek = dateObj.getDay();
+                
+                // 跳过周末（如果有特殊需求可以调整）
+                // if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+                
+                personsToProcess.forEach(pid => {
+                    if (!attendanceDataCache[pid]) return;
+                    
+                    const dailyHours = attendanceDataCache[pid][date] || 0;
+                    
+                    // 如果当天没有考勤工时，跳过
+                    if (dailyHours === 0) return;
+                    
+                    // 获取当天有效的项目
+                    const activeProjects = mockProjectData.filter(project => {
+                        return isProjectActiveOnDate(project, date);
+                    });
+                    
+                    // 按占比分配
+                    activeProjects.forEach(project => {
+                        const percentage = projectAllocations[project.id]?.percentage || 0;
+                        if (percentage > 0) {
+                            allocationResults[pid][date][project.id] = parseFloat((dailyHours * percentage / 100).toFixed(1));
+                        }
+                    });
+                });
+            }
+            
+            // 显示分配结果区域
+            document.getElementById('allocationResultSection').classList.remove('hidden');
+            document.getElementById('submitSection').classList.remove('hidden');
+            
+            // 显示分配结果
+            renderAllocationResults();
+            
+            // 更新汇总
+            updateProjectSummary();
+            
+            alert('智能分配完成！您可以手动调整各项目的分配工时。');
+        }
+
+        function isProjectActiveOnDate(project, date) {
+            const checkDate = new Date(date);
+            const startDate = new Date(project.startDate);
+            const endDate = new Date(project.endDate);
+            
+            return checkDate >= startDate && checkDate <= endDate;
+        }
+
+        function renderAllocationResults() {
+            // 由于直接在考勤日历下方显示分配表格会比较复杂，
+            // 这里改为显示一个专门的分配结果表格
+            showAllocationResultTable();
+        }
+
+        function showAllocationResultTable() {
+            const container = document.getElementById('allocationResultContent');
+            container.innerHTML = '';
+            
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            const personId = document.getElementById('personSelect').value;
+            const personsToShow = personId ? [mockPersonnelData.find(p => p.id === personId)] : mockPersonnelData;
+            
+            // 获取有效的项目（当月有有效天数的项目）
+            const activeProjects = mockProjectData.filter(project => {
+                return calculateProjectEffectiveDays(project) > 0;
+            });
+            
+            // 渲染分配表格
+            personsToShow.forEach(person => {
+                if (!person || !allocationResults[person.id]) return;
+                
+                const personCard = document.createElement('div');
+                personCard.className = 'mb-3';
+                
+                let tableHtml = `
+                    <div class="text-sm font-medium text-gray-800 mb-2">${person.name} (${person.position})</div>
+                    <div class="allocation-table-wrapper">
+                        <table class="allocation-table">
+                            <thead>
+                                <tr>
+                                    <th class="sticky-left">日期</th>
+                                    <th>考勤</th>
+                                    ${activeProjects.map(p => `
+                                        <th>
+                                            <div class="flex items-center justify-center">
+                                                <div class="w-2 h-2 rounded mr-1" style="background-color: ${p.color}"></div>
+                                                <span class="truncate max-w-[80px]">${p.name}</span>
+                                            </div>
+                                        </th>
+                                    `).join('')}
+                                    <th>已分配</th>
+                                    <th>剩余</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                let personTotalAllocated = 0;
+                let personTotalHours = 0;
+                
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const attendance = attendanceDataCache[person.id]?.[date] || 0;
+                    const dateObj = new Date(currentYear, currentMonth - 1, day);
+                    const dayOfWeek = dateObj.getDay();
+                    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                    
+                    let dayTotal = 0;
+                    let rowClass = '';
+                    
+                    if (attendance > 0) {
+                        personTotalHours += attendance;
+                        
+                        // 计算当天分配
+                        activeProjects.forEach(p => {
+                            dayTotal += allocationResults[person.id]?.[date]?.[p.id] || 0;
+                        });
+                        
+                        personTotalAllocated += dayTotal;
+                        
+                        if (dayTotal < attendance) {
+                            rowClass = 'bg-yellow-50';
+                        }
+                    }
+                    
+                    tableHtml += `
+                        <tr class="${rowClass} ${isWeekend ? 'bg-red-50' : ''}">
+                            <td class="sticky-left">${day}日</td>
+                            <td class="${attendance > 0 ? 'text-green-600 font-medium' : 'text-gray-400'}">
+                                ${attendance > 0 ? attendance + 'h' : '-'}
+                            </td>
+                            ${activeProjects.map(p => {
+                                const value = allocationResults[person.id]?.[date]?.[p.id] || 0;
+                                const isActive = isProjectActiveOnDate(p, date);
+                                
+                                if (!isActive) {
+                                    return `<td class="text-gray-300">-</td>`;
+                                }
+                                
+                                return `
+                                    <td class="text-center">
+                                        <input type="number" 
+                                            data-person="${person.id}" 
+                                            data-date="${date}" 
+                                            data-project="${p.id}"
+                                            class="allocation-input ${attendance === 0 ? 'disabled' : ''}"
+                                            value="${value}" 
+                                            min="0" 
+                                            step="0.5"
+                                            ${attendance === 0 ? 'disabled' : ''}
+                                            onchange="updateAllocation(this)"
+                                            oninput="updateAllocation(this)">
+                                    </td>
+                                `;
+                            }).join('')}
+                            <td class="${dayTotal > 0 ? 'text-blue-600 font-medium' : 'text-gray-400'}">
+                                ${attendance > 0 ? dayTotal.toFixed(1) + 'h' : '-'}
+                            </td>
+                            <td class="${attendance > 0 && dayTotal < attendance ? 'text-yellow-600 font-medium' : 'text-gray-400'}">
+                                ${attendance > 0 ? (attendance - dayTotal).toFixed(1) + 'h' : '-'}
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+                tableHtml += `
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="sticky-left font-medium">汇总</td>
+                                    <td class="font-bold text-green-600">${personTotalHours.toFixed(1)}h</td>
+                                    ${activeProjects.map(p => {
+                                        let projectTotal = 0;
+                                        for (let day = 1; day <= daysInMonth; day++) {
+                                            const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                                            projectTotal += allocationResults[person.id]?.[date]?.[p.id] || 0;
+                                        }
+                                        return `
+                                            <td class="font-bold" style="color: ${p.color}">${projectTotal.toFixed(1)}h</td>
+                                        `;
+                                    }).join('')}
+                                    <td class="font-bold text-blue-600">${personTotalAllocated.toFixed(1)}h</td>
+                                    <td class="font-bold text-yellow-600">${(personTotalHours - personTotalAllocated).toFixed(1)}h</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                `;
+                
+                personCard.innerHTML = tableHtml;
+                container.appendChild(personCard);
+            });
+        }
+
+        function updateAllocation(input) {
+            const personId = input.dataset.person;
+            const date = input.dataset.date;
+            const projectId = input.dataset.project;
+            const value = parseFloat(input.value) || 0;
+            
+            // 更新内存中的数据
+            if (!allocationResults[personId]) {
+                allocationResults[personId] = {};
+            }
+            if (!allocationResults[personId][date]) {
+                allocationResults[personId][date] = {};
+            }
+            
+            allocationResults[personId][date][projectId] = value;
+            
+            // 更新剩余显示（需要重新计算）
+            updateRowRemaining(input);
+        }
+
+        function updateRowRemaining(input) {
+            const row = input.closest('tr');
+            const personId = input.dataset.person;
+            const date = input.dataset.date;
+            
+            const attendance = attendanceDataCache[personId]?.[date] || 0;
+            
+            // 计算已分配
+            let allocated = 0;
+            Object.values(allocationResults[personId][date]).forEach(val => {
+                allocated += val;
+            });
+            
+            // 更新剩余列
+            const cells = row.querySelectorAll('td');
+            const lastCell = cells[cells.length - 1];
+            lastCell.textContent = (attendance - allocated).toFixed(1) + 'h';
+            
+            if (attendance > 0 && allocated < attendance) {
+                lastCell.classList.add('text-yellow-600', 'font-medium');
+                lastCell.classList.remove('text-gray-400');
+            }
+            
+            // 更新已分配列
+            const allocatedCell = cells[cells.length - 2];
+            allocatedCell.textContent = allocated.toFixed(1) + 'h';
+            if (allocated > 0) {
+                allocatedCell.classList.add('text-blue-600', 'font-medium');
+                allocatedCell.classList.remove('text-gray-400');
+            }
+            
+            // 更新行背景色
+            if (attendance > 0 && allocated < attendance) {
+                row.classList.add('bg-yellow-50');
+            } else {
+                row.classList.remove('bg-yellow-50');
+            }
+        }
+
+        function updateProjectSummary() {
+            const container = document.getElementById('projectSummary');
+            const section = document.getElementById('projectSummarySection');
+            container.innerHTML = '';
+            
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            const personId = document.getElementById('personSelect').value;
+            const personsToProcess = personId ? [personId] : Object.keys(allocationResults);
+            
+            // 计算各项目总工时
+            const projectTotals = {};
+            let grandTotal = 0;
+            
+            mockProjectData.forEach(project => {
+                projectTotals[project.id] = {
+                    name: project.name,
+                    color: project.color,
+                    total: 0
+                };
+            });
+            
+            personsToProcess.forEach(pid => {
+                if (!allocationResults[pid]) return;
+                
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    
+                    mockProjectData.forEach(project => {
+                        const hours = allocationResults[pid]?.[date]?.[project.id] || 0;
+                        projectTotals[project.id].total += hours;
+                        grandTotal += hours;
+                    });
+                }
+            });
+            
+            // 渲染汇总卡片
+            Object.values(projectTotals).forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'summary-card';
+                card.style.border = `1px solid ${project.color}`;
+                card.style.backgroundColor = project.color + '10';
+                
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 rounded mr-1.5" style="background-color: ${project.color}"></div>
+                            <span class="text-xs font-medium text-gray-700 truncate max-w-[100px]">${project.name}</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-bold" style="color: ${project.color}">${project.total.toFixed(1)}h</div>
+                            <div class="text-[10px] text-gray-500">${grandTotal > 0 ? ((project.total / grandTotal) * 100).toFixed(0) : 0}%</div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+            
+            // 添加总工时卡片
+            const totalCard = document.createElement('div');
+            totalCard.className = 'summary-card border-1 border-blue-400 bg-blue-50';
+            totalCard.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-gray-700">月度总分配</span>
+                    <div class="text-sm font-bold text-blue-600">${grandTotal.toFixed(1)}h</div>
+                </div>
+            `;
+            container.appendChild(totalCard);
+            
+            // 显示汇总区域
+            section.classList.remove('hidden');
+        }
+
+        // ==================== 提交 ====================
+        
+        function submitBatchReport() {
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            const personId = document.getElementById('personSelect').value;
+            const personsToSubmit = personId ? [personId] : Object.keys(allocationResults);
+            
+            const reports = [];
+            const deviceReports = [];
+            
+            // 处理人工工时
+            personsToSubmit.forEach(pid => {
+                if (!allocationResults[pid]) return;
+                
+                const person = mockPersonnelData.find(p => p.id === pid);
+                
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const attendance = attendanceDataCache[pid]?.[date] || 0;
+                    
+                    if (attendance === 0) continue;
+                    
+                    mockProjectData.forEach(project => {
+                        const hours = allocationResults[pid]?.[date]?.[project.id] || 0;
+                        if (hours > 0) {
+                            reports.push({
+                                personId: pid,
+                                personName: person?.name || '',
+                                projectId: project.id,
+                                projectName: project.name,
+                                date: date,
+                                hours: hours
+                            });
+                        }
+                    });
+                }
+            });
+            
+            // 处理设备工时
+            Object.keys(deviceAllocationResults).forEach(deviceId => {
+                const result = deviceAllocationResults[deviceId];
+                
+                result.projectHours.forEach(ph => {
+                    deviceReports.push({
+                        deviceId: deviceId,
+                        deviceName: result.device.name,
+                        projectId: ph.projectId,
+                        projectName: ph.projectName,
+                        month: `${currentYear}-${String(currentMonth).padStart(2, '0')}`,
+                        hours: ph.hours,
+                        depreciation: ph.depreciation
+                    });
+                });
+            });
+            
+            if (reports.length === 0 && deviceReports.length === 0) {
+                alert('没有检测到有效的报工记录，请先生成人工或设备分配数据！');
+                return;
+            }
+            
+            // 校验人工与设备占比一致性
+            const consistencyWarnings = validatePersonnelDeviceConsistency();
+            
+            console.log('提交批量报工数据:', {
+                year: currentYear,
+                month: currentMonth,
+                personnelReports: reports.length,
+                deviceReports: deviceReports.length,
+                consistencyWarnings: consistencyWarnings
+            });
+
+            // 保存人工工时
+            saveBatchWorkToStorage(reports, currentYear, currentMonth);
+            
+            // 保存设备工时
+            saveDeviceWorkToStorage(deviceReports, currentYear, currentMonth);
+
+            let confirmMsg = `批量报工数据已提交成功！\n\n`;
+            confirmMsg += `人工报工: ${reports.length} 条\n`;
+            confirmMsg += `设备报工: ${deviceReports.length} 条\n`;
+            
+            if (consistencyWarnings.length > 0) {
+                confirmMsg += `\n⚠️ 占比差异提示:\n${consistencyWarnings.join('\n')}\n`;
+            }
+            
+            confirmMsg += `\n是否跳转到报工记录列表查看？`;
+
+            if (confirm(confirmMsg)) {
+                loadPage('batch-report-list.html');
+            } else {
+                resetForm();
+            }
+        }
+
+        function validatePersonnelDeviceConsistency() {
+            const warnings = [];
+            
+            if (Object.keys(allocationResults).length === 0 || Object.keys(deviceAllocationResults).length === 0) {
+                return warnings;
+            }
+            
+            // 计算人工各项目总占比
+            const personnelProjectRatio = {};
+            let totalPersonnelHours = 0;
+            
+            Object.keys(allocationResults).forEach(pid => {
+                Object.keys(allocationResults[pid]).forEach(date => {
+                    Object.keys(allocationResults[pid][date]).forEach(projectId => {
+                        const hours = allocationResults[pid][date][projectId];
+                        personnelProjectRatio[projectId] = (personnelProjectRatio[projectId] || 0) + hours;
+                        totalPersonnelHours += hours;
+                    });
+                });
+            });
+            
+            // 计算设备各项目总占比
+            const deviceProjectRatio = {};
+            let totalDeviceHours = 0;
+            
+            Object.keys(deviceAllocationResults).forEach(deviceId => {
+                deviceAllocationResults[deviceId].projectHours.forEach(ph => {
+                    deviceProjectRatio[ph.projectId] = (deviceProjectRatio[ph.projectId] || 0) + ph.hours;
+                    totalDeviceHours += ph.hours;
+                });
+            });
+            
+            // 比较各项目占比差异
+            mockProjectData.forEach(project => {
+                const personnelRatio = totalPersonnelHours > 0 
+                    ? (personnelProjectRatio[project.id] || 0) / totalPersonnelHours * 100 
+                    : 0;
+                const deviceRatio = totalDeviceHours > 0 
+                    ? (deviceProjectRatio[project.id] || 0) / totalDeviceHours * 100 
+                    : 0;
+                
+                if (Math.abs(personnelRatio - deviceRatio) > 30) {
+                    warnings.push(`项目"${project.name}"：人工占比${personnelRatio.toFixed(1)}% vs 设备占比${deviceRatio.toFixed(1)}%`);
+                }
+            });
+            
+            return warnings;
+        }
+
+        function saveDeviceWorkToStorage(reports, year, month) {
+            const storedRecords = JSON.parse(localStorage.getItem('deviceWorkRecords') || '[]');
+            
+            const newRecords = [];
+            
+            reports.forEach(report => {
+                newRecords.push({
+                    id: Date.now() + Math.random().toString(36).substr(2, 9),
+                    deviceId: report.deviceId,
+                    deviceName: report.deviceName,
+                    projectId: report.projectId,
+                    projectName: report.projectName,
+                    month: report.month,
+                    hours: report.hours,
+                    depreciation: report.depreciation,
+                    submitTime: new Date().toLocaleString('zh-CN'),
+                    source: 'batch'
+                });
+            });
+            
+            localStorage.setItem('deviceWorkRecords', JSON.stringify([...newRecords, ...storedRecords]));
+            
+            console.log('设备工时数据已保存:', newRecords.length, '条');
+        }
+
+        function saveBatchWorkToStorage(reports, year, month) {
+            const storedRecords = JSON.parse(localStorage.getItem('workHourRecords') || '[]');
+            
+            const newRecords = [];
+            
+            reports.forEach(report => {
+                report.dailyAllocations.forEach(day => {
+                    day.projectHours.forEach(ph => {
+                        newRecords.push({
+                            id: Date.now() + Math.random().toString(36).substr(2, 9),
+                            name: report.personName,
+                            department: '研发部',
+                            project: ph.projectName,
+                            workContent: `研发工作 - ${ph.projectName}`,
+                            date: day.date,
+                            manualHours: ph.hours,
+                            deviceRdHours: 0,
+                            deviceProductionHours: 0,
+                            intangibleHours: 0,
+                            submitTime: new Date().toLocaleString('zh-CN'),
+                            collected: false,
+                            source: 'batch'
+                        });
+                    });
+                });
+            });
+            
+            localStorage.setItem('workHourRecords', JSON.stringify([...newRecords, ...storedRecords]));
+            
+            console.log('批量报工数据已同步到人员工时记录:', newRecords.length, '条');
+        }
+
+        // ==================== Tab切换 ====================
+        function switchWorkTypeTab(tabName) {
+            document.getElementById('tabPersonnel').className = tabName === 'personnel' 
+                ? 'px-6 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50' 
+                : 'px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700';
+            document.getElementById('tabDevice').className = tabName === 'device' 
+                ? 'px-6 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50' 
+                : 'px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700';
+            
+            document.getElementById('personnelWorkTab').classList.toggle('hidden', tabName !== 'personnel');
+            document.getElementById('deviceWorkTab').classList.toggle('hidden', tabName !== 'device');
+        }
+
+        // ==================== 设备工时相关函数 ====================
+        
+        function initDeviceAllocationCards() {
+            const container = document.getElementById('deviceAllocationCards');
+            container.innerHTML = '';
+            
+            const scheduleType = document.getElementById('workScheduleType').value;
+            
+            mockDeviceData.forEach(device => {
+                const availability = calculateDeviceAvailability(device, currentYear, currentMonth, scheduleType);
+                
+                const card = document.createElement('div');
+                card.className = 'device-card';
+                card.id = `device-card-${device.id}`;
+                card.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <input type="checkbox" id="device-check-${device.id}" class="mr-2" onchange="toggleDeviceSelection('${device.id}')">
+                        <div class="w-3 h-3 rounded mr-1.5" style="background-color: ${device.color}"></div>
+                        <span class="text-sm font-medium text-gray-800 truncate">${device.name}</span>
+                    </div>
+                    <div id="device-info-${device.id}" class="text-[10px] text-gray-500 mb-2 space-y-1">
+                        <div>月可用: ${availability.rdAvailable}h | 维护: ${device.maintenanceHours}h</div>
+                        <div>折旧: ¥${device.depreciation.toLocaleString()}</div>
+                    </div>
+                    <div id="device-project-allocation-${device.id}" class="device-project-inputs hidden">
+                        <div class="text-[10px] text-gray-500 mb-1.5">项目分配比例:</div>
+                        ${mockProjectData.filter(p => calculateProjectEffectiveDays(p) > 0).map(project => `
+                            <div class="flex items-center mb-1">
+                                <span class="text-[10px] text-gray-600 w-20 truncate">${project.name}:</span>
+                                <input type="number" 
+                                    id="device-percent-${device.id}-${project.id}"
+                                    class="device-percent-input" 
+                                    min="0" max="100" step="5" value="0"
+                                    onchange="updateDevicePercentage('${device.id}', '${project.id}')">
+                                <span class="text-[10px] text-gray-500">%</span>
+                            </div>
+                        `).join('')}
+                        <div class="flex items-center mt-2 text-[10px]">
+                            <span class="text-gray-600">设备总占比：</span>
+                            <span id="device-total-percent-${device.id}" class="font-medium text-blue-600">0%</span>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+                
+                deviceAllocations[device.id] = {
+                    selected: false,
+                    availability: availability,
+                    projectPercentages: {}
+                };
+            });
+        }
+
+        function calculateDeviceAvailability(device, year, month, scheduleType) {
+            // 确保year和month是有效的数值
+            if (!year || !month || year < 2000 || month < 1 || month > 12) {
+                console.warn('设备可用时间计算：年月参数无效', { year, month });
+                return {
+                    totalAvailable: 0,
+                    maintenance: device.maintenanceHours,
+                    rdAvailable: 0
+                };
+            }
+            
+            const daysInMonth = new Date(year, month, 0).getDate();
+            let totalHours = 0;
+            
+            if (scheduleType === 'continuous_24h') {
+                totalHours = daysInMonth * 24;
+            } else if (scheduleType === 'double_rest') {
+                const workDays = calculateWorkDays(year, month, 'double_rest');
+                totalHours = workDays * 8;
+            } else if (scheduleType === 'single_rest') {
+                const workDays = calculateWorkDays(year, month, 'single_rest');
+                totalHours = workDays * 8;
+            }
+            
+            const rdAvailable = totalHours - device.maintenanceHours;
+            
+            console.log(`设备${device.name}可用时间计算:`, {
+                year, month, daysInMonth, scheduleType, totalHours, 
+                maintenance: device.maintenanceHours, rdAvailable
+            });
+            
+            return {
+                totalAvailable: totalHours,
+                maintenance: device.maintenanceHours,
+                rdAvailable: rdAvailable > 0 ? rdAvailable : 0
+            };
+        }
+
+        function calculateWorkDays(year, month, type) {
+            const daysInMonth = new Date(year, month, 0).getDate();
+            let workDays = 0;
+            
+            console.log(`===== calculateWorkDays =====`);
+            console.log(`参数: year=${year}, month=${month}, type="${type}", type类型=${typeof type}`);
+            console.log(`当月天数: ${daysInMonth}`);
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month - 1, day);
+                const dayOfWeek = date.getDay();
+                const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+                
+                let isWorkDay = false;
+                
+                if (type === 'double_rest' || type === 'double_rest') {
+                    if (dayOfWeek !== 0 && dayOfWeek !== 6) isWorkDay = true;
+                } else if (type === 'single_rest') {
+                    if (dayOfWeek !== 0) isWorkDay = true;
+                } else if (type === 'continuous_24h') {
+                    isWorkDay = true;
+                }
+                
+                if (isWorkDay) workDays++;
+                console.log(`  ${year}-${month}-${day} ${weekDays[dayOfWeek]} (dayOfWeek=${dayOfWeek}) -> ${isWorkDay ? '工作日' : '休息日'}`);
+            }
+            
+            console.log(`计算结果: ${workDays} 个工作日`);
+            return workDays;
+        }
+
+        function updateDeviceAvailability() {
+            const scheduleType = document.getElementById('workScheduleType').value;
+            
+            mockDeviceData.forEach(device => {
+                const availability = calculateDeviceAvailability(device, currentYear, currentMonth, scheduleType);
+                
+                const infoDiv = document.getElementById(`device-info-${device.id}`);
+                if (infoDiv) {
+                    infoDiv.innerHTML = `
+                        <div>月可用: ${availability.rdAvailable}h | 维护: ${device.maintenanceHours}h</div>
+                        <div>折旧: ¥${device.depreciation.toLocaleString()}</div>
+                    `;
+                }
+                
+                if (deviceAllocations[device.id]) {
+                    deviceAllocations[device.id].availability = availability;
+                }
+            });
+        }
+
+        function toggleDeviceSelection(deviceId) {
+            const checkbox = document.getElementById(`device-check-${deviceId}`);
+            const projectInputs = document.getElementById(`device-project-allocation-${deviceId}`);
+            
+            if (checkbox.checked) {
+                projectInputs.classList.remove('hidden');
+                deviceAllocations[deviceId].selected = true;
+            } else {
+                projectInputs.classList.add('hidden');
+                deviceAllocations[deviceId].selected = false;
+                
+                mockProjectData.filter(p => calculateProjectEffectiveDays(p) > 0).forEach(project => {
+                    const input = document.getElementById(`device-percent-${deviceId}-${project.id}`);
+                    if (input) input.value = 0;
+                    deviceAllocations[deviceId].projectPercentages[project.id] = 0;
+                });
+                
+                document.getElementById(`device-total-percent-${deviceId}`).textContent = '0%';
+            }
+        }
+
+        function updateDevicePercentage(deviceId, projectId) {
+            const input = document.getElementById(`device-percent-${deviceId}-${projectId}`);
+            let value = parseInt(input.value) || 0;
+            
+            if (value < 0) value = 0;
+            if (value > 100) value = 100;
+            input.value = value;
+            
+            deviceAllocations[deviceId].projectPercentages[projectId] = value;
+            
+            let totalPercent = 0;
+            mockProjectData.filter(p => calculateProjectEffectiveDays(p) > 0).forEach(project => {
+                totalPercent += deviceAllocations[deviceId].projectPercentages[project.id] || 0;
+            });
+            
+            document.getElementById(`device-total-percent-${deviceId}`).textContent = `${Math.min(totalPercent, 100)}%`;
+            
+            if (totalPercent > 100) {
+                document.getElementById(`device-total-percent-${deviceId}`).className = 'font-medium text-red-600';
+            } else {
+                document.getElementById(`device-total-percent-${deviceId}`).className = 'font-medium text-blue-600';
+            }
+        }
+
+        function applyDeviceAllocation() {
+            const selectedDevices = Object.keys(deviceAllocations).filter(id => deviceAllocations[id].selected);
+            
+            if (selectedDevices.length === 0) {
+                alert('请先勾选本月使用的设备！');
+                return;
+            }
+            
+            const errors = validateDeviceAllocation();
+            if (errors.length > 0) {
+                alert('设备分配校验失败：\n\n' + errors.join('\n'));
+                return;
+            }
+            
+            deviceAllocationResults = {};
+            
+            selectedDevices.forEach(deviceId => {
+                const device = mockDeviceData.find(d => d.id === deviceId);
+                const allocation = deviceAllocations[deviceId];
+                const rdHours = allocation.availability.rdAvailable;
+                
+                const projectHours = [];
+                let totalAllocated = 0;
+                
+                mockProjectData.filter(p => calculateProjectEffectiveDays(p) > 0).forEach(project => {
+                    const percent = allocation.projectPercentages[project.id] || 0;
+                    if (percent > 0) {
+                        const hours = Math.round(rdHours * percent / 100);
+                        projectHours.push({
+                            projectId: project.id,
+                            projectName: project.name,
+                            hours: hours,
+                            percentage: percent,
+                            depreciation: Math.round(device.depreciation * percent / 100)
+                        });
+                        totalAllocated += hours;
+                    }
+                });
+                
+                deviceAllocationResults[deviceId] = {
+                    device: device,
+                    totalHours: totalAllocated,
+                    unallocatedHours: rdHours - totalAllocated,
+                    projectHours: projectHours
+                };
+            });
+            
+            renderDeviceAllocationResults();
+            document.getElementById('deviceAllocationResultSection').classList.remove('hidden');
+            document.getElementById('deviceSummarySection').classList.remove('hidden');
+            document.getElementById('submitSection').classList.remove('hidden');
+        }
+
+        function validateDeviceAllocation() {
+            const errors = [];
+            
+            Object.keys(deviceAllocations).filter(id => deviceAllocations[id].selected).forEach(deviceId => {
+                const allocation = deviceAllocations[deviceId];
+                
+                let totalPercent = 0;
+                mockProjectData.filter(p => calculateProjectEffectiveDays(p) > 0).forEach(project => {
+                    totalPercent += allocation.projectPercentages[project.id] || 0;
+                });
+                
+                if (totalPercent > 100) {
+                    const device = mockDeviceData.find(d => d.id === deviceId);
+                    errors.push(`${device.name} 项目占比总和超过100%（当前${totalPercent}%）`);
+                }
+                
+                if (totalPercent === 0) {
+                    const device = mockDeviceData.find(d => d.id === deviceId);
+                    errors.push(`${device.name} 已勾选但未设置任何项目占比`);
+                }
+            });
+            
+            return errors;
+        }
+
+        function renderDeviceAllocationResults() {
+            const container = document.getElementById('deviceAllocationResultContent');
+            const summaryContainer = document.getElementById('deviceSummary');
+            
+            container.innerHTML = '';
+            summaryContainer.innerHTML = '';
+            
+            Object.keys(deviceAllocationResults).forEach(deviceId => {
+                const result = deviceAllocationResults[deviceId];
+                
+                const tableDiv = document.createElement('div');
+                tableDiv.className = 'mb-4';
+                tableDiv.innerHTML = `
+                    <div class="text-sm font-medium text-gray-800 mb-2 flex items-center">
+                        <div class="w-3 h-3 rounded mr-1.5" style="background-color: ${result.device.color}"></div>
+                        ${result.device.name}
+                        <span class="text-xs text-gray-500 ml-2">（总工时: ${result.totalHours}h / 可用: ${deviceAllocations[deviceId].availability.rdAvailable}h）</span>
+                    </div>
+                    <table class="min-w-full text-xs">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-3 py-1.5 text-left">项目名称</th>
+                                <th class="px-3 py-1.5 text-center">占比</th>
+                                <th class="px-3 py-1.5 text-center">工时(h)</th>
+                                <th class="px-3 py-1.5 text-right">折旧(¥)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${result.projectHours.map(ph => `
+                                <tr class="border-b">
+                                    <td class="px-3 py-1.5">${ph.projectName}</td>
+                                    <td class="px-3 py-1.5 text-center">${ph.percentage}%</td>
+                                    <td class="px-3 py-1.5 text-center font-medium text-blue-600">${ph.hours}</td>
+                                    <td class="px-3 py-1.5 text-right font-medium text-gray-800">¥${ph.depreciation.toLocaleString()}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                container.appendChild(tableDiv);
+            });
+            
+            const projectSummaryData = {};
+            Object.keys(deviceAllocationResults).forEach(deviceId => {
+                const result = deviceAllocationResults[deviceId];
+                result.projectHours.forEach(ph => {
+                    if (!projectSummaryData[ph.projectId]) {
+                        projectSummaryData[ph.projectId] = {
+                            projectName: ph.projectName,
+                            totalHours: 0,
+                            totalDepreciation: 0,
+                            deviceCount: 0
+                        };
+                    }
+                    projectSummaryData[ph.projectId].totalHours += ph.hours;
+                    projectSummaryData[ph.projectId].totalDepreciation += ph.depreciation;
+                    projectSummaryData[ph.projectId].deviceCount++;
+                });
+            });
+            
+            Object.keys(projectSummaryData).forEach(projectId => {
+                const summary = projectSummaryData[projectId];
+                const card = document.createElement('div');
+                card.className = 'p-2 bg-white rounded border';
+                card.innerHTML = `
+                    <div class="text-xs font-medium text-gray-800">${summary.projectName}</div>
+                    <div class="text-[10px] text-gray-500 mt-1">
+                        设备工时: <span class="font-medium text-blue-600">${summary.totalHours}h</span> |
+                        折旧: <span class="font-medium text-gray-800">¥${summary.totalDepreciation.toLocaleString()}</span>
+                    </div>
+                    <div class="text-[10px] text-gray-400">${summary.deviceCount} 台设备</div>
+                `;
+                summaryContainer.appendChild(card);
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('workTypeTabSection').classList.add('hidden');
+            document.getElementById('personnelWorkTab').classList.remove('hidden');
+            document.getElementById('deviceWorkTab').classList.add('hidden');
+            
+            document.getElementById('projectAllocationSection').classList.add('hidden');
+            document.getElementById('allocationResultSection').classList.add('hidden');
+            document.getElementById('deviceAllocationResultSection').classList.add('hidden');
+            document.getElementById('deviceSummarySection').classList.add('hidden');
+            document.getElementById('submitSection').classList.add('hidden');
+            
+            document.getElementById('projectAllocationCards').innerHTML = '';
+            document.getElementById('allocationResultContent').innerHTML = `
+                <div class="text-center text-gray-400 py-8">
+                    <i class="fa fa-bar-chart-o text-4xl mb-2"></i>
+                    <p class="text-sm">暂无分配结果</p>
+                    <p class="text-xs">请先设置项目占比并点击"应用智能分配"</p>
+                </div>
+            `;
+            document.getElementById('deviceAllocationCards').innerHTML = `
+                <div class="text-center text-gray-400 py-8">
+                    <i class="fa fa-cogs text-4xl mb-2"></i>
+                    <p class="text-sm">请先选择月份并点击"开始分配"</p>
+                </div>
+            `;
+            document.getElementById('projectSummary').innerHTML = '';
+            document.getElementById('projectSummarySection').classList.add('hidden');
+            
+            attendanceDataCache = {};
+            allocationResults = {};
+            projectAllocations = {};
+            deviceAllocations = {};
+            deviceAllocationResults = {};
+            
+            initProjectAllocations();
+        }
+    </script>
+</body>
+</html>

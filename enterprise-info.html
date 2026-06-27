@@ -638,65 +638,13 @@
                             <input type="text" value="91320100MA1XXXXX88" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                         </div>
                         <div class="space-y-1">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">所属行业 (GB/T 4754) <span class="text-red-500">*</span></label>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">所属行业 <span class="text-red-500">*</span></label>
                             <select id="industry-code" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" onchange="calculateRatio()">
                                 <option value="">请选择所属行业</option>
-                                <optgroup label="制造业（可享受100%加计扣除）">
-                                    <option value="C13">农副食品加工业 (C13)</option>
-                                    <option value="C14">食品制造业 (C14)</option>
-                                    <option value="C25">石油加工、炼焦和核燃料加工业 (C25)</option>
-                                    <option value="C26">化学原料和化学制品制造业 (C26)</option>
-                                    <option value="C27">医药制造业 (C27)</option>
-                                    <option value="C28">化学纤维制造业 (C28)</option>
-                                    <option value="C34">通用设备制造业 (C34)</option>
-                                    <option value="C35">专用设备制造业 (C35)</option>
-                                    <option value="C36">汽车制造业 (C36)</option>
-                                    <option value="C39">计算机、通信和其他电子设备制造业 (C39)</option>
-                                    <option value="C40">仪器仪表制造业 (C40)</option>
-                                </optgroup>
-                                <optgroup label="信息传输、软件和信息技术服务业（可享受100%加计扣除）">
-                                    <option value="I63">电信、广播电视和卫星传输服务 (I63)</option>
-                                    <option value="I64">互联网和相关服务 (I64)</option>
-                                    <option value="I6510">软件开发 (I6510)</option>
-                                    <option value="I6520">信息系统集成服务 (I6520)</option>
-                                    <option value="I6530">信息技术咨询服务 (I6530)</option>
-                                    <option value="I6540">数据处理和存储支持服务 (I6540)</option>
-                                </optgroup>
-                                <optgroup label="科学研究和技术服务业（可享受100%加计扣除）">
-                                    <option value="M73">研究和试验发展 (M73)</option>
-                                    <option value="M74">专业技术服务业 (M74)</option>
-                                    <option value="M75">科技推广和应用服务业 (M75)</option>
-                                </optgroup>
-                                <optgroup label="负面清单行业（不得享受加计扣除）">
-                                    <option value="C16">烟草制造业 (C16)</option>
-                                    <option value="F51">批发业 (F51)</option>
-                                    <option value="F52">零售业 (F52)</option>
-                                    <option value="H61">住宿业 (H61)</option>
-                                    <option value="H62">餐饮业 (H62)</option>
-                                    <option value="S90">文化艺术业 (S90)</option>
-                                    <option value="S91">娱乐业 (S91)</option>
-                                </optgroup>
-                                <optgroup label="其他行业（2023年起可享受100%加计扣除）">
-                                    <option value="A01">农业 (A01)</option>
-                                    <option value="B06">煤炭开采和洗选业 (B06)</option>
-                                    <option value="D44">电力、热力生产和供应业 (D44)</option>
-                                    <option value="E48">土木工程建筑业 (E48)</option>
-                                    <option value="G53">铁路运输业 (G53)</option>
-                                    <option value="J66">货币金融服务 (J66)</option>
-                                    <option value="L72">商务服务业 (L72)</option>
-                                </optgroup>
-                            </select>
-                            <div class="mt-1 flex items-center">
-                                <i class="fa fa-info-circle text-blue-500 mr-1 text-xs"></i>
-                                <span class="text-xs text-gray-500">【政策提示】2023年起，除负面清单行业外，其他所有企业研发费用加计扣除比例均为100%</span>
-                            </div>
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">登记注册类型</label>
-                            <select class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
-                                <option value="110">有限责任公司</option>
-                                <option value="170">私营企业</option>
-                                <option value="210">港、澳、台商投资企业</option>
+                                <option value="IT">信息技术行业</option>
+                                <option value="manufacturing">工业企业-制造业企业</option>
+                                <option value="research">纯粹的研发机构</option>
+                                <option value="agriculture">农林牧渔行业</option>
                             </select>
                         </div>
                     </div>

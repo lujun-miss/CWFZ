@@ -526,6 +526,9 @@
                         <button class="btn-primary flex items-center" onclick="openIntegrateModal()">
                             <i class="fa fa-database mr-2"></i>月度工时分配整合
                         </button>
+                        <button class="btn-secondary flex items-center" onclick="openBatchAllocationModal()">
+                            <i class="fa fa-calendar mr-2"></i>月度批量分配
+                        </button>
                         <button class="btn-outline flex items-center">
                             <i class="fa fa-download mr-2"></i>导出
                         </button>
@@ -926,6 +929,76 @@
         </main>
     </div>
 
+    <!-- 月度批量分配弹窗 -->
+    <div id="batchAllocationModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4">
+            <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+                <h3 class="text-lg font-medium text-gray-900">月度批量分配</h3>
+                <button onclick="closeBatchAllocationModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+
+            <div class="px-6 py-4 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">员工姓名</label>
+                        <select id="batchEmployee" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="loadBatchAllocationProjects()">
+                            <option value="张三">张三 - 研发部</option>
+                            <option value="李四">李四 - 研发部</option>
+                            <option value="王五">王五 - 研发部</option>
+                            <option value="赵六">赵六 - 研发部</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">分配月份</label>
+                        <input type="month" id="batchMonth" value="2025-06" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" onchange="loadBatchAllocationProjects()">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">月度总工时（小时）</label>
+                    <input type="number" id="batchTotalHours" value="167.2" min="0" step="0.5" readonly class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <p class="text-xs text-gray-500 mt-1">根据实际考勤数据自动计算（实际出勤天数 × 8小时）</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">各项目分配比例（总和需为100%）</label>
+                    <p class="text-xs text-gray-500 mb-3">项目列表根据所选员工在所选月份参与的项目自动加载</p>
+                    <div id="batchProjectList" class="space-y-2">
+                        <!-- 动态加载项目列表 -->
+                    </div>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button class="btn-outline text-sm flex-1" onclick="setBatchAveragePercent()">
+                        <i class="fa fa-balance-scale mr-1"></i> 平均分配
+                    </button>
+                </div>
+
+                <button class="btn-secondary w-full py-2" onclick="calculateBatchAllocation()">
+                    <i class="fa fa-calculator mr-2"></i> 计算分配结果
+                </button>
+
+                <div id="batchAllocationResult" class="hidden bg-gray-50 rounded-lg p-4">
+                    <h4 class="text-sm font-medium text-gray-700 mb-3">分配结果预览</h4>
+                    <div id="batchResultList" class="space-y-2">
+                        <!-- 动态生成分配结果 -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-2 border-t border-gray-200">
+                <button onclick="closeBatchAllocationModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    取消
+                </button>
+                <button onclick="saveBatchAllocation()" class="px-4 py-2 bg-secondary text-white rounded-md hover:bg-green-600">
+                    <i class="fa fa-save mr-2"></i> 保存分配
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 数据整合模态框 -->
     <div id="integrateModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
@@ -1060,6 +1133,143 @@
         // 关闭数据整合模态框
         function closeIntegrateModal() {
             document.getElementById('integrateModal').classList.add('hidden');
+        }
+
+        // 打开月度批量分配弹窗
+        function openBatchAllocationModal() {
+            document.getElementById('batchAllocationModal').classList.remove('hidden');
+            loadBatchAllocationProjects();
+        }
+
+        // 关闭月度批量分配弹窗
+        function closeBatchAllocationModal() {
+            document.getElementById('batchAllocationModal').classList.add('hidden');
+        }
+
+        // 根据员工和月份加载参与的项目
+        function loadBatchAllocationProjects() {
+            var employeeName = document.getElementById('batchEmployee').value;
+            var month = document.getElementById('batchMonth').value;
+
+            // 模拟数据：根据员工和月份查询参与的项目
+            var employeeProjects = {
+                '张三': {
+                    '2025-06': [
+                        { name: '智能传感器研发', id: 'projectA' },
+                        { name: '工业机器人控制系统', id: 'projectB' }
+                    ]
+                },
+                '李四': {
+                    '2025-06': [
+                        { name: '工业机器人控制系统', id: 'projectB' }
+                    ]
+                },
+                '王五': {
+                    '2025-06': [
+                        { name: '新能源材料研究', id: 'projectC' }
+                    ]
+                }
+            };
+
+            var projects = employeeProjects[employeeName] && employeeProjects[employeeName][month] || [];
+            var projectListDiv = document.getElementById('batchProjectList');
+            projectListDiv.innerHTML = '';
+
+            if (projects.length === 0) {
+                projectListDiv.innerHTML = '<p class="text-sm text-gray-500">该员工在所选月份未参与任何项目</p>';
+                return;
+            }
+
+            projects.forEach(function(project) {
+                var projectHtml = `
+                    <div class="flex items-center space-x-4 py-2">
+                        <div class="flex-1">
+                            <label class="text-sm text-gray-600">${project.name}</label>
+                        </div>
+                        <input type="number" id="${project.id}Percent" value="${Math.floor(100 / projects.length)}" min="0" max="100"
+                               class="w-24 border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center">
+                        <span class="text-gray-500">%</span>
+                        <button class="text-xs px-2 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-800 hover:border-gray-400 transition-colors" onclick="selectBatchProject('${project.id}')">
+                            <i class="fa fa-check-circle mr-1"></i>全部分配
+                        </button>
+                    </div>
+                `;
+                projectListDiv.innerHTML += projectHtml;
+            });
+        }
+
+        // 全部分配到指定项目并高亮
+        function selectBatchProject(projectId) {
+            var inputs = document.querySelectorAll('#batchProjectList input[type="number"]');
+            inputs.forEach(function(input) {
+                var parentDiv = input.parentElement;
+                if (input.id === projectId + 'Percent') {
+                    input.value = 100;
+                    parentDiv.classList.add('bg-blue-50', 'ring-2', 'ring-blue-200', 'rounded-lg');
+                } else {
+                    input.value = 0;
+                    parentDiv.classList.remove('bg-blue-50', 'ring-2', 'ring-blue-200', 'rounded-lg');
+                }
+            });
+        }
+
+        // 平均分配
+        function setBatchAveragePercent() {
+            var inputs = document.querySelectorAll('#batchProjectList input[type="number"]');
+            var avgPercent = Math.floor(100 / inputs.length);
+            var remainder = 100 - (avgPercent * inputs.length);
+
+            inputs.forEach(function(input, index) {
+                var parentDiv = input.parentElement;
+                parentDiv.classList.remove('bg-blue-50', 'ring-2', 'ring-blue-200', 'rounded-lg');
+
+                if (index === 0) {
+                    input.value = avgPercent + remainder;
+                } else {
+                    input.value = avgPercent;
+                }
+            });
+        }
+
+        // 计算批量分配结果
+        function calculateBatchAllocation() {
+            var totalHours = parseFloat(document.getElementById('batchTotalHours').value) || 0;
+            var inputs = document.querySelectorAll('#batchProjectList input[type="number"]');
+            var totalPercent = 0;
+            var results = [];
+
+            inputs.forEach(function(input) {
+                var percent = parseFloat(input.value) || 0;
+                totalPercent += percent;
+                var projectName = input.parentElement.querySelector('label').textContent;
+                var hours = (totalHours * percent / 100).toFixed(2);
+                results.push({ name: projectName, percent: percent, hours: hours });
+            });
+
+            if (totalPercent !== 100) {
+                alert('分配比例总和必须等于100%！');
+                return;
+            }
+
+            document.getElementById('batchAllocationResult').classList.remove('hidden');
+            var resultList = document.getElementById('batchResultList');
+            resultList.innerHTML = '';
+
+            results.forEach(function(result) {
+                var resultItem = document.createElement('div');
+                resultItem.className = 'flex justify-between items-center py-2 border-b border-gray-100';
+                resultItem.innerHTML = `
+                    <span class="text-gray-600">${result.name}</span>
+                    <span class="text-blue-600 font-medium">${result.hours} 小时 (${result.percent}%)</span>
+                `;
+                resultList.appendChild(resultItem);
+            });
+        }
+
+        // 保存批量分配
+        function saveBatchAllocation() {
+            alert('月度批量分配已保存成功！\n\n工时记录已自动生成，可在工时分配列表中查看。');
+            closeBatchAllocationModal();
         }
         
         // 人工费归集
