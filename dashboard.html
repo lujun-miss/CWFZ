@@ -496,6 +496,12 @@
                                     <span>数据字典管理</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('help-content-management.html')">
+                                    <i class="fa fa-question-circle w-6"></i>
+                                    <span>知识库维护</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -868,22 +874,35 @@
         </div>
     </div>
 
-    <!-- 帮助说明弹窗 -->
-    <div id="helpModal" class="fixed inset-0 bg-black/50 z-[100] hidden items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div class="px-6 py-4 border-b flex items-center justify-between bg-gray-50">
-                <h3 id="helpTitle" class="text-lg font-bold text-gray-800 flex items-center"></h3>
-                <button onclick="closeHelp()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <i class="fa fa-times text-xl"></i>
+    <!-- 知识库抽屉 -->
+    <div id="helpModal" class="fixed inset-0 bg-slate-900/40 z-[100] hidden">
+        <div class="absolute inset-0" onclick="closeHelp()"></div>
+        <aside class="absolute right-0 top-0 h-full w-full max-w-5xl bg-white shadow-2xl flex flex-col">
+            <div class="px-6 py-4 border-b bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between">
+                <div>
+                    <h3 id="helpTitle" class="text-lg font-black flex items-center"></h3>
+                    <p id="helpSubtitle" class="text-xs text-blue-100 mt-1"></p>
+                </div>
+                <button onclick="closeHelp()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+                    <i class="fa fa-times text-lg"></i>
                 </button>
             </div>
-            <div id="helpContent" class="p-6 text-sm text-gray-600 leading-relaxed max-h-[60vh] overflow-y-auto">
-                <!-- 内容动态填充 -->
+            <div class="p-4 border-b bg-gray-50">
+                <div class="relative">
+                    <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input id="helpSearchInput" type="text" oninput="filterHelpItems()" placeholder="搜索关键词，例如：设备工时、加计扣除、无形资产"
+                        class="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
             </div>
-            <div class="px-6 py-4 border-t bg-gray-50 flex justify-end">
-                <button onclick="closeHelp()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">我知道了</button>
+            <div class="flex-1 grid grid-cols-12 min-h-0">
+                <div class="col-span-4 border-r bg-slate-50 overflow-y-auto">
+                    <div id="helpCategoryList" class="p-4 space-y-3"></div>
+                </div>
+                <div class="col-span-8 overflow-y-auto">
+                    <div id="helpContent" class="p-6 text-sm text-gray-600 leading-relaxed"></div>
+                </div>
             </div>
-        </div>
+        </aside>
     </div>
     
     <script>
@@ -898,46 +917,357 @@
             '2026': [3900, 1300, 1400, 850, 550, 650, 2100]
         };
 
-        function showHelp(type) {
-            const modal = document.getElementById('helpModal');
-            const title = document.getElementById('helpTitle');
-            const content = document.getElementById('helpContent');
-            
-            if (type === 'operation') {
-                title.innerHTML = '<i class="fa fa-book mr-2 text-blue-500"></i>操作说明';
-                content.innerHTML = `
-                    <div class="space-y-4">
-                        <section>
-                            <h4 class="font-bold text-gray-800 mb-1">1. 数据归集流程</h4>
-                            <p>进入“费用归集”模块，按照人工、折旧、材料等分类录入研发活动产生的原始凭证或分摊数据。</p>
-                        </section>
-                        <section>
-                            <h4 class="font-bold text-gray-800 mb-1">2. 多口径调整</h4>
-                            <p>系统支持会计口径、加计扣除、高企認定等多种规则。您可以在“口径规则配置”中自定义分摊比例。</p>
-                        </section>
-                        <section>
-                            <h4 class="font-bold text-gray-800 mb-1">3. 报表导出</h4>
-                            <p>所有数据归集完成后，可在“多口径报表”模块一键生成符合税务和高企审计要求的辅助账表。</p>
-                        </section>
-                    </div>
-                `;
-            } else if (type === 'policy') {
-                title.innerHTML = '<i class="fa fa-gavel mr-2 text-blue-500"></i>政策说明';
-                content.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
-                            <h4 class="font-bold text-blue-800 mb-1">高新技术企业認定政策</h4>
-                            <p class="text-blue-700 text-xs text-justify">企业近三个会计年度的研究开发费用总额占同期销售收入总额的比例符合：最近一年销售收入在5,000万元以下的，比例不低于5%。</p>
-                        </div>
-                        <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-400">
-                            <h4 class="font-bold text-green-800 mb-1">研发费用加计扣除</h4>
-                            <p class="text-green-700 text-xs text-justify">企业开展研发活动中实际发生的研发费用，未形成无形资产计入当期损益的，在按规定据实扣除的基础上，自2023年1月1日起，再按实际发生额的100%在税前加计扣除。</p>
-                        </div>
-                    </div>
-                `;
+        const helpLibrary = {
+            operation: {
+                icon: 'fa-book',
+                title: '操作说明书',
+                subtitle: '围绕当前系统流程提供图文式操作指引、字段说明和常见问题',
+                categories: [
+                    {
+                        id: 'op-overview',
+                        title: '首页使用指引',
+                        desc: '查看研发费归集进度、预警指标和快捷入口。',
+                        tags: ['首页', '进度', '预警'],
+                        content: `
+                            <h4 class="text-lg font-black text-gray-800 mb-3">首页使用指引</h4>
+                            <div class="space-y-3">
+                                <p>首页用于快速查看企业当前研发费用归集状态、年度预算使用情况和合规预警。</p>
+                                <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                                    <div class="font-bold text-blue-800 mb-2">推荐操作顺序</div>
+                                    <ol class="list-decimal list-inside space-y-1 text-blue-700 text-sm">
+                                        <li>查看顶部研发费归集进度，确认当前归集金额和上限。</li>
+                                        <li>点击预警指标，优先处理异常或缺失数据。</li>
+                                        <li>通过左侧菜单进入项目、人员、资产和费用归集模块。</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        id: 'op-work-hour',
+                        title: '智能报工',
+                        desc: '人工、设备、无形资产工时的批量填报流程。',
+                        tags: ['智能报工', '设备工时', '无形资产', '考勤'],
+                        content: `
+                            <h4 class="text-lg font-black text-gray-800 mb-3">智能报工操作说明</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                                <div class="p-4 rounded-xl bg-slate-50 border">
+                                    <div class="font-bold text-gray-800 mb-1">人工工时</div>
+                                    <p>按人员考勤和项目占比生成每日项目工时，人员筛选只影响人工工时。</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-slate-50 border">
+                                    <div class="font-bold text-gray-800 mb-1">设备/无形资产工时</div>
+                                    <p>按考勤人员、项目绑定关系和研发/生产占比拆分到每日。</p>
+                                </div>
+                            </div>
+                            <ol class="list-decimal list-inside space-y-2">
+                                <li>选择报工月份，点击“开始分配”。</li>
+                                <li>在人工、设备、无形资产 Tab 中分别设置占比或工时。</li>
+                                <li>点击“应用分配”，检查每日明细和底部本月合计。</li>
+                                <li>确认无剩余未分配或异常后，提交智能报工。</li>
+                            </ol>
+                        `
+                    },
+                    {
+                        id: 'op-caliber',
+                        title: '多口径报表',
+                        desc: '会计、高企、加计扣除、IPO口径的差异查看。',
+                        tags: ['多口径', '报表', '加计扣除', '高企'],
+                        content: `
+                            <h4 class="text-lg font-black text-gray-800 mb-3">多口径报表生成</h4>
+                            <p class="mb-3">系统可基于同一套底层归集数据，分别生成会计口径、加计扣除口径、高企口径和 IPO 口径报表。</p>
+                            <div class="space-y-2">
+                                <div class="p-3 rounded-lg border-l-4 border-blue-500 bg-blue-50">先完成基础数据归集，再进入口径规则配置确认调整规则。</div>
+                                <div class="p-3 rounded-lg border-l-4 border-green-500 bg-green-50">生成报表前建议先查看校验报告，处理缺失项目、异常比例和超额分配。</div>
+                            </div>
+                        `
+                    },
+                    {
+                        id: 'op-faq',
+                        title: '常见问题',
+                        desc: '缓存、页面刷新、分配结果不变化等常见处理方式。',
+                        tags: ['FAQ', '缓存', '刷新', '异常'],
+                        content: `
+                            <h4 class="text-lg font-black text-gray-800 mb-3">常见问题</h4>
+                            <div class="space-y-3">
+                                <details class="p-3 bg-gray-50 rounded-lg" open>
+                                    <summary class="font-bold text-gray-800 cursor-pointer">页面改动后浏览器没有变化？</summary>
+                                    <p class="mt-2">请使用 Ctrl + Shift + R 强制刷新，或清理浏览器缓存后重新打开。</p>
+                                </details>
+                                <details class="p-3 bg-gray-50 rounded-lg">
+                                    <summary class="font-bold text-gray-800 cursor-pointer">设备或无形资产某天没有分配工时？</summary>
+                                    <p class="mt-2">请检查所选考勤人员当天是否存在考勤记录，无考勤日期不会自动分配工时。</p>
+                                </details>
+                            </div>
+                        `
+                    }
+                ]
+            },
+            policy: {
+                icon: 'fa-gavel',
+                title: '政策法规库',
+                subtitle: '聚合研发费用、高企认定、加计扣除和会计处理相关政策依据',
+                categories: [
+                    {
+                        id: 'policy-deduction',
+                        title: '研发费用加计扣除',
+                        desc: '研发费用税前加计扣除政策和费用范围。',
+                        tags: ['加计扣除', '研发费用', '税前扣除'],
+                        policies: [
+                            {
+                                title: '关于进一步完善研发费用税前加计扣除政策的公告',
+                                desc: '明确研发费用税前加计扣除比例和适用口径。',
+                                agency: '财政部、税务总局',
+                                docNo: '公告2023年第7号',
+                                publishDate: '2023-03-26',
+                                sourceUrl: 'https://example.gov.cn/policy/rd-deduction',
+                                tags: ['加计扣除', '研发费用'],
+                                attachments: [
+                                    { name: '关于进一步完善研发费用税前加计扣除政策的公告.pdf', type: 'PDF', size: '2.4MB' }
+                                ]
+                            },
+                            {
+                                title: '关于提高科技型中小企业研发费用加计扣除比例的通知',
+                                desc: '科技型中小企业研发费用加计扣除比例相关政策。',
+                                agency: '财政部、税务总局、科技部',
+                                docNo: '财税〔2022〕16号',
+                                publishDate: '2022-03-23',
+                                sourceUrl: 'https://example.gov.cn/policy/sme-rd-deduction',
+                                tags: ['科技型中小企业', '加计扣除'],
+                                attachments: [
+                                    { name: '科技型中小企业研发费用加计扣除比例通知.pdf', type: 'PDF', size: '1.9MB' },
+                                    { name: '政策解读附件.docx', type: 'Word', size: '856KB' }
+                                ]
+                            },
+                            {
+                                title: '研发费用税前加计扣除归集范围政策解读',
+                                desc: '说明人员人工、直接投入、折旧摊销等费用归集范围。',
+                                agency: '国家税务总局',
+                                docNo: '政策解读文件',
+                                publishDate: '2023-04-12',
+                                sourceUrl: '',
+                                tags: ['政策解读', '归集范围'],
+                                attachments: [
+                                    { name: '研发费用税前加计扣除归集范围政策解读.pdf', type: 'PDF', size: '1.2MB' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'policy-hitech',
+                        title: '高新技术企业认定',
+                        desc: '研发费用占比、科技人员和知识产权等认定要点。',
+                        tags: ['高企', '研发费用占比', '科技人员'],
+                        policies: [
+                            {
+                                title: '高新技术企业认定管理办法',
+                                desc: '高新技术企业认定条件、组织管理和监督管理要求。',
+                                agency: '科技部、财政部、税务总局',
+                                docNo: '国科发火〔2016〕32号',
+                                publishDate: '2016-01-29',
+                                sourceUrl: 'https://example.gov.cn/policy/high-tech',
+                                tags: ['高企', '认定办法'],
+                                attachments: [
+                                    { name: '高新技术企业认定管理办法.pdf', type: 'PDF', size: '3.1MB' }
+                                ]
+                            },
+                            {
+                                title: '高新技术企业认定管理工作指引',
+                                desc: '细化高企认定材料、研发费用归集和专家评审要求。',
+                                agency: '科技部、财政部、税务总局',
+                                docNo: '国科发火〔2016〕195号',
+                                publishDate: '2016-06-22',
+                                sourceUrl: '',
+                                tags: ['高企', '工作指引'],
+                                attachments: [
+                                    { name: '高新技术企业认定管理工作指引.pdf', type: 'PDF', size: '4.6MB' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'policy-accounting',
+                        title: '会计准则口径',
+                        desc: '研发支出费用化、资本化和无形资产摊销处理。',
+                        tags: ['会计准则', '资本化', '无形资产'],
+                        policies: [
+                            {
+                                title: '企业会计准则第6号-无形资产',
+                                desc: '无形资产确认、研发支出费用化和资本化处理要求。',
+                                agency: '财政部',
+                                docNo: '财会〔2006〕3号',
+                                publishDate: '2006-02-15',
+                                sourceUrl: 'https://example.gov.cn/policy/accounting',
+                                tags: ['会计准则', '无形资产'],
+                                attachments: [
+                                    { name: '企业会计准则第6号-无形资产.pdf', type: 'PDF', size: '1.8MB' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'policy-risk',
+                        title: '合规风险提示',
+                        desc: '研发项目、费用归集、工时分配和凭证留存风险。',
+                        tags: ['合规', '风险', '留痕', '审计'],
+                        policies: [
+                            {
+                                title: '工时分配合规风险提示',
+                                desc: '提示机械平均、无考勤分配、项目归属不清等风险。',
+                                agency: '内部合规',
+                                docNo: '风险提示-001',
+                                publishDate: '2026-06-24',
+                                sourceUrl: '',
+                                tags: ['工时', '合规风险'],
+                                attachments: [
+                                    { name: '工时分配合规风险提示.pdf', type: 'PDF', size: '640KB' }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             }
-            
-            modal.style.display = 'flex';
+        };
+
+        let currentHelpType = 'operation';
+        let activeHelpCategoryId = '';
+
+        function showHelp(type) {
+            currentHelpType = type;
+            const library = helpLibrary[type] || helpLibrary.operation;
+            activeHelpCategoryId = library.categories[0]?.id || '';
+
+            document.getElementById('helpTitle').innerHTML = `<i class="fa ${library.icon} mr-2"></i>${library.title}`;
+            document.getElementById('helpSubtitle').textContent = library.subtitle;
+            document.getElementById('helpSearchInput').value = '';
+            document.getElementById('helpModal').style.display = 'block';
+
+            renderHelpCategoryList(library.categories);
+            renderHelpContent(activeHelpCategoryId);
+        }
+
+        function renderHelpCategoryList(categories) {
+            const container = document.getElementById('helpCategoryList');
+            container.innerHTML = categories.map(item => `
+                <button onclick="renderHelpContent('${item.id}')"
+                    class="w-full text-left p-4 rounded-2xl border transition-all ${item.id === activeHelpCategoryId ? 'bg-white border-blue-200 shadow-sm' : 'bg-transparent border-transparent hover:bg-white hover:border-gray-200'}">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <div class="text-sm font-black ${item.id === activeHelpCategoryId ? 'text-blue-700' : 'text-gray-800'}">${item.title}</div>
+                            <div class="text-xs text-gray-500 mt-1 leading-relaxed">${item.desc}</div>
+                        </div>
+                        <i class="fa fa-angle-right text-gray-300 mt-1"></i>
+                    </div>
+                    ${currentHelpType === 'policy' ? '' : `
+                    <div class="mt-3 flex flex-wrap gap-1">
+                        ${item.tags.map(tag => `<span class="px-2 py-0.5 rounded-full bg-gray-100 text-[10px] text-gray-500">${tag}</span>`).join('')}
+                    </div>
+                    `}
+                </button>
+            `).join('');
+        }
+
+        function renderHelpContent(categoryId) {
+            const library = helpLibrary[currentHelpType] || helpLibrary.operation;
+            const item = library.categories.find(category => category.id === categoryId) || library.categories[0];
+            if (!item) return;
+            activeHelpCategoryId = item.id;
+            renderHelpCategoryList(getFilteredHelpCategories());
+            document.getElementById('helpContent').innerHTML = currentHelpType === 'policy' ? renderPolicyHelpDetail(item) : `
+                <div class="mb-5 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs text-gray-400 mb-1">${library.title}</div>
+                        <h3 class="text-2xl font-black text-gray-900">${item.title}</h3>
+                    </div>
+                    <button onclick="copyHelpTitle()" class="px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200">
+                        <i class="fa fa-copy mr-1"></i>复制标题
+                    </button>
+                </div>
+                <div class="prose prose-sm max-w-none">${item.content}</div>
+            `;
+        }
+
+        function renderPolicyHelpDetail(item) {
+            const policies = item.policies || [];
+            return `
+                <div class="space-y-3">
+                    ${policies.length ? policies.map(policy => `
+                        <div class="p-4 rounded-2xl border bg-white shadow-sm">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <div class="font-black text-gray-900">${policy.title}</div>
+                                    <div class="text-xs text-gray-500 mt-1 leading-relaxed">${policy.desc || ''}</div>
+                                </div>
+                                <span class="shrink-0 px-2 py-1 rounded-full bg-blue-50 text-blue-600 text-[10px]">${policy.attachments?.length || 0} 个附件</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3 text-xs">
+                                <div class="p-2 rounded-lg bg-gray-50"><span class="text-gray-400">发文机关：</span><span class="font-bold text-gray-700">${policy.agency || '-'}</span></div>
+                                <div class="p-2 rounded-lg bg-gray-50"><span class="text-gray-400">文号：</span><span class="font-bold text-gray-700">${policy.docNo || '-'}</span></div>
+                                <div class="p-2 rounded-lg bg-gray-50"><span class="text-gray-400">发布日期：</span><span class="font-bold text-gray-700">${policy.publishDate || '-'}</span></div>
+                            </div>
+                            <div class="mt-3 space-y-2">
+                                ${(policy.attachments || []).map(file => renderPolicyAttachment(file)).join('') || '<div class="p-3 text-center rounded-lg bg-gray-50 text-gray-400 text-xs">暂无政策原文附件</div>'}
+                            </div>
+                            <div class="mt-3 flex items-center justify-end gap-2">
+                                ${policy.sourceUrl ? `<a class="text-xs text-blue-600 hover:underline" href="${policy.sourceUrl}" target="_blank">查看来源</a>` : '<span class="text-xs text-gray-400">以附件为准</span>'}
+                            </div>
+                        </div>
+                    `).join('') : '<div class="p-6 text-center rounded-xl bg-gray-50 text-gray-400">当前分类暂无政策文件</div>'}
+                                    </div>
+            `;
+        }
+
+        function renderPolicyAttachment(file) {
+            return `
+                <div class="p-3 rounded-xl border bg-gray-50 flex items-center justify-between gap-3">
+                    <div class="flex items-center min-w-0">
+                        <div class="w-9 h-9 rounded-lg bg-red-50 text-red-500 flex items-center justify-center mr-3">
+                            <i class="fa ${file.type === 'Word' ? 'fa-file-word-o' : 'fa-file-pdf-o'}"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <div class="font-bold text-gray-800 truncate">${file.name}</div>
+                            <div class="text-xs text-gray-400 mt-0.5">${file.type} · ${file.size}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button class="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 text-xs hover:bg-blue-100">预览</button>
+                        <button class="px-3 py-1.5 rounded-lg bg-white border text-gray-600 text-xs hover:bg-gray-100">下载</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getFilteredHelpCategories() {
+            const keyword = (document.getElementById('helpSearchInput')?.value || '').trim().toLowerCase();
+            const categories = (helpLibrary[currentHelpType] || helpLibrary.operation).categories;
+            if (!keyword) return categories;
+            return categories.filter(item => {
+                const policyText = currentHelpType === 'policy'
+                    ? (item.policies || []).map(policy => `${policy.title} ${policy.desc || ''} ${policy.agency || ''} ${policy.docNo || ''} ${(policy.tags || []).join(' ')}`).join(' ')
+                    : '';
+                const text = `${item.title} ${item.desc} ${item.tags.join(' ')} ${policyText}`.toLowerCase();
+                return text.includes(keyword);
+            });
+        }
+
+        function filterHelpItems() {
+            const filtered = getFilteredHelpCategories();
+            const container = document.getElementById('helpCategoryList');
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400 text-sm py-10">未找到匹配内容</div>';
+                document.getElementById('helpContent').innerHTML = '<div class="text-center text-gray-400 py-20"><i class="fa fa-search text-4xl mb-3"></i><p>请尝试更换关键词</p></div>';
+                return;
+            }
+            activeHelpCategoryId = filtered.some(item => item.id === activeHelpCategoryId) ? activeHelpCategoryId : filtered[0].id;
+            renderHelpCategoryList(filtered);
+            renderHelpContent(activeHelpCategoryId);
+        }
+
+        function copyHelpTitle() {
+            const item = (helpLibrary[currentHelpType] || helpLibrary.operation).categories.find(category => category.id === activeHelpCategoryId);
+            if (item && navigator.clipboard) {
+                navigator.clipboard.writeText(item.title);
+            }
         }
 
         function closeHelp() {

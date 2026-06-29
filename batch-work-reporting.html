@@ -1031,6 +1031,10 @@
     <script>
         function loadPage(pageUrl) {
             try {
+                const currentPage = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+                if (currentPage === pageUrl) {
+                    return;
+                }
                 console.log('准备跳转到页面:', pageUrl);
                 window.location.assign(pageUrl);
             } catch (error) {
@@ -1371,7 +1375,6 @@
         function initProjectAllocations() {
             const container = document.getElementById('projectAllocationCards');
             container.innerHTML = '';
-            calculateProjectDeviceSummary(); // Calculate device totals per project
             
             // 获取要显示的人员
             let personsToShow = [];
@@ -1427,8 +1430,7 @@
                                         ${formatDateShort(project.startDate)} ~ ${formatDateShort(project.endDate)}
                                     </div>
                                     <div class="text-[10px] text-gray-500 mt-1">
-                                        <span class="text-blue-600">设备研发: ${projectDeviceSummary[project.id]?.rdHours || 0}h</span>
-                                        <span class="ml-2 text-green-600">设备生产: ${projectDeviceSummary[project.id]?.prodHours || 0}h</span>
+                                        当月有效 ${calculateProjectEffectiveDays(project)} 天
                                     </div>
                                 </th>
                             `).join('')}

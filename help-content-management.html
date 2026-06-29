@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识库内容维护 - 研知π</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: Inter, "Microsoft YaHei", system-ui, sans-serif; }
+        .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+        .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+        .drawer-mask { background: rgba(15, 23, 42, .42); }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航 -->
+        <aside class="w-64 bg-white shadow-lg flex-shrink-0 flex flex-col">
+            <div class="h-16 px-5 border-b flex items-center">
+                <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center mr-3">
+                    <i class="fa fa-book"></i>
+                </div>
+                <div>
+                    <div class="text-lg font-black text-slate-800">研知π</div>
+                    <div class="text-[10px] text-slate-400">知识库维护后台</div>
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto py-4">
+                <a href="dashboard.html" class="flex items-center px-5 py-3 text-slate-600 hover:bg-slate-50">
+                    <i class="fa fa-home w-6"></i>
+                    <span class="text-sm">首页</span>
+                </a>
+                <div class="px-5 pt-4 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">内容中心</div>
+                <button onclick="switchLibraryType('operation')" id="nav-operation" class="w-full flex items-center px-5 py-3 text-primary bg-blue-50 border-r-4 border-primary">
+                    <i class="fa fa-book w-6"></i>
+                    <span class="text-sm font-bold">操作说明书</span>
+                </button>
+                <button onclick="switchLibraryType('policy')" id="nav-policy" class="w-full flex items-center px-5 py-3 text-slate-600 hover:bg-slate-50">
+                    <i class="fa fa-gavel w-6"></i>
+                    <span class="text-sm">政策法规库</span>
+                </button>
+                <div class="px-5 pt-4 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">系统设置</div>
+                <a href="data-dictionary.html" class="flex items-center px-5 py-3 text-slate-600 hover:bg-slate-50">
+                    <i class="fa fa-database w-6"></i>
+                    <span class="text-sm">数据字典</span>
+                </a>
+                <a href="warning-rules-config.html" class="flex items-center px-5 py-3 text-slate-600 hover:bg-slate-50">
+                    <i class="fa fa-warning w-6"></i>
+                    <span class="text-sm">预警规则</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主体 -->
+        <div class="flex-1 flex flex-col min-w-0">
+            <header class="h-16 bg-white border-b px-6 flex items-center justify-between">
+                <div>
+                    <h1 class="text-lg font-black text-slate-900">知识库内容维护</h1>
+                    <p class="text-xs text-slate-400 mt-0.5">维护前台“操作说明书”和“政策法规库”抽屉展示内容</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="openEditorDrawer('new')" class="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-blue-700">
+                        <i class="fa fa-plus mr-1"></i>新增内容
+                    </button>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-hidden p-6">
+                <!-- 数据概览 -->
+                <div class="grid grid-cols-4 gap-4 mb-5">
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+                        <div class="text-xs text-slate-400">已发布内容</div>
+                        <div class="text-2xl font-black text-slate-900 mt-2" id="publishedCount">0</div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+                        <div class="text-xs text-slate-400">草稿内容</div>
+                        <div class="text-2xl font-black text-amber-500 mt-2" id="draftCount">0</div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+                        <div class="text-xs text-slate-400">停用内容</div>
+                        <div class="text-2xl font-black text-slate-400 mt-2" id="disabledCount">0</div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+                        <div class="text-xs text-slate-400">本月更新</div>
+                        <div class="text-2xl font-black text-primary mt-2">8</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-5 h-[calc(100vh-210px)]">
+                    <!-- 分类树 -->
+                    <section class="col-span-3 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col min-h-0">
+                        <div class="p-4 border-b flex items-center justify-between">
+                            <div>
+                                <h2 class="text-sm font-black">分类目录</h2>
+                                <p class="text-[10px] text-slate-400 mt-1">按类型维护分类和排序</p>
+                            </div>
+                            <button onclick="openCategoryDialog()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <div id="categoryTree" class="p-3 overflow-y-auto scrollbar-thin space-y-2"></div>
+                    </section>
+
+                    <!-- 内容列表 -->
+                    <section class="col-span-6 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col min-h-0">
+                        <div class="p-4 border-b">
+                            <div class="flex items-center justify-between mb-3">
+                                <div>
+                                    <h2 id="listTitle" class="text-sm font-black">操作说明书内容</h2>
+                                    <p id="listSubtitle" class="text-[10px] text-slate-400 mt-1">按页面和功能维护操作说明</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="relative col-span-2">
+                                    <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                    <input id="keywordInput" oninput="renderContentList()" class="w-full pl-9 pr-3 py-2 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary" placeholder="搜索标题、标签、关联页面">
+                                </div>
+                                <select id="statusFilter" onchange="renderContentList()" class="px-3 py-2 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="">全部状态</option>
+                                    <option value="published">已发布</option>
+                                    <option value="draft">草稿</option>
+                                    <option value="disabled">已停用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="contentList" class="flex-1 overflow-y-auto scrollbar-thin divide-y divide-slate-100"></div>
+                    </section>
+
+                    <!-- 详情与前台效果 -->
+                    <section class="col-span-3 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col min-h-0">
+                        <div class="p-4 border-b">
+                            <h2 class="text-sm font-black">内容详情</h2>
+                            <p class="text-[10px] text-slate-400 mt-1">查看当前条目的前台展示效果</p>
+                        </div>
+                        <div id="detailPanel" class="flex-1 overflow-y-auto scrollbar-thin p-4"></div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 编辑抽屉 -->
+    <div id="editorDrawer" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 drawer-mask" onclick="closeEditorDrawer()"></div>
+        <aside class="absolute right-0 top-0 h-full w-[760px] bg-white shadow-2xl flex flex-col">
+            <div class="h-16 px-6 border-b flex items-center justify-between">
+                <div>
+                    <h3 id="editorTitle" class="text-lg font-black">新增内容</h3>
+                    <p class="text-xs text-slate-400 mt-1">保存后可先预览，再发布到前台知识库</p>
+                </div>
+                <button onclick="closeEditorDrawer()" class="w-9 h-9 rounded-full hover:bg-slate-100">
+                    <i class="fa fa-times text-slate-500"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto scrollbar-thin p-6 space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="block">
+                        <span class="text-sm font-medium text-slate-700">知识库类型</span>
+                        <select id="editType" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm">
+                            <option value="operation">操作说明书</option>
+                            <option value="policy">政策法规库</option>
+                        </select>
+                    </label>
+                    <label class="block">
+                        <span class="text-sm font-medium text-slate-700">分类</span>
+                        <select id="editCategory" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm"></select>
+                    </label>
+                </div>
+                <label class="block">
+                    <span class="text-sm font-medium text-slate-700">标题 <span class="text-red-500">*</span></span>
+                    <input id="editTitle" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm" placeholder="请输入内容标题">
+                </label>
+                <label id="editSummaryField" class="block">
+                    <span class="text-sm font-medium text-slate-700">摘要</span>
+                    <textarea id="editSummary" rows="2" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm" placeholder="用于前台目录列表展示"></textarea>
+                </label>
+                <div id="editRelationFields" class="grid grid-cols-2 gap-4">
+                    <label class="block">
+                        <span class="text-sm font-medium text-slate-700">关联功能页面</span>
+                        <input id="editPage" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm" placeholder="如 batch-work-reporting.html">
+                    </label>
+                    <label class="block">
+                        <span class="text-sm font-medium text-slate-700">标签</span>
+                        <input id="editTags" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm" placeholder="多个标签用逗号分隔">
+                    </label>
+                </div>
+                <div id="policyFields" class="hidden space-y-4">
+                    <div class="p-3 rounded-xl bg-blue-50 border border-blue-100 text-xs text-blue-700">
+                        <i class="fa fa-info-circle mr-1"></i>
+                        极简维护：选分类、上传政策原文即可；标题、文号、发文机关等可由附件识别后自动回填，必要时再到高级信息补充。
+                    </div>
+                    <div class="p-4 rounded-xl border border-dashed border-blue-200 bg-blue-50/40">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-sm font-bold text-slate-700">政策原文附件 <span class="text-red-500">*</span></div>
+                                <div class="text-xs text-slate-400 mt-1">上传 PDF、Word 或扫描件即可，不需要手工录入全文。</div>
+                            </div>
+                            <button type="button" class="px-4 py-2 rounded-lg bg-primary text-white text-sm hover:bg-blue-700">
+                                <i class="fa fa-upload mr-1"></i>上传政策原文
+                            </button>
+                        </div>
+                        <div id="editAttachmentList" class="mt-4 space-y-2"></div>
+                    </div>
+                    <details class="rounded-xl border bg-slate-50">
+                        <summary class="px-4 py-3 text-sm font-bold text-slate-600 cursor-pointer">
+                            <i class="fa fa-sliders mr-1"></i>高级信息（选填）
+                        </summary>
+                        <div class="p-4 pt-0 space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <label class="block">
+                                    <span class="text-sm font-medium text-slate-700">发文机关</span>
+                                    <input id="editAgency" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm" placeholder="可自动识别">
+                                </label>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-slate-700">文号</span>
+                                    <input id="editDocNo" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm" placeholder="可自动识别">
+                                </label>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <label class="block">
+                                    <span class="text-sm font-medium text-slate-700">发布日期</span>
+                                    <input id="editPublishDate" type="date" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm">
+                                </label>
+                                <label class="block">
+                                    <span class="text-sm font-medium text-slate-700">生效日期</span>
+                                    <input id="editEffectiveDate" type="date" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm">
+                                </label>
+                                <label class="block col-span-2">
+                                    <span class="text-sm font-medium text-slate-700">政策来源链接</span>
+                                    <input id="editSourceUrl" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm" placeholder="可填写官网原文链接">
+                                </label>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <label id="editContentField" class="block">
+                    <span id="editContentLabel" class="text-sm font-medium text-slate-700">正文内容</span>
+                    <textarea id="editContent" rows="10" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm" placeholder="支持维护操作步骤、政策条款、风险提示等正文内容"></textarea>
+                </label>
+                <div class="grid grid-cols-3 gap-4">
+                    <label class="block">
+                        <span class="text-sm font-medium text-slate-700">排序</span>
+                        <input id="editSort" type="number" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm" value="10">
+                    </label>
+                    <label class="block">
+                        <span class="text-sm font-medium text-slate-700">状态</span>
+                        <select id="editStatus" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm">
+                            <option value="draft">草稿</option>
+                            <option value="published">已发布</option>
+                            <option value="disabled">已停用</option>
+                        </select>
+                    </label>
+                    <label id="genericAttachmentField" class="block">
+                        <span class="text-sm font-medium text-slate-700">附件</span>
+                        <button type="button" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm text-slate-500 hover:bg-slate-50">
+                            <i class="fa fa-paperclip mr-1"></i>上传附件
+                        </button>
+                    </label>
+                </div>
+            </div>
+            <div class="p-5 border-t bg-slate-50 flex items-center justify-between">
+                <button onclick="openPreviewDrawer()" class="px-4 py-2 text-sm border rounded-lg bg-white hover:bg-slate-50">
+                    <i class="fa fa-eye mr-1"></i>预览前台效果
+                </button>
+                <div class="flex items-center gap-2">
+                    <button onclick="closeEditorDrawer()" class="px-4 py-2 text-sm border rounded-lg bg-white hover:bg-slate-50">取消</button>
+                    <button onclick="saveContent()" class="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-blue-700">保存</button>
+                    <button onclick="publishContent()" class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700">发布</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 前台预览抽屉 -->
+    <div id="previewDrawer" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 drawer-mask" onclick="closePreviewDrawer()"></div>
+        <aside class="absolute right-0 top-0 h-full w-[900px] bg-white shadow-2xl flex flex-col">
+            <div class="px-6 py-4 border-b bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-black"><i class="fa fa-eye mr-2"></i>前台抽屉预览</h3>
+                    <p class="text-xs text-blue-100 mt-1">模拟用户点击“操作说明书 / 政策法规库”后的展示效果</p>
+                </div>
+                <button onclick="closePreviewDrawer()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4 border-b bg-slate-50">
+                <div class="relative">
+                    <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input class="w-full pl-9 pr-3 py-2 border rounded-xl text-sm" placeholder="搜索关键词，例如：设备工时、加计扣除">
+                </div>
+            </div>
+            <div class="flex-1 grid grid-cols-12 min-h-0">
+                <div id="previewList" class="col-span-4 border-r bg-slate-50 p-4 overflow-y-auto scrollbar-thin space-y-3"></div>
+                <div id="previewContent" class="col-span-8 p-6 overflow-y-auto scrollbar-thin"></div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const categoryMap = {
+            operation: [
+                { id: 'op-home', name: '首页使用指引', count: 2 },
+                { id: 'op-work-hour', name: '智能报工', count: 4 },
+                { id: 'op-cost', name: '费用归集', count: 3 },
+                { id: 'op-report', name: '多口径报表', count: 2 },
+                { id: 'op-faq', name: '常见问题', count: 5 }
+            ],
+            policy: [
+                { id: 'pl-deduction', name: '研发费用加计扣除', count: 6 },
+                { id: 'pl-hitech', name: '高新技术企业认定', count: 4 },
+                { id: 'pl-accounting', name: '会计准则口径', count: 3 },
+                { id: 'pl-ipo', name: 'IPO研发费用', count: 2 },
+                { id: 'pl-risk', name: '合规风险提示', count: 3 }
+            ]
+        };
+
+        const contentData = [
+            { id: 1, type: 'operation', category: 'op-work-hour', title: '智能报工操作说明', summary: '说明人工、设备、无形资产工时批量填报流程。', page: 'batch-work-reporting.html', tags: ['智能报工', '设备工时', '无形资产'], status: 'published', updateTime: '2026-06-29 15:20', editor: '管理员', content: '选择报工月份，分别维护人工、设备、无形资产工时，检查每日明细后提交。' },
+            { id: 2, type: 'operation', category: 'op-home', title: '首页指标查看说明', summary: '说明研发费归集进度、预警指标和快捷入口。', page: 'dashboard.html', tags: ['首页', '指标', '预警'], status: 'published', updateTime: '2026-06-28 09:12', editor: '管理员', content: '首页展示研发费用归集进度、服务状态和关键合规预警。' },
+            { id: 3, type: 'operation', category: 'op-report', title: '多口径报表生成说明', summary: '说明会计、高企、加计扣除、IPO报表生成流程。', page: 'multi-caliber-report.html', tags: ['多口径', '报表'], status: 'draft', updateTime: '2026-06-26 17:40', editor: '张三', content: '完成费用归集后，可按不同口径生成报表并导出。' },
+            { id: 4, type: 'policy', category: 'pl-deduction', title: '研发费用加计扣除政策', summary: '研发费用税前加计扣除的费用范围和留痕要求。', page: 'rd-caliber-report.html', tags: ['加计扣除', '研发费用'], status: 'published', updateTime: '2026-06-27 11:08', editor: '管理员', agency: '财政部、税务总局', docNo: '示例文号', sourceUrl: 'https://example.gov.cn/policy/rd-deduction', policyScope: '适用于企业开展研发活动形成的可归集研发费用。', policyImpact: '影响人工费用、直接投入、折旧摊销、无形资产摊销等归集口径。', policyRisk: '需保留项目立项、工时、凭证、费用归属等可追溯材料。', attachments: [{ name: '研发费用加计扣除政策红头文件.pdf', type: 'PDF', size: '2.4MB' }, { name: '政策解读附件.docx', type: 'Word', size: '856KB' }], content: '企业开展研发活动中实际发生的研发费用，可按规定享受税前加计扣除。' },
+            { id: 5, type: 'policy', category: 'pl-hitech', title: '高新技术企业认定研发费用口径', summary: '高企认定中研发费用占比、人员占比等要点。', page: 'hi-tech-caliber-report.html', tags: ['高企', '研发费用占比'], status: 'published', updateTime: '2026-06-25 14:32', editor: '李四', agency: '科技部、财政部、税务总局', docNo: '示例文号', sourceUrl: 'https://example.gov.cn/policy/high-tech', policyScope: '适用于高新技术企业认定和复审相关研发费用口径。', policyImpact: '影响高企研发费用占比、科技人员占比和项目归集材料。', policyRisk: '需关注知识产权、成果转化、研发组织管理水平与费用归集一致性。', attachments: [{ name: '高新技术企业认定管理办法.pdf', type: 'PDF', size: '3.1MB' }], content: '高新技术企业认定关注研发费用、科技人员、知识产权和成果转化等指标。' },
+            { id: 6, type: 'policy', category: 'pl-risk', title: '工时分配合规风险提示', summary: '提示机械平均、无考勤分配、项目归属不清等风险。', page: 'batch-work-reporting.html', tags: ['合规', '工时', '风险'], status: 'disabled', updateTime: '2026-06-24 10:05', editor: '王五', agency: '内部合规', docNo: '风险提示-001', policyScope: '适用于人工、设备、无形资产工时分配场景。', policyImpact: '影响工时分配、费用分摊和多口径报表底稿。', policyRisk: '避免机械平均、无考勤分配、项目绑定关系缺失等明显不合理情形。', attachments: [{ name: '工时分配合规风险提示.pdf', type: 'PDF', size: '640KB' }], content: '工时分配应结合考勤、项目周期和资产绑定关系，避免明显不合理分配。' }
+        ];
+
+        let currentType = 'operation';
+        let activeCategory = 'op-work-hour';
+        let activeContentId = 1;
+
+        function switchLibraryType(type) {
+            currentType = type;
+            activeCategory = categoryMap[type][0].id;
+            const firstItem = contentData.find(item => item.type === type && item.category === activeCategory) || contentData.find(item => item.type === type);
+            activeContentId = firstItem?.id || null;
+            renderAll();
+        }
+
+        function renderAll() {
+            renderNav();
+            renderCategoryTree();
+            renderContentList();
+            renderDetailPanel();
+            renderStats();
+            document.getElementById('listTitle').textContent = currentType === 'operation' ? '操作说明书内容' : '政策法规库内容';
+            document.getElementById('listSubtitle').textContent = currentType === 'operation' ? '按页面和功能维护操作说明' : '按政策分类、口径和条款维护法规内容';
+        }
+
+        function renderNav() {
+            const active = 'w-full flex items-center px-5 py-3 text-primary bg-blue-50 border-r-4 border-primary';
+            const normal = 'w-full flex items-center px-5 py-3 text-slate-600 hover:bg-slate-50';
+            document.getElementById('nav-operation').className = currentType === 'operation' ? active : normal;
+            document.getElementById('nav-policy').className = currentType === 'policy' ? active : normal;
+        }
+
+        function renderCategoryTree() {
+            const container = document.getElementById('categoryTree');
+            container.innerHTML = categoryMap[currentType].map(category => `
+                <button onclick="selectCategory('${category.id}')" class="w-full p-3 rounded-xl text-left transition-all ${activeCategory === category.id ? 'bg-blue-50 border border-blue-100' : 'hover:bg-slate-50 border border-transparent'}">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold ${activeCategory === category.id ? 'text-primary' : 'text-slate-700'}">${category.name}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-white border text-slate-400">${category.count}</span>
+                    </div>
+                    <div class="mt-2 flex items-center text-[10px] text-slate-400">
+                        <i class="fa fa-sort mr-1"></i>支持拖拽排序
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        function selectCategory(categoryId) {
+            activeCategory = categoryId;
+            const firstItem = getFilteredItems()[0];
+            activeContentId = firstItem?.id || null;
+            renderAll();
+        }
+
+        function getFilteredItems() {
+            const keyword = document.getElementById('keywordInput')?.value.trim().toLowerCase() || '';
+            const status = document.getElementById('statusFilter')?.value || '';
+            return contentData.filter(item => {
+                const inType = item.type === currentType;
+                const inCategory = item.category === activeCategory;
+                const inStatus = !status || item.status === status;
+                const text = `${item.title} ${item.summary} ${item.page} ${item.tags.join(' ')}`.toLowerCase();
+                return inType && inCategory && inStatus && (!keyword || text.includes(keyword));
+            });
+        }
+
+        function renderContentList() {
+            const container = document.getElementById('contentList');
+            const items = getFilteredItems();
+            if (items.length === 0) {
+                container.innerHTML = '<div class="py-20 text-center text-slate-400"><i class="fa fa-inbox text-4xl mb-3"></i><p class="text-sm">暂无内容</p></div>';
+                return;
+            }
+            container.innerHTML = items.map(item => `
+                <div onclick="selectContent(${item.id})" class="p-4 cursor-pointer hover:bg-slate-50 ${activeContentId === item.id ? 'bg-blue-50/60' : ''}">
+                    <div class="flex items-start justify-between">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-black text-slate-800 truncate">${item.title}</h3>
+                                ${statusBadge(item.status)}
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1 line-clamp-2">${item.summary}</p>
+                        </div>
+                        <div class="flex items-center gap-1 ml-3">
+                            <button onclick="event.stopPropagation(); openEditorDrawer(${item.id})" class="w-7 h-7 rounded-lg hover:bg-white text-slate-400 hover:text-primary"><i class="fa fa-pencil"></i></button>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-400">${item.updateTime}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderDetailPanel() {
+            const panel = document.getElementById('detailPanel');
+            const item = contentData.find(data => data.id === activeContentId);
+            if (!item) {
+                panel.innerHTML = '<div class="h-full flex items-center justify-center text-slate-400 text-sm">请选择一条内容</div>';
+                return;
+            }
+            panel.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">${statusBadge(item.status)}<span class="text-[10px] text-slate-400">ID: ${item.id}</span></div>
+                        <h3 class="text-lg font-black text-slate-900">${item.title}</h3>
+                        <p class="text-sm text-slate-500 mt-2">${item.summary}</p>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-50 border text-xs space-y-2">
+                        <div><span class="text-slate-400">关联页面：</span>${item.page || '-'}</div>
+                        <div><span class="text-slate-400">维护人员：</span>${item.editor}</div>
+                        <div><span class="text-slate-400">更新时间：</span>${item.updateTime}</div>
+                        ${item.type === 'policy' ? `<div><span class="text-slate-400">发文机关：</span>${item.agency || '-'}</div><div><span class="text-slate-400">政策文号：</span>${item.docNo || '-'}</div><div><span class="text-slate-400">原文附件：</span>${item.attachments?.length || 0} 个</div>` : ''}
+                    </div>
+                    ${item.type === 'policy' ? `
+                    <div>
+                        <div class="text-xs font-bold text-slate-500 mb-2">政策原文附件</div>
+                        <div class="space-y-2">
+                            ${renderAttachmentCards(item.attachments)}
+                        </div>
+                    </div>
+                    ` : ''}
+                    <div>
+                        <div class="text-xs font-bold text-slate-500 mb-2">${item.type === 'policy' ? '核心条款摘要' : '前台展示正文'}</div>
+                        <div class="p-4 rounded-xl border bg-white text-sm leading-relaxed">${item.content}</div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="openEditorDrawer(${item.id})" class="px-3 py-2 text-sm rounded-lg border hover:bg-slate-50"><i class="fa fa-pencil mr-1"></i>编辑</button>
+                        <button onclick="openPreviewDrawer()" class="px-3 py-2 text-sm rounded-lg bg-primary text-white hover:bg-blue-700"><i class="fa fa-eye mr-1"></i>预览</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function statusBadge(status) {
+            const map = {
+                published: 'bg-green-50 text-green-700 border-green-100',
+                draft: 'bg-amber-50 text-amber-700 border-amber-100',
+                disabled: 'bg-slate-100 text-slate-500 border-slate-200'
+            };
+            const text = { published: '已发布', draft: '草稿', disabled: '已停用' };
+            return `<span class="px-2 py-0.5 rounded-full border text-[10px] ${map[status] || map.draft}">${text[status] || status}</span>`;
+        }
+
+        function renderAttachmentCards(attachments = []) {
+            if (!attachments.length) {
+                return '<div class="p-3 rounded-xl bg-slate-50 text-xs text-slate-400">暂无政策原文附件</div>';
+            }
+            return attachments.map(file => `
+                <div class="p-3 rounded-xl border bg-white flex items-center justify-between">
+                    <div class="flex items-center min-w-0">
+                        <div class="w-9 h-9 rounded-lg bg-red-50 text-red-500 flex items-center justify-center mr-3">
+                            <i class="fa fa-file-pdf-o"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-slate-700 truncate">${file.name}</div>
+                            <div class="text-[10px] text-slate-400">${file.type} · ${file.size}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button class="px-2 py-1 text-[10px] rounded bg-blue-50 text-blue-600">预览</button>
+                        <button class="px-2 py-1 text-[10px] rounded bg-slate-100 text-slate-500">下载</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectContent(id) {
+            activeContentId = id;
+            renderContentList();
+            renderDetailPanel();
+        }
+
+        function renderStats() {
+            const items = contentData.filter(item => item.type === currentType);
+            document.getElementById('publishedCount').textContent = items.filter(item => item.status === 'published').length;
+            document.getElementById('draftCount').textContent = items.filter(item => item.status === 'draft').length;
+            document.getElementById('disabledCount').textContent = items.filter(item => item.status === 'disabled').length;
+        }
+
+        function openEditorDrawer(id) {
+            const item = contentData.find(data => data.id === id) || null;
+            document.getElementById('editorTitle').textContent = item ? '编辑内容' : '新增内容';
+            document.getElementById('editType').value = item?.type || currentType;
+            renderEditCategories(item?.type || currentType, item?.category || activeCategory);
+            document.getElementById('editTitle').value = item?.title || '';
+            document.getElementById('editSummary').value = item?.summary || '';
+            document.getElementById('editPage').value = item?.page || '';
+            document.getElementById('editTags').value = item?.tags?.join('，') || '';
+            document.getElementById('editContent').value = item?.content || '';
+            document.getElementById('editStatus').value = item?.status || 'draft';
+            document.getElementById('editAgency').value = item?.agency || '';
+            document.getElementById('editDocNo').value = item?.docNo || '';
+            document.getElementById('editSourceUrl').value = item?.sourceUrl || '';
+            document.getElementById('editAttachmentList').innerHTML = renderAttachmentCards(item?.attachments || []);
+            togglePolicyFields();
+            document.getElementById('editorDrawer').classList.remove('hidden');
+        }
+
+        function renderEditCategories(type, selected) {
+            document.getElementById('editCategory').innerHTML = categoryMap[type].map(category => `<option value="${category.id}" ${category.id === selected ? 'selected' : ''}>${category.name}</option>`).join('');
+        }
+
+        document.addEventListener('change', function(event) {
+            if (event.target.id === 'editType') {
+                renderEditCategories(event.target.value, categoryMap[event.target.value][0].id);
+                togglePolicyFields();
+            }
+        });
+
+        function togglePolicyFields() {
+            const isPolicy = document.getElementById('editType').value === 'policy';
+            document.getElementById('policyFields').classList.toggle('hidden', !isPolicy);
+            document.getElementById('editSummaryField').classList.toggle('hidden', isPolicy);
+            document.getElementById('editRelationFields').classList.toggle('hidden', isPolicy);
+            document.getElementById('editContentField').classList.toggle('hidden', isPolicy);
+            document.getElementById('genericAttachmentField').classList.toggle('hidden', isPolicy);
+            document.getElementById('editContentLabel').textContent = isPolicy ? '核心条款摘要' : '正文内容';
+            document.getElementById('editContent').rows = isPolicy ? 4 : 10;
+            document.getElementById('editContent').placeholder = isPolicy ? '用 2-5 句话概括核心条款即可，政策全文通过附件查看。' : '支持维护操作步骤、字段说明、常见问题等正文内容';
+        }
+
+        function closeEditorDrawer() {
+            document.getElementById('editorDrawer').classList.add('hidden');
+        }
+
+        function openPreviewDrawer() {
+            const items = contentData.filter(item => item.type === currentType && item.status === 'published');
+            const active = contentData.find(item => item.id === activeContentId) || items[0];
+            document.getElementById('previewList').innerHTML = items.map(item => `
+                <button onclick="previewContent(${item.id})" class="w-full text-left p-4 rounded-2xl border ${item.id === active?.id ? 'bg-white border-blue-200 shadow-sm' : 'border-transparent hover:bg-white'}">
+                    <div class="text-sm font-black ${item.id === active?.id ? 'text-primary' : 'text-slate-800'}">${item.title}</div>
+                    <div class="text-xs text-slate-500 mt-1">${item.summary}</div>
+                </button>
+            `).join('');
+            document.getElementById('previewDrawer').classList.remove('hidden');
+            previewContent(active?.id);
+        }
+
+        function previewContent(id) {
+            const item = contentData.find(data => data.id === id);
+            if (!item) return;
+            document.getElementById('previewContent').innerHTML = `
+                <div class="text-xs text-slate-400 mb-1">${item.type === 'operation' ? '操作说明书' : '政策法规库'}</div>
+                <h3 class="text-2xl font-black text-slate-900 mb-3">${item.title}</h3>
+                <p class="text-sm text-slate-500 mb-5">${item.summary}</p>
+                ${item.type === 'policy' ? `
+                <div class="grid grid-cols-2 gap-3 mb-5 text-xs">
+                    <div class="p-3 rounded-xl bg-slate-50 border"><span class="text-slate-400">发文机关：</span>${item.agency || '-'}</div>
+                    <div class="p-3 rounded-xl bg-slate-50 border"><span class="text-slate-400">文号：</span>${item.docNo || '-'}</div>
+                    <div class="p-3 rounded-xl bg-slate-50 border col-span-2"><span class="text-slate-400">政策原文：</span>${item.attachments?.length || 0} 个附件，可在线预览或下载</div>
+                </div>
+                <div class="mb-5 space-y-2">${renderAttachmentCards(item.attachments)}</div>
+                ` : ''}
+                <div class="p-5 rounded-2xl border bg-white leading-relaxed">${item.content}</div>
+            `;
+        }
+
+        function closePreviewDrawer() {
+            document.getElementById('previewDrawer').classList.add('hidden');
+        }
+
+        function saveContent() {
+            alert('原型演示：内容已保存为草稿。');
+            closeEditorDrawer();
+        }
+
+        function publishContent() {
+            alert('原型演示：内容已发布到前台知识库。');
+            closeEditorDrawer();
+        }
+
+        function openCategoryDialog() {
+            alert('原型演示：这里可新增分类、设置排序、绑定前台展示范围。');
+        }
+
+        renderAll();
+    </script>
+</body>
+</html>

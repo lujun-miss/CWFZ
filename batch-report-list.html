@@ -7,19 +7,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .sub-menu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-        .sub-menu.expanded {
-            max-height: 500px;
-        }
-        .sub-menu.collapsed {
-            max-height: 0;
+        .collapsed {
+            display: none;
         }
         .menu-arrow {
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
         .menu-arrow.collapsed {
             transform: rotate(-90deg);
@@ -313,7 +305,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-blue-600 bg-blue-50 font-medium" onclick="loadPage('batch-report-list.html')">
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-blue-600 bg-blue-50 rounded-lg font-medium" onclick="loadPage('batch-report-list.html')">
                                     <i class="fa fa-list w-6"></i>
                                     <span>报工记录</span>
                                 </a>
@@ -509,6 +501,12 @@
                                     <span>数据字典管理</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('help-content-management.html')">
+                                    <i class="fa fa-question-circle w-6"></i>
+                                    <span>知识库维护</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -532,13 +530,20 @@
                             <input type="month" id="filterMonth" class="w-full px-3 py-2 border rounded-md text-sm" onchange="filterRecords()">
                         </div>
 
-
                         <div>
-                            <label class="block text-xs text-gray-500 mb-1">归集状态</label>
+                            <label class="block text-xs text-gray-500 mb-1">类型</label>
+                            <select id="filterReportType" class="w-full px-3 py-2 border rounded-md text-sm" onchange="filterRecords()">
+                                <option value="manual">人工</option>
+                                <option value="device">设备</option>
+                                <option value="intangible">无形资产</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">项目归集状态</label>
                             <select id="filterCollectedStatus" class="w-full px-3 py-2 border rounded-md text-sm" onchange="filterRecords()">
-                                <option value="">所有状态</option>
-                                <option value="collected">已归集</option>
-                                <option value="uncollected">未归集</option>
+                                <option value="">全部项目</option>
+                                <option value="collected">含已归集项目</option>
+                                <option value="uncollected">全部未归集</option>
                             </select>
                         </div>
                         <div class="flex items-end space-x-2">
@@ -559,8 +564,9 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">报工月份</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">类型（人工、设备）</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">归集状态</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">人员</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">项目</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">类型</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">提交时间</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
                                 </tr>
@@ -595,9 +601,6 @@
                             <button onclick="closeDetailModal()" class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md text-sm hover:bg-gray-300">
                                 关闭
                             </button>
-                            <button onclick="editRecord()" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
-                                <i class="fa fa-edit mr-1"></i>重新编辑
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -616,12 +619,10 @@
         }
     }
 
-    function toggleMenu(button) {
-        const menuGroup = button.closest('.menu-group');
-        const subMenu = menuGroup.querySelector('.sub-menu');
-        const arrow = button.querySelector('.menu-arrow');
-        
-        subMenu.classList.toggle('expanded');
+    function toggleMenu(element) {
+        const subMenu = element.nextElementSibling;
+        const arrow = element.querySelector('.menu-arrow');
+
         subMenu.classList.toggle('collapsed');
         arrow.classList.toggle('collapsed');
     }
@@ -653,28 +654,47 @@
 
     // 生成模拟智能报工记录
     function generateMockSmartWorkReports() {
+        const junePeople = Array.from({ length: 20 }, (_, index) => ({
+            id: `p${index + 1}`,
+            name: ['张三', '李四', '王五', '赵六', '钱七', '孙八', '周九', '吴十', '郑一', '王二', '冯三', '陈四', '褚五', '卫六', '蒋七', '沈八', '韩九', '杨十', '朱一', '秦二'][index]
+        }));
+        const juneProjects = [
+            { id: 'proj1', name: '智能传感器研发' },
+            { id: 'proj2', name: '工业机器人控制系统' },
+            { id: 'proj3', name: '新能源材料研究' }
+        ];
         const mockReports = [
             {
                 id: 'swr-2026-06-1',
                 month: '2026-06',
-                personIds: ['p1', 'p2'],
-                personNames: ['张三', '李四'],
-                projectIds: ['proj1', 'proj2'],
-                projectNames: ['智能传感器研发', '工业机器人控制系统'],
+                personIds: junePeople.map(person => person.id),
+                personNames: junePeople.map(person => person.name),
+                projectIds: juneProjects.map(project => project.id),
+                projectNames: juneProjects.map(project => project.name),
                 totalManualHours: 160,
                 totalDeviceRdHours: 40,
                 totalDeviceProductionHours: 20,
                 status: 'submitted',
                 collected: false,
+                projectCollectionStatuses: {
+                    proj1: true,
+                    proj2: false,
+                    proj3: false
+                },
                 submitTime: '2026-06-25 10:00:00',
                 initialPersonnelProjectAllocations: {},
                 initialDeviceAllocations: {},
                 dailyAllocations: [
-                    { date: '2026-06-01', personId: 'p1', personName: '张三', projectId: 'proj1', projectName: '智能传感器研发', manualHours: 4, deviceRdHours: 0, deviceProductionHours: 0 },
-                    { date: '2026-06-01', personId: 'p1', personName: '张三', projectId: 'proj2', projectName: '工业机器人控制系统', manualHours: 4, deviceRdHours: 0, deviceProductionHours: 0 },
+                    ...junePeople.flatMap((person, index) => {
+                        const firstProject = juneProjects[index % juneProjects.length];
+                        const secondProject = juneProjects[(index + 1) % juneProjects.length];
+                        return [
+                            { date: '2026-06-01', personId: person.id, personName: person.name, projectId: firstProject.id, projectName: firstProject.name, manualHours: 4, deviceRdHours: 0, deviceProductionHours: 0 },
+                            { date: '2026-06-01', personId: person.id, personName: person.name, projectId: secondProject.id, projectName: secondProject.name, manualHours: 4, deviceRdHours: 0, deviceProductionHours: 0 }
+                        ];
+                    }),
                     { date: '2026-06-01', personId: '', personName: '设备', projectId: 'proj1', projectName: '智能传感器研发', manualHours: 0, deviceRdHours: 5, deviceProductionHours: 2 },
-                    { date: '2026-06-02', personId: 'p2', personName: '李四', projectId: 'proj1', projectName: '智能传感器研发', manualHours: 8, deviceRdHours: 0, deviceProductionHours: 0 },
-                    { date: '2026-06-02', personId: '', personName: '设备', projectId: 'proj2', projectName: '工业机器人控制系统', manualHours: 0, deviceRdHours: 3, deviceProductionHours: 1 },
+                    { date: '2026-06-02', personId: '', personName: '设备', projectId: 'proj2', projectName: '工业机器人控制系统', manualHours: 0, deviceRdHours: 3, deviceProductionHours: 1 }
                 ]
             },
             {
@@ -689,6 +709,9 @@
                 totalDeviceProductionHours: 5,
                 status: 'submitted',
                 collected: true,
+                projectCollectionStatuses: {
+                    proj3: true
+                },
                 submitTime: '2026-05-20 11:30:00',
                 initialPersonnelProjectAllocations: {},
                 initialDeviceAllocations: {},
@@ -710,12 +733,178 @@
         document.getElementById('filterMonth').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     }
 
+    function buildPersonRecordRows(records) {
+        return records.flatMap(record => {
+            const personMap = new Map();
+
+            (record.dailyAllocations || []).forEach(item => {
+                const personId = item.personId || '';
+                const personName = item.personName || '';
+                if (!personId || personName === '设备') return;
+
+                if (!personMap.has(personId)) {
+                    personMap.set(personId, {
+                        record,
+                        personId,
+                        personName,
+                        projectNames: new Set(),
+                        projectHours: new Map(),
+                        manualHours: 0
+                    });
+                }
+
+                const row = personMap.get(personId);
+                const manualHours = Number(item.manualHours || 0);
+                if (item.projectName) row.projectNames.add(item.projectName);
+                if (item.projectName) {
+                    row.projectHours.set(item.projectName, (row.projectHours.get(item.projectName) || 0) + manualHours);
+                }
+                row.manualHours += manualHours;
+            });
+
+            // 兼容旧数据：如果只有人员数组但没有每日明细，也按人员展开行。
+            (record.personIds || []).forEach((personId, index) => {
+                if (!personId || personMap.has(personId)) return;
+                personMap.set(personId, {
+                    record,
+                    personId,
+                    personName: (record.personNames || [])[index] || '未命名人员',
+                    projectNames: new Set(record.projectNames || []),
+                    projectHours: new Map(),
+                    manualHours: 0
+                });
+            });
+
+            if (personMap.size === 0) {
+                return [{
+                    record,
+                    personId: '',
+                    personName: '无人员报工',
+                    projectNames: new Set(record.projectNames || []),
+                    projectHours: new Map(),
+                    manualHours: 0
+                }];
+            }
+
+            return Array.from(personMap.values());
+        });
+    }
+
+    function renderProjectNames(projectNames) {
+        const names = Array.from(projectNames).filter(Boolean);
+        if (names.length === 0) return '<span class="text-gray-400">-</span>';
+        return names.map(name => `<span class="inline-block px-2 py-0.5 mr-1 mb-1 rounded-full bg-blue-50 text-blue-700 text-xs">${name}</span>`).join('');
+    }
+
+    function renderProjectHours(projectHours, fallbackProjectNames) {
+        const entries = Array.from(projectHours || new Map()).filter(([, hours]) => hours > 0);
+        if (entries.length === 0) return renderProjectNames(fallbackProjectNames);
+
+        return entries.map(([name, hours]) => `
+            <span class="inline-block px-2 py-0.5 mr-1 mb-1 rounded-full bg-blue-50 text-blue-700 text-xs">
+                ${name} ${hours.toFixed(1)}h
+            </span>
+        `).join('');
+    }
+
+    function buildProjectCollectionRows(record) {
+        const projectMap = new Map();
+
+        (record.projectIds || []).forEach((projectId, index) => {
+            if (!projectId) return;
+            projectMap.set(projectId, {
+                id: projectId,
+                name: (record.projectNames || [])[index] || projectId
+            });
+        });
+
+        (record.dailyAllocations || []).forEach(item => {
+            if (!item.projectId || projectMap.has(item.projectId)) return;
+            projectMap.set(item.projectId, {
+                id: item.projectId,
+                name: item.projectName || item.projectId
+            });
+        });
+
+        if (projectMap.size === 0 && (record.projectNames || []).length > 0) {
+            (record.projectNames || []).forEach((projectName, index) => {
+                projectMap.set(`project-${index}`, {
+                    id: `project-${index}`,
+                    name: projectName
+                });
+            });
+        }
+
+        const projectStatuses = record.projectCollectionStatuses || {};
+
+        return Array.from(projectMap.values()).map(project => ({
+            ...project,
+            collected: Object.prototype.hasOwnProperty.call(projectStatuses, project.id)
+                ? Boolean(projectStatuses[project.id])
+                : Boolean(record.collected)
+        }));
+    }
+
+    function hasCollectedProject(record) {
+        return buildProjectCollectionRows(record).some(project => project.collected);
+    }
+
+    function getProjectManualHours(record) {
+        const hourMap = new Map();
+
+        (record.dailyAllocations || []).forEach(item => {
+            if (!item.projectId) return;
+            const currentHours = hourMap.get(item.projectId) || 0;
+            hourMap.set(item.projectId, currentHours + Number(item.manualHours || 0));
+        });
+
+        return hourMap;
+    }
+
+    function renderProjectCollectionStatusList(record) {
+        const rows = buildProjectCollectionRows(record);
+        const projectManualHours = getProjectManualHours(record);
+
+        if (rows.length === 0) {
+            return '<div class="text-sm text-gray-400">暂无项目归集状态</div>';
+        }
+
+        return `
+            <div class="border border-gray-200 rounded-lg overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">项目</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">人工工时</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">归集状态</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        ${rows.map(project => `
+                            <tr>
+                                <td class="px-4 py-2 text-sm text-gray-900">${project.name}</td>
+                                <td class="px-4 py-2 text-sm font-medium text-gray-900">${(projectManualHours.get(project.id) || 0).toFixed(1)}h</td>
+                                <td class="px-4 py-2">
+                                    <span class="status-badge ${project.collected ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                        ${project.collected ? '已归集' : '未归集'}
+                                    </span>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+
     // 渲染记录列表
     function renderRecords(records) {
         const tbody = document.getElementById('recordsTableBody');
         const emptyState = document.getElementById('emptyState');
+        const selectedType = document.getElementById('filterReportType')?.value || 'manual';
+        const personRows = selectedType === 'manual' ? buildPersonRecordRows(records) : [];
         
-        if (records.length === 0) {
+        if (personRows.length === 0) {
             tbody.innerHTML = '';
             emptyState.classList.remove('hidden');
             return;
@@ -723,21 +912,8 @@
         
         emptyState.classList.add('hidden');
         
-        tbody.innerHTML = records.map(record => {
-            const statusText = record.collected ? '已归集' : '未归集';
-            const statusClass = record.collected ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
-
-            let typeText = '';
-            const hasManual = record.totalManualHours > 0;
-            const hasDevice = record.totalDeviceRdHours > 0 || record.totalDeviceProductionHours > 0;
-
-            if (hasDevice) {
-                typeText = '设备';
-            } else if (hasManual) {
-                typeText = '人工';
-            } else {
-                typeText = '未知'; // Should not happen if report is valid
-            }
+        tbody.innerHTML = personRows.map(row => {
+            const record = row.record;
             
             return `
                 <tr class="hover:bg-gray-50">
@@ -745,12 +921,13 @@
                         <div class="text-sm font-medium text-gray-900">${record.month}</div>
                     </td>
                     <td class="px-4 py-3">
-                        <div class="text-sm text-gray-900">${typeText}</div>
+                        <div class="text-sm font-medium text-gray-900">${row.personName}</div>
+                    </td>
+                    <td class="px-4 py-3 max-w-sm">
+                        <div>${renderProjectHours(row.projectHours, row.projectNames)}</div>
                     </td>
                     <td class="px-4 py-3">
-                        <span class="status-badge ${statusClass}">
-                            ${statusText}
-                        </span>
+                        <div class="text-sm text-gray-900">人工</div>
                     </td>
                     <td class="px-4 py-3">
                         <div class="text-sm text-gray-900">${record.submitTime || '-'}</div>
@@ -760,11 +937,8 @@
                             <button onclick="viewDetail('${record.id}')" class="text-blue-600 hover:text-blue-800 text-sm">
                                 <i class="fa fa-eye mr-1"></i>查看
                             </button>
-                            <button onclick="editRecord('${record.id}')" class="text-gray-600 hover:text-gray-800 text-sm">
-                                <i class="fa fa-edit mr-1"></i>编辑
-                            </button>
-                            <button onclick="deleteRecord('${record.id}')" class="text-red-600 hover:text-red-800 text-sm">
-                                <i class="fa fa-trash mr-1"></i>删除
+                            <button onclick="withdrawRecord('${record.id}')" class="text-orange-600 hover:text-orange-800 text-sm">
+                                <i class="fa fa-undo mr-1"></i>撤回
                             </button>
                         </div>
                     </td>
@@ -776,6 +950,7 @@
     // 筛选记录
     function filterRecords() {
         const month = document.getElementById('filterMonth').value;
+        const reportType = document.getElementById('filterReportType').value;
         const collectedStatus = document.getElementById('filterCollectedStatus').value; 
         
         let filtered = allSmartWorkReports;
@@ -783,10 +958,20 @@
         if (month) {
             filtered = filtered.filter(r => r.month === month);
         }
+
+        if (reportType === 'manual') {
+            filtered = filtered.filter(r => Number(r.totalManualHours || 0) > 0 || (r.dailyAllocations || []).some(item => Number(item.manualHours || 0) > 0));
+        } else if (reportType === 'device') {
+            filtered = [];
+        } else if (reportType === 'intangible') {
+            filtered = [];
+        }
         
         if (collectedStatus !== '') {
-            const isCollected = collectedStatus === 'collected';
-            filtered = filtered.filter(r => r.collected === isCollected);
+            filtered = filtered.filter(r => {
+                const hasCollected = hasCollectedProject(r);
+                return collectedStatus === 'collected' ? hasCollected : !hasCollected;
+            });
         }
         
         renderRecords(filtered);
@@ -795,6 +980,7 @@
     // 重置筛选
     function resetFilter() {
         document.getElementById('filterMonth').value = '';
+        document.getElementById('filterReportType').value = 'manual';
         document.getElementById('filterCollectedStatus').value = ''; 
         renderRecords(allSmartWorkReports); 
     }
@@ -810,54 +996,12 @@
         }
         
         const content = document.getElementById('detailContent');
-        
-        // Group daily allocations by person and then by project for better display
-        const groupedDailyAllocations = {};
-        record.dailyAllocations.forEach(daily => {
-            if (!groupedDailyAllocations[daily.personName || '设备']) { // Use '设备' for device-only entries
-                groupedDailyAllocations[daily.personName || '设备'] = {};
-            }
-            if (!groupedDailyAllocations[daily.personName || '设备'][daily.projectName]) {
-                groupedDailyAllocations[daily.personName || '设备'][daily.projectName] = [];
-            }
-            groupedDailyAllocations[daily.personName || '设备'][daily.projectName].push(daily);
-        });
-
-        let personAllocationDetailsHtml = '';
-        for (const personOrDeviceName in groupedDailyAllocations) {
-            personAllocationDetailsHtml += `
-                <div class="mb-4 p-4 bg-gray-50 rounded-lg">
-                    <div class="font-medium text-gray-800 mb-2">${personOrDeviceName}</div>
-                    ${Object.entries(groupedDailyAllocations[personOrDeviceName]).map(([projectName, dailyEntries]) => `
-                        <div class="mb-2">
-                            <div class="text-sm font-medium text-gray-700">${projectName}</div>
-                            <div class="grid grid-cols-4 gap-2 text-xs text-gray-600 mt-1">
-                                ${dailyEntries.map(entry => `
-                                    <div class="flex flex-col border-b border-gray-200 pb-1 mb-1">
-                                        <span>${entry.date.substring(5).replace('-', '.')}</span>
-                                        ${entry.manualHours > 0 ? `<span>人工: ${entry.manualHours}h</span>` : ''}
-                                        ${entry.deviceRdHours > 0 ? `<span>设备研发: ${entry.deviceRdHours}h</span>` : ''}
-                                        ${entry.deviceProductionHours > 0 ? `<span>设备生产: ${entry.deviceProductionHours}h</span>` : ''}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
 
         content.innerHTML = `
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="text-xs text-gray-500">报工月份</label>
                     <div class="text-sm font-medium text-gray-900">${record.month}</div>
-                </div>
-                <div>
-                    <label class="text-xs text-gray-500">状态</label>
-                    <span class="status-badge ${record.collected ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
-                        ${record.collected ? '已归集' : '未归集'}
-                    </span>
                 </div>
                 <div>
                     <label class="text-xs text-gray-500">提交时间</label>
@@ -867,9 +1011,11 @@
 
 
             </div>
-            
-            <h4 class="text-sm font-semibold text-gray-800 mb-3">详细分配明细</h4>
-            ${personAllocationDetailsHtml}
+
+            <h4 class="text-sm font-semibold text-gray-800 mb-3">项目工时与归集状态</h4>
+            <div class="mb-6">
+                ${renderProjectCollectionStatusList(record)}
+            </div>
         `;
         
         document.getElementById('detailModal').classList.remove('hidden');
@@ -881,20 +1027,26 @@
         currentRecordId = null;
     }
 
-    // 编辑记录
-    function editRecord(recordId) {
-        // 跳转到批量报工页面，带上记录ID参数
-        loadPage(`batch-work-reporting.html?recordId=${recordId}`);
-    }
+    // 撤回记录
+    function withdrawRecord(recordId) {
+        const record = allSmartWorkReports.find(r => r.id === recordId);
 
-    // 删除记录
-    function deleteRecord(recordId) {
-        if (confirm('确定要删除这条报工记录吗？删除后无法恢复。')) {
+        if (!record) {
+            alert('未找到该报工记录。');
+            return;
+        }
+
+        if (hasCollectedProject(record)) {
+            alert('已存在项目已归集，则不允许进行撤回');
+            return;
+        }
+
+        if (confirm('确定要撤回这条报工记录吗？撤回后列表中不再展示。')) {
             const index = allSmartWorkReports.findIndex(r => r.id === recordId);
             if (index > -1) {
                 allSmartWorkReports.splice(index, 1);
                 localStorage.setItem('smartWorkReports', JSON.stringify(allSmartWorkReports)); // Update localStorage
-                filterRecords(); // Re-render records after deletion
+                filterRecords(); // Re-render records after withdrawal
             }
         }
     }
