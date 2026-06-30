@@ -2085,22 +2085,6 @@
                 tableHtml += `
                             </tbody>
                             <tfoot>
-                                <tr>
-                                    <td class="sticky-left font-medium">汇总</td>
-                                    <td class="font-bold text-green-600">${personTotalHours.toFixed(1)}h</td>
-                                    ${personProjects.map(p => {
-                                        let projectTotal = 0;
-                                        for (let day = 1; day <= daysInMonth; day++) {
-                                            const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                                            projectTotal += allocationResults[person.id]?.[date]?.[p.id] || 0;
-                                        }
-                                        return `
-                                            <td class="font-bold" style="color: ${p.color}">${projectTotal.toFixed(1)}h</td>
-                                        `;
-                                    }).join('')}
-                                    <td class="font-bold text-blue-600">${personTotalAllocated.toFixed(1)}h</td>
-                                    <td class="font-bold text-yellow-600">${(personTotalHours - personTotalAllocated).toFixed(1)}h</td>
-                                </tr>
                             </tfoot>
                         </table>
                     </div>
@@ -2176,8 +2160,9 @@
             container.innerHTML = '';
             
             const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-            const personId = document.getElementById('personSelect').value;
-            const personsToProcess = personId ? [personId] : Object.keys(allocationResults);
+            const personsToProcess = selectedPersonIds.length > 0 
+                ? selectedPersonIds
+                : getRegularPersonnel().map(p => p.id);
             
             // 计算各项目总工时
             const projectTotals = {};

@@ -496,12 +496,6 @@
                                     <span>数据字典管理</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('help-content-management.html')">
-                                    <i class="fa fa-question-circle w-6"></i>
-                                    <span>知识库维护</span>
-                                </a>
-                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -929,19 +923,52 @@
                         desc: '查看研发费归集进度、预警指标和快捷入口。',
                         tags: ['首页', '进度', '预警'],
                         content: `
-                            <h4 class="text-lg font-black text-gray-800 mb-3">首页使用指引</h4>
-                            <div class="space-y-3">
-                                <p>首页用于快速查看企业当前研发费用归集状态、年度预算使用情况和合规预警。</p>
-                                <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                                    <div class="font-bold text-blue-800 mb-2">推荐操作顺序</div>
-                                    <ol class="list-decimal list-inside space-y-1 text-blue-700 text-sm">
+                            <div class="space-y-5">
+                                <p>首页用于快速查看企业当前研发费用归集状态、年度预算使用情况、不同口径报表进度以及合规预警。业务人员进入系统后，可先通过首页判断当月是否已经完成基础数据维护，再决定进入智能报工、费用归集或多口径报表模块。</p>
+                                <section>
+                                    <h5 class="font-bold text-gray-800 mb-2">一、适用场景</h5>
+                                    <p class="mb-2">首页主要用于日常数据检查、月度归集跟踪和报表生成前的状态确认。建议在以下场景中优先查看首页：</p>
+                                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-600">
+                                        <li>月初检查项目、人员、设备、无形资产等基础数据是否齐全。</li>
+                                        <li>月中查看人工工时、设备工时、无形资产工时是否已完成填报。</li>
+                                        <li>月末确认研发费用归集进度、预算使用情况和异常预警。</li>
+                                        <li>生成加计扣除、高企、会计等口径报表前，先确认底层数据完整性。</li>
+                                    </ul>
+                                </section>
+                                <figure class="my-4">
+                                    <img class="w-full rounded-xl border shadow-sm" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=enterprise%20R%26D%20expense%20management%20dashboard%20workflow%20diagram%2C%20clean%20SaaS%20UI%20illustration%2C%20Chinese%20business%20software%2C%20blue%20and%20white%20interface%2C%20professional%20documentation%20image&image_size=landscape_16_9" alt="首页操作流程图">
+                                    <figcaption class="text-xs text-gray-400 mt-2">示例：后台正文中插入的首页操作流程图。</figcaption>
+                                </figure>
+                                <section>
+                                    <h5 class="font-bold text-gray-800 mb-2">二、页面区域说明</h5>
+                                    <p><strong>研发费用概览：</strong>展示当前月份、季度或年度的研发费用发生额、预算占用比例和费用趋势，用于判断整体费用水平是否正常。</p>
+                                    <p><strong>归集进度：</strong>用于判断人工、设备、无形资产、直接投入等费用是否已经完成归集，便于定位未完成的业务环节。</p>
+                                    <p><strong>快捷入口：</strong>可快速进入智能报工、费用归集、报表查看、基础数据维护等常用页面，减少跨菜单查找。</p>
+                                    <p><strong>预警指标：</strong>展示考勤缺失、工时异常、项目周期不匹配、费用超额等需要优先处理的问题。</p>
+                                </section>
+                                <section>
+                                    <h5 class="font-bold text-gray-800 mb-2">三、推荐操作顺序</h5>
+                                    <ol class="list-decimal list-inside space-y-1 text-sm text-gray-600">
                                         <li>查看顶部研发费归集进度，确认当前归集金额和上限。</li>
                                         <li>点击预警指标，优先处理异常或缺失数据。</li>
                                         <li>通过左侧菜单进入项目、人员、资产和费用归集模块。</li>
+                                        <li>完成数据修正后返回首页，确认进度和预警状态是否同步更新。</li>
                                     </ol>
-                                </div>
+                                </section>
+                                <section>
+                                    <h5 class="font-bold text-gray-800 mb-2">四、注意事项</h5>
+                                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-600">
+                                        <li>首页仅做汇总和预警展示，具体数据调整需进入对应业务页面处理。</li>
+                                        <li>若页面数据未刷新，可先检查筛选时间维度，再进行浏览器强制刷新。</li>
+                                        <li>预警处理完成后，建议重新生成相关报表，确保多口径数据一致。</li>
+                                    </ul>
+                                </section>
                             </div>
-                        `
+                        `,
+                        attachments: [
+                            { name: '首页操作说明书.pdf', type: 'PDF', size: '1.2MB' },
+                            { name: '研发费用归集首页指标说明.xlsx', type: 'Excel', size: '420KB' }
+                        ]
                     },
                     {
                         id: 'op-work-hour',
@@ -960,13 +987,80 @@
                                     <p>按考勤人员、项目绑定关系和研发/生产占比拆分到每日。</p>
                                 </div>
                             </div>
+                            <figure class="my-5">
+                                <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px;"></iframe>
+                                </div>
+                                <figcaption class="text-xs text-gray-400 mt-2">示例：智能报工完整操作流程视频演示（可替换为实际录制的操作视频）</figcaption>
+                            </figure>
                             <ol class="list-decimal list-inside space-y-2">
                                 <li>选择报工月份，点击“开始分配”。</li>
                                 <li>在人工、设备、无形资产 Tab 中分别设置占比或工时。</li>
                                 <li>点击“应用分配”，检查每日明细和底部本月合计。</li>
                                 <li>确认无剩余未分配或异常后，提交智能报工。</li>
                             </ol>
-                        `
+                        `,
+                        articles: [
+                            {
+                                id: 'op-work-hour-manual',
+                                title: '人工工时批量填报',
+                                content: `
+                                    <h4 class="text-lg font-black text-gray-800 mb-3">人工工时批量填报</h4>
+                                    <figure class="my-4">
+                                        <img class="w-full rounded-xl border shadow-sm" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=manual%20work%20hour%20batch%20reporting%20workflow%20diagram%2C%20employee%20attendance%20calendar%2C%20project%20allocation%20table%2C%20enterprise%20SaaS%20documentation%20screenshot%2C%20clean%20blue%20white%20style&image_size=landscape_16_9" alt="人工工时批量填报流程图">
+                                        <figcaption class="text-xs text-gray-400 mt-2">示例：人工工时按考勤和项目占比分配的流程图。</figcaption>
+                                    </figure>
+                                    <figure class="my-5">
+                                        <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px;"></iframe>
+                                        </div>
+                                        <figcaption class="text-xs text-gray-400 mt-2">视频演示：人工工时批量填报完整操作步骤</figcaption>
+                                    </figure>
+                                    <ol class="list-decimal list-inside space-y-2">
+                                        <li>选择报工月份，系统按人员考勤加载可分配日期。</li>
+                                        <li>按人员维护各项目占比，项目占比大于 0% 才参与分配。</li>
+                                        <li>点击“应用分配”，系统按考勤工时和项目占比生成每日人工工时。</li>
+                                        <li>检查项目工时合计后提交，后续可在报工记录中按人员查看。</li>
+                                    </ol>
+                                `,
+                                attachments: [
+                                    { name: '人工工时批量填报操作手册.pdf', type: 'PDF', size: '1.8MB' },
+                                    { name: '人工工时导入模板.xlsx', type: 'Excel', size: '356KB' }
+                                ]
+                            },
+                            {
+                                id: 'op-work-hour-device',
+                                title: '设备工时批量填报',
+                                content: `
+                                    <h4 class="text-lg font-black text-gray-800 mb-3">设备工时批量填报</h4>
+                                    <ol class="list-decimal list-inside space-y-2">
+                                        <li>选择设备考勤人员，系统仅在该人员有考勤的日期分配设备工时。</li>
+                                        <li>维护项目-设备矩阵，分别录入月度研发工时和生产工时。</li>
+                                        <li>点击“应用设备分配”，系统按项目月度总量拆分到每日，并保持随机波动。</li>
+                                        <li>查看每个项目的已分配研发、已分配生产和剩余未分配。</li>
+                                    </ol>
+                                `,
+                                attachments: [
+                                    { name: '设备工时填报说明.pdf', type: 'PDF', size: '1.5MB' }
+                                ]
+                            },
+                            {
+                                id: 'op-work-hour-intangible',
+                                title: '无形资产工时批量填报',
+                                content: `
+                                    <h4 class="text-lg font-black text-gray-800 mb-3">无形资产工时批量填报</h4>
+                                    <ol class="list-decimal list-inside space-y-2">
+                                        <li>选择无形资产考勤人员，按该人员考勤日期控制可分配日期。</li>
+                                        <li>维护项目-无形资产矩阵，区分研发工时和生产工时。</li>
+                                        <li>应用分配后查看每日拆分结果，确保月度总量和项目维度剩余正确。</li>
+                                        <li>确认后与人工、设备工时一起提交智能报工。</li>
+                                    </ol>
+                                `,
+                                attachments: [
+                                    { name: '无形资产工时填报说明.pdf', type: 'PDF', size: '1.4MB' }
+                                ]
+                            }
+                        ]
                     },
                     {
                         id: 'op-caliber',
@@ -1131,11 +1225,13 @@
 
         let currentHelpType = 'operation';
         let activeHelpCategoryId = '';
+        let activeHelpArticleId = '';
 
         function showHelp(type) {
             currentHelpType = type;
             const library = helpLibrary[type] || helpLibrary.operation;
             activeHelpCategoryId = library.categories[0]?.id || '';
+            activeHelpArticleId = currentHelpType === 'operation' ? getOperationArticles(library.categories[0])[0]?.id || '' : '';
 
             document.getElementById('helpTitle').innerHTML = `<i class="fa ${library.icon} mr-2"></i>${library.title}`;
             document.getElementById('helpSubtitle').textContent = library.subtitle;
@@ -1148,42 +1244,94 @@
 
         function renderHelpCategoryList(categories) {
             const container = document.getElementById('helpCategoryList');
+            if (currentHelpType === 'operation') {
+                container.innerHTML = categories.map(item => {
+                    const articles = getOperationArticles(item);
+                    const expanded = item.id === activeHelpCategoryId;
+                    return `
+                        <div class="rounded-2xl border transition-all ${expanded ? 'bg-white border-blue-200 shadow-sm' : 'bg-transparent border-transparent hover:bg-white hover:border-gray-200'}">
+                            <button onclick="renderHelpContent('${item.id}')"
+                                class="w-full text-left p-4 flex items-start justify-between">
+                                <div class="text-sm font-black ${expanded ? 'text-blue-700' : 'text-gray-800'}">${item.title}</div>
+                                <i class="fa fa-angle-${expanded ? 'down' : 'right'} text-gray-300 mt-1"></i>
+                            </button>
+                            ${expanded ? `
+                                <div class="px-3 pb-3 space-y-1">
+                                    ${articles.map(article => `
+                                        <button onclick="renderHelpContent('${item.id}', '${article.id}')"
+                                            class="w-full text-left px-3 py-2 rounded-xl text-xs ${article.id === activeHelpArticleId ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}">
+                                            ${article.title}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+                return;
+            }
+
             container.innerHTML = categories.map(item => `
                 <button onclick="renderHelpContent('${item.id}')"
                     class="w-full text-left p-4 rounded-2xl border transition-all ${item.id === activeHelpCategoryId ? 'bg-white border-blue-200 shadow-sm' : 'bg-transparent border-transparent hover:bg-white hover:border-gray-200'}">
                     <div class="flex items-start justify-between">
                         <div>
                             <div class="text-sm font-black ${item.id === activeHelpCategoryId ? 'text-blue-700' : 'text-gray-800'}">${item.title}</div>
-                            <div class="text-xs text-gray-500 mt-1 leading-relaxed">${item.desc}</div>
                         </div>
                         <i class="fa fa-angle-right text-gray-300 mt-1"></i>
                     </div>
-                    ${currentHelpType === 'policy' ? '' : `
-                    <div class="mt-3 flex flex-wrap gap-1">
-                        ${item.tags.map(tag => `<span class="px-2 py-0.5 rounded-full bg-gray-100 text-[10px] text-gray-500">${tag}</span>`).join('')}
-                    </div>
-                    `}
                 </button>
             `).join('');
         }
 
-        function renderHelpContent(categoryId) {
+        function renderHelpContent(categoryId, articleId = '') {
             const library = helpLibrary[currentHelpType] || helpLibrary.operation;
             const item = library.categories.find(category => category.id === categoryId) || library.categories[0];
             if (!item) return;
             activeHelpCategoryId = item.id;
+            const article = currentHelpType === 'operation' ? getOperationArticles(item).find(data => data.id === articleId) || getOperationArticles(item)[0] : null;
+            activeHelpArticleId = article?.id || '';
             renderHelpCategoryList(getFilteredHelpCategories());
             document.getElementById('helpContent').innerHTML = currentHelpType === 'policy' ? renderPolicyHelpDetail(item) : `
                 <div class="mb-5 flex items-center justify-between">
                     <div>
-                        <div class="text-xs text-gray-400 mb-1">${library.title}</div>
-                        <h3 class="text-2xl font-black text-gray-900">${item.title}</h3>
+                        <div class="text-xs text-gray-400 mb-1">${library.title} / ${item.title}</div>
+                        <h3 class="text-2xl font-black text-gray-900">${article.title}</h3>
                     </div>
                     <button onclick="copyHelpTitle()" class="px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200">
                         <i class="fa fa-copy mr-1"></i>复制标题
                     </button>
                 </div>
-                <div class="prose prose-sm max-w-none">${item.content}</div>
+                <div class="prose prose-sm max-w-none">${article.content}</div>
+                ${renderOperationAttachments(article.attachments)}
+            `;
+        }
+
+        function getOperationArticles(category) {
+            if (!category) return [];
+            if (Array.isArray(category.articles) && category.articles.length > 0) {
+                return category.articles;
+            }
+            return [{
+                id: `${category.id}-default`,
+                title: category.title,
+                content: category.content || '',
+                attachments: category.attachments || []
+            }];
+        }
+
+        function renderOperationAttachments(attachments = []) {
+            if (!attachments.length) return '';
+            return `
+                <div class="mt-6 pt-5 border-t">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="font-black text-gray-800">相关附件</div>
+                        <span class="text-xs text-gray-400">${attachments.length} 个附件</span>
+                    </div>
+                    <div class="space-y-2">
+                        ${attachments.map(file => renderPolicyAttachment(file)).join('')}
+                    </div>
+                </div>
             `;
         }
 
@@ -1218,11 +1366,16 @@
         }
 
         function renderPolicyAttachment(file) {
+            const fileType = (file.type || '').toLowerCase();
+            const icon = fileType.includes('word') ? 'fa-file-word-o'
+                : fileType.includes('excel') ? 'fa-file-excel-o'
+                : fileType.includes('image') ? 'fa-file-image-o'
+                : 'fa-file-pdf-o';
             return `
                 <div class="p-3 rounded-xl border bg-gray-50 flex items-center justify-between gap-3">
                     <div class="flex items-center min-w-0">
                         <div class="w-9 h-9 rounded-lg bg-red-50 text-red-500 flex items-center justify-center mr-3">
-                            <i class="fa ${file.type === 'Word' ? 'fa-file-word-o' : 'fa-file-pdf-o'}"></i>
+                            <i class="fa ${icon}"></i>
                         </div>
                         <div class="min-w-0">
                             <div class="font-bold text-gray-800 truncate">${file.name}</div>
@@ -1244,7 +1397,7 @@
             return categories.filter(item => {
                 const policyText = currentHelpType === 'policy'
                     ? (item.policies || []).map(policy => `${policy.title} ${policy.desc || ''} ${policy.agency || ''} ${policy.docNo || ''} ${(policy.tags || []).join(' ')}`).join(' ')
-                    : '';
+                    : getOperationArticles(item).map(article => `${article.title} ${article.content || ''}`).join(' ');
                 const text = `${item.title} ${item.desc} ${item.tags.join(' ')} ${policyText}`.toLowerCase();
                 return text.includes(keyword);
             });
@@ -1259,14 +1412,18 @@
                 return;
             }
             activeHelpCategoryId = filtered.some(item => item.id === activeHelpCategoryId) ? activeHelpCategoryId : filtered[0].id;
+            const activeCategory = filtered.find(item => item.id === activeHelpCategoryId) || filtered[0];
+            activeHelpArticleId = currentHelpType === 'operation' ? getOperationArticles(activeCategory)[0]?.id || '' : '';
             renderHelpCategoryList(filtered);
             renderHelpContent(activeHelpCategoryId);
         }
 
         function copyHelpTitle() {
             const item = (helpLibrary[currentHelpType] || helpLibrary.operation).categories.find(category => category.id === activeHelpCategoryId);
-            if (item && navigator.clipboard) {
-                navigator.clipboard.writeText(item.title);
+            const article = currentHelpType === 'operation' ? getOperationArticles(item).find(data => data.id === activeHelpArticleId) : null;
+            const title = article?.title || item?.title;
+            if (title && navigator.clipboard) {
+                navigator.clipboard.writeText(title);
             }
         }
 
