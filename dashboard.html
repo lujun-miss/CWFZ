@@ -50,6 +50,31 @@
                             <span>首页</span>
                         </a>
                     </li>
+
+                    <!-- 通知公告 -->
+                    <li class="menu-group">
+                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" onclick="toggleMenu(this)">
+                            <div class="flex items-center">
+                                <i class="fa fa-bell-o w-6"></i>
+                                <span>通知公告</span>
+                            </div>
+                            <i class="fa fa-chevron-down text-xs menu-arrow collapsed"></i>
+                        </button>
+                        <ul class="ml-6 sub-menu">
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('notification-announcement.html?tab=system')">
+                                    <i class="fa fa-volume-up w-6"></i>
+                                    <span>系统通知</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600" onclick="loadPage('notification-announcement.html?tab=warning')">
+                                    <i class="fa fa-warning w-6"></i>
+                                    <span>预警指标</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     
                     <!-- 项目管理 -->
                     <li class="menu-group">
@@ -510,7 +535,7 @@
                     <h2 id="page-title" class="text-lg font-medium text-gray-800">首页</h2>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button class="text-gray-500 hover:text-gray-700">
+                    <button onclick="loadPage('notification-announcement.html?tab=system')" class="text-gray-500 hover:text-gray-700">
                         <i class="fa fa-bell"></i>
                     </button>
                     <div class="relative group">
@@ -587,7 +612,7 @@
 
                         <!-- 指标预警 (由固定定位移动到此处并排) -->
                         <div class="relative group/alert">
-                            <button id="warningIcon" class="flex flex-col items-center justify-center w-28 h-28 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-white hover:to-white text-white hover:text-orange-500 rounded-2xl transition-all duration-300 border border-white/30 hover:border-white shadow-xl group/btn">
+                            <button id="warningIcon" onclick="loadPage('notification-announcement.html?tab=warning')" class="flex flex-col items-center justify-center w-28 h-28 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-white hover:to-white text-white hover:text-orange-500 rounded-2xl transition-all duration-300 border border-white/30 hover:border-white shadow-xl group/btn">
                                 <i class="fa fa-warning text-2xl mb-2 group-hover/btn:scale-125 transition-transform"></i>
                                 <span class="text-xs font-black tracking-tighter">预警指标</span>
                                 <span class="absolute top-2 right-2 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full border-2 border-white shadow-lg flex items-center justify-center" id="warningBadge"></span>
