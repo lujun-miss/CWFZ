@@ -121,6 +121,34 @@
         .allocation-table tbody tr:hover td.sticky-left {
             background: #f9fafb;
         }
+        .allocation-table th.sticky-random,
+        .allocation-table td.sticky-random {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 12;
+            min-width: 70px;
+            width: 70px;
+            border-right: 1px solid #d1d5db;
+        }
+        .allocation-table th.sticky-date,
+        .allocation-table td.sticky-date {
+            position: sticky;
+            left: 70px;
+            background: white;
+            z-index: 11;
+            min-width: 80px;
+            width: 80px;
+            border-right: 2px solid #d1d5db;
+        }
+        .allocation-table thead th.sticky-random,
+        .allocation-table thead th.sticky-date {
+            background: #f9fafb;
+        }
+        .allocation-table tbody tr:hover td.sticky-random,
+        .allocation-table tbody tr:hover td.sticky-date {
+            background: #f9fafb;
+        }
         .allocation-input {
             width: 60px;
             padding: 0.125rem 0.25rem;
@@ -720,12 +748,13 @@
                         <div id="projectAllocationCards" class="overflow-x-auto mb-3">
                         </div>
                         
-                        <div class="flex items-center justify-end gap-2">
-                            <button onclick="randomizePersonPercentages()" class="px-4 py-1.5 bg-purple-600 text-white rounded-md text-xs hover:bg-purple-700">
-                                <i class="fa fa-random mr-1"></i>按人员随机生成占比
+                        <div class="flex flex-wrap items-center justify-end gap-2">       
+                            <button type="button" onclick="randomizePersonPercentages(event)" class="px-4 py-1.5 bg-emerald-600 text-white rounded-md text-xs hover:bg-emerald-700">
+                                <span class="inline-flex items-center justify-center w-4 h-4 mr-1 rounded-full bg-white text-emerald-600 text-[10px] font-bold">1</span>按人员生成项目占比
                             </button>
-                            <button onclick="applyAllocation()" class="px-4 py-1.5 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700">
-                                <i class="fa fa-magic mr-1"></i>应用智能分配
+                            <i class="fa fa-long-arrow-right text-gray-300 text-xs"></i>
+                            <button type="button" onclick="applyAllocation(event)" class="px-4 py-1.5 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700">
+                                <span class="inline-flex items-center justify-center w-4 h-4 mr-1 rounded-full bg-white text-blue-600 text-[10px] font-bold">2</span>应用智能分配    
                             </button>
                             <button onclick="toggleRandomRuleHelp()" class="w-6 h-6 flex items-center justify-center bg-gray-100 text-gray-500 rounded-full text-xs hover:bg-gray-200 hover:text-gray-700 transition-colors" title="智能分配规则说明">
                                 <i class="fa fa-question-circle"></i>
@@ -831,11 +860,14 @@
                     <div id="allocationResultSection" class="bg-white rounded-lg shadow-sm p-4 mb-4 hidden">
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="text-sm font-semibold text-gray-800"><i class="fa fa-table mr-1"></i>人工分配结果</h3>
+                            <button type="button" onclick="randomizeAllPersonnelDailyRows()" class="px-3 py-1.5 rounded-md bg-purple-600 text-white text-xs hover:bg-purple-700">
+                                <span class="inline-flex items-center justify-center w-4 h-4 mr-1 rounded-full bg-white text-purple-600 text-[10px] font-bold">3</span>全人员每日随机工时生成（可选）
+                            </button>
                         </div>
                         
                         <div class="mb-3 p-2 bg-blue-50 rounded-lg text-xs text-blue-700">
                             <i class="fa fa-info-circle mr-1"></i>
-                            <strong>说明：</strong>系统根据考勤打卡记录自动计算每日工时，按项目占比智能分配，可手动调整各项目工时。<span class="text-gray-500 ml-2">灰色表示当天无考勤打卡</span>
+                            <strong>说明：</strong>先完成步骤1生成项目占比，再执行步骤2生成基准工时；如需避免每日工时过于一致，可执行步骤3随机调整。<span class="text-gray-500 ml-2">灰色表示当天无考勤打卡</span>
                         </div>
                         
                         <div id="allocationResultContent">
@@ -1198,6 +1230,8 @@
 
         // 分配结果缓存
         let allocationResults = {};
+        let allocationBaseResults = {};
+        let allocationChangeTypes = {};
 
         // 设备占比设置
         let deviceAllocations = {};
@@ -1542,8 +1576,31 @@
             if (warningDiv) warningDiv.classList.toggle('hidden', totalPercentage >= 100);
             if (okDiv) okDiv.classList.toggle('hidden', totalPercentage !== 100);
         }
+
+        function showPageMessage(message, type = 'success') {
+            const existing = document.getElementById('pageMessageToast');
+            if (existing) existing.remove();
+
+            const colorClass = type === 'error'
+                ? 'bg-red-50 text-red-700 border-red-200'
+                : type === 'warning'
+                    ? 'bg-amber-50 text-amber-700 border-amber-200'
+                    : 'bg-green-50 text-green-700 border-green-200';
+
+            const toast = document.createElement('div');
+            toast.id = 'pageMessageToast';
+            toast.className = `fixed top-5 right-5 z-50 max-w-md px-4 py-3 rounded-lg border shadow-lg text-sm ${colorClass}`;
+            toast.innerHTML = message.replace(/\n/g, '<br>');
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                const current = document.getElementById('pageMessageToast');
+                if (current) current.remove();
+            }, 3500);
+        }
         
-        function randomizePersonPercentages() {
+        function randomizePersonPercentages(event) {
+            if (event) event.preventDefault();
             const personsToProcess = selectedPersonIds.length > 0 
                 ? mockPersonnelData.filter(p => selectedPersonIds.includes(p.id))
                 : mockPersonnelData;
@@ -1586,9 +1643,9 @@
             });
 
             if (generatedPersonCount === 0) {
-                alert('当前没有可生成占比的人员项目，请检查人员是否绑定了当月有效项目。');
+                showPageMessage('当前没有可生成占比的人员项目，请检查人员是否绑定了当月有效项目。', 'warning');
             } else {
-                alert(`已为 ${generatedPersonCount} 名人员随机生成项目占比，可继续手动微调。`);
+                showPageMessage(`已为 ${generatedPersonCount} 名人员随机生成项目占比，可继续手动微调。`);
             }
         }
         
@@ -1767,6 +1824,8 @@
             // 清除缓存
             attendanceDataCache = {};
             allocationResults = {};
+            allocationBaseResults = {};
+            allocationChangeTypes = {};
             
             // 生成考勤数据
             personsToLoad.forEach(person => {
@@ -1789,16 +1848,23 @@
             const personsToProcess = Object.keys(attendanceDataCache);
             
             allocationResults = {};
+            allocationBaseResults = {};
+            allocationChangeTypes = {};
             
             personsToProcess.forEach(pid => {
                 allocationResults[pid] = {};
+                allocationBaseResults[pid] = {};
+                allocationChangeTypes[pid] = {};
                 for (let day = 1; day <= daysInMonth; day++) {
                     const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     allocationResults[pid][date] = {};
+                    allocationBaseResults[pid][date] = {};
+                    allocationChangeTypes[pid][date] = {};
                     
                     // 初始化各项目分配为0
                     mockProjectData.forEach(project => {
                         allocationResults[pid][date][project.id] = 0;
+                        allocationBaseResults[pid][date][project.id] = 0;
                     });
                 }
             });
@@ -1811,7 +1877,8 @@
             }
         }
 
-        function applyAllocation() {
+        function applyAllocation(event) {
+            if (event) event.preventDefault();
             const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
             const personsToProcess = Object.keys(attendanceDataCache);
             
@@ -1839,9 +1906,8 @@
             });
             
             if (validationMessages.length > 0) {
-                if (!confirm(`以下人员的占比设置不足100%，剩余工时将无法分配。\n${validationMessages.join('\n')}\n\n是否继续？`)) {
-                    return;
-                }
+                showPageMessage(`以下人员的占比设置不足100%，请调整后再应用智能分配：\n${validationMessages.join('\n')}`, 'warning');
+                return;
             }
             
             // 清除之前的分配结果
@@ -1856,7 +1922,7 @@
                 
                 console.log(`正在分配 ${person.name} 的工时...`);
                 
-                // 按日期进行分配（明显随机波动）
+                // 按日期进行分配，默认按项目占比分摊。
                 for (let day = 1; day <= daysInMonth; day++) {
                     const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     
@@ -1883,47 +1949,23 @@
 
                     if (activeTotalPercentage <= 0) continue;
                     
-                    // 方案A：当天有效项目自由波动，最后统一调整到当天考勤工时
-                    // 第一步：所有项目按基准值 + 随机波动分配
-                    projectsWithPercent.forEach(project => {
+                    // 默认按“项目占比 * 当日考勤”计算，结果表中可按日期勾选随机生成。
+                    let allocatedTotal = 0;
+                    projectsWithPercent.forEach((project, index) => {
                         const percentage = personnelProjectAllocations[pid]?.[project.id]?.percentage || 0;
                         if (percentage === 0) return;
                         
                         const baseHours = dailyHours * percentage / activeTotalPercentage;
-                        const randomVariation = Math.random() * 0.6 - 0.3; // -0.3 ~ +0.3
-                        const allocated = baseHours * (1 + randomVariation);
-                        
-                        allocationResults[pid][date][project.id] = allocated;
-                    });
-                    
-                    // 第二步：统一调整确保总和等于考勤工时
-                    let totalAllocated = 0;
-                    projectsWithPercent.forEach(project => {
-                        totalAllocated += allocationResults[pid][date][project.id] || 0;
-                    });
-                    
-                    // 如果总和与考勤不一致，按比例调整所有项目
-                    if (Math.abs(totalAllocated - dailyHours) > 0.01) {
-                        const adjustmentRatio = dailyHours / totalAllocated;
-                        projectsWithPercent.forEach(project => {
-                            const currentAllocated = allocationResults[pid][date][project.id] || 0;
-                            allocationResults[pid][date][project.id] = parseFloat((currentAllocated * adjustmentRatio).toFixed(1));
-                        });
-                    }
+                        let allocated = parseFloat(baseHours.toFixed(1));
+                        if (index === projectsWithPercent.length - 1) {
+                            allocated = parseFloat(Math.max(0, dailyHours - allocatedTotal).toFixed(1));
+                        }
 
-                    const roundedTotal = projectsWithPercent.reduce((sum, project) => {
-                        return sum + (allocationResults[pid][date][project.id] || 0);
-                    }, 0);
-                    const roundingDiff = parseFloat((dailyHours - roundedTotal).toFixed(1));
-                    if (Math.abs(roundingDiff) >= 0.1) {
-                        const mainProject = projectsWithPercent.reduce((maxProject, project) => {
-                            const currentValue = allocationResults[pid][date][project.id] || 0;
-                            const maxValue = allocationResults[pid][date][maxProject.id] || 0;
-                            return currentValue > maxValue ? project : maxProject;
-                        }, projectsWithPercent[0]);
-                        const currentValue = allocationResults[pid][date][mainProject.id] || 0;
-                        allocationResults[pid][date][mainProject.id] = parseFloat(Math.max(0, currentValue + roundingDiff).toFixed(1));
-                    }
+                        allocationResults[pid][date][project.id] = allocated;
+                        allocationBaseResults[pid][date][project.id] = allocated;
+                        delete allocationChangeTypes[pid][date][project.id];
+                        allocatedTotal += allocated;
+                    });
                 }
             });
             
@@ -1953,7 +1995,7 @@
             // 更新汇总
             updateProjectSummary();
             
-            alert('智能分配完成！您可以手动调整各项目的分配工时。');
+            showPageMessage('智能分配完成，您可以手动调整各项目的分配工时。');
         }
 
         function isProjectActiveOnDate(project, date) {
@@ -1997,7 +2039,19 @@
                         <table class="allocation-table">
                             <thead>
                                 <tr>
-                                    <th class="sticky-left">日期</th>
+                                    <th class="sticky-random text-center">
+                                        <div class="flex flex-col items-center gap-1">
+                                            <div class="text-[10px] font-semibold text-gray-700">随机调整</div>
+                                            <label class="inline-flex items-center justify-center cursor-pointer text-[10px]" title="选择该人员所有有考勤日期">
+                                                <input type="checkbox" class="mr-1" onchange="toggleAllRandomRows(this, '${person.id}')">
+                                                <span>全选日期</span>
+                                            </label>
+                                            <button type="button" onclick="randomizeSelectedDailyRows(this, '${person.id}')" class="px-2 py-0.5 rounded bg-purple-600 text-white text-[10px] hover:bg-purple-700">
+                                                生成随机工时
+                                            </button>
+                                        </div>
+                                    </th>
+                                    <th class="sticky-date">日期</th>
                                     <th>考勤</th>
                                     ${personProjects.map(p => `
                                         <th>
@@ -2044,12 +2098,30 @@
                     
                     tableHtml += `
                         <tr class="${rowClass} ${isWeekend ? 'bg-red-50' : ''}">
-                            <td class="sticky-left">${day}日</td>
+                            <td class="sticky-random text-center">
+                                ${attendance > 0 ? `
+                                    <input type="checkbox"
+                                        data-person="${person.id}"
+                                        data-date="${date}"
+                                        title="选择当天参与随机生成">
+                                ` : '-'}
+                            </td>
+                            <td class="sticky-date">${day}日</td>
                             <td class="${attendance > 0 ? 'text-green-600 font-medium' : 'text-gray-400'}">
                                 ${attendance > 0 ? attendance + 'h' : '-'}
                             </td>
                             ${personProjects.map(p => {
                                 const value = allocationResults[person.id]?.[date]?.[p.id] || 0;
+                                const baseValue = allocationBaseResults[person.id]?.[date]?.[p.id] ?? value;
+                                const changeType = allocationChangeTypes[person.id]?.[date]?.[p.id] || '';
+                                const diff = parseFloat((value - baseValue).toFixed(1));
+                                const displayBaseValue = changeType === 'random' && Math.abs(diff) < 0.1 && value >= 1
+                                    ? parseFloat((value - 1).toFixed(1))
+                                    : baseValue;
+                                const displayDiff = parseFloat((value - displayBaseValue).toFixed(1));
+                                const changeTip = attendance > 0 && changeType
+                                    ? `<div class="text-[10px] mt-1 ${changeType === 'random' ? 'text-purple-600' : 'text-orange-600'}">基准 ${displayBaseValue.toFixed(1)}h，${changeType === 'random' ? '随机' : '手动'} ${displayDiff > 0 ? '+' : ''}${displayDiff.toFixed(1)}h</div>`
+                                    : '';
                                 const isActive = isProjectActiveOnDate(p, date);
                                 
                                 if (!isActive) {
@@ -2065,10 +2137,12 @@
                                             class="allocation-input ${attendance === 0 ? 'disabled' : ''}"
                                             value="${value}" 
                                             min="0" 
+                                            max="${attendance}"
                                             step="0.5"
                                             ${attendance === 0 ? 'disabled' : ''}
                                             onchange="updateAllocation(this)"
                                             oninput="updateAllocation(this)">
+                                        ${changeTip}
                                     </td>
                                 `;
                             }).join('')}
@@ -2099,7 +2173,8 @@
             const personId = input.dataset.person;
             const date = input.dataset.date;
             const projectId = input.dataset.project;
-            const value = parseFloat(input.value) || 0;
+            let value = parseFloat(input.value) || 0;
+            const attendance = attendanceDataCache[personId]?.[date] || 0;
             
             // 更新内存中的数据
             if (!allocationResults[personId]) {
@@ -2109,10 +2184,162 @@
                 allocationResults[personId][date] = {};
             }
             
+            const otherAllocated = Object.entries(allocationResults[personId][date])
+                .filter(([pid]) => pid !== projectId)
+                .reduce((sum, [, hours]) => sum + (Number(hours) || 0), 0);
+            const maxAllowed = Math.max(0, attendance - otherAllocated);
+            if (value > maxAllowed) {
+                value = parseFloat(maxAllowed.toFixed(1));
+                input.value = value;
+                showPageMessage('当天项目工时合计不能超过本日考勤，已自动调整。', 'warning');
+            }
+
             allocationResults[personId][date][projectId] = value;
+            const baseValue = allocationBaseResults[personId]?.[date]?.[projectId] ?? value;
+            if (!allocationChangeTypes[personId]) allocationChangeTypes[personId] = {};
+            if (!allocationChangeTypes[personId][date]) allocationChangeTypes[personId][date] = {};
+            if (Math.abs(value - baseValue) >= 0.1) {
+                allocationChangeTypes[personId][date][projectId] = 'manual';
+            } else {
+                delete allocationChangeTypes[personId][date][projectId];
+            }
+            renderAllocationResults();
             
             // 更新剩余显示（需要重新计算）
-            updateRowRemaining(input);
+            updateProjectSummary();
+        }
+
+        function toggleAllRandomRows(checkbox, personId) {
+            const table = checkbox.closest('table');
+            if (!table) return;
+
+            const dayCheckboxes = table.querySelectorAll(`tbody input[type="checkbox"][data-person="${personId}"]`);
+            dayCheckboxes.forEach(item => {
+                item.checked = checkbox.checked;
+            });
+        }
+
+        function randomizeSelectedDailyRows(button, personId) {
+            const table = button.closest('table');
+            if (!table) return;
+
+            const selectedRows = Array.from(table.querySelectorAll(`tbody input[type="checkbox"][data-person="${personId}"]:checked`));
+            if (selectedRows.length === 0) {
+                showPageMessage('请先勾选需要随机生成的日期。', 'warning');
+                return;
+            }
+
+            selectedRows.forEach(item => {
+                randomizeDailyAllocation(item.dataset.person, item.dataset.date, item.closest('tr'), false);
+            });
+
+            renderAllocationResults();
+            updateProjectSummary();
+            showPageMessage(`已随机生成 ${selectedRows.length} 天的项目工时。`);
+        }
+
+        function randomizeAllPersonnelDailyRows() {
+            const personIds = Object.keys(attendanceDataCache);
+            let randomizedDays = 0;
+
+            personIds.forEach(personId => {
+                Object.entries(attendanceDataCache[personId] || {}).forEach(([date, attendance]) => {
+                    if ((Number(attendance) || 0) > 0) {
+                        randomizeDailyAllocation(personId, date, null, false);
+                        randomizedDays++;
+                    }
+                });
+            });
+
+            if (randomizedDays === 0) {
+                showPageMessage('当前没有可随机生成的考勤日期，请先开始分配。', 'warning');
+                return;
+            }
+
+            renderAllocationResults();
+            updateProjectSummary();
+            showPageMessage(`已为全部人员随机生成 ${randomizedDays} 条每日项目工时。`);
+        }
+
+        function randomizeDailyAllocation(personId, date, row, shouldUpdateSummary = true) {
+            const attendance = attendanceDataCache[personId]?.[date] || 0;
+            if (attendance <= 0) return;
+
+            const person = mockPersonnelData.find(p => p.id === personId);
+            if (!person) return;
+
+            const activeProjects = mockProjectData.filter(project => {
+                const percentage = personnelProjectAllocations[personId]?.[project.id]?.percentage || 0;
+                return person.projects.includes(project.id)
+                    && isProjectActiveOnDate(project, date)
+                    && percentage > 0;
+            });
+
+            if (activeProjects.length === 0) {
+                showPageMessage('当天没有可分配的有效项目，请先设置项目占比。', 'warning');
+                return;
+            }
+
+            if (!allocationResults[personId]) allocationResults[personId] = {};
+            if (!allocationResults[personId][date]) allocationResults[personId][date] = {};
+            if (!allocationChangeTypes[personId]) allocationChangeTypes[personId] = {};
+            if (!allocationChangeTypes[personId][date]) allocationChangeTypes[personId][date] = {};
+
+            const randomWeights = activeProjects.map(project => {
+                const percentage = personnelProjectAllocations[personId]?.[project.id]?.percentage || 0;
+                const variation = 0.7 + Math.random() * 0.6;
+                return {
+                    project,
+                    weight: Math.max(0.01, percentage * variation)
+                };
+            });
+
+            const totalWeight = randomWeights.reduce((sum, item) => sum + item.weight, 0);
+            let allocatedTotal = 0;
+
+            randomWeights.forEach((item, index) => {
+                let hours = parseFloat((attendance * item.weight / totalWeight).toFixed(1));
+                if (index === randomWeights.length - 1) {
+                    hours = parseFloat(Math.max(0, attendance - allocatedTotal).toFixed(1));
+                }
+                allocationResults[personId][date][item.project.id] = hours;
+                allocationChangeTypes[personId][date][item.project.id] = 'random';
+                allocatedTotal += hours;
+
+                const input = row?.querySelector(`input[data-project="${item.project.id}"]`);
+                if (input) input.value = hours;
+            });
+
+            const changedProject = activeProjects.some(project => {
+                const value = allocationResults[personId][date][project.id] || 0;
+                const baseValue = allocationBaseResults[personId]?.[date]?.[project.id] ?? value;
+                return Math.abs(value - baseValue) >= 0.1;
+            });
+            if (!changedProject && activeProjects.length > 1) {
+                const increaseProject = activeProjects[0];
+                const decreaseProject = activeProjects.find(project => {
+                    return project.id !== increaseProject.id && (allocationResults[personId][date][project.id] || 0) >= 1;
+                }) || activeProjects[1];
+                if (increaseProject.id !== decreaseProject.id) {
+                    allocationResults[personId][date][increaseProject.id] = parseFloat(((allocationResults[personId][date][increaseProject.id] || 0) + 1).toFixed(1));
+                    allocationResults[personId][date][decreaseProject.id] = parseFloat(Math.max(0, (allocationResults[personId][date][decreaseProject.id] || 0) - 1).toFixed(1));
+                }
+            }
+
+            mockProjectData.forEach(project => {
+                if (!activeProjects.some(item => item.id === project.id)) {
+                    allocationResults[personId][date][project.id] = 0;
+                    delete allocationChangeTypes[personId][date][project.id];
+                    const input = row?.querySelector(`input[data-project="${project.id}"]`);
+                    if (input) input.value = 0;
+                }
+            });
+
+            if (shouldUpdateSummary) {
+                renderAllocationResults();
+                updateProjectSummary();
+                showPageMessage('已按当天考勤随机生成项目工时。');
+            }
         }
 
         function updateRowRemaining(input) {
@@ -4165,6 +4392,8 @@
             
             attendanceDataCache = {};
             allocationResults = {};
+            allocationBaseResults = {};
+            allocationChangeTypes = {};
             projectAllocations = {};
             deviceAllocations = {};
             deviceAllocationResults = {};
