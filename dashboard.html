@@ -612,7 +612,7 @@
 
                         <!-- 指标预警 (由固定定位移动到此处并排) -->
                         <div class="relative group/alert">
-                            <button id="warningIcon" onclick="loadPage('notification-announcement.html?tab=warning')" class="flex flex-col items-center justify-center w-28 h-28 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-white hover:to-white text-white hover:text-orange-500 rounded-2xl transition-all duration-300 border border-white/30 hover:border-white shadow-xl group/btn">
+                            <button id="warningIcon" class="flex flex-col items-center justify-center w-28 h-28 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-white hover:to-white text-white hover:text-orange-500 rounded-2xl transition-all duration-300 border border-white/30 hover:border-white shadow-xl group/btn">
                                 <i class="fa fa-warning text-2xl mb-2 group-hover/btn:scale-125 transition-transform"></i>
                                 <span class="text-xs font-black tracking-tighter">预警指标</span>
                                 <span class="absolute top-2 right-2 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full border-2 border-white shadow-lg flex items-center justify-center" id="warningBadge"></span>
@@ -924,6 +924,26 @@
         </aside>
     </div>
     
+    <div id="homeWarningIgnoreModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-[2000]">
+        <div class="bg-white rounded-2xl shadow-2xl w-[420px] p-6">
+            <div class="flex items-start mb-4">
+                <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center mr-3">
+                    <i class="fa fa-commenting-o"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-black text-slate-900">填写无需处理备注</h3>
+                    <p class="text-xs text-slate-500 mt-1">请说明该预警无需处理的原因，便于后续留痕。</p>
+                </div>
+            </div>
+            <textarea id="homeWarningIgnoreRemark" class="w-full h-24 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="例如：该指标属于试算口径，暂不影响本次申报。"></textarea>
+            <p id="homeWarningIgnoreError" class="hidden text-xs text-red-500 mt-2">请填写无需处理备注。</p>
+            <div class="flex justify-end gap-2 mt-5">
+                <button type="button" onclick="closeHomeWarningIgnoreModal()" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-50">取消</button>
+                <button type="button" onclick="confirmHomeWarningIgnored()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">确定</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 全局变量定义
         let expenseTypeChart;
@@ -1941,6 +1961,8 @@
         }
         
         // 更新预警显示
+        let currentHomeWarnings = [];
+
         function updateWarningDisplay(warnings) {
             const warningIcon = document.getElementById('warningIcon');
             const warningBadge = document.getElementById('warningBadge');
@@ -1948,6 +1970,7 @@
             const warningCount = document.getElementById('warningCount');
             const warningTime = document.getElementById('warningTime');
             const warningIndicator = document.getElementById('warningIndicator');
+            currentHomeWarnings = warnings;
             
             // 更新检测时间
             const now = new Date();
@@ -1972,8 +1995,9 @@
                 warnings.forEach((w, index) => {
                     const levelColor = w.level === 'high' ? 'red' : 'orange';
                     const caliberColor = w.caliber === '高企口径' ? 'yellow' : 'green';
+                    const warningKey = getHomeWarningKey(w, index, currentYear);
                     warningHtml += `
-                        <div class="p-3 bg-${levelColor === 'red' ? 'red' : 'orange'}-50 rounded-xl border border-${levelColor === 'red' ? 'red' : 'orange'}-100 shadow-sm">
+                        <div class="p-3 bg-${levelColor === 'red' ? 'red' : 'orange'}-50 rounded-xl border border-${levelColor === 'red' ? 'red' : 'orange'}-100 shadow-sm" data-home-warning-index="${index}" data-home-warning-key="${warningKey}">
                             <div class="flex justify-between items-center mb-1.5">
                                 <div class="flex items-center">
                                     <span class="px-1.5 py-0.5 bg-slate-200 text-slate-700 text-[10px] font-bold rounded mr-1.5">${currentYear}年度</span>
@@ -1984,7 +2008,10 @@
                             </div>
                             <div class="flex justify-between items-end">
                                 <p class="text-xs text-slate-600 leading-relaxed pr-4">${w.message}</p>
-                                <a href="javascript:void(0)" onclick="handleWarningJump('${w.targetPage || 'warning-rules-config.html'}')" class="text-[10px] font-bold text-blue-600 hover:underline whitespace-nowrap">去处理</a>
+                                <div class="flex flex-col items-end gap-1 whitespace-nowrap">
+                                    <button type="button" onclick="markHomeWarningHandled(event, ${index})" class="text-[10px] font-bold text-blue-600 hover:underline">已处理</button>
+                                    <button type="button" onclick="markHomeWarningIgnored(event, ${index})" class="text-[10px] font-bold text-slate-500 hover:text-slate-700">无需处理</button>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1999,6 +2026,87 @@
             // 在跳转前可以记录一些状态，比如从预警跳转过去的
             localStorage.setItem('from_warning', 'true');
             window.location.href = page;
+        }
+
+        let pendingHomeWarningIndex = null;
+
+        function getHomeWarningKey(warning, index, year) {
+            return `${year}-${warning.caliber}-${warning.name}-${index}`.replace(/\s+/g, '');
+        }
+
+        function saveHomeWarningAction(index, status, remark = '') {
+            const warning = currentHomeWarnings[index];
+            if (!warning) return;
+            const currentYear = document.getElementById('yearSelect').value;
+            const key = getHomeWarningKey(warning, index, currentYear);
+            const records = JSON.parse(localStorage.getItem('homeWarningActions') || '{}');
+            records[key] = {
+                key,
+                year: `${currentYear}年`,
+                caliber: warning.caliber,
+                name: warning.name,
+                message: warning.message,
+                status,
+                remark,
+                handledTime: new Date().toLocaleString('zh-CN', { hour12: false })
+            };
+            localStorage.setItem('homeWarningActions', JSON.stringify(records));
+        }
+
+        function markHomeWarningHandled(event, index) {
+            event.stopPropagation();
+            const item = document.querySelector(`[data-home-warning-index="${index}"]`);
+            if (!item) return;
+            saveHomeWarningAction(index, '已处理');
+            item.className = 'p-3 bg-green-50 rounded-xl border border-green-100 shadow-sm';
+            item.querySelector('.flex.justify-between.items-end').innerHTML = `
+                <p class="text-xs text-green-700 leading-relaxed pr-4">该预警已标记为已处理。</p>
+                <span class="text-[10px] font-bold text-green-600 whitespace-nowrap">已处理</span>
+            `;
+        }
+
+        function markHomeWarningIgnored(event, index) {
+            event.stopPropagation();
+            pendingHomeWarningIndex = index;
+            document.getElementById('homeWarningIgnoreRemark').value = '';
+            document.getElementById('homeWarningIgnoreError').classList.add('hidden');
+            const modal = document.getElementById('homeWarningIgnoreModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeHomeWarningIgnoreModal() {
+            pendingHomeWarningIndex = null;
+            const modal = document.getElementById('homeWarningIgnoreModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
+        }
+
+        function confirmHomeWarningIgnored() {
+            const remark = document.getElementById('homeWarningIgnoreRemark').value.trim();
+            if (!remark) {
+                document.getElementById('homeWarningIgnoreError').classList.remove('hidden');
+                return;
+            }
+            const item = document.querySelector(`[data-home-warning-index="${pendingHomeWarningIndex}"]`);
+            if (!item) return;
+            saveHomeWarningAction(pendingHomeWarningIndex, '无需处理', remark);
+            item.className = 'p-3 bg-slate-50 rounded-xl border border-slate-100 shadow-sm';
+            item.querySelector('.flex.justify-between.items-end').innerHTML = `
+                <p class="text-xs text-slate-500 leading-relaxed pr-4">已标记为无需处理。备注：${escapeHtml(remark)}</p>
+                <span class="text-[10px] font-bold text-slate-400 whitespace-nowrap">无需处理</span>
+            `;
+            closeHomeWarningIgnoreModal();
         }
 
         // 预警图标点击事件 - 切换预警面板显示

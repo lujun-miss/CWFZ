@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -538,6 +538,7 @@
                                 <option>已读</option>
                                 <option>待处理</option>
                                 <option>已处理</option>
+                                <option>无需处理</option>
                             </select>
                             <input type="text" placeholder="搜索标题、对象、项目" class="px-3 py-2 border rounded-md text-sm w-56">
                         </div>
@@ -593,6 +594,7 @@
                                     <th class="py-3 px-3">预警类型</th>
                                     <th class="py-3 px-3">详情</th>
                                     <th class="py-3 px-3">状态</th>
+                                    <th class="py-3 px-3">处理备注</th>
                                     <th class="py-3 px-3">操作</th>
                                 </tr>
                             </thead>
@@ -603,7 +605,13 @@
                                     <td class="py-3 px-3"><span class="px-2 py-1 rounded-full bg-red-50 text-red-600 text-xs">研发费用占比不足</span></td>
                                     <td class="py-3 px-3 text-gray-600">当前研发费用占营业收入比例为 3.2%，低于高企口径建议关注阈值。</td>
                                     <td class="py-3 px-3 warning-status"><span class="px-2 py-1 rounded-full bg-orange-50 text-orange-600 text-xs">待处理</span></td>
-                                    <td class="py-3 px-3 warning-action"><button onclick="openWarningConfirm('w1')" class="text-blue-600 hover:text-blue-700">去处理</button></td>
+                                    <td class="py-3 px-3 warning-remark text-gray-500">-</td>
+                                    <td class="py-3 px-3 warning-action">
+                                        <div class="flex items-center gap-3">
+                                            <button onclick="markWarningHandled('w1')" class="text-blue-600 hover:text-blue-700">已处理</button>
+                                            <button onclick="openWarningConfirm('w1', 'ignored')" class="text-gray-500 hover:text-gray-700">无需处理</button>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr data-warning-id="w2">
                                     <td class="py-3 px-3 text-gray-600">2026年</td>
@@ -611,7 +619,13 @@
                                     <td class="py-3 px-3"><span class="px-2 py-1 rounded-full bg-orange-50 text-orange-600 text-xs">科技人员占比不足</span></td>
                                     <td class="py-3 px-3 text-gray-600">科技人员占比为 8%，低于高企认定常用关注比例，建议核对人员归集范围。</td>
                                     <td class="py-3 px-3 warning-status"><span class="px-2 py-1 rounded-full bg-orange-50 text-orange-600 text-xs">待处理</span></td>
-                                    <td class="py-3 px-3 warning-action"><button onclick="openWarningConfirm('w2')" class="text-blue-600 hover:text-blue-700">去处理</button></td>
+                                    <td class="py-3 px-3 warning-remark text-gray-500">-</td>
+                                    <td class="py-3 px-3 warning-action">
+                                        <div class="flex items-center gap-3">
+                                            <button onclick="markWarningHandled('w2')" class="text-blue-600 hover:text-blue-700">已处理</button>
+                                            <button onclick="openWarningConfirm('w2', 'ignored')" class="text-gray-500 hover:text-gray-700">无需处理</button>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr data-warning-id="w3">
                                     <td class="py-3 px-3 text-gray-600">2026年</td>
@@ -619,7 +633,13 @@
                                     <td class="py-3 px-3"><span class="px-2 py-1 rounded-full bg-yellow-50 text-yellow-600 text-xs">知识产权材料缺失</span></td>
                                     <td class="py-3 px-3 text-gray-600">当前年度高企材料中未关联有效知识产权附件，建议补充专利或软著资料。</td>
                                     <td class="py-3 px-3 warning-status"><span class="px-2 py-1 rounded-full bg-orange-50 text-orange-600 text-xs">待处理</span></td>
-                                    <td class="py-3 px-3 warning-action"><button onclick="openWarningConfirm('w3')" class="text-blue-600 hover:text-blue-700">去处理</button></td>
+                                    <td class="py-3 px-3 warning-remark text-gray-500">-</td>
+                                    <td class="py-3 px-3 warning-action">
+                                        <div class="flex items-center gap-3">
+                                            <button onclick="markWarningHandled('w3')" class="text-blue-600 hover:text-blue-700">已处理</button>
+                                            <button onclick="openWarningConfirm('w3', 'ignored')" class="text-gray-500 hover:text-gray-700">无需处理</button>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr data-warning-id="w4">
                                     <td class="py-3 px-3 text-gray-600">2026年</td>
@@ -627,6 +647,7 @@
                                     <td class="py-3 px-3"><span class="px-2 py-1 rounded-full bg-yellow-50 text-yellow-600 text-xs">研发项目材料不完整</span></td>
                                     <td class="py-3 px-3 text-gray-600">部分研发项目缺少立项书、阶段记录或验收材料，可能影响高企材料完整性。</td>
                                     <td class="py-3 px-3 warning-status"><span class="px-2 py-1 rounded-full bg-green-50 text-green-600 text-xs">已处理</span></td>
+                                    <td class="py-3 px-3 warning-remark text-gray-500">-</td>
                                     <td class="py-3 px-3 warning-action"><span class="text-gray-400">已处理</span></td>
                                 </tr>
                             </tbody>
@@ -644,19 +665,25 @@
                     <i class="fa fa-exclamation-triangle"></i>
                 </div>
                 <div>
-                    <h3 class="text-base font-semibold text-gray-900">确定处理吗？</h3>
-                    <p class="text-xs text-gray-500 mt-1">确定后，此报警信息将变为“已处理”。</p>
+                    <h3 id="warningConfirmTitle" class="text-base font-semibold text-gray-900">确定处理吗？</h3>
+                    <p id="warningConfirmDesc" class="text-xs text-gray-500 mt-1">确定后，此报警信息将变为“已处理”。</p>
                 </div>
+            </div>
+            <div id="warningIgnoreRemarkWrap" class="hidden mt-4">
+                <label class="block text-xs text-gray-500 mb-1">无需处理备注</label>
+                <textarea id="warningIgnoreRemark" class="w-full h-24 px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="请填写无需处理的原因"></textarea>
+                <p id="warningIgnoreRemarkError" class="hidden text-xs text-red-500 mt-1">请填写无需处理备注。</p>
             </div>
             <div class="flex justify-end gap-2 mt-5">
                 <button onclick="closeWarningConfirm()" class="px-4 py-2 border rounded-md text-sm text-gray-600 hover:bg-gray-50">取消</button>
-                <button onclick="confirmWarningHandled()" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">确定</button>
+                <button onclick="confirmWarningAction()" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">确定</button>
             </div>
         </div>
     </div>
 
     <script>
         let pendingWarningId = null;
+        let pendingWarningAction = 'handled';
 
         function loadPage(pageUrl) {
             window.location.assign(pageUrl);
@@ -687,8 +714,16 @@
                 : 'nav-item nav-item-hover flex items-center px-4 py-2 text-gray-600 rounded-md';
         }
 
-        function openWarningConfirm(warningId) {
+        function openWarningConfirm(warningId, action = 'handled') {
             pendingWarningId = warningId;
+            pendingWarningAction = action;
+            document.getElementById('warningConfirmTitle').textContent = action === 'ignored' ? '确定无需处理吗？' : '确定处理吗？';
+            document.getElementById('warningConfirmDesc').textContent = action === 'ignored'
+                ? '请填写无需处理备注，确定后此报警信息将变为“无需处理”。'
+                : '确定后，此报警信息将变为“已处理”。';
+            document.getElementById('warningIgnoreRemarkWrap').classList.toggle('hidden', action !== 'ignored');
+            document.getElementById('warningIgnoreRemark').value = '';
+            document.getElementById('warningIgnoreRemarkError').classList.add('hidden');
             const modal = document.getElementById('warningConfirmModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -696,26 +731,87 @@
 
         function closeWarningConfirm() {
             pendingWarningId = null;
+            pendingWarningAction = 'handled';
+            document.getElementById('warningIgnoreRemarkWrap').classList.add('hidden');
             const modal = document.getElementById('warningConfirmModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
 
-        function confirmWarningHandled() {
+        function markWarningHandled(warningId) {
+            const row = document.querySelector(`[data-warning-id="${warningId}"]`);
+            if (!row) return;
+            row.querySelector('.warning-status').innerHTML = '<span class="px-2 py-1 rounded-full bg-green-50 text-green-600 text-xs">已处理</span>';
+            row.querySelector('.warning-remark').innerHTML = '-';
+            row.querySelector('.warning-action').innerHTML = '<span class="text-gray-400">已处理</span>';
+        }
+
+        function confirmWarningAction() {
             if (!pendingWarningId) return;
             const row = document.querySelector(`[data-warning-id="${pendingWarningId}"]`);
             if (row) {
-                row.querySelector('.warning-status').innerHTML = '<span class="px-2 py-1 rounded-full bg-green-50 text-green-600 text-xs">已处理</span>';
-                row.querySelector('.warning-action').innerHTML = '<span class="text-gray-400">已处理</span>';
+                if (pendingWarningAction === 'ignored') {
+                    const remark = document.getElementById('warningIgnoreRemark').value.trim();
+                    if (!remark) {
+                        document.getElementById('warningIgnoreRemarkError').classList.remove('hidden');
+                        return;
+                    }
+                    row.querySelector('.warning-status').innerHTML = '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-600 text-xs">无需处理</span>';
+                    row.querySelector('.warning-remark').innerHTML = `<span class="inline-block max-w-[220px] truncate align-bottom" title="${escapeHtml(remark)}">${escapeHtml(remark)}</span>`;
+                    row.querySelector('.warning-action').innerHTML = '<span class="text-gray-400">无需处理</span>';
+                } else {
+                    row.querySelector('.warning-status').innerHTML = '<span class="px-2 py-1 rounded-full bg-green-50 text-green-600 text-xs">已处理</span>';
+                    row.querySelector('.warning-remark').innerHTML = '-';
+                    row.querySelector('.warning-action').innerHTML = '<span class="text-gray-400">已处理</span>';
+                }
             }
             closeWarningConfirm();
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
+        }
+
+        function renderStoredHomeWarningActions() {
+            const tbody = document.querySelector('#warningPanel tbody');
+            if (!tbody) return;
+            tbody.querySelectorAll('.home-warning-action-row').forEach(row => row.remove());
+            const records = Object.values(JSON.parse(localStorage.getItem('homeWarningActions') || '{}'));
+            records.forEach(record => {
+                if (document.querySelector(`[data-warning-key="${record.key}"]`)) return;
+                const isIgnored = record.status === '无需处理';
+                const statusHtml = isIgnored
+                    ? '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-600 text-xs">无需处理</span>'
+                    : '<span class="px-2 py-1 rounded-full bg-green-50 text-green-600 text-xs">已处理</span>';
+                const remarkHtml = isIgnored
+                    ? `<span class="inline-block max-w-[220px] truncate align-bottom" title="${escapeHtml(record.remark || '')}">${escapeHtml(record.remark || '-')}</span>`
+                    : '-';
+                const actionHtml = isIgnored ? '<span class="text-gray-400">无需处理</span>' : '<span class="text-gray-400">已处理</span>';
+                tbody.insertAdjacentHTML('afterbegin', `
+                    <tr class="home-warning-action-row bg-blue-50/30" data-warning-key="${escapeHtml(record.key)}">
+                        <td class="py-3 px-3 text-gray-600">${escapeHtml(record.year || '-')}</td>
+                        <td class="py-3 px-3 font-medium text-gray-800">${escapeHtml(record.caliber || '-')}</td>
+                        <td class="py-3 px-3"><span class="px-2 py-1 rounded-full bg-orange-50 text-orange-600 text-xs">${escapeHtml(record.name || '-')}</span></td>
+                        <td class="py-3 px-3 text-gray-600">${escapeHtml(record.message || '-')}</td>
+                        <td class="py-3 px-3 warning-status">${statusHtml}</td>
+                        <td class="py-3 px-3 warning-remark text-gray-500">${remarkHtml}</td>
+                        <td class="py-3 px-3 warning-action">${actionHtml}</td>
+                    </tr>
+                `);
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             const tab = new URLSearchParams(window.location.search).get('tab') || 'system';
             switchTab(tab === 'warning' ? 'warning' : 'system');
+            renderStoredHomeWarningActions();
         });
     </script>
 </body>
 </html>
-
