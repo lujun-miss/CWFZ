@@ -796,18 +796,18 @@
                                 <p><strong>计算步骤：</strong></p>
                                 <ul class="list-disc list-inside pl-2">
                                     <li>1. 每天先筛选当日有效项目</li>
-                                    <li>2. 当日基准值 = 考勤工时 × 项目占比 ÷ 当日有效项目总占比</li>
-                                    <li>3. 每个项目在基准值基础上做 <strong>±30%</strong> 随机波动，再统一调整到当天考勤工时</li>
+                                    <li>2. 当日基准值 = 剩余未分配工时 × 项目占比 ÷ 当日可分配项目总占比</li>
+                                    <li>3. 每个项目在基准值基础上做 <strong>±30%</strong> 随机波动，再统一调整到当天剩余未分配工时</li>
                                 </ul>
                                 <p><strong>波动规则详解：</strong></p>
                                 <div class="bg-white p-2 rounded border border-blue-100 mt-1 text-[10px]">
                                     <p>• <strong>波动方式</strong>：<strong>所有项目自由波动</strong>，最后统一调整</p>
                                     <p>• <strong>简化公式</strong>：<strong>临时分配 = 基准值 × (1 + 随机波动[-0.3, +0.3])</strong></p>
-                                    <p>• <strong>最终调整</strong>：<strong>实际分配 = 临时分配 × (考勤工时 ÷ 总和)</strong></p>
+                                    <p>• <strong>最终调整</strong>：<strong>实际分配 = 临时分配 × (剩余未分配工时 ÷ 总和)</strong></p>
                                     <p>• <strong>优点</strong>：</p>
                                     <p class="pl-3">① 所有项目都能波动，看起来自然</p>
                                     <p class="pl-3">② 代码简单，不需要复杂的剩余空间检查</p>
-                                    <p class="pl-3">③ 永远不会超过考勤工时（统一调整保证）</p>
+                                    <p class="pl-3">③ 永远不会超过剩余未分配工时（统一调整保证）</p>
                                     <p>• <strong>例子</strong>：</p>
                                     <p class="pl-3">考勤8h，三个项目临时分配总和8.5h（超标0.5h）</p>
                                     <p class="pl-3">调整比例 = 8h ÷ 8.5h = 0.941</p>
@@ -849,7 +849,7 @@
                                     <p><strong>核心规则总结：</strong></p>
                                     <p class="pl-3">- <strong>所有项目都波动</strong>：每个项目都有随机性，看起来更自然</p>
                                     <p class="pl-3">- <strong>统一调整</strong>：按比例调整所有项目，确保总和=考勤</p>
-                                    <p class="pl-3">- <strong>永不超标</strong>：调整机制保证总和始终等于考勤工时</p>
+                                    <p class="pl-3">- <strong>永不超标</strong>：调整机制保证本次分配总和始终等于剩余未分配工时</p>
                                     <p class="pl-3">- <strong>月度精确</strong>：最后几天微调，确保月度总计符合目标占比</p>
                                 </div>
                             </div>
@@ -1091,7 +1091,7 @@
                 id: 'proj1', 
                 name: '智能传感器研发', 
                 startDate: '2026-06-01', 
-                endDate: '2026-06-30',
+                endDate: '2026-07-31',
                 color: '#3b82f6',
                 devices: ['d1', 'd2', 'd3']
             },
@@ -1099,7 +1099,7 @@
                 id: 'proj2', 
                 name: '工业机器人控制系统', 
                 startDate: '2026-05-01', 
-                endDate: '2026-06-15',
+                endDate: '2026-07-31',
                 color: '#10b981',
                 devices: ['d1', 'd4']
             },
@@ -1115,7 +1115,7 @@
                 id: 'proj4', 
                 name: '人工智能算法优化', 
                 startDate: '2026-01-01', 
-                endDate: '2026-05-31',
+                endDate: '2026-07-31',
                 color: '#ef4444',
                 devices: ['d3']
             }
@@ -1166,6 +1166,43 @@
 
         function getRegularPersonnel() {
             return mockPersonnelData.filter(person => !person.isDeviceAttendance && !person.isIntangibleAttendance);
+        }
+
+        function getCollectedProjectHours(personId, date, projectId) {
+            const day = Number(date.split('-')[2]);
+            const collectedSamples = [
+                { personId: 'p1', day: 1, projectId: 'proj1', hours: 2 },
+                { personId: 'p1', day: 2, projectId: 'proj2', hours: 1.5 },
+                { personId: 'p2', day: 3, projectId: 'proj3', hours: 2 }
+            ];
+            const record = collectedSamples.find(item =>
+                item.personId === personId && item.day === day && item.projectId === projectId
+            );
+            return record ? record.hours : 0;
+        }
+
+        function getCollectedDailyHours(personId, date) {
+            return mockProjectData.reduce((sum, project) => {
+                return sum + getCollectedProjectHours(personId, date, project.id);
+            }, 0);
+        }
+
+        function isProjectCollectedInMonth(personId, projectId) {
+            if (!currentYear || !currentMonth) return false;
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                if (getCollectedProjectHours(personId, date, projectId) > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function getRemainingAllocatableHours(personId, date) {
+            const attendance = attendanceDataCache[personId]?.[date] || 0;
+            const collectedHours = getCollectedDailyHours(personId, date);
+            return parseFloat(Math.max(0, attendance - collectedHours).toFixed(1));
         }
 
         function getDeviceAttendancePerson() {
@@ -1929,12 +1966,15 @@
                     if (!attendanceDataCache[pid]) continue;
                     
                     const dailyHours = attendanceDataCache[pid][date] || 0;
-                    
-                    if (dailyHours === 0) continue;
+                    const allocatableHours = getRemainingAllocatableHours(pid, date);
+
+                    if (dailyHours === 0 || allocatableHours === 0) continue;
                     
                     // 筛选该人员参与且当天有效的项目
                     const activeProjects = mockProjectData.filter(project => {
-                        return person.projects.includes(project.id) && isProjectActiveOnDate(project, date);
+                        return person.projects.includes(project.id)
+                            && isProjectActiveOnDate(project, date)
+                            && !isProjectCollectedInMonth(pid, project.id);
                     });
                     
                     const projectsWithPercent = activeProjects.filter(p => {
@@ -1949,16 +1989,16 @@
 
                     if (activeTotalPercentage <= 0) continue;
                     
-                    // 默认按“项目占比 * 当日考勤”计算，结果表中可按日期勾选随机生成。
+                    // 默认按“项目占比 * 当日剩余未分配工时”计算，已归集工时不再参与更新。
                     let allocatedTotal = 0;
                     projectsWithPercent.forEach((project, index) => {
                         const percentage = personnelProjectAllocations[pid]?.[project.id]?.percentage || 0;
                         if (percentage === 0) return;
                         
-                        const baseHours = dailyHours * percentage / activeTotalPercentage;
+                        const baseHours = allocatableHours * percentage / activeTotalPercentage;
                         let allocated = parseFloat(baseHours.toFixed(1));
                         if (index === projectsWithPercent.length - 1) {
-                            allocated = parseFloat(Math.max(0, dailyHours - allocatedTotal).toFixed(1));
+                            allocated = parseFloat(Math.max(0, allocatableHours - allocatedTotal).toFixed(1));
                         }
 
                         allocationResults[pid][date][project.id] = allocated;
@@ -2053,16 +2093,24 @@
                                     </th>
                                     <th class="sticky-date">日期</th>
                                     <th>考勤</th>
-                                    ${personProjects.map(p => `
+                                    <th>当日已归集工时</th>
+                                    <th>剩余未分配工时</th>
+                                    ${personProjects.map(p => {
+                                        const projectCollected = isProjectCollectedInMonth(person.id, p.id);
+                                        return `
                                         <th>
-                                            <div class="flex items-center justify-center">
+                                            <div class="flex flex-col items-center justify-center gap-1">
+                                                <div class="flex items-center justify-center">
                                                 <div class="w-2 h-2 rounded mr-1" style="background-color: ${p.color}"></div>
                                                 <span class="truncate max-w-[80px]">${p.name}</span>
+                                                </div>
+                                                ${projectCollected ? '<span class="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 text-[10px] font-medium">本月已归集</span>' : ''}
                                             </div>
                                         </th>
-                                    `).join('')}
-                                    <th>已分配</th>
-                                    <th>剩余</th>
+                                    `}).join('')}
+                                    <th>本次已分配</th>
+                                    <th>当日工时合计</th>
+                                    <th>本次剩余</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2074,6 +2122,8 @@
                 for (let day = 1; day <= daysInMonth; day++) {
                     const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     const attendance = attendanceDataCache[person.id]?.[date] || 0;
+                    const collectedHours = getCollectedDailyHours(person.id, date);
+                    const remainingAllocatableHours = getRemainingAllocatableHours(person.id, date);
                     const dateObj = new Date(currentYear, currentMonth - 1, day);
                     const dayOfWeek = dateObj.getDay();
                     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
@@ -2091,15 +2141,16 @@
                         
                         personTotalAllocated += dayTotal;
                         
-                        if (dayTotal < attendance) {
+                        if (dayTotal < remainingAllocatableHours) {
                             rowClass = 'bg-yellow-50';
                         }
                     }
                     
+                    const occupiedTotal = parseFloat((collectedHours + dayTotal).toFixed(1));
                     tableHtml += `
                         <tr class="${rowClass} ${isWeekend ? 'bg-red-50' : ''}">
                             <td class="sticky-random text-center">
-                                ${attendance > 0 ? `
+                                ${remainingAllocatableHours > 0 ? `
                                     <input type="checkbox"
                                         data-person="${person.id}"
                                         data-date="${date}"
@@ -2110,8 +2161,19 @@
                             <td class="${attendance > 0 ? 'text-green-600 font-medium' : 'text-gray-400'}">
                                 ${attendance > 0 ? attendance + 'h' : '-'}
                             </td>
+                            <td class="${collectedHours > 0 ? 'text-indigo-600 font-medium' : 'text-gray-400'}">
+                                ${attendance > 0 ? `
+                                    <div>${collectedHours.toFixed(1)}h</div>
+                                    ${collectedHours > 0 ? '<div class="text-[10px] text-indigo-500 mt-1">明细见项目列</div>' : ''}
+                                ` : '-'}
+                            </td>
+                            <td class="${remainingAllocatableHours > 0 ? 'text-emerald-600 font-medium' : 'text-gray-400'}">
+                                ${attendance > 0 ? remainingAllocatableHours.toFixed(1) + 'h' : '-'}
+                            </td>
                             ${personProjects.map(p => {
                                 const value = allocationResults[person.id]?.[date]?.[p.id] || 0;
+                                const collectedProjectHours = getCollectedProjectHours(person.id, date, p.id);
+                                const projectCollected = isProjectCollectedInMonth(person.id, p.id);
                                 const baseValue = allocationBaseResults[person.id]?.[date]?.[p.id] ?? value;
                                 const changeType = allocationChangeTypes[person.id]?.[date]?.[p.id] || '';
                                 const diff = parseFloat((value - baseValue).toFixed(1));
@@ -2128,18 +2190,29 @@
                                     return `<td class="text-gray-300">-</td>`;
                                 }
                                 
+                                if (projectCollected) {
+                                    return `
+                                        <td class="text-center">
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold whitespace-nowrap" title="本月已归集，锁定不可改">
+                                                <i class="fa fa-lock text-[10px]"></i>${collectedProjectHours.toFixed(1)}h
+                                                <span class="text-[10px] font-medium text-indigo-500">已归集</span>
+                                            </span>
+                                        </td>
+                                    `;
+                                }
+
                                 return `
                                     <td class="text-center">
                                         <input type="number" 
                                             data-person="${person.id}" 
                                             data-date="${date}" 
                                             data-project="${p.id}"
-                                            class="allocation-input ${attendance === 0 ? 'disabled' : ''}"
+                                            class="allocation-input ${remainingAllocatableHours === 0 ? 'disabled' : ''}"
                                             value="${value}" 
                                             min="0" 
-                                            max="${attendance}"
+                                            max="${remainingAllocatableHours}"
                                             step="0.5"
-                                            ${attendance === 0 ? 'disabled' : ''}
+                                            ${attendance === 0 || remainingAllocatableHours === 0 ? 'disabled' : ''}
                                             onchange="updateAllocation(this)"
                                             oninput="updateAllocation(this)">
                                         ${changeTip}
@@ -2149,8 +2222,11 @@
                             <td class="${dayTotal > 0 ? 'text-blue-600 font-medium' : 'text-gray-400'}">
                                 ${attendance > 0 ? dayTotal.toFixed(1) + 'h' : '-'}
                             </td>
-                            <td class="${attendance > 0 && dayTotal < attendance ? 'text-yellow-600 font-medium' : 'text-gray-400'}">
-                                ${attendance > 0 ? (attendance - dayTotal).toFixed(1) + 'h' : '-'}
+                            <td class="${occupiedTotal === attendance ? 'text-green-600 font-medium' : 'text-orange-600 font-medium'}">
+                                ${attendance > 0 ? occupiedTotal.toFixed(1) + 'h' : '-'}
+                            </td>
+                            <td class="${attendance > 0 && dayTotal < remainingAllocatableHours ? 'text-yellow-600 font-medium' : 'text-gray-400'}">
+                                ${attendance > 0 ? (remainingAllocatableHours - dayTotal).toFixed(1) + 'h' : '-'}
                             </td>
                         </tr>
                     `;
@@ -2174,7 +2250,7 @@
             const date = input.dataset.date;
             const projectId = input.dataset.project;
             let value = parseFloat(input.value) || 0;
-            const attendance = attendanceDataCache[personId]?.[date] || 0;
+            const allocatableHours = getRemainingAllocatableHours(personId, date);
             
             // 更新内存中的数据
             if (!allocationResults[personId]) {
@@ -2187,11 +2263,11 @@
             const otherAllocated = Object.entries(allocationResults[personId][date])
                 .filter(([pid]) => pid !== projectId)
                 .reduce((sum, [, hours]) => sum + (Number(hours) || 0), 0);
-            const maxAllowed = Math.max(0, attendance - otherAllocated);
+            const maxAllowed = Math.max(0, allocatableHours - otherAllocated);
             if (value > maxAllowed) {
                 value = parseFloat(maxAllowed.toFixed(1));
                 input.value = value;
-                showPageMessage('当天项目工时合计不能超过本日考勤，已自动调整。', 'warning');
+                showPageMessage('当天项目工时合计不能超过剩余未分配工时，已自动调整。', 'warning');
             }
 
             allocationResults[personId][date][projectId] = value;
@@ -2244,7 +2320,7 @@
 
             personIds.forEach(personId => {
                 Object.entries(attendanceDataCache[personId] || {}).forEach(([date, attendance]) => {
-                    if ((Number(attendance) || 0) > 0) {
+                    if ((Number(attendance) || 0) > 0 && getRemainingAllocatableHours(personId, date) > 0) {
                         randomizeDailyAllocation(personId, date, null, false);
                         randomizedDays++;
                     }
@@ -2252,7 +2328,7 @@
             });
 
             if (randomizedDays === 0) {
-                showPageMessage('当前没有可随机生成的考勤日期，请先开始分配。', 'warning');
+                showPageMessage('当前没有可随机生成的剩余未分配工时，请先开始分配。', 'warning');
                 return;
             }
 
@@ -2263,7 +2339,8 @@
 
         function randomizeDailyAllocation(personId, date, row, shouldUpdateSummary = true) {
             const attendance = attendanceDataCache[personId]?.[date] || 0;
-            if (attendance <= 0) return;
+            const allocatableHours = getRemainingAllocatableHours(personId, date);
+            if (attendance <= 0 || allocatableHours <= 0) return;
 
             const person = mockPersonnelData.find(p => p.id === personId);
             if (!person) return;
@@ -2272,6 +2349,7 @@
                 const percentage = personnelProjectAllocations[personId]?.[project.id]?.percentage || 0;
                 return person.projects.includes(project.id)
                     && isProjectActiveOnDate(project, date)
+                    && !isProjectCollectedInMonth(personId, project.id)
                     && percentage > 0;
             });
 
@@ -2298,9 +2376,9 @@
             let allocatedTotal = 0;
 
             randomWeights.forEach((item, index) => {
-                let hours = parseFloat((attendance * item.weight / totalWeight).toFixed(1));
+                let hours = parseFloat((allocatableHours * item.weight / totalWeight).toFixed(1));
                 if (index === randomWeights.length - 1) {
-                    hours = parseFloat(Math.max(0, attendance - allocatedTotal).toFixed(1));
+                    hours = parseFloat(Math.max(0, allocatableHours - allocatedTotal).toFixed(1));
                 }
                 allocationResults[personId][date][item.project.id] = hours;
                 allocationChangeTypes[personId][date][item.project.id] = 'random';
@@ -2338,7 +2416,7 @@
             if (shouldUpdateSummary) {
                 renderAllocationResults();
                 updateProjectSummary();
-                showPageMessage('已按当天考勤随机生成项目工时。');
+                showPageMessage('已按当天剩余未分配工时随机生成项目工时。');
             }
         }
 
@@ -2348,6 +2426,7 @@
             const date = input.dataset.date;
             
             const attendance = attendanceDataCache[personId]?.[date] || 0;
+            const allocatableHours = getRemainingAllocatableHours(personId, date);
             
             // 计算已分配
             let allocated = 0;
@@ -2358,23 +2437,30 @@
             // 更新剩余列
             const cells = row.querySelectorAll('td');
             const lastCell = cells[cells.length - 1];
-            lastCell.textContent = (attendance - allocated).toFixed(1) + 'h';
+            lastCell.textContent = (allocatableHours - allocated).toFixed(1) + 'h';
             
-            if (attendance > 0 && allocated < attendance) {
+            if (attendance > 0 && allocated < allocatableHours) {
                 lastCell.classList.add('text-yellow-600', 'font-medium');
                 lastCell.classList.remove('text-gray-400');
             }
             
             // 更新已分配列
-            const allocatedCell = cells[cells.length - 2];
+            const allocatedCell = cells[cells.length - 3];
             allocatedCell.textContent = allocated.toFixed(1) + 'h';
             if (allocated > 0) {
                 allocatedCell.classList.add('text-blue-600', 'font-medium');
                 allocatedCell.classList.remove('text-gray-400');
             }
+
+            const collectedHours = getCollectedDailyHours(personId, date);
+            const occupiedCell = cells[cells.length - 2];
+            occupiedCell.textContent = (collectedHours + allocated).toFixed(1) + 'h';
+            occupiedCell.classList.toggle('text-green-600', attendance > 0 && collectedHours + allocated === attendance);
+            occupiedCell.classList.toggle('text-orange-600', attendance > 0 && collectedHours + allocated !== attendance);
+            occupiedCell.classList.add('font-medium');
             
             // 更新行背景色
-            if (attendance > 0 && allocated < attendance) {
+            if (attendance > 0 && allocated < allocatableHours) {
                 row.classList.add('bg-yellow-50');
             } else {
                 row.classList.remove('bg-yellow-50');

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>研税通（R&D Tax Comply）</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f8fafc; padding: 24px; }
+        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04); }
+        .step-line::after { content: ''; position: absolute; top: 22px; left: 50%; width: 100%; height: 2px; background: #dbeafe; z-index: 0; }
+        .step-line:last-child::after { display: none; }
+        .tab-btn.active { color: #2563eb; background: #eff6ff; border-color: #bfdbfe; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        .audit-node::before { content: ''; position: absolute; left: 11px; top: 28px; width: 2px; height: calc(100% - 28px); background: #dbeafe; }
+        .audit-node:last-child::before { display: none; }
+    </style>
+</head>
+<body>
+    <div class="max-w-[1600px] mx-auto">
+        <!-- 顶部说明 -->
+        <div class="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 rounded-3xl p-7 text-white mb-6 overflow-hidden relative">
+            <div class="absolute right-8 top-8 w-48 h-48 bg-blue-400/20 rounded-full blur-3xl"></div>
+            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div>
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold mb-4">
+                        <i class="fa fa-shield mr-2 text-cyan-300"></i>
+                        专为代账机构设计 · 研发费加计扣除倒推合规工具
+                    </div>
+                    <h1 class="text-3xl font-black tracking-tight">研税通 <span class="text-cyan-200">R&D Tax Comply</span></h1>
+                    <p class="text-blue-100 mt-3 max-w-3xl leading-relaxed">
+                        从企业财务账、凭证、薪资、固定资产和存货数据倒推出可申报研发费用，自动执行2023年加计扣除政策硬编码校验，并生成带审计追踪链路的备查资料包。
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-3 min-w-[360px]">
+                    <div class="bg-white/10 border border-white/15 rounded-2xl p-4">
+                        <p class="text-xs text-blue-100">可追溯凭证</p>
+                        <p class="text-2xl font-black mt-1">98.6%</p>
+                    </div>
+                    <div class="bg-white/10 border border-white/15 rounded-2xl p-4">
+                        <p class="text-xs text-blue-100">政策硬编码</p>
+                        <p class="text-2xl font-black mt-1">2023</p>
+                    </div>
+                    <div class="bg-white/10 border border-white/15 rounded-2xl p-4">
+                        <p class="text-xs text-blue-100">待处理异常</p>
+                        <p class="text-2xl font-black mt-1 text-amber-200">17</p>
+                    </div>
+                    <div class="bg-white/10 border border-white/15 rounded-2xl p-4">
+                        <p class="text-xs text-blue-100">可加计金额</p>
+                        <p class="text-2xl font-black mt-1">¥8,426万</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 核心约束提示 -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+            <div class="card p-4 border-l-4 border-l-red-500">
+                <div class="flex items-center mb-2">
+                    <i class="fa fa-ban text-red-500 mr-2"></i>
+                    <p class="font-bold text-slate-800">纯倒推逻辑</p>
+                </div>
+                <p class="text-xs text-slate-500 leading-relaxed">不做立项审批、工时报工、领料申请，只使用已存在于财务账中的数据进行倒推归集。</p>
+            </div>
+            <div class="card p-4 border-l-4 border-l-blue-500">
+                <div class="flex items-center mb-2">
+                    <i class="fa fa-link text-blue-500 mr-2"></i>
+                    <p class="font-bold text-slate-800">审计追踪</p>
+                </div>
+                <p class="text-xs text-slate-500 leading-relaxed">每一笔归集费用必须能追溯到原始凭证、清洗规则、映射关系和政策计算过程。</p>
+            </div>
+            <div class="card p-4 border-l-4 border-l-emerald-500">
+                <div class="flex items-center mb-2">
+                    <i class="fa fa-code text-emerald-500 mr-2"></i>
+                    <p class="font-bold text-slate-800">政策硬编码</p>
+                </div>
+                <p class="text-xs text-slate-500 leading-relaxed">100%加计、委外80%、其他费用10%红线、资本化10年摊销固化在规则引擎中。</p>
+            </div>
+            <div class="card p-4 border-l-4 border-l-purple-500">
+                <div class="flex items-center mb-2">
+                    <i class="fa fa-archive text-purple-500 mr-2"></i>
+                    <p class="font-bold text-slate-800">输出导向</p>
+                </div>
+                <p class="text-xs text-slate-500 leading-relaxed">所有页面围绕最终生成“税务备查资料包 ZIP”设计，减少代账人员整理材料成本。</p>
+            </div>
+        </div>
+
+        <!-- 输出导向流程 -->
+        <div class="card p-6 mb-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-lg font-black text-slate-800">倒推合规流水线</h2>
+                    <p class="text-sm text-slate-500 mt-1">从账务数据导入开始，到备查资料包生成结束，全程保留审计轨迹。</p>
+                </div>
+                <button onclick="openZipModal()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-sm">
+                    <i class="fa fa-file-zip-o mr-2"></i>一键生成备查资料包
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div class="relative step-line">
+                    <div class="relative z-10 card p-4 bg-blue-50 border-blue-100">
+                        <div class="w-11 h-11 rounded-full bg-blue-600 text-white flex items-center justify-center font-black mb-3">1</div>
+                        <p class="font-bold text-slate-800">导入财务账</p>
+                        <p class="text-xs text-slate-500 mt-1">凭证、薪资、固定资产、存货</p>
+                    </div>
+                </div>
+                <div class="relative step-line">
+                    <div class="relative z-10 card p-4 bg-cyan-50 border-cyan-100">
+                        <div class="w-11 h-11 rounded-full bg-cyan-600 text-white flex items-center justify-center font-black mb-3">2</div>
+                        <p class="font-bold text-slate-800">清洗与异常池</p>
+                        <p class="text-xs text-slate-500 mt-1">摘要关键词、科目映射、强制处理</p>
+                    </div>
+                </div>
+                <div class="relative step-line">
+                    <div class="relative z-10 card p-4 bg-indigo-50 border-indigo-100">
+                        <div class="w-11 h-11 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black mb-3">3</div>
+                        <p class="font-bold text-slate-800">RD双登映射</p>
+                        <p class="text-xs text-slate-500 mt-1">内部项目多对一映射申报项目</p>
+                    </div>
+                </div>
+                <div class="relative step-line">
+                    <div class="relative z-10 card p-4 bg-amber-50 border-amber-100">
+                        <div class="w-11 h-11 rounded-full bg-amber-600 text-white flex items-center justify-center font-black mb-3">4</div>
+                        <p class="font-bold text-slate-800">政策规则校验</p>
+                        <p class="text-xs text-slate-500 mt-1">10%红线、80%委外、资本化摊销</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="relative z-10 card p-4 bg-emerald-50 border-emerald-100">
+                        <div class="w-11 h-11 rounded-full bg-emerald-600 text-white flex items-center justify-center font-black mb-3">5</div>
+                        <p class="font-bold text-slate-800">输出ZIP包</p>
+                        <p class="text-xs text-slate-500 mt-1">申报表、辅助账、凭证索引、审计轨迹</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 功能区 -->
+        <div class="card overflow-hidden">
+            <div class="border-b border-slate-200 p-4 flex flex-wrap gap-2 bg-white sticky top-0 z-20">
+                <button class="tab-btn active px-4 py-2 rounded-xl border border-transparent text-sm font-bold text-slate-600" onclick="switchTab('import', this)">
+                    <i class="fa fa-upload mr-2"></i>数据接入与清洗
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-xl border border-transparent text-sm font-bold text-slate-600" onclick="switchTab('mapping', this)">
+                    <i class="fa fa-sitemap mr-2"></i>项目双登与映射
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-xl border border-transparent text-sm font-bold text-slate-600" onclick="switchTab('rules', this)">
+                    <i class="fa fa-gavel mr-2"></i>政策规则引擎
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-xl border border-transparent text-sm font-bold text-slate-600" onclick="switchTab('audit', this)">
+                    <i class="fa fa-link mr-2"></i>审计追踪
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-xl border border-transparent text-sm font-bold text-slate-600" onclick="switchTab('output', this)">
+                    <i class="fa fa-archive mr-2"></i>备查资料包
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-xl border border-transparent text-sm font-bold text-slate-600" onclick="switchTab('tech', this)">
+                    <i class="fa fa-cubes mr-2"></i>技术架构
+                </button>
+            </div>
+
+            <!-- 数据接入与清洗 -->
+            <section id="tab-import" class="tab-panel active p-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="xl:col-span-2 space-y-6">
+                        <div>
+                            <h3 class="text-lg font-black text-slate-800">Excel模板导入</h3>
+                            <p class="text-sm text-slate-500 mt-1">代账机构只需导入客户已存在的账务数据，系统不要求客户补录正向业务流程。</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="card p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <p class="font-bold text-slate-800">Sheet1_凭证</p>
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">必填</span>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed">凭证号、日期、摘要、科目编码、科目名称、借方金额、贷方金额、部门、个人、项目辅助核算</p>
+                            </div>
+                            <div class="card p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <p class="font-bold text-slate-800">Sheet2_薪资</p>
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">必填</span>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed">工号、姓名、部门、基本工资、五险一金、实发合计</p>
+                            </div>
+                            <div class="card p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <p class="font-bold text-slate-800">Sheet3_固定资产</p>
+                                    <span class="px-2 py-1 bg-slate-50 text-slate-600 text-xs rounded-full">可选</span>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed">资产编号、名称、使用部门、本月折旧</p>
+                            </div>
+                            <div class="card p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <p class="font-bold text-slate-800">Sheet4_存货</p>
+                                    <span class="px-2 py-1 bg-slate-50 text-slate-600 text-xs rounded-full">可选</span>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed">领料单号、日期、物料编码、物料名称、数量、金额、领用部门</p>
+                            </div>
+                        </div>
+
+                        <div class="card p-5 border-dashed border-2 border-blue-200 bg-blue-50/40">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div class="flex items-center">
+                                    <div class="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center mr-4">
+                                        <i class="fa fa-cloud-upload text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-black text-slate-800">上传客户账套Excel</p>
+                                        <p class="text-sm text-slate-500 mt-1">支持 .xlsx，系统自动识别四个固定Sheet并生成导入批次号。</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3">
+                                    <button class="px-4 py-2 bg-white border border-blue-200 text-blue-600 rounded-xl font-bold text-sm">
+                                        <i class="fa fa-download mr-2"></i>下载模板
+                                    </button>
+                                    <button onclick="simulateImport()" class="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold text-sm">
+                                        <i class="fa fa-play mr-2"></i>模拟导入
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-4">
+                                <p class="text-xs text-slate-400">导入批次</p>
+                                <p id="batchNo" class="text-lg font-black text-slate-800 mt-1">IMP-202607-001</p>
+                                <p class="text-xs text-emerald-600 mt-2">已读取 4 个Sheet</p>
+                            </div>
+                            <div class="card p-4">
+                                <p class="text-xs text-slate-400">识别研发相关凭证</p>
+                                <p id="rdVoucherCount" class="text-lg font-black text-slate-800 mt-1">342 笔</p>
+                                <p class="text-xs text-blue-600 mt-2">关键词命中率 72.4%</p>
+                            </div>
+                            <div class="card p-4">
+                                <p class="text-xs text-slate-400">待处理池</p>
+                                <p id="pendingCount" class="text-lg font-black text-amber-600 mt-1">17 条</p>
+                                <p class="text-xs text-amber-600 mt-2">必须人工指定归属</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="card p-5">
+                            <h4 class="font-black text-slate-800 mb-4">智能清洗逻辑</h4>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mr-3 mt-0.5">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-slate-800 text-sm">摘要关键词引擎</p>
+                                        <p class="text-xs text-slate-500 mt-1">命中“RD、研发、项目、试制、中试”等词，自动标记研发相关。</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 mt-0.5">
+                                        <i class="fa fa-random"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-slate-800 text-sm">科目映射</p>
+                                        <p class="text-xs text-slate-500 mt-1">预置标准科目，如5301研发支出，支持将660207等客户科目映射进标准科目。</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center mr-3 mt-0.5">
+                                        <i class="fa fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-slate-800 text-sm">异常强制处理</p>
+                                        <p class="text-xs text-slate-500 mt-1">摘要为空、科目无法匹配、金额方向异常自动进入待处理池。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-5">
+                            <h4 class="font-black text-slate-800 mb-4">待处理池示例</h4>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-amber-50 rounded-xl border border-amber-100">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="font-bold text-slate-800">记-0089</span>
+                                        <span class="text-amber-600">摘要为空</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 mt-1">科目：管理费用-其他 / 借方 ¥18,600</p>
+                                </div>
+                                <div class="p-3 bg-red-50 rounded-xl border border-red-100">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="font-bold text-slate-800">记-0116</span>
+                                        <span class="text-red-600">科目无法匹配</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 mt-1">科目：660299-技术服务 / 借方 ¥92,000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 项目双登与映射 -->
+            <section id="tab-mapping" class="tab-panel p-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="xl:col-span-2 card overflow-hidden">
+                        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-black text-slate-800">RD档案库与税局备案项目映射</h3>
+                                <p class="text-sm text-slate-500 mt-1">支持内部项目多对一汇总到税局申报项目。</p>
+                            </div>
+                            <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-xs font-bold">多对一映射</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-50 text-slate-500">
+                                    <tr>
+                                        <th class="px-5 py-3 text-left">内部RD编码</th>
+                                        <th class="px-5 py-3 text-left">项目名称</th>
+                                        <th class="px-5 py-3 text-left">项目类型</th>
+                                        <th class="px-5 py-3 text-left">起止日期</th>
+                                        <th class="px-5 py-3 text-left">税局备案编号</th>
+                                        <th class="px-5 py-3 text-left">申报项目</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="px-5 py-4 font-bold text-slate-800">RD01</td>
+                                        <td class="px-5 py-4 text-slate-700">高能量密度电芯材料试验</td>
+                                        <td class="px-5 py-4"><span class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs">自主</span></td>
+                                        <td class="px-5 py-4 text-slate-500">2023-01 ~ 2023-12</td>
+                                        <td class="px-5 py-4 text-slate-500">税研备-2023-001</td>
+                                        <td class="px-5 py-4 font-bold text-blue-600">新一代电池技术研发</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-5 py-4 font-bold text-slate-800">RD02</td>
+                                        <td class="px-5 py-4 text-slate-700">快充电池热管理中试</td>
+                                        <td class="px-5 py-4"><span class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs">自主</span></td>
+                                        <td class="px-5 py-4 text-slate-500">2023-02 ~ 2023-11</td>
+                                        <td class="px-5 py-4 text-slate-500">税研备-2023-001</td>
+                                        <td class="px-5 py-4 font-bold text-blue-600">新一代电池技术研发</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-5 py-4 font-bold text-slate-800">RD03</td>
+                                        <td class="px-5 py-4 text-slate-700">BMS算法委托开发</td>
+                                        <td class="px-5 py-4"><span class="px-2 py-1 bg-amber-50 text-amber-600 rounded-full text-xs">委托</span></td>
+                                        <td class="px-5 py-4 text-slate-500">2023-03 ~ 2023-10</td>
+                                        <td class="px-5 py-4 text-slate-500">税研备-2023-002</td>
+                                        <td class="px-5 py-4 font-bold text-purple-600">智能电池管理系统研发</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="card p-5">
+                            <h4 class="font-black text-slate-800 mb-4">多对一汇总示意</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                                    <span class="font-bold text-slate-700">RD01</span>
+                                    <i class="fa fa-arrow-right text-slate-300"></i>
+                                    <span class="text-blue-600 font-bold">申报项目A</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                                    <span class="font-bold text-slate-700">RD02</span>
+                                    <i class="fa fa-arrow-right text-slate-300"></i>
+                                    <span class="text-blue-600 font-bold">申报项目A</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                                    <span class="font-bold text-slate-700">RD05</span>
+                                    <i class="fa fa-arrow-right text-slate-300"></i>
+                                    <span class="text-blue-600 font-bold">申报项目A</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-4 leading-relaxed">内部项目用于费用追踪，申报项目用于税务口径输出，两套编号同时保留。</p>
+                        </div>
+
+                        <div class="card p-5">
+                            <h4 class="font-black text-slate-800 mb-4">人员/设备反推校验</h4>
+                            <div class="p-3 bg-red-50 rounded-xl border border-red-100">
+                                <div class="flex items-center justify-between">
+                                    <p class="font-bold text-red-700">人员复用异常</p>
+                                    <span class="text-xs text-red-500">高风险</span>
+                                </div>
+                                <p class="text-xs text-slate-600 mt-2 leading-relaxed">凭证摘要包含“张三”，张三被标记为核心研发人员，但科目为“管理费用-福利费”，需人工确认是否属于可归集范围。</p>
+                            </div>
+                            <div class="p-3 bg-amber-50 rounded-xl border border-amber-100 mt-3">
+                                <div class="flex items-center justify-between">
+                                    <p class="font-bold text-amber-700">设备用途异常</p>
+                                    <span class="text-xs text-amber-500">中风险</span>
+                                </div>
+                                <p class="text-xs text-slate-600 mt-2 leading-relaxed">“高速老化测试台”被标记为研发专用设备，但折旧凭证部门为生产部。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 政策规则引擎 -->
+            <section id="tab-rules" class="tab-panel p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="card p-5">
+                        <p class="text-xs text-slate-400">2023加计比例</p>
+                        <p class="text-3xl font-black text-emerald-600 mt-2">100%</p>
+                        <p class="text-xs text-slate-500 mt-2">符合条件研发费用按100%加计扣除。</p>
+                    </div>
+                    <div class="card p-5">
+                        <p class="text-xs text-slate-400">委托研发计入</p>
+                        <p class="text-3xl font-black text-blue-600 mt-2">80%</p>
+                        <p class="text-xs text-slate-500 mt-2">委托研发按实际支付额80%计入。</p>
+                    </div>
+                    <div class="card p-5">
+                        <p class="text-xs text-slate-400">其他费用红线</p>
+                        <p class="text-3xl font-black text-red-600 mt-2">10%</p>
+                        <p class="text-xs text-slate-500 mt-2">超出部分自动剔除并出具说明。</p>
+                    </div>
+                    <div class="card p-5">
+                        <p class="text-xs text-slate-400">资本化摊销</p>
+                        <p class="text-3xl font-black text-purple-600 mt-2">10年</p>
+                        <p class="text-xs text-slate-500 mt-2">形成无形资产后按10年摊销，摊销额100%加计。</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div class="card overflow-hidden">
+                        <div class="p-5 border-b border-slate-100">
+                            <h3 class="font-black text-slate-800">10%红线校验</h3>
+                            <p class="text-sm text-slate-500 mt-1">公式：其他费用 / (人员 + 直接投入 + 折旧 + 摊销 + 设计 + 调试 + 其他)</p>
+                        </div>
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-50 text-slate-500">
+                                <tr>
+                                    <th class="px-5 py-3 text-left">RD项目</th>
+                                    <th class="px-5 py-3 text-right">费用基数</th>
+                                    <th class="px-5 py-3 text-right">其他费用</th>
+                                    <th class="px-5 py-3 text-right">占比</th>
+                                    <th class="px-5 py-3 text-right">超支金额</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="px-5 py-4 font-bold text-slate-800">RD01</td>
+                                    <td class="px-5 py-4 text-right">¥3,200,000</td>
+                                    <td class="px-5 py-4 text-right">¥286,000</td>
+                                    <td class="px-5 py-4 text-right text-emerald-600 font-bold">8.94%</td>
+                                    <td class="px-5 py-4 text-right text-slate-400">¥0</td>
+                                </tr>
+                                <tr class="bg-red-50/50">
+                                    <td class="px-5 py-4 font-bold text-slate-800">RD02</td>
+                                    <td class="px-5 py-4 text-right">¥1,850,000</td>
+                                    <td class="px-5 py-4 text-right">¥255,000</td>
+                                    <td class="px-5 py-4 text-right text-red-600 font-bold">13.78%</td>
+                                    <td class="px-5 py-4 text-right text-red-600 font-bold">¥70,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card overflow-hidden">
+                        <div class="p-5 border-b border-slate-100">
+                            <h3 class="font-black text-slate-800">委托研发80%与境外2/3校验</h3>
+                            <p class="text-sm text-slate-500 mt-1">委托项目自动按政策口径计算允许归集金额。</p>
+                        </div>
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-50 text-slate-500">
+                                <tr>
+                                    <th class="px-5 py-3 text-left">委托类型</th>
+                                    <th class="px-5 py-3 text-right">实际支付</th>
+                                    <th class="px-5 py-3 text-right">允许计入</th>
+                                    <th class="px-5 py-3 text-left">校验</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="px-5 py-4 font-bold text-slate-800">境内委托</td>
+                                    <td class="px-5 py-4 text-right">¥800,000</td>
+                                    <td class="px-5 py-4 text-right text-blue-600 font-bold">¥640,000</td>
+                                    <td class="px-5 py-4"><span class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs">通过</span></td>
+                                </tr>
+                                <tr class="bg-amber-50/60">
+                                    <td class="px-5 py-4 font-bold text-slate-800">境外委托</td>
+                                    <td class="px-5 py-4 text-right">¥1,200,000</td>
+                                    <td class="px-5 py-4 text-right text-blue-600 font-bold">¥960,000</td>
+                                    <td class="px-5 py-4"><span class="px-2 py-1 bg-amber-50 text-amber-600 rounded-full text-xs">需校验2/3上限</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="xl:col-span-2 card p-5">
+                        <div class="flex items-center justify-between mb-5">
+                            <div>
+                                <h3 class="font-black text-slate-800">资本化/费用化拆分</h3>
+                                <p class="text-sm text-slate-500 mt-1">用户只标记资本化时点，系统按硬编码政策自动拆分研究阶段与开发阶段。</p>
+                            </div>
+                            <span class="px-3 py-1 bg-purple-50 text-purple-600 text-xs rounded-full font-bold">形成无形资产后10年摊销</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="p-4 bg-slate-50 rounded-2xl">
+                                <p class="text-xs text-slate-400">研究阶段</p>
+                                <p class="text-xl font-black text-slate-800 mt-1">¥1,420,000</p>
+                                <p class="text-xs text-emerald-600 mt-2">全额费用化，可100%加计</p>
+                            </div>
+                            <div class="p-4 bg-purple-50 rounded-2xl">
+                                <p class="text-xs text-slate-400">资本化时点</p>
+                                <p class="text-xl font-black text-purple-700 mt-1">2023-07-01</p>
+                                <p class="text-xs text-purple-600 mt-2">用户标记，系统留痕</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-2xl">
+                                <p class="text-xs text-slate-400">开发阶段资本化</p>
+                                <p class="text-xl font-black text-slate-800 mt-1">¥2,800,000</p>
+                                <p class="text-xs text-slate-500 mt-2">形成无形资产成本</p>
+                            </div>
+                            <div class="p-4 bg-blue-50 rounded-2xl">
+                                <p class="text-xs text-slate-400">本年摊销可加计</p>
+                                <p class="text-xl font-black text-blue-700 mt-1">¥140,000</p>
+                                <p class="text-xs text-blue-600 mt-2">10年摊销额 × 100%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 审计追踪 -->
+            <section id="tab-audit" class="tab-panel p-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="xl:col-span-2 card overflow-hidden">
+                        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-black text-slate-800">费用归集审计追踪表</h3>
+                                <p class="text-sm text-slate-500 mt-1">每一笔申报金额都能追溯到凭证、清洗、映射和规则计算。</p>
+                            </div>
+                            <span class="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold">Audit Trail Ready</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-50 text-slate-500">
+                                    <tr>
+                                        <th class="px-5 py-3 text-left">归集ID</th>
+                                        <th class="px-5 py-3 text-left">凭证号</th>
+                                        <th class="px-5 py-3 text-left">原始摘要</th>
+                                        <th class="px-5 py-3 text-left">标准费用类型</th>
+                                        <th class="px-5 py-3 text-left">RD项目</th>
+                                        <th class="px-5 py-3 text-right">申报金额</th>
+                                        <th class="px-5 py-3 text-left">追踪状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="px-5 py-4 font-bold text-slate-800">AT-000231</td>
+                                        <td class="px-5 py-4 text-blue-600 font-bold">记-0068</td>
+                                        <td class="px-5 py-4 text-slate-600">RD01正极材料试制领料</td>
+                                        <td class="px-5 py-4">直接投入</td>
+                                        <td class="px-5 py-4">RD01</td>
+                                        <td class="px-5 py-4 text-right font-bold">¥86,400</td>
+                                        <td class="px-5 py-4"><span class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs">完整</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-5 py-4 font-bold text-slate-800">AT-000232</td>
+                                        <td class="px-5 py-4 text-blue-600 font-bold">记-0071</td>
+                                        <td class="px-5 py-4 text-slate-600">研发中心张三工资计提</td>
+                                        <td class="px-5 py-4">人员人工</td>
+                                        <td class="px-5 py-4">RD02</td>
+                                        <td class="px-5 py-4 text-right font-bold">¥24,800</td>
+                                        <td class="px-5 py-4"><span class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs">完整</span></td>
+                                    </tr>
+                                    <tr class="bg-amber-50/60">
+                                        <td class="px-5 py-4 font-bold text-slate-800">AT-000233</td>
+                                        <td class="px-5 py-4 text-blue-600 font-bold">记-0089</td>
+                                        <td class="px-5 py-4 text-slate-600">摘要为空</td>
+                                        <td class="px-5 py-4">其他费用</td>
+                                        <td class="px-5 py-4">待确认</td>
+                                        <td class="px-5 py-4 text-right font-bold">¥18,600</td>
+                                        <td class="px-5 py-4"><span class="px-2 py-1 bg-amber-50 text-amber-600 rounded-full text-xs">待补充</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card p-5">
+                        <h4 class="font-black text-slate-800 mb-5">单笔费用追踪链</h4>
+                        <div class="space-y-0">
+                            <div class="audit-node relative pl-9 pb-5">
+                                <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</div>
+                                <p class="font-bold text-slate-800 text-sm">原始凭证</p>
+                                <p class="text-xs text-slate-500 mt-1">记-0068 / 借方 ¥86,400</p>
+                            </div>
+                            <div class="audit-node relative pl-9 pb-5">
+                                <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-cyan-600 text-white flex items-center justify-center text-xs">2</div>
+                                <p class="font-bold text-slate-800 text-sm">关键词命中</p>
+                                <p class="text-xs text-slate-500 mt-1">命中“RD01、试制、领料”</p>
+                            </div>
+                            <div class="audit-node relative pl-9 pb-5">
+                                <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs">3</div>
+                                <p class="font-bold text-slate-800 text-sm">科目映射</p>
+                                <p class="text-xs text-slate-500 mt-1">原科目 1403 → 直接投入</p>
+                            </div>
+                            <div class="audit-node relative pl-9 pb-5">
+                                <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs">4</div>
+                                <p class="font-bold text-slate-800 text-sm">政策校验</p>
+                                <p class="text-xs text-slate-500 mt-1">符合100%加计范围，无超限</p>
+                            </div>
+                            <div class="audit-node relative pl-9">
+                                <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">5</div>
+                                <p class="font-bold text-slate-800 text-sm">输出归集</p>
+                                <p class="text-xs text-slate-500 mt-1">写入辅助账与凭证索引</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 备查资料包 -->
+            <section id="tab-output" class="tab-panel p-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="xl:col-span-2 card p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-black text-slate-800">备查资料包生成中心</h3>
+                                <p class="text-sm text-slate-500 mt-1">面向税务检查和代账交付，严格按ZIP目录结构输出。</p>
+                            </div>
+                            <button onclick="openZipModal()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold">
+                                <i class="fa fa-archive mr-2"></i>生成ZIP
+                            </button>
+                        </div>
+
+                        <div class="bg-slate-950 text-slate-100 rounded-2xl p-5 font-mono text-sm leading-7 overflow-x-auto">
+                            <div>RDTaxComply_客户简称_2023年度_备查资料包.zip</div>
+                            <div>├─ 01_申报主表/</div>
+                            <div>│  ├─ 研发费用加计扣除优惠明细表.xlsx</div>
+                            <div>│  ├─ 可加计扣除金额测算表.xlsx</div>
+                            <div>│  └─ 项目汇总申报表.xlsx</div>
+                            <div>├─ 02_研发费用辅助账/</div>
+                            <div>│  ├─ 项目维度辅助账.xlsx</div>
+                            <div>│  ├─ 八大费用分类明细账.xlsx</div>
+                            <div>│  └─ 资本化摊销计算表.xlsx</div>
+                            <div>├─ 03_凭证追踪索引/</div>
+                            <div>│  ├─ 归集费用-原始凭证追踪表.xlsx</div>
+                            <div>│  ├─ 凭证影像索引清单.xlsx</div>
+                            <div>│  └─ 异常处理留痕表.xlsx</div>
+                            <div>├─ 04_政策规则校验/</div>
+                            <div>│  ├─ 10%红线校验表.xlsx</div>
+                            <div>│  ├─ 委托研发80%计算表.xlsx</div>
+                            <div>│  ├─ 境外委托2-3上限校验表.xlsx</div>
+                            <div>│  └─ 资本化费用化拆分说明.xlsx</div>
+                            <div>├─ 05_RD项目双登映射/</div>
+                            <div>│  ├─ 内部RD项目档案.xlsx</div>
+                            <div>│  ├─ 税局备案项目映射表.xlsx</div>
+                            <div>│  └─ 多对一项目汇总说明.xlsx</div>
+                            <div>├─ 06_原始导入数据/</div>
+                            <div>│  ├─ Sheet1_凭证_原始.xlsx</div>
+                            <div>│  ├─ Sheet2_薪资_原始.xlsx</div>
+                            <div>│  ├─ Sheet3_固定资产_原始.xlsx</div>
+                            <div>│  └─ Sheet4_存货_原始.xlsx</div>
+                            <div>└─ 07_审计轨迹/</div>
+                            <div>   ├─ audit_trail.json</div>
+                            <div>   ├─ rule_engine_snapshot.json</div>
+                            <div>   └─ 操作日志.pdf</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="card p-5">
+                            <h4 class="font-black text-slate-800 mb-4">生成前检查</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
+                                    <span class="text-sm font-bold text-slate-700">凭证追踪完整率</span>
+                                    <span class="text-emerald-600 font-black">98.6%</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
+                                    <span class="text-sm font-bold text-slate-700">政策规则快照</span>
+                                    <span class="text-emerald-600 font-black">已锁定</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-amber-50 rounded-xl">
+                                    <span class="text-sm font-bold text-slate-700">待处理异常</span>
+                                    <span class="text-amber-600 font-black">17条</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-red-50 rounded-xl">
+                                    <span class="text-sm font-bold text-slate-700">10%红线超限</span>
+                                    <span class="text-red-600 font-black">1项</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card p-5">
+                            <h4 class="font-black text-slate-800 mb-4">交付信息</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">客户</span>
+                                    <span class="font-bold text-slate-800">某新能源科技有限公司</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">纳税年度</span>
+                                    <span class="font-bold text-slate-800">2023年度</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">申报项目</span>
+                                    <span class="font-bold text-slate-800">6个</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">预计可加计</span>
+                                    <span class="font-bold text-blue-600">¥8,426万</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 技术架构 -->
+            <section id="tab-tech" class="tab-panel p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="card p-6">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-4">
+                            <i class="fa fa-desktop text-xl"></i>
+                        </div>
+                        <h3 class="font-black text-slate-800">前端建议</h3>
+                        <p class="text-sm text-slate-500 mt-2 leading-relaxed">React + Ant Design Pro，适合代账机构多租户、多客户、多批次的中后台操作。</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">React</span>
+                            <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">Ant Design Pro</span>
+                            <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">ProTable</span>
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
+                            <i class="fa fa-server text-xl"></i>
+                        </div>
+                        <h3 class="font-black text-slate-800">后端建议</h3>
+                        <p class="text-sm text-slate-500 mt-2 leading-relaxed">Node.js NestJS 或 Python Django，重点支持Excel解析、规则引擎、ZIP生成和审计日志。</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-xs rounded-full">NestJS</span>
+                            <span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-xs rounded-full">Django</span>
+                            <span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-xs rounded-full">Worker Queue</span>
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center mb-4">
+                            <i class="fa fa-database text-xl"></i>
+                        </div>
+                        <h3 class="font-black text-slate-800">数据库建议</h3>
+                        <p class="text-sm text-slate-500 mt-2 leading-relaxed">PostgreSQL，使用JSONB存储不规则凭证数据、规则快照和审计轨迹。</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded-full">PostgreSQL</span>
+                            <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded-full">JSONB</span>
+                            <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded-full">Audit Log</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6 mt-6">
+                    <h3 class="font-black text-slate-800 mb-4">核心数据表建议</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                        <div class="p-4 bg-slate-50 rounded-2xl">
+                            <p class="font-bold text-slate-800">import_batches</p>
+                            <p class="text-xs text-slate-500 mt-1">导入批次、客户、年度、原始文件hash</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">
+                            <p class="font-bold text-slate-800">raw_vouchers</p>
+                            <p class="text-xs text-slate-500 mt-1">原始凭证JSONB、清洗状态、异常原因</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">
+                            <p class="font-bold text-slate-800">rd_project_maps</p>
+                            <p class="text-xs text-slate-500 mt-1">内部RD项目与税局备案项目映射</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl">
+                            <p class="font-bold text-slate-800">audit_trails</p>
+                            <p class="text-xs text-slate-500 mt-1">每笔归集费用的凭证、规则和操作链路</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ZIP弹窗 -->
+    <div id="zipModal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center z-50 p-6">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-black text-slate-800">备查资料包生成任务</h3>
+                    <p class="text-sm text-slate-500 mt-1">系统将在服务器异步生成ZIP，并写入规则快照与审计轨迹。</p>
+                </div>
+                <button onclick="closeZipModal()" class="w-9 h-9 rounded-full hover:bg-slate-100 text-slate-500">
+                    <i class="fa fa-close"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
+                        <span class="font-bold text-slate-700">生成申报主表</span>
+                        <i class="fa fa-check text-emerald-600"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
+                        <span class="font-bold text-slate-700">生成辅助账与凭证索引</span>
+                        <i class="fa fa-check text-emerald-600"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
+                        <span class="font-bold text-slate-700">写入 rule_engine_snapshot.json</span>
+                        <i class="fa fa-spinner fa-spin text-blue-600"></i>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                        <span class="font-bold text-slate-700">压缩ZIP并生成下载链接</span>
+                        <span class="text-xs text-slate-400">等待中</span>
+                    </div>
+                </div>
+                <div class="mt-5 p-4 bg-amber-50 rounded-2xl border border-amber-100">
+                    <p class="text-sm font-bold text-amber-700"><i class="fa fa-exclamation-triangle mr-2"></i>生成前提示</p>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">当前仍有17条待处理异常和1项其他费用10%红线超限。允许生成预览包，但正式交付包建议处理完成后再生成。</p>
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-slate-50 flex justify-end gap-3">
+                <button onclick="closeZipModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl font-bold">取消</button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold">继续生成预览包</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+
+        function openZipModal() {
+            const modal = document.getElementById('zipModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeZipModal() {
+            const modal = document.getElementById('zipModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function simulateImport() {
+            document.getElementById('batchNo').textContent = 'IMP-202607-002';
+            document.getElementById('rdVoucherCount').textContent = '386 笔';
+            document.getElementById('pendingCount').textContent = '21 条';
+        }
+    </script>
+</body>
+</html>
