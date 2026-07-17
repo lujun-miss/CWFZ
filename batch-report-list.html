@@ -32,6 +32,13 @@
             background-color: #fef3c7;
             color: #b45309;
         }
+        .toast { position: fixed; top: 20px; right: 20px; padding: 12px 24px; border-radius: 8px; color: white; font-size: 14px; z-index: 9999; transform: translateX(120%); transition: transform 0.3s ease; display: flex; align-items: center; }
+        .toast.show { transform: translateX(0); }
+        .toast-success { background: #10b981; }
+        .toast-error { background: #ef4444; }
+        .toast-info { background: #3b82f6; }
+        .withdraw-reason-input { width: 100%; padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; resize: vertical; min-height: 80px; }
+        .withdraw-reason-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.1); }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -593,13 +600,92 @@
                         </div>
                         <div class="px-6 py-4 border-t flex justify-end space-x-3">
                             <button onclick="closeDetailModal()" class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md text-sm hover:bg-gray-300">
-                                关闭
+                            关闭
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 撤回确认弹窗 -->
+                <div id="withdrawModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full mx-4 overflow-hidden">
+                        <div class="px-6 py-4 bg-red-50 border-b border-red-100">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fa fa-exclamation-triangle text-red-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-red-800">确认撤回报工记录</h3>
+                                    <p class="text-sm text-red-600">此操作将影响已提交的数据，请谨慎操作</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                                <div class="flex items-start">
+                                    <i class="fa fa-info-circle text-blue-500 mt-1 mr-3 flex-shrink-0"></i>
+                                    <div class="text-sm text-blue-700">
+                                        <p class="font-medium mb-2">撤回影响说明：</p>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>该报工记录将从列表中移除</li>
+                                            <li>已分配的工时数据将被清空</li>
+                                            <li>撤回后可重新创建报工记录</li>
+                                            <li>撤回操作不可撤销</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                                <div class="flex items-start">
+                                    <i class="fa fa-warning text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
+                                    <div class="text-sm text-yellow-700">
+                                        <p class="font-medium">前置条件检查：</p>
+                                        <p id="withdrawCondition" class="mt-1">正在检查...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">撤回原因 <span class="text-red-500">*</span></label>
+                                <textarea id="withdrawReason" class="withdraw-reason-input" placeholder="请输入撤回原因，如：数据有误需要重新录入、项目调整等..."></textarea>
+                            </div>
+
+                            <div class="flex items-center mb-4">
+                                <input type="checkbox" id="confirmWithdraw" class="w-4 h-4 text-red-500 rounded">
+                                <label for="confirmWithdraw" class="ml-2 text-sm text-gray-600">我已了解撤回的影响，确认执行撤回操作</label>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 border-t flex justify-end space-x-3">
+                            <button onclick="closeWithdrawModal()" class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md text-sm hover:bg-gray-300">
+                                取消
+                            </button>
+                            <button onclick="confirmWithdraw()" id="confirmWithdrawBtn" class="px-4 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                <i class="fa fa-undo mr-1"></i>确认撤回
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 撤回成功提示弹窗 -->
+                <div id="withdrawSuccessModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                    <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 overflow-hidden">
+                        <div class="px-6 py-8 text-center">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-check text-green-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">撤回成功</h3>
+                            <p class="text-gray-600 mb-6">报工记录已成功撤回，您可以重新创建报工记录。</p>
+                            <button onclick="closeWithdrawSuccessModal()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                                知道了
                             </button>
                         </div>
                     </div>
                 </div>
             </main>
         </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
     </div>
 
     <script>
@@ -726,6 +812,10 @@
         // 设置默认月份为当前月
         const now = new Date();
         document.getElementById('filterMonth').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+        // 添加撤回弹窗事件监听
+        document.getElementById('withdrawReason').addEventListener('input', checkWithdrawConfirm);
+        document.getElementById('confirmWithdraw').addEventListener('change', checkWithdrawConfirm);
     }
 
     function buildPersonRecordRows(records) {
@@ -1174,28 +1264,98 @@
         currentRecordId = null;
     }
 
-    // 撤回记录
+    let currentWithdrawRecordId = null;
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `toast toast-${type} show`;
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // 打开撤回确认弹窗
     function withdrawRecord(recordId) {
         const record = allSmartWorkReports.find(r => r.id === recordId);
 
         if (!record) {
-            alert('未找到该报工记录。');
+            showToast('未找到该报工记录。', 'error');
+            return;
+        }
+
+        currentWithdrawRecordId = recordId;
+        
+        const conditionEl = document.getElementById('withdrawCondition');
+        const hasCollected = hasCollectedProject(record);
+        
+        if (hasCollected) {
+            conditionEl.innerHTML = '<span class="text-red-600 font-medium">❌ 存在已归集项目，不允许撤回</span><br><span class="text-xs mt-1 block">请先前往费用归集模块撤销已归集的项目，再进行撤回操作。</span>';
+            document.getElementById('confirmWithdrawBtn').disabled = true;
+            document.getElementById('confirmWithdraw').checked = false;
+        } else {
+            conditionEl.innerHTML = '<span class="text-green-600 font-medium">✅ 检查通过，可以撤回</span><br><span class="text-xs mt-1 block">该记录的所有项目均未归集，符合撤回条件。</span>';
+        }
+
+        document.getElementById('withdrawReason').value = '';
+        document.getElementById('confirmWithdraw').checked = false;
+        checkWithdrawConfirm();
+        
+        document.getElementById('withdrawModal').classList.remove('hidden');
+    }
+
+    // 检查撤回确认条件
+    function checkWithdrawConfirm() {
+        const reason = document.getElementById('withdrawReason').value.trim();
+        const checked = document.getElementById('confirmWithdraw').checked;
+        const hasCollected = currentWithdrawRecordId ? hasCollectedProject(allSmartWorkReports.find(r => r.id === currentWithdrawRecordId)) : true;
+        
+        document.getElementById('confirmWithdrawBtn').disabled = !reason || !checked || hasCollected;
+    }
+
+    // 关闭撤回确认弹窗
+    function closeWithdrawModal() {
+        document.getElementById('withdrawModal').classList.add('hidden');
+        currentWithdrawRecordId = null;
+    }
+
+    // 确认撤回
+    function confirmWithdraw() {
+        if (!currentWithdrawRecordId) return;
+        
+        const record = allSmartWorkReports.find(r => r.id === currentWithdrawRecordId);
+        if (!record) {
+            showToast('未找到该报工记录。', 'error');
+            closeWithdrawModal();
             return;
         }
 
         if (hasCollectedProject(record)) {
-            alert('已存在项目已归集，则不允许进行撤回');
+            showToast('存在已归集项目，不允许撤回', 'error');
             return;
         }
 
-        if (confirm('确定要撤回这条报工记录吗？撤回后列表中不再展示。')) {
-            const index = allSmartWorkReports.findIndex(r => r.id === recordId);
-            if (index > -1) {
-                allSmartWorkReports.splice(index, 1);
-                localStorage.setItem('smartWorkReports', JSON.stringify(allSmartWorkReports)); // Update localStorage
-                filterRecords(); // Re-render records after withdrawal
-            }
+        const reason = document.getElementById('withdrawReason').value.trim();
+        if (!reason) {
+            showToast('请输入撤回原因', 'error');
+            return;
         }
+
+        const index = allSmartWorkReports.findIndex(r => r.id === currentWithdrawRecordId);
+        if (index > -1) {
+            allSmartWorkReports.splice(index, 1);
+            localStorage.setItem('smartWorkReports', JSON.stringify(allSmartWorkReports));
+            filterRecords();
+        }
+
+        closeWithdrawModal();
+        document.getElementById('withdrawSuccessModal').classList.remove('hidden');
+    }
+
+    // 关闭撤回成功弹窗
+    function closeWithdrawSuccessModal() {
+        document.getElementById('withdrawSuccessModal').classList.add('hidden');
+        showToast('报工记录已撤回', 'success');
     }
 
     // 页面加载完成后初始化

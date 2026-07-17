@@ -140,6 +140,15 @@
                     <i class="fa fa-plus mr-1"></i>添加物料
                 </button>
             </div>
+            <div id="priceDiffAlert" class="hidden bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+                <div class="flex items-start">
+                    <i class="fa fa-exclamation-triangle text-amber-600 mt-0.5 mr-2"></i>
+                    <div>
+                        <p class="text-amber-800 text-sm font-medium">检测到单价变动</p>
+                        <p class="text-amber-600 text-xs mt-1">部分物料的领用单价与档案单价不一致，请确认是否需要填写价格变动原因。</p>
+                    </div>
+                </div>
+            </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-100">
@@ -149,8 +158,10 @@
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">规格型号</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">单位</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">领料数量 <span class="text-red-500">*</span></th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">单价(元)</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">档案单价(元)</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">领用单价(元)</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">金额(元)</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">备注</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
                         </tr>
                     </thead>
@@ -178,10 +189,16 @@
                                 <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm" placeholder="0" min="0" onchange="calculateAmount(this)">
                             </td>
                             <td class="px-4 py-3">
-                                <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly placeholder="0.00" id="price-0">
+                                <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly placeholder="0.00" id="sysPrice-0">
+                            </td>
+                            <td class="px-4 py-3">
+                                <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="0.00" id="actualPrice-0" onchange="calculateAmount(this)">
                             </td>
                             <td class="px-4 py-3">
                                 <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly placeholder="0.00" id="amount-0">
+                            </td>
+                            <td class="px-4 py-3">
+                                <input type="text" class="w-full border border-gray-300 rounded px-2 py-1 text-sm" placeholder="选填，如单价变动原因" id="remark-0">
                             </td>
                             <td class="px-4 py-3">
                                 <button class="text-danger hover:text-red-700" onclick="removeMaterialRow(this)">
@@ -269,10 +286,16 @@
                     <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm" placeholder="0" min="0" onchange="calculateAmount(this)">
                 </td>
                 <td class="px-4 py-3">
-                    <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly placeholder="0.00" id="price-${rowCount}">
+                    <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly placeholder="0.00" id="sysPrice-${rowCount}">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="0.00" id="actualPrice-${rowCount}" onchange="calculateAmount(this)">
                 </td>
                 <td class="px-4 py-3">
                     <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly placeholder="0.00" id="amount-${rowCount}">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="text" class="w-full border border-gray-300 rounded px-2 py-1 text-sm" placeholder="选填，如单价变动原因" id="remark-${rowCount}">
                 </td>
                 <td class="px-4 py-3">
                     <button class="text-danger hover:text-red-700" onclick="removeMaterialRow(this)">
@@ -303,11 +326,12 @@
             row.querySelector('td:nth-child(3) input').value = spec || '';
             row.querySelector('td:nth-child(4) input').value = unit || '';
             row.querySelector('td:nth-child(6) input').value = price || '';
+            row.querySelector('td:nth-child(7) input').value = price || '';
             
             if (price) {
-                calculateAmount(row.querySelector('td:nth-child(6) input'));
+                calculateAmount(row.querySelector('td:nth-child(7) input'));
             } else {
-                row.querySelector('td:nth-child(7) input').value = '';
+                row.querySelector('td:nth-child(8) input').value = '';
                 updateTotals();
             }
         }
@@ -315,9 +339,19 @@
         function calculateAmount(input) {
             const row = input.parentElement.parentElement;
             const quantity = parseFloat(row.querySelector('td:nth-child(5) input').value) || 0;
-            const price = parseFloat(row.querySelector('td:nth-child(6) input').value) || 0;
-            const amount = quantity * price;
-            row.querySelector('td:nth-child(7) input').value = amount.toFixed(2);
+            const archivePrice = parseFloat(row.querySelector('td:nth-child(6) input').value) || 0;
+            const issuePrice = parseFloat(row.querySelector('td:nth-child(7) input').value) || 0;
+            const amount = quantity * issuePrice;
+            row.querySelector('td:nth-child(8) input').value = amount.toFixed(2);
+            
+            if (archivePrice > 0 && issuePrice > 0 && Math.abs(archivePrice - issuePrice) > 0.01) {
+                row.querySelector('td:nth-child(7)').classList.add('bg-amber-50', 'border-amber-200');
+                row.querySelector('td:nth-child(7) input').classList.add('border-amber-400');
+            } else {
+                row.querySelector('td:nth-child(7)').classList.remove('bg-amber-50', 'border-amber-200');
+                row.querySelector('td:nth-child(7) input').classList.remove('border-amber-400');
+            }
+            
             updateTotals();
         }
 
@@ -326,21 +360,38 @@
             let count = 0;
             let totalQuantity = 0;
             let totalAmount = 0;
+            let priceDiffAlert = false;
 
             rows.forEach(row => {
                 const quantity = parseFloat(row.querySelector('td:nth-child(5) input').value) || 0;
-                const amount = parseFloat(row.querySelector('td:nth-child(7) input').value) || 0;
+                const archivePrice = parseFloat(row.querySelector('td:nth-child(6) input').value) || 0;
+                const issuePrice = parseFloat(row.querySelector('td:nth-child(7) input').value) || 0;
+                const amount = parseFloat(row.querySelector('td:nth-child(8) input').value) || 0;
                 
                 if (quantity > 0 || amount > 0) {
                     count++;
+                }
+                if (archivePrice > 0 && issuePrice > 0 && Math.abs(archivePrice - issuePrice) > 0.01) {
+                    priceDiffAlert = true;
                 }
                 totalQuantity += quantity;
                 totalAmount += amount;
             });
 
+            const alertDiv = document.getElementById('priceDiffAlert');
+            if (priceDiffAlert) {
+                alertDiv.classList.remove('hidden');
+            } else {
+                alertDiv.classList.add('hidden');
+            }
+
             document.getElementById('materialCount').textContent = count;
             document.getElementById('totalQuantity').textContent = totalQuantity;
             document.getElementById('totalAmount').textContent = '¥' + totalAmount.toFixed(2);
+        }
+
+        function checkPriceDiff(select) {
+            updateTotals();
         }
 
         updateTotals();

@@ -13,12 +13,121 @@
         .sidebar-item.active { background: #2563eb; color: #fff; }
         iframe { width: 100%; height: calc(100vh - 64px); border: none; }
         .main-container { height: calc(100vh - 64px); }
+        .toast { position: fixed; top: 20px; right: 20px; padding: 12px 24px; border-radius: 8px; color: white; font-size: 14px; z-index: 9999; transform: translateX(120%); transition: transform 0.3s ease; display: flex; align-items: center; }
+        .toast.show { transform: translateX(0); }
+        .toast-success { background: #10b981; }
+        .toast-error { background: #ef4444; }
+        .toast-info { background: #3b82f6; }
+        .guide-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .guide-modal { background: white; border-radius: 16px; padding: 40px; width: 500px; max-width: 90%; }
+        .guide-step { display: none; }
+        .guide-step.active { display: block; }
+        .guide-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+        .guide-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; }
+        .guide-dot.active { background: #3b82f6; }
+        .guide-btn-group { display: flex; justify-content: flex-end; gap: 12px; }
+        .guide-btn { padding: 10px 24px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .guide-btn-primary { background: #3b82f6; color: white; border: none; }
+        .guide-btn-primary:hover { background: #2563eb; }
+        .guide-btn-secondary { background: #f1f5f9; color: #64748b; border: none; }
+        .guide-btn-secondary:hover { background: #e2e8f0; }
+        .header-btn { transition: all 0.2s; }
+        .header-btn:hover { background: rgba(59,130,246,0.1); }
+        .notification-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden bg-slate-50">
-    <!-- 侧边栏 -->
+    <div class="toast" id="toast"></div>
+
+    <div class="guide-overlay" id="guideOverlay">
+        <div class="guide-modal">
+            <div class="guide-step active" id="guideStep1">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white mx-auto mb-4">
+                        <i class="fa fa-flask text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-800 mb-2">欢迎使用 openRD</h2>
+                    <p class="text-slate-500">研发费用管理服务系统，帮助您高效管理研发费用归集与申报</p>
+                </div>
+                <div class="guide-indicator">
+                    <div class="guide-dot active"></div>
+                    <div class="guide-dot"></div>
+                    <div class="guide-dot"></div>
+                    <div class="guide-dot"></div>
+                </div>
+                <div class="guide-btn-group">
+                    <button class="guide-btn guide-btn-secondary" onclick="skipGuide()">跳过引导</button>
+                    <button class="guide-btn guide-btn-primary" onclick="nextGuide()">下一步 <i class="fa fa-arrow-right ml-1"></i></button>
+                </div>
+            </div>
+
+            <div class="guide-step" id="guideStep2">
+                <div class="flex items-start space-x-4 mb-6">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+                        <i class="fa fa-users text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-1">第一步：同步基础数据</h3>
+                        <p class="text-slate-500 text-sm">在左侧导航的"基础数据同步"栏目中，同步人员、考勤、工时、设备和项目数据，确保系统数据完整准确。</p>
+                    </div>
+                </div>
+                <div class="guide-indicator">
+                    <div class="guide-dot"></div>
+                    <div class="guide-dot active"></div>
+                    <div class="guide-dot"></div>
+                    <div class="guide-dot"></div>
+                </div>
+                <div class="guide-btn-group">
+                    <button class="guide-btn guide-btn-secondary" onclick="prevGuide()">上一步</button>
+                    <button class="guide-btn guide-btn-primary" onclick="nextGuide()">下一步 <i class="fa fa-arrow-right ml-1"></i></button>
+                </div>
+            </div>
+
+            <div class="guide-step" id="guideStep3">
+                <div class="flex items-start space-x-4 mb-6">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600">
+                        <i class="fa fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-1">第二步：执行费用归集</h3>
+                        <p class="text-slate-500 text-sm">在"费用归集"栏目中，点击"八大费用归集"执行自动归集，系统将根据预设规则分配各项研发费用。</p>
+                    </div>
+                </div>
+                <div class="guide-indicator">
+                    <div class="guide-dot"></div>
+                    <div class="guide-dot"></div>
+                    <div class="guide-dot active"></div>
+                    <div class="guide-dot"></div>
+                </div>
+                <div class="guide-btn-group">
+                    <button class="guide-btn guide-btn-secondary" onclick="prevGuide()">上一步</button>
+                    <button class="guide-btn guide-btn-primary" onclick="nextGuide()">下一步 <i class="fa fa-arrow-right ml-1"></i></button>
+                </div>
+            </div>
+
+            <div class="guide-step" id="guideStep4">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white mx-auto mb-4">
+                        <i class="fa fa-check text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-800 mb-2">准备就绪</h2>
+                    <p class="text-slate-500">系统引导已完成，您可以开始使用系统了。如有问题，请随时查看帮助文档。</p>
+                </div>
+                <div class="guide-indicator">
+                    <div class="guide-dot"></div>
+                    <div class="guide-dot"></div>
+                    <div class="guide-dot"></div>
+                    <div class="guide-dot active"></div>
+                </div>
+                <div class="guide-btn-group">
+                    <button class="guide-btn guide-btn-secondary" onclick="prevGuide()">上一步</button>
+                    <button class="guide-btn guide-btn-primary" onclick="finishGuide()">开始使用 <i class="fa fa-arrow-right ml-1"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col">
-        <!-- Logo区域 -->
         <div class="p-6 border-b border-slate-200">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg">
@@ -31,15 +140,12 @@
             </div>
         </div>
 
-        <!-- 导航菜单 -->
         <nav class="flex-1 p-4 overflow-y-auto">
-            <!-- 首页 -->
             <div class="sidebar-item active flex items-center px-4 py-3 rounded-xl text-sm font-medium" onclick="loadPage('home.html', this)">
                 <i class="fa fa-home w-5 mr-3"></i>
                 <span>首页仪表盘</span>
             </div>
 
-            <!-- 研税通 -->
             <div class="mt-6">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-2">R&D Tax Comply</p>
                 <div class="sidebar-item flex items-center px-4 py-3 rounded-xl text-sm font-medium text-slate-600" onclick="loadPage('rdtax-comply.html', this)">
@@ -48,7 +154,6 @@
                 </div>
             </div>
 
-            <!-- 基础数据同步 -->
             <div class="mt-6">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-2">基础数据同步</p>
                 <div class="sidebar-item flex items-center px-4 py-3 rounded-xl text-sm font-medium text-slate-600" onclick="loadPage('sync-personnel.html', this)">
@@ -73,7 +178,6 @@
                 </div>
             </div>
 
-            <!-- 费用调整 -->
             <div class="mt-6">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-2">费用调整</p>
                 <div class="sidebar-item flex items-center px-4 py-3 rounded-xl text-sm font-medium text-slate-600" onclick="loadPage('adjust-labor.html', this)">
@@ -110,7 +214,6 @@
                 </div>
             </div>
 
-            <!-- 费用归集 -->
             <div class="mt-6">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-2">费用归集</p>
                 <div class="sidebar-item flex items-center px-4 py-3 rounded-xl text-sm font-medium text-slate-600" onclick="loadPage('allocate-cost.html', this)">
@@ -123,9 +226,6 @@
                 </div>
             </div>
 
-
-
-            <!-- 口径管理 -->
             <div class="mt-6">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-2">口径管理</p>
                 <div class="sidebar-item flex items-center px-4 py-3 rounded-xl text-sm font-medium text-slate-600" onclick="loadPage('caliber-template.html', this)">
@@ -138,7 +238,6 @@
                 </div>
             </div>
 
-            <!-- 报表中心 -->
             <div class="mt-6">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-2">报表中心</p>
                 <div class="sidebar-item flex items-center px-4 py-3 rounded-xl text-sm font-medium text-slate-600" onclick="loadPage('report-detail.html', this)">
@@ -155,7 +254,6 @@
                 </div>
             </div>
 
-            <!-- 系统设置 -->
             <div class="mt-6">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-2">系统设置</p>
                 <div class="sidebar-item flex items-center px-4 py-3 rounded-xl text-sm font-medium text-slate-600" onclick="loadPage('settings-sync.html', this)">
@@ -181,7 +279,6 @@
             </div>
         </nav>
 
-        <!-- 用户信息 -->
         <div class="p-4 border-t border-slate-200">
             <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xs">
@@ -195,30 +292,40 @@
         </div>
     </aside>
 
-    <!-- 主内容区 -->
     <div class="flex-1 flex flex-col">
-        <!-- 顶部导航 -->
         <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between">
             <div>
                 <h2 id="pageTitle" class="text-lg font-bold text-slate-800">首页仪表盘</h2>
             </div>
             <div class="flex items-center space-x-4">
-                <button class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                <button class="header-btn p-2 rounded-lg transition-colors relative" onclick="showNotifications()">
                     <i class="fa fa-bell text-slate-500"></i>
+                    <span class="notification-dot"></span>
                 </button>
-                <button class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-                    <i class="fa fa-search text-slate-500"></i>
+                <button class="header-btn p-2 rounded-lg transition-colors" onclick="showHelp()">
+                    <i class="fa fa-question-circle text-slate-500"></i>
                 </button>
             </div>
         </header>
 
-        <!-- 内容区域 -->
         <main class="main-container overflow-hidden">
             <iframe id="mainFrame" src="home.html"></iframe>
         </main>
     </div>
 
     <script>
+        let currentGuideStep = 1;
+        const totalGuideSteps = 4;
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast toast-${type} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
         function loadPage(url, el) {
             document.getElementById('mainFrame').src = url;
             const title = el.querySelector('span').innerText;
@@ -227,6 +334,49 @@
                 item.classList.remove('active');
             });
             el.classList.add('active');
+            showToast(`已切换到：${title}`, 'info');
+        }
+
+        function nextGuide() {
+            if (currentGuideStep < totalGuideSteps) {
+                document.getElementById(`guideStep${currentGuideStep}`).classList.remove('active');
+                currentGuideStep++;
+                document.getElementById(`guideStep${currentGuideStep}`).classList.add('active');
+                
+                document.querySelectorAll('.guide-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentGuideStep - 1);
+                });
+            }
+        }
+
+        function prevGuide() {
+            if (currentGuideStep > 1) {
+                document.getElementById(`guideStep${currentGuideStep}`).classList.remove('active');
+                currentGuideStep--;
+                document.getElementById(`guideStep${currentGuideStep}`).classList.add('active');
+                
+                document.querySelectorAll('.guide-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentGuideStep - 1);
+                });
+            }
+        }
+
+        function skipGuide() {
+            document.getElementById('guideOverlay').style.display = 'none';
+            showToast('欢迎使用 openRD 系统', 'info');
+        }
+
+        function finishGuide() {
+            document.getElementById('guideOverlay').style.display = 'none';
+            showToast('系统引导已完成，祝您使用愉快！', 'success');
+        }
+
+        function showNotifications() {
+            showToast('暂无新通知', 'info');
+        }
+
+        function showHelp() {
+            showToast('如需帮助，请查看系统文档或联系管理员', 'info');
         }
     </script>
 </body>
