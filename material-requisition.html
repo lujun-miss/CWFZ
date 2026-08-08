@@ -403,6 +403,228 @@
         }
 
         updateTotals();
+
+        // 导入领料单功能
+        function showImportModal() {
+            document.getElementById('importModal').classList.remove('hidden');
+        }
+
+        function closeImportModal() {
+            document.getElementById('importModal').classList.add('hidden');
+            document.getElementById('importFile').value = '';
+            document.getElementById('importPreview').innerHTML = '';
+            document.getElementById('importStep2').classList.add('hidden');
+            document.getElementById('importStep1').classList.remove('hidden');
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            document.getElementById('importStep1').classList.add('hidden');
+            document.getElementById('importStep2').classList.remove('hidden');
+            
+            simulateImportPreview();
+        }
+
+        function simulateImportPreview() {
+            const sampleData = [
+                { code: 'TL001', name: '天然橡胶', spec: 'SBR-1502', unit: 'kg', quantity: 500, price: 18.50 },
+                { code: 'TL002', name: '合成橡胶', spec: 'BR-9000', unit: 'kg', quantity: 300, price: 22.30 },
+                { code: 'TL003', name: '炭黑', spec: 'N330', unit: 'kg', quantity: 200, price: 8.50 },
+                { code: 'TL004', name: '钢丝', spec: '1.5mm', unit: 'kg', quantity: 150, price: 5.20 },
+                { code: 'TL005', name: '助剂A', spec: 'ZA-2', unit: 'kg', quantity: 50, price: 120.00 },
+                { code: 'TL006', name: '包装材料', spec: '纸箱', unit: '个', quantity: 100, price: 5.00 },
+                { code: 'TL007', name: '硫化剂', spec: 'DCP', unit: 'kg', quantity: 30, price: 85.00 },
+                { code: 'TL008', name: '防老剂', spec: 'RD', unit: 'kg', quantity: 25, price: 150.00 },
+            ];
+
+            const rdMaterials = ['TL001', 'TL002', 'TL003', 'TL005', 'TL007', 'TL008'];
+
+            let html = '<table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-100"><tr>' +
+                '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><input type="checkbox" onchange="toggleSelectAll(this)"></th>' +
+                '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500">物料编码</th>' +
+                '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500">物料名称</th>' +
+                '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500">规格</th>' +
+                '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500">数量</th>' +
+                '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500">单价</th>' +
+                '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500">是否研发</th>' +
+                '<th class="px-3 py-2 text-left text-xs font-medium text-gray-500">分配项目</th>' +
+                '</tr></thead><tbody>';
+
+            sampleData.forEach((item, index) => {
+                const isRd = rdMaterials.includes(item.code);
+                const rowClass = isRd ? '' : 'bg-gray-50 opacity-60';
+                const rdIcon = isRd 
+                    ? '<span class="text-green-600"><i class="fa fa-check-circle"></i> 是</span>' 
+                    : '<span class="text-gray-400"><i class="fa fa-times-circle"></i> 否</span>';
+                
+                html += `<tr class="${rowClass}" id="importRow-${index}">` +
+                    `<td class="px-3 py-2"><input type="checkbox" class="import-checkbox" ${isRd ? 'checked' : ''}></td>` +
+                    `<td class="px-3 py-2 text-sm">${item.code}</td>` +
+                    `<td class="px-3 py-2 text-sm">${item.name}</td>` +
+                    `<td class="px-3 py-2 text-sm">${item.spec}</td>` +
+                    `<td class="px-3 py-2 text-sm">${item.quantity} ${item.unit}</td>` +
+                    `<td class="px-3 py-2 text-sm">¥${item.price}</td>` +
+                    `<td class="px-3 py-2 text-sm">${rdIcon}</td>` +
+                    `<td class="px-3 py-2">` +
+                    `<select class="w-full border border-gray-300 rounded px-2 py-1 text-sm project-select">` +
+                    `<option value="">请选择项目</option>` +
+                    `<option value="proj1">智能传感器研发</option>` +
+                    `<option value="proj2">工业机器人控制系统</option>` +
+                    `<option value="proj3">新能源材料研究</option>` +
+                    `</select></td></tr>`;
+            });
+
+            html += '</tbody></table>';
+            document.getElementById('importPreview').innerHTML = html;
+        }
+
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.import-checkbox');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+        }
+
+        function batchAssignProject() {
+            const project = document.getElementById('batchProject').value;
+            if (!project) {
+                alert('请先选择要分配的项目');
+                return;
+            }
+            const checkboxes = document.querySelectorAll('.import-checkbox:checked');
+            checkboxes.forEach(cb => {
+                const row = cb.parentElement.parentElement;
+                row.querySelector('.project-select').value = project;
+            });
+            alert('已批量分配项目');
+        }
+
+        function confirmImport() {
+            const checkboxes = document.querySelectorAll('.import-checkbox:checked');
+            let importedCount = 0;
+
+            checkboxes.forEach(cb => {
+                const row = cb.parentElement.parentElement;
+                const code = row.querySelector('td:nth-child(2)').textContent;
+                const name = row.querySelector('td:nth-child(3)').textContent;
+                const spec = row.querySelector('td:nth-child(4)').textContent;
+                const quantity = parseFloat(row.querySelector('td:nth-child(5)').textContent);
+                const price = parseFloat(row.querySelector('td:nth-child(6)').textContent.replace('¥', ''));
+                const project = row.querySelector('.project-select').value;
+
+                addImportedRow(code, name, spec, 'kg', quantity, price, project);
+                importedCount++;
+            });
+
+            closeImportModal();
+            alert('成功导入 ' + importedCount + ' 条物料记录');
+        }
+
+        function addImportedRow(code, name, spec, unit, quantity, price, project) {
+            const tableBody = document.getElementById('materialTableBody');
+            const rowCount = tableBody.querySelectorAll('tr').length;
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td class="px-4 py-3">
+                    <input type="text" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly value="${code}" id="code-${rowCount}">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="text" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly value="${name}">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="text" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly value="${spec}" id="spec-${rowCount}">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="text" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly value="${unit}" id="unit-${rowCount}">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm" value="${quantity}" min="0" onchange="calculateAmount(this)">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly value="${price}" id="sysPrice-${rowCount}">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary" value="${price}" id="actualPrice-${rowCount}" onchange="calculateAmount(this)">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="number" class="w-full border border-gray-300 rounded px-2 py-1 text-sm bg-gray-100" readonly value="${(quantity * price).toFixed(2)}" id="amount-${rowCount}">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="text" class="w-full border border-gray-300 rounded px-2 py-1 text-sm" placeholder="选填，如单价变动原因" id="remark-${rowCount}">
+                </td>
+                <td class="px-4 py-3">
+                    <button class="text-danger hover:text-red-700" onclick="removeMaterialRow(this)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+            
+            if (project) {
+                const projectSelect = document.querySelector('select option[value="' + project + '"]');
+                if (projectSelect) {
+                    document.querySelector('select').value = project;
+                }
+            }
+            
+            updateTotals();
+        }
     </script>
+
+    <!-- 导入领料单模态框 -->
+    <div id="importModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-lg font-medium text-gray-800">导入领料单</h3>
+                <button class="text-gray-400 hover:text-gray-600" onclick="closeImportModal()">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-6">
+                <!-- 步骤1：上传文件 -->
+                <div id="importStep1">
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer" onclick="document.getElementById('importFile').click()">
+                        <i class="fa fa-file-excel-o text-4xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-600">点击或拖拽上传Excel文件</p>
+                        <p class="text-xs text-gray-400 mt-2">支持 .xlsx, .xls 格式</p>
+                        <p class="text-xs text-gray-400 mt-1">建议列：物料编码、物料名称、规格型号、单位、数量、单价</p>
+                        <input type="file" id="importFile" class="hidden" accept=".xlsx,.xls" onchange="handleFileSelect(event)">
+                    </div>
+                    <div class="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-md">
+                        <p class="text-xs text-blue-700"><i class="fa fa-info-circle mr-1"></i>系统将自动识别研发物料并标记，非研发物料默认不选中，可手动调整</p>
+                    </div>
+                </div>
+
+                <!-- 步骤2：预览与分配 -->
+                <div id="importStep2" class="hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-sm font-medium text-gray-700">预览导入数据</h4>
+                        <div class="flex items-center space-x-2">
+                            <select id="batchProject" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                                <option value="">批量分配项目</option>
+                                <option value="proj1">智能传感器研发</option>
+                                <option value="proj2">工业机器人控制系统</option>
+                                <option value="proj3">新能源材料研究</option>
+                            </select>
+                            <button class="bg-primary text-white px-3 py-1 rounded text-sm hover:bg-blue-600" onclick="batchAssignProject()">
+                                批量分配
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto max-h-80 overflow-y-auto border border-gray-200 rounded">
+                        <div id="importPreview"></div>
+                    </div>
+                    <div class="mt-4 p-3 bg-amber-50 border border-amber-100 rounded-md">
+                        <p class="text-xs text-amber-700"><i class="fa fa-exclamation-circle mr-1"></i>绿色标记为系统识别的研发物料，灰色为非研发物料。可勾选需要导入的物料，并为其分配项目。</p>
+                    </div>
+                    <div class="flex justify-end space-x-2 mt-4">
+                        <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300" onclick="closeImportModal()">取消</button>
+                        <button class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-green-600" onclick="confirmImport()">确认导入</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

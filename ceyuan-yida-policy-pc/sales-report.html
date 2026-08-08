@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能报告 - 策源易达政策销售平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { brand: {
+                50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac',
+                400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d'
+            } } } }
+        }
+    </script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+        .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+        .scrollbar-thin::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+        .ai-gradient { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); }
+        .modal-transition { transition: opacity 0.25s ease; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+        <div class="max-w-[1600px] mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-brand-600 rounded-lg flex items-center justify-center">
+                    <i class="fa fa-file-text-o text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">智能报告</h1>
+                    <p class="text-xs text-gray-500">AI 一键生成定制化分析报告</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 hover:text-brand-600"><i class="fa fa-bell"></i></button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-9 h-9 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 font-semibold">张</div>
+                    <span class="text-sm text-gray-700">张销售</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1600px] mx-auto px-6 py-6">
+        <!-- 报告生成区 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+            <div class="ai-gradient p-6 text-white">
+                <div class="flex items-center space-x-3 mb-2">
+                    <i class="fa fa-magic text-2xl"></i>
+                    <h2 class="text-lg font-bold">AI 智能报告生成</h2>
+                </div>
+                <p class="text-sm text-brand-50">选择企业，AI 自动分析政策匹配度、科创能力，秒级生成定制化报告</p>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">选择企业</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                            <option>星河智造科技有限公司</option>
+                            <option>康泰生物制药有限公司</option>
+                            <option>锐达新材料股份公司</option>
+                            <option>智远装备制造有限公司</option>
+                            <option>新能源科技发展公司</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">报告类型</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                            <option>企业政策匹配报告</option>
+                            <option>科创能力诊断报告</option>
+                            <option>行业政策分析报告</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">分析深度</label>
+                        <select class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                            <option>标准分析</option>
+                            <option>深度分析</option>
+                            <option>极速概览</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-5 flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center space-x-2 text-xs text-gray-500">
+                        <i class="fa fa-info-circle text-brand-500"></i>
+                        <span>预计生成时间：约 8 秒 · 基于企业资质、专利、行业数据综合分析</span>
+                    </div>
+                    <button class="px-6 py-2.5 bg-brand-600 text-white rounded-lg text-sm hover:bg-brand-700 flex items-center">
+                        <i class="fa fa-magic mr-2"></i>AI 一键生成
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 报告模板 -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-semibold text-gray-800">报告模板</h2>
+                <button class="text-sm text-brand-600 hover:text-brand-700"><i class="fa fa-th mr-1"></i>查看全部</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-brand-300 transition cursor-pointer">
+                    <div class="w-12 h-12 bg-brand-50 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fa fa-list-alt text-brand-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 mb-1">企业政策匹配报告</h3>
+                    <p class="text-xs text-gray-500 mb-3">基于企业资质画像，匹配可申报政策清单及补贴额度</p>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-gray-400"><i class="fa fa-clock-o mr-1"></i>已生成 326 份</span>
+                        <span class="text-brand-600">使用模板 <i class="fa fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-brand-300 transition cursor-pointer">
+                    <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fa fa-flask text-blue-500 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 mb-1">科创能力诊断报告</h3>
+                    <p class="text-xs text-gray-500 mb-3">评估企业研发投入、专利储备、科技成果转化能力</p>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-gray-400"><i class="fa fa-clock-o mr-1"></i>已生成 218 份</span>
+                        <span class="text-brand-600">使用模板 <i class="fa fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-brand-300 transition cursor-pointer">
+                    <div class="w-12 h-12 bg-orange-50 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fa fa-bar-chart text-orange-500 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 mb-1">行业政策分析报告</h3>
+                    <p class="text-xs text-gray-500 mb-3">汇总行业相关政策动向、申报趋势及竞品申报情况</p>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-gray-400"><i class="fa fa-clock-o mr-1"></i>已生成 152 份</span>
+                        <span class="text-brand-600">使用模板 <i class="fa fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主体区域：报告列表 + 详情预览 -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <!-- 报告列表 -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <h2 class="font-semibold text-gray-800">已生成报告</h2>
+                    <div class="relative">
+                        <i class="fa fa-search absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" placeholder="搜索报告..." class="pl-7 pr-3 py-1.5 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-brand-500 w-44">
+                    </div>
+                </div>
+                <div class="divide-y divide-gray-100 max-h-[640px] overflow-y-auto scrollbar-thin">
+                    <div class="p-4 hover:bg-brand-50/40 cursor-pointer border-l-4 border-brand-600 bg-brand-50/30" onclick="showReport(0)">
+                        <div class="flex items-start justify-between mb-1.5">
+                            <h4 class="text-sm font-medium text-gray-800 flex-1">星河智造政策匹配分析报告</h4>
+                            <span class="px-2 py-0.5 bg-brand-50 text-brand-700 rounded text-xs">政策匹配</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">星河智造科技有限公司</p>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span><i class="fa fa-clock-o mr-1"></i>2026-08-02 14:23</span>
+                            <div class="flex items-center space-x-3">
+                                <span><i class="fa fa-eye mr-0.5"></i>32</span>
+                                <span><i class="fa fa-share-alt mr-0.5"></i>8</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 hover:bg-brand-50/40 cursor-pointer" onclick="showReport(1)">
+                        <div class="flex items-start justify-between mb-1.5">
+                            <h4 class="text-sm font-medium text-gray-800 flex-1">康泰生物科创能力诊断报告</h4>
+                            <span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs">能力诊断</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">康泰生物制药有限公司</p>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span><i class="fa fa-clock-o mr-1"></i>2026-08-01 10:15</span>
+                            <div class="flex items-center space-x-3">
+                                <span><i class="fa fa-eye mr-0.5"></i>28</span>
+                                <span><i class="fa fa-share-alt mr-0.5"></i>5</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 hover:bg-brand-50/40 cursor-pointer" onclick="showReport(2)">
+                        <div class="flex items-start justify-between mb-1.5">
+                            <h4 class="text-sm font-medium text-gray-800 flex-1">新材料行业政策分析报告</h4>
+                            <span class="px-2 py-0.5 bg-orange-50 text-orange-700 rounded text-xs">行业分析</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">锐达新材料股份公司</p>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span><i class="fa fa-clock-o mr-1"></i>2026-07-30 16:42</span>
+                            <div class="flex items-center space-x-3">
+                                <span><i class="fa fa-eye mr-0.5"></i>45</span>
+                                <span><i class="fa fa-share-alt mr-0.5"></i>12</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 hover:bg-brand-50/40 cursor-pointer" onclick="showReport(3)">
+                        <div class="flex items-start justify-between mb-1.5">
+                            <h4 class="text-sm font-medium text-gray-800 flex-1">智远装备政策匹配报告</h4>
+                            <span class="px-2 py-0.5 bg-brand-50 text-brand-700 rounded text-xs">政策匹配</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">智远装备制造有限公司</p>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span><i class="fa fa-clock-o mr-1"></i>2026-07-28 09:30</span>
+                            <div class="flex items-center space-x-3">
+                                <span><i class="fa fa-eye mr-0.5"></i>21</span>
+                                <span><i class="fa fa-share-alt mr-0.5"></i>3</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 hover:bg-brand-50/40 cursor-pointer" onclick="showReport(4)">
+                        <div class="flex items-start justify-between mb-1.5">
+                            <h4 class="text-sm font-medium text-gray-800 flex-1">新能源行业政策分析报告</h4>
+                            <span class="px-2 py-0.5 bg-orange-50 text-orange-700 rounded text-xs">行业分析</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">新能源科技发展公司</p>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span><i class="fa fa-clock-o mr-1"></i>2026-07-26 11:20</span>
+                            <div class="flex items-center space-x-3">
+                                <span><i class="fa fa-eye mr-0.5"></i>38</span>
+                                <span><i class="fa fa-share-alt mr-0.5"></i>7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 报告详情预览 -->
+            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <div>
+                        <h2 class="font-semibold text-gray-800">星河智造政策匹配分析报告</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">星河智造科技有限公司 · 生成于 2026-08-02 14:23</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50"><i class="fa fa-share-alt mr-1"></i>分享</button>
+                        <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50"><i class="fa fa-download mr-1"></i>下载</button>
+                        <button class="px-3 py-1.5 bg-brand-600 text-white rounded-lg text-xs hover:bg-brand-700"><i class="fa fa-external-link mr-1"></i>预览</button>
+                    </div>
+                </div>
+                <div class="p-6 max-h-[640px] overflow-y-auto scrollbar-thin">
+                    <!-- 报告摘要 -->
+                    <div class="bg-gradient-to-br from-brand-50 to-blue-50 rounded-lg p-5 mb-5">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <i class="fa fa-lightbulb-o text-brand-600"></i>
+                            <h3 class="font-semibold text-gray-800 text-sm">报告摘要</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            星河智造科技有限公司作为国家高新技术企业，在电子信息领域具备较强研发实力。
+                            经 AI 综合分析，企业可申报政策 <span class="text-brand-600 font-semibold">18 项</span>，
+                            预计可获补贴金额 <span class="text-brand-600 font-semibold">280 万元</span>，
+                            政策匹配度整体优秀，建议优先申报高新技术企业复审及省级专精特新项目。
+                        </p>
+                    </div>
+
+                    <!-- 核心指标 -->
+                    <div class="grid grid-cols-4 gap-3 mb-5">
+                        <div class="bg-gray-50 rounded-lg p-3 text-center">
+                            <p class="text-2xl font-bold text-brand-600">18</p>
+                            <p class="text-xs text-gray-500 mt-0.5">可申报政策</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3 text-center">
+                            <p class="text-2xl font-bold text-brand-600">280万</p>
+                            <p class="text-xs text-gray-500 mt-0.5">预计补贴</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3 text-center">
+                            <p class="text-2xl font-bold text-brand-600">92%</p>
+                            <p class="text-xs text-gray-500 mt-0.5">综合匹配度</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3 text-center">
+                            <p class="text-2xl font-bold text-brand-600">A+</p>
+                            <p class="text-xs text-gray-500 mt-0.5">申报评级</p>
+                        </div>
+                    </div>
+
+                    <!-- 详细分析 -->
+                    <div class="space-y-5">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                                <span class="w-1 h-4 bg-brand-600 rounded mr-2"></span>一、企业政策匹配清单
+                            </h3>
+                            <div class="space-y-2">
+                                <div class="border border-gray-100 rounded-lg p-3">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-800">国家高新技术企业认定（复审）</p>
+                                            <p class="text-xs text-gray-400 mt-1">补贴 30 万 · 申报截止 2026-09-30 · 匹配度 98%</p>
+                                        </div>
+                                        <span class="px-2 py-0.5 bg-brand-50 text-brand-700 rounded text-xs">强烈推荐</span>
+                                    </div>
+                                </div>
+                                <div class="border border-gray-100 rounded-lg p-3">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-800">省级专精特新中小企业</p>
+                                            <p class="text-xs text-gray-400 mt-1">补贴 50 万 · 申报截止 2026-10-15 · 匹配度 92%</p>
+                                        </div>
+                                        <span class="px-2 py-0.5 bg-brand-50 text-brand-700 rounded text-xs">强烈推荐</span>
+                                    </div>
+                                </div>
+                                <div class="border border-gray-100 rounded-lg p-3">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-800">研发费用加计扣除</p>
+                                            <p class="text-xs text-gray-400 mt-1">减税 80 万 · 长期有效 · 匹配度 88%</p>
+                                        </div>
+                                        <span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs">推荐申报</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                                <span class="w-1 h-4 bg-brand-600 rounded mr-2"></span>二、企业资质优势分析
+                            </h3>
+                            <div class="bg-gray-50 rounded-lg p-4 text-sm text-gray-600 leading-relaxed">
+                                企业拥有 <strong class="text-brand-600">38 项发明专利</strong>、<strong class="text-brand-600">12 项软件著作权</strong>，
+                                研发人员占比达 <strong class="text-brand-600">28%</strong>，研发投入强度 <strong class="text-brand-600">6.8%</strong>，
+                                远超同行业平均水平。近三年科技成果转化 26 项，具备较强的产学研合作基础。
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                                <span class="w-1 h-4 bg-brand-600 rounded mr-2"></span>三、申报建议
+                            </h3>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <div class="flex items-start space-x-2">
+                                    <i class="fa fa-check-circle text-brand-600 mt-0.5"></i>
+                                    <p>建议 9 月底前启动高企复审材料准备工作，重点完善知识产权及成果转化材料。</p>
+                                </div>
+                                <div class="flex items-start space-x-2">
+                                    <i class="fa fa-check-circle text-brand-600 mt-0.5"></i>
+                                    <p>专精特新项目需补充细分市场占有率证明，建议联系行业协会出具相关材料。</p>
+                                </div>
+                                <div class="flex items-start space-x-2">
+                                    <i class="fa fa-check-circle text-brand-600 mt-0.5"></i>
+                                    <p>研发费用归集建议采用专业辅助账系统，可同时满足加计扣除与高企认定需求。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showReport(index) {
+            const items = document.querySelectorAll('.lg\\:col-span-2 .divide-y > div');
+            items.forEach((item, i) => {
+                item.classList.remove('border-l-4', 'border-brand-600', 'bg-brand-50/30');
+                if (i === index) {
+                    item.classList.add('border-l-4', 'border-brand-600', 'bg-brand-50/30');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
