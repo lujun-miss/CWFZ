@@ -958,7 +958,7 @@
                         </div>
                         <div class="mb-3 p-2 bg-blue-50 rounded-lg text-xs text-blue-700">
                             <i class="fa fa-lightbulb-o mr-1"></i>
-                            <strong>备注：</strong>① 总工时默认按"运行天数×24小时"自动填充，可手动修改；② 研发工时默认按总工时的15%加载，上限不超过15%，可手动调整；③ 每日各项目研发+生产工时总和不超过24小时，超限时系统自动按比例缩减；④ 填报人默认为该项目的负责人。
+                            <strong>备注：</strong>① 总工时默认按"运行天数×24小时"自动填充，可手动修改；② 研发工时默认按总工时的15%加载，上限不超过15%，可手动调整；③ 每日各项目研发+生产工时总和不超过24小时，超限时系统自动按比例缩减；④ 填报人默认为该项目的负责人；⑤ 若某项目当天无人员填报工时，则设备研发工时当天不分配给该项目。
                         </div>
                         
                         <div id="deviceAllocationMatrix" class="overflow-x-auto mb-3">
@@ -3461,11 +3461,12 @@
                             ${projects.map(project => {
                                 const colspan = 'colspan="2"';
                                 return `
-                                    <th class="px-3 py-2 text-xs font-medium text-gray-600 text-center align-top" style="background-color: ${project.color}15;" ${colspan}>
+                                    <th class="px-3 py-2 text-xs font-medium text-gray-600 text-center align-top" style="background-color: ${project.color}15;">
                                         <div class="flex items-center justify-center">
                                             <div class="w-2 h-2 rounded mr-1.5" style="background-color: ${project.color}"></div>
                                             <span class="truncate max-w-[120px]">${project.name}</span>
                                         </div>
+                                        <div class="text-[10px] text-gray-400 mt-1 font-normal">${formatDateShort(project.startDate)} ~ ${formatDateShort(project.endDate)}</div>
                                     </th>
                                 `;
                             }).join('')}
@@ -3475,7 +3476,6 @@
                             ${projects.map(project => {
                                 return `
                                     <th class="px-2 py-1 text-[10px] font-medium text-gray-600 text-center" style="background-color: ${project.color}15;">研发占比</th>
-                                    <th class="px-2 py-1 text-[10px] font-medium text-gray-600 text-center" style="background-color: ${project.color}15;">生产占比</th>
                                 `;
                             }).join('')}
                         </tr>
@@ -3592,7 +3592,6 @@
                     if (!isBound) {
                         tableHtml += `
                             <td class="px-2 py-2 text-center bg-gray-100">-</td>
-                            <td class="px-2 py-2 text-center bg-gray-100">-</td>
                         `;
                     } else {
                         if (device.usageType === 'shared_rd_prod') {
@@ -3608,17 +3607,6 @@
                                     </div>
                                     <div class="text-[10px] text-blue-600 mt-1">${allocatedRdForProject.toFixed(1)}h</div>
                                 </td>
-                                <td class="px-2 py-2 text-center">
-                                    <div class="flex items-center justify-center">
-                                        <input type="number" 
-                                            id="device-prod-percent-${device.id}-${project.id}"
-                                            class="device-percent-input w-12 text-center border rounded px-1 py-0.5 text-xs" 
-                                            min="0" max="100" step="5" value="${currentProdValue}"
-                                            onchange="updateProjectDevicePercentage('${device.id}', '${project.id}', 'prod')">
-                                        <span class="ml-0.5 text-xs text-gray-500">%</span>
-                                    </div>
-                                    <div class="text-[10px] text-green-600 mt-1">${allocatedProdForProject.toFixed(1)}h</div>
-                                </td>
                             `;
                         } else {
                             tableHtml += `
@@ -3632,7 +3620,6 @@
                                         <span class="ml-0.5 text-xs text-gray-500">%</span>
                                     </div>
                                 </td>
-                                <td class="px-2 py-2 text-center bg-gray-50">-</td>
                             `;
                         }
                     }
@@ -4161,6 +4148,18 @@
             return result;
         }
 
+        function checkProjectHasPersonHoursOnDate(projectId, date) {
+            const personsInProject = mockPersonnelData.filter(p => p.projects && p.projects.includes(projectId) && !p.isDeviceAttendance && !p.isIntangibleAttendance);
+            for (const person of personsInProject) {
+                if (!attendanceDataCache[person.id] && currentYear && currentMonth) {
+                    attendanceDataCache[person.id] = generateMockAttendanceData(person.id, currentYear, currentMonth);
+                }
+                const hours = attendanceDataCache[person.id]?.[date] || 0;
+                if (hours > 0) return true;
+            }
+            return false;
+        }
+
         function applyDeviceAllocation() {
             console.log("applyDeviceAllocation function called.");
             const projects = getDeviceProjectsForAttendancePerson();
@@ -4257,7 +4256,8 @@
                         const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                         const attendanceHours = getDeviceAttendanceData(deviceId)[date] || 0;
                         const isInProjectPeriod = date >= project.startDate && date <= project.endDate;
-                        if (attendanceHours > 0 && isInProjectPeriod) {
+                        const hasPersonHours = checkProjectHasPersonHoursOnDate(project.id, date);
+                        if (attendanceHours > 0 && isInProjectPeriod && hasPersonHours) {
                             validDates.push(date);
                         }
                     }
@@ -4443,9 +4443,23 @@
                             ${projects.map(p => {
                                 const rdValue = dailyProjectRdHours[p.id];
                                 const prodValue = dailyProjectProdHours[p.id];
+                                const hasPersonHours = checkProjectHasPersonHoursOnDate(p.id, date);
+                                const isInProjectPeriod = date >= p.startDate && date <= p.endDate;
+                                const isBlocked = !hasPersonHours && isInProjectPeriod && attendanceHours > 0;
+
+                                if (isBlocked) {
+                                    return `
+                                        <td class="text-center bg-orange-50" colspan="2">
+                                            <span class="text-[10px] text-orange-500" title="该项目当天无人员填报工时"><i class="fa fa-ban"></i> 无人填报</span>
+                                        </td>
+                                    `;
+                                }
+
+                                const inputClass = !isInProjectPeriod || attendanceHours === 0 ? 'opacity-40' : '';
+                                const disabledAttr = !isInProjectPeriod || attendanceHours === 0 ? 'disabled' : '';
                                 
                                 return `
-                                    <td class="text-center">
+                                    <td class="text-center ${inputClass}">
                                         <input type="number" 
                                             data-device="${deviceId}" 
                                             data-date="${date}" 
@@ -4455,10 +4469,11 @@
                                             value="${rdValue}" 
                                             min="0" 
                                             step="0.1"
+                                            ${disabledAttr}
                                             onchange="updateDailyDeviceAllocation(this)"
                                             oninput="updateDailyDeviceAllocation(this)">
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center ${inputClass}">
                                         <input type="number" 
                                             data-device="${deviceId}" 
                                             data-date="${date}" 
@@ -4468,6 +4483,7 @@
                                             value="${prodValue}" 
                                             min="0" 
                                             step="0.1"
+                                            ${disabledAttr}
                                             onchange="updateDailyDeviceAllocation(this)"
                                             oninput="updateDailyDeviceAllocation(this)">
                                     </td>
