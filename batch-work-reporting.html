@@ -958,7 +958,7 @@
                         </div>
                         <div class="mb-3 p-2 bg-blue-50 rounded-lg text-xs text-blue-700">
                             <i class="fa fa-lightbulb-o mr-1"></i>
-                            <strong>备注：</strong>① 总工时默认按"运行天数×24小时"自动填充，可手动修改；② 研发工时默认按总工时的15%加载，上限不超过15%，可手动调整；③ 每日各项目研发+生产工时总和不超过24小时，超限时系统自动按比例缩减；④ 填报人默认为该项目的负责人；⑤ 若某项目当天无人员填报工时，则设备研发工时当天不分配给该项目。
+                            <strong>备注：</strong>① 总工时默认按"运行天数×24小时"自动填充，可手动修改；② 研发工时默认按总工时的15%加载，上限不超过15%，可手动调整；③ 每日各项目研发+生产工时总和不超过24小时，超限时系统自动按比例缩减；④ 填报人默认为该项目的负责人；⑤ 若某项目当天无人员填报工时，则设备研发工时当天不分配给该项目。<br><span class="ml-12">显示效果：</span><span class="text-orange-500">🚫 无人填报</span><span>（橙色标记=当天该项目无人员工时）、</span><span class="text-gray-400">灰色禁用</span><span>（项目周期外或设备未运行）。</span>
                         </div>
                         
                         <div id="deviceAllocationMatrix" class="overflow-x-auto mb-3">
@@ -1010,7 +1010,8 @@
                             <div class="text-[10px] text-purple-700 space-y-2">
                                 <p><strong>核心规则：</strong></p>
                                 <ul class="list-disc list-inside pl-2">
-                                    <li>每个无形资产的研发占比、生产占比总和建议分别为 100%</li>
+                                    <li>每个无形资产的研发占比总和固定为 100%</li>
+                                    <li>同一项目的生产占比 = 100% - 研发占比</li>
                                     <li>只给已绑定的项目-无形资产组合生成占比</li>
                                     <li>每个项目至少分配 5%，避免极端小值</li>
                                     <li>应用分配后，会按所选考勤人员有考勤的日期拆分到每日</li>
@@ -1020,7 +1021,11 @@
                         </div>
                         <div class="mb-3 p-2 bg-green-50 rounded-lg text-xs text-green-700">
                             <i class="fa fa-info-circle mr-1"></i>
-                            <strong>说明：</strong>无形资产工时按所选“无形资产考勤人员”加载其绑定项目，并按“项目绑定无形资产”生成分配矩阵；矩阵中只开放已绑定的项目-无形资产组合。无形资产总工时拆分为研发工时、生产工时，每日工时仅拆分到该人员有考勤的日期；每列研发/生产占比建议不超过100%。
+                            <strong>说明：</strong>无形资产工时按所选月份加载当月有效项目，并按"项目绑定无形资产"生成分配矩阵；矩阵中只开放已绑定的项目-无形资产组合。无形资产总工时拆分为研发工时、生产工时，每日工时仅拆分到有考勤的日期；每行研发占比总和固定为100%。
+                        </div>
+                        <div class="mb-3 p-2 bg-blue-50 rounded-lg text-xs text-blue-700">
+                            <i class="fa fa-lightbulb-o mr-1"></i>
+                            <strong>备注：</strong>① 总工时默认按"运行天数×24小时"自动填充，可手动修改；② 研发工时默认按总工时的15%加载，上限不超过15%，可手动调整；③ 每日各项目研发+生产工时总和不超过24小时，超限时系统自动按比例缩减；④ 填报人默认为该项目的负责人；⑤ 若某项目当天无人员填报工时，则无形资产研发工时当天不分配给该项目。<br><span class="ml-12">显示效果：</span><span class="text-orange-500">🚫 无人填报</span><span>（橙色标记=当天该项目无人员工时）、</span><span class="text-gray-400">灰色禁用</span><span>（项目周期外或无考勤）。</span>
                         </div>
                         <div id="intangibleAllocationMatrix" class="overflow-x-auto mb-3">
                             <div class="text-center text-gray-400 py-8">
@@ -1234,12 +1239,21 @@
 
         function getDeviceAttendanceData(deviceId) {
             if (!currentYear || !currentMonth) return {};
+            // 优先使用手动勾选的运行数据
+            if (deviceAllocations[deviceId]?.runDataOverride) {
+                return deviceAllocations[deviceId].runDataOverride;
+            }
             const runMode = getDeviceRunMode(deviceId);
             const cacheKey = `device-month-${deviceId || 'default'}-${runMode}-${currentYear}-${currentMonth}`;
             if (!attendanceDataCache[cacheKey]) {
                 attendanceDataCache[cacheKey] = generateDeviceMonthRunData(currentYear, currentMonth, runMode);
             }
             return attendanceDataCache[cacheKey] || {};
+        }
+
+        // 获取设备运行数据（含手动覆盖），用于计算运行天数
+        function getDeviceEffectiveRunData(deviceId) {
+            return getDeviceAttendanceData(deviceId);
         }
 
         function getDeviceProjectsForAttendancePerson() {
@@ -1280,9 +1294,23 @@
         }
 
         function getIntangibleAttendanceData() {
+            // 优先使用手动勾选的运行数据
+            if (intangibleAllocations.__calendarOverride?.runDataOverride) {
+                return intangibleAllocations.__calendarOverride.runDataOverride;
+            }
             const person = getIntangibleAttendancePerson();
             if (!person) return {};
             if (!attendanceDataCache[person.id] && currentYear && currentMonth) {
+                attendanceDataCache[person.id] = generateMockAttendanceData(person.id, currentYear, currentMonth);
+            }
+            return attendanceDataCache[person.id] || {};
+        }
+
+        // 获取无形资产默认（考勤）运行数据，用于日历比对
+        function getIntangibleDefaultAttendanceData() {
+            const person = getIntangibleAttendancePerson();
+            if (!person || !currentYear || !currentMonth) return {};
+            if (!attendanceDataCache[person.id]) {
                 attendanceDataCache[person.id] = generateMockAttendanceData(person.id, currentYear, currentMonth);
             }
             return attendanceDataCache[person.id] || {};
@@ -1336,6 +1364,12 @@
         ];
 
         const deviceRunModeOptions = {
+            double_rest: { label: '双休', includeWeekends: false },
+            single_rest: { label: '单休', includeSaturday: true },
+            full_month: { label: '足月运行', includeWeekends: true }
+        };
+
+        const intangibleRunModeOptions = {
             double_rest: { label: '双休', includeWeekends: false },
             single_rest: { label: '单休', includeSaturday: true },
             full_month: { label: '足月运行', includeWeekends: true }
@@ -1468,7 +1502,7 @@
             
             if (selectedPersons.length === 0) {
                 const placeholderMap = {
-                    intangible: '请选择无形资产考勤人员',
+                    intangible: '默认项目负责人',
                     personnel: '请选择人员'
                 };
                 placeholder.textContent = placeholderMap[currentWorkType] || placeholderMap.personnel;
@@ -2846,7 +2880,8 @@
 
             const personFilterGroup = document.getElementById('personFilterGroup');
             if (personFilterGroup) {
-                personFilterGroup.classList.toggle('hidden', tabName === 'device');
+                // 设备工时、无形资产工时不显示考勤人员选择（默认使用项目负责人）
+                personFilterGroup.classList.toggle('hidden', tabName === 'device' || tabName === 'intangible');
             }
 
             const personFilterLabel = document.getElementById('personFilterLabel');
@@ -2881,7 +2916,7 @@
                 const tipMap = {
                     personnel: '人工工时可按人员筛选；选择“全部人员”时会批量加载所有人员考勤。',
                     device: '设备工时按所选月份加载当月有效项目，并按项目-设备矩阵分配；每台设备单独设置运行模式，用于计算本月运行天数。',
-                    intangible: '无形资产工时按项目-无形资产矩阵分配；选择考勤人员后，仅在该人员有考勤的日期拆分无形资产研发使用工时，并加载该人员绑定的项目。'
+                    intangible: '无形资产工时按项目-无形资产矩阵分配；默认按当月有效项目加载，填报人默认为项目负责人，仅在有考勤的日期拆分无形资产研发使用工时。'
                 };
                 filterTip.textContent = tipMap[tabName] || tipMap.personnel;
             }
@@ -2889,9 +2924,17 @@
 
         // ==================== 无形资产工时相关函数 ====================
 
+        function getIntangibleRunDays() {
+            const attendanceData = getIntangibleAttendanceData();
+            return Object.values(attendanceData).filter(hours => Number(hours || 0) > 0).length;
+        }
+
         function initIntangibleAllocationCards() {
             const container = document.getElementById('intangibleAllocationMatrix');
             if (!container) return;
+
+            const previousIntangibleAllocations = intangibleAllocations;
+            container.innerHTML = '';
 
             const projects = getIntangibleProjectsForAttendancePerson();
             if (projects.length === 0) {
@@ -2899,136 +2942,222 @@
                 return;
             }
 
+            // 使用运行模式计算默认运行天数（每个资产可以有不同的运行模式）
+            const defaultRunMode = 'double_rest';
+            const defaultRunDays = calculateIntangibleRunDays(defaultRunMode);
+            const defaultTotalHours = defaultRunDays * 24;
+
+            // 先为每个无形资产的每个项目生成随机研发占比（生产占比 = 100% - 研发占比）
             mockIntangibleAssetData.forEach(asset => {
-                if (!intangibleAllocations[asset.id] || typeof intangibleAllocations[asset.id] !== 'object') {
+                const projectsBoundToAsset = projects.filter(p => asset.projects.includes(p.id));
+                if (projectsBoundToAsset.length === 0) return;
+
+                // 确保结构初始化
+                if (!intangibleAllocations[asset.id]) {
                     intangibleAllocations[asset.id] = {
-                        assetHoursInput: 0,
+                        projectPercentages: {},
                         assetRdHoursInput: 0,
-                        projectPercentages: {}
+                        assetHoursInput: 0
                     };
-                }
-                if (intangibleAllocations[asset.id].assetRdHoursInput === undefined) {
-                    intangibleAllocations[asset.id].assetRdHoursInput = 0;
-                }
-                if (intangibleAllocations[asset.id].assetRdHoursInput > intangibleAllocations[asset.id].assetHoursInput) {
-                    intangibleAllocations[asset.id].assetRdHoursInput = intangibleAllocations[asset.id].assetHoursInput;
                 }
                 if (!intangibleAllocations[asset.id].projectPercentages) {
                     intangibleAllocations[asset.id].projectPercentages = {};
                 }
+                // 旧数据兼容：将 number 类型转换为 { rd, prod }
                 Object.keys(intangibleAllocations[asset.id].projectPercentages).forEach(projectId => {
                     const value = intangibleAllocations[asset.id].projectPercentages[projectId];
                     if (typeof value === 'number') {
                         intangibleAllocations[asset.id].projectPercentages[projectId] = { rd: value, prod: 100 - value };
                     }
                 });
+
+                // 为尚未生成占比的项目-资产组合随机生成研发占比（生产占比 = 100% - 研发占比）
+                const needsGenerate = projectsBoundToAsset.some(project => !intangibleAllocations[asset.id].projectPercentages[project.id]);
+                if (needsGenerate) {
+                    const rdPercentages = generateRandomPercentages(projectsBoundToAsset.length);
+                    projectsBoundToAsset.forEach((project, index) => {
+                        if (!intangibleAllocations[asset.id].projectPercentages[project.id]) {
+                            const rdVal = rdPercentages[index];
+                            intangibleAllocations[asset.id].projectPercentages[project.id] = { rd: rdVal, prod: 100 - rdVal };
+                        }
+                    });
+                }
             });
 
+            // 构建表格：无形资产作为行，项目作为列（与设备工时页面一致）
             let tableHtml = `
                 <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
                     <thead>
                         <tr class="bg-gray-50">
-                            <th class="sticky-left bg-gray-50 px-3 py-2 text-xs font-medium text-gray-600 border-r align-bottom" rowspan="2">项目名称</th>
-                            ${mockIntangibleAssetData.map(asset => `
-                                <th class="px-3 py-2 text-xs font-medium text-gray-600 text-center align-top" colspan="2">
+                            <th class="sticky-left bg-gray-50 px-3 py-2 text-xs font-medium text-gray-600 border-r align-bottom" rowspan="2">资产名称</th>
+                            <th class="px-3 py-2 text-xs font-medium text-gray-600 text-center align-top" rowspan="2">资产配置</th>
+                            ${projects.map(project => `
+                                <th class="px-3 py-2 text-xs font-medium text-gray-600 text-center align-top" style="background-color: ${project.color}15;">
                                     <div class="flex items-center justify-center">
-                                        <i class="fa fa-copyright text-indigo-500 mr-1"></i>
-                                        <span class="truncate max-w-[120px]">${asset.name}</span>
+                                        <div class="w-2 h-2 rounded mr-1.5" style="background-color: ${project.color}"></div>
+                                        <span class="truncate max-w-[120px]">${project.name}</span>
                                     </div>
-                                    <div class="text-[10px] text-gray-400 mt-1 font-normal">${asset.type}</div>
-                                    <div class="text-[10px] text-gray-500 mt-1 font-normal">
-                                        <label for="intangible-total-input-${asset.id}" class="text-[10px] text-gray-600">总工时:</label>
-                                        <input type="number" id="intangible-total-input-${asset.id}"
-                                            class="w-12 text-center border rounded px-1 py-0.5 text-xs"
-                                            value="${intangibleAllocations[asset.id]?.assetHoursInput || 0}"
-                                            min="0" step="0.1"
-                                            onchange="updateIntangibleTotalHours('${asset.id}')"> h
-                                    </div>
-                                    <div class="text-[10px] text-gray-400 mt-1 font-normal">
-                                        <label for="intangible-rd-input-${asset.id}" class="text-[10px] text-gray-600">研发工时:</label>
-                                        <input type="number" id="intangible-rd-input-${asset.id}"
-                                            class="w-12 text-center border rounded px-1 py-0.5 text-xs"
-                                            value="${intangibleAllocations[asset.id]?.assetRdHoursInput || 0}"
-                                            min="0" step="0.1"
-                                            onchange="updateIntangibleRdProdHours('${asset.id}')"> h
-                                    </div>
-                                    <div class="text-[10px] text-gray-500 mt-1 font-normal">生产工时: <span id="intangible-prod-display-${asset.id}">${((intangibleAllocations[asset.id]?.assetHoursInput || 0) - (intangibleAllocations[asset.id]?.assetRdHoursInput || 0)).toFixed(1)}</span>h</div>
+                                    <div class="text-[10px] text-gray-400 mt-1 font-normal">${formatDateShort(project.startDate)} ~ ${formatDateShort(project.endDate)}</div>
                                 </th>
                             `).join('')}
+                            <th class="px-3 py-2 text-xs font-medium text-gray-600 text-center align-top" rowspan="2">资产总占比</th>
                         </tr>
                         <tr class="bg-gray-50">
-                            ${mockIntangibleAssetData.map(asset => `
-                                <th class="px-3 py-1 text-xs font-medium text-gray-600 text-center">研发占比</th>
-                                <th class="px-3 py-1 text-xs font-medium text-gray-600 text-center">生产占比</th>
+                            ${projects.map(project => `
+                                <th class="px-2 py-1 text-[10px] font-medium text-gray-600 text-center" style="background-color: ${project.color}15;">研发占比</th>
                             `).join('')}
                         </tr>
                     </thead>
                     <tbody>
             `;
 
-            projects.forEach(project => {
+            // 无形资产作为行
+            mockIntangibleAssetData.forEach(asset => {
+                const allocation = intangibleAllocations[asset.id] || {};
+
+                // 根据资产运行模式计算默认运行天数和总工时
+                const assetRunMode = allocation.runMode || 'double_rest';
+                const assetRunDays = calculateIntangibleRunDays(assetRunMode);
+                const assetDefaultTotalHours = assetRunDays * 24;
+
+                // 默认总工时 = 运行天数 × 24 小时
+                const totalHoursValue = allocation.assetHoursInput || assetDefaultTotalHours;
+                if (!allocation.assetHoursInput) {
+                    allocation.assetHoursInput = assetDefaultTotalHours;
+                }
+
+                // 默认研发工时 = 总工时 × 15%，上限不超过 15%
+                const defaultRdHours = parseFloat((totalHoursValue * 0.15).toFixed(1));
+                if (!allocation.assetRdHoursInput) {
+                    allocation.assetRdHoursInput = defaultRdHours;
+                }
+
+                // 资产类型徽标
+                const typeBadge = `<span class="text-[9px] bg-indigo-100 text-indigo-700 px-1 py-0.5 rounded">${asset.type}</span>`;
+
+                // 资产配置列（运行模式下拉框、日历按钮、总工时、研发工时输入框，与设备配置列一致）
+                let assetConfigHtml = `
+                    <div class="mb-1 flex items-center gap-1">
+                        <select id="intangible-run-mode-${asset.id}" class="flex-1 border rounded px-1 py-0.5 text-[10px] bg-white" onchange="updateIntangibleRunMode('${asset.id}')">
+                            ${Object.entries(intangibleRunModeOptions).map(([value, option]) => `
+                                <option value="${value}" ${(allocation.runMode || 'double_rest') === value ? 'selected' : ''}>${option.label}</option>
+                            `).join('')}
+                        </select>
+                        <button onclick="openIntangibleCalendar('${asset.id}')" class="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-blue-50 text-blue-600 rounded text-[10px] hover:bg-blue-100 transition-colors" title="日历勾选运行天数">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                    </div>
+                    <div class="text-[10px] text-gray-400 font-normal mb-1">运行 <span id="intangible-run-days-${asset.id}">${assetRunDays}</span> 天 × 24h = <span id="intangible-default-hours-${asset.id}">${assetDefaultTotalHours}</span>h</div>
+                    <div class="mb-1">
+                        <label class="text-[10px] text-gray-600">总工时:</label>
+                        <input type="number" id="intangible-total-input-${asset.id}"
+                            class="w-14 text-center border rounded px-1 py-0.5 text-[10px]"
+                            value="${totalHoursValue}"
+                            min="0" step="0.1"
+                            onchange="updateIntangibleTotalHours('${asset.id}')"> h
+                    </div>
+                    <div class="text-[10px] text-gray-500">
+                        <label class="text-[10px] text-gray-600">研发:</label>
+                        <input type="number" id="intangible-rd-input-${asset.id}"
+                            class="w-14 text-center border rounded px-1 py-0.5 text-[10px]"
+                            value="${allocation.assetRdHoursInput}"
+                            min="0" max="${defaultRdHours}" step="0.1"
+                            onchange="updateIntangibleRdProdHours('${asset.id}', true)"> h
+                    </div>
+                    <div class="text-[10px] text-gray-400 font-normal mt-1">生产: <span id="intangible-prod-display-${asset.id}">${(totalHoursValue - allocation.assetRdHoursInput).toFixed(1)}</span>h</div>
+                `;
+
                 tableHtml += `
                     <tr class="border-b hover:bg-gray-50">
                         <td class="sticky-left bg-white px-3 py-2 text-xs text-gray-700 border-r font-medium">
                             <div class="flex items-center">
-                                <div class="w-2 h-2 rounded mr-1.5" style="background-color: ${project.color}"></div>
-                                ${project.name}
+                                <i class="fa fa-copyright text-indigo-500 mr-2"></i>
+                                <span>${asset.name}</span>
                             </div>
+                            <div class="mt-1">${typeBadge}</div>
+                        </td>
+                        <td class="px-2 py-2 text-xs text-gray-600 border-r" style="min-width: 160px;">
+                            ${assetConfigHtml}
                         </td>
                 `;
-                mockIntangibleAssetData.forEach(asset => {
+
+                // 每个项目的研发占比
+                projects.forEach(project => {
                     const isBound = asset.projects.includes(project.id);
-                    const percentage = intangibleAllocations[asset.id]?.projectPercentages?.[project.id] || { rd: 0, prod: 0 };
-                    const totalHours = intangibleAllocations[asset.id]?.assetHoursInput || 0;
-                    const rdHours = intangibleAllocations[asset.id]?.assetRdHoursInput || 0;
-                    const prodHours = Math.max(totalHours - rdHours, 0);
-                    const allocatedRdHours = isBound ? rdHours * (percentage.rd || 0) / 100 : 0;
-                    const allocatedProdHours = isBound ? prodHours * (percentage.prod || 0) / 100 : 0;
-                    tableHtml += `
-                        <td class="px-2 py-2 text-center ${isBound ? '' : 'bg-gray-100 text-gray-300'}">
-                            ${isBound
-                                ? `<input type="number"
-                                      id="intangible-rd-percent-${asset.id}-${project.id}"
-                                      class="w-12 text-center border rounded px-1 py-0.5 text-xs"
-                                      min="0" max="100" step="5" value="${percentage.rd || 0}"
-                                      onchange="updateIntangiblePercentage('${asset.id}', '${project.id}', 'rd')">
-                                   <div class="text-[10px] text-blue-600 mt-1">${allocatedRdHours.toFixed(1)}h</div>`
-                                : '<span>-</span>'}
-                        </td>
-                        <td class="px-2 py-2 text-center ${isBound ? '' : 'bg-gray-100 text-gray-300'}">
-                            ${isBound
-                                ? `<input type="number"
-                                      id="intangible-prod-percent-${asset.id}-${project.id}"
-                                      class="w-12 text-center border rounded px-1 py-0.5 text-xs"
-                                      min="0" max="100" step="5" value="${percentage.prod || 0}"
-                                      onchange="updateIntangiblePercentage('${asset.id}', '${project.id}', 'prod')">
-                                   <div class="text-[10px] text-green-600 mt-1">${allocatedProdHours.toFixed(1)}h</div>`
-                                : '<span>-</span>'}
-                        </td>
-                    `;
+                    const currentRdValue = intangibleAllocations[asset.id]?.projectPercentages?.[project.id]?.rd || 0;
+                    const rdHoursCapacity = allocation.assetRdHoursInput || 0;
+                    const allocatedRdForProject = isBound ? rdHoursCapacity * (currentRdValue / 100) : 0;
+
+                    if (!isBound) {
+                        tableHtml += `
+                            <td class="px-2 py-2 text-center bg-gray-100">-</td>
+                        `;
+                    } else {
+                        tableHtml += `
+                            <td class="px-2 py-2 text-center">
+                                <div class="flex items-center justify-center">
+                                    <input type="number"
+                                        id="intangible-rd-percent-${asset.id}-${project.id}"
+                                        class="intangible-percent-input w-12 text-center border rounded px-1 py-0.5 text-xs"
+                                        min="0" max="100" step="5" value="${currentRdValue}"
+                                        onchange="updateIntangiblePercentage('${asset.id}', '${project.id}', 'rd')">
+                                    <span class="ml-0.5 text-xs text-gray-500">%</span>
+                                </div>
+                                <div class="text-[10px] text-blue-600 mt-1">${allocatedRdForProject.toFixed(1)}h</div>
+                            </td>
+                        `;
+                    }
                 });
-                tableHtml += '</tr>';
+
+                // 资产总占比（只显示研发总占比）
+                tableHtml += `
+                        <td class="px-3 py-2 text-xs text-center border-l">
+                            <span id="intangible-total-rd-percent-${asset.id}" class="font-medium text-blue-600">0%</span>
+                        </td>
+                    </tr>
+                `;
             });
 
             tableHtml += `
                     </tbody>
-                    <tfoot>
-                        <tr class="bg-gray-50 font-medium">
-                            <td class="sticky-left bg-gray-50 px-3 py-2 text-xs text-gray-600 border-r">无形资产总占比</td>
-                            ${mockIntangibleAssetData.map(asset => `
-                                <td class="px-3 py-2 text-xs text-center">
-                                    <span id="intangible-total-rd-percent-${asset.id}" class="font-medium text-blue-600">0%</span>
-                                </td>
-                                <td class="px-3 py-2 text-xs text-center">
-                                    <span id="intangible-total-prod-percent-${asset.id}" class="font-medium text-blue-600">0%</span>
-                                </td>
-                            `).join('')}
-                        </tr>
-                    </tfoot>
                 </table>
             `;
+
             container.innerHTML = tableHtml;
-            mockIntangibleAssetData.forEach(asset => updateIntangibleTotalPercentage(asset.id));
+
+            // 保留之前用户填写的工时输入
+            mockIntangibleAssetData.forEach(asset => {
+                if (intangibleAllocations[asset.id] && previousIntangibleAllocations[asset.id]) {
+                    intangibleAllocations[asset.id].assetRdHoursInput = previousIntangibleAllocations[asset.id].assetRdHoursInput || 0;
+                    intangibleAllocations[asset.id].assetHoursInput = previousIntangibleAllocations[asset.id].assetHoursInput !== undefined ? previousIntangibleAllocations[asset.id].assetHoursInput : 0;
+                }
+            });
+
+            // 延迟更新合计显示，确保DOM已渲染
+            setTimeout(() => {
+                refreshAllIntangiblePercentages(projects);
+            }, 50);
+        }
+
+        function refreshAllIntangiblePercentages(projects) {
+            if (!projects) projects = getIntangibleProjectsForAttendancePerson();
+
+            // 更新每个无形资产的总占比（只显示研发总占比）
+            mockIntangibleAssetData.forEach(asset => {
+                let assetTotalRd = 0;
+
+                projects.forEach(project => {
+                    if (asset.projects.includes(project.id)) {
+                        assetTotalRd += intangibleAllocations[asset.id]?.projectPercentages?.[project.id]?.rd || 0;
+                    }
+                });
+
+                const rdTotalEl = document.getElementById(`intangible-total-rd-percent-${asset.id}`);
+                if (rdTotalEl) {
+                    rdTotalEl.textContent = `${assetTotalRd.toFixed(0)}%`;
+                    rdTotalEl.className = `font-medium ${assetTotalRd > 100 ? 'text-red-600' : 'text-blue-600'}`;
+                }
+            });
         }
 
         function ensureIntangibleAllocation(assetId) {
@@ -3049,20 +3178,50 @@
 
         function updateIntangibleTotalHours(assetId) {
             ensureIntangibleAllocation(assetId);
-            const input = document.getElementById(`intangible-total-input-${assetId}`);
-            intangibleAllocations[assetId].assetHoursInput = Math.max(parseFloat(input?.value) || 0, 0);
-            if (intangibleAllocations[assetId].assetRdHoursInput > intangibleAllocations[assetId].assetHoursInput) {
-                intangibleAllocations[assetId].assetRdHoursInput = intangibleAllocations[assetId].assetHoursInput;
-            }
-            initIntangibleAllocationCards();
+            const totalInput = document.getElementById(`intangible-total-input-${assetId}`);
+            if (!totalInput) return;
+
+            let newTotalHours = parseFloat(totalInput.value) || 0;
+            if (newTotalHours < 0) newTotalHours = 0;
+            totalInput.value = newTotalHours;
+
+            intangibleAllocations[assetId].assetHoursInput = newTotalHours;
+
+            // 重新计算研发工时（默认按总工时的15%）
+            updateIntangibleRdProdHours(assetId, false);
         }
 
-        function updateIntangibleRdProdHours(assetId) {
+        function updateIntangibleRdProdHours(assetId, isManualInput) {
             ensureIntangibleAllocation(assetId);
-            const input = document.getElementById(`intangible-rd-input-${assetId}`);
-            const totalHours = intangibleAllocations[assetId].assetHoursInput || 0;
-            intangibleAllocations[assetId].assetRdHoursInput = Math.min(Math.max(parseFloat(input?.value) || 0, 0), totalHours);
-            initIntangibleAllocationCards();
+            const rdInput = document.getElementById(`intangible-rd-input-${assetId}`);
+            const prodDisplay = document.getElementById(`intangible-prod-display-${assetId}`);
+            if (!rdInput) return;
+
+            const totalAvailableHours = intangibleAllocations[assetId].assetHoursInput || 0;
+            let rdHours = parseFloat(rdInput.value) || 0;
+            const maxRdHoursAllowed = totalAvailableHours * 0.15; // 15% 上限
+
+            if (isManualInput) {
+                // 手动输入时，超过15%则截断并提示
+                if (rdHours > maxRdHoursAllowed) {
+                    rdHours = parseFloat(maxRdHoursAllowed.toFixed(1));
+                    rdInput.value = rdHours;
+                    alert(`研发工时不能超过总工时的15% (${rdHours.toFixed(1)}h)！`);
+                }
+            } else {
+                // 非手动输入（如总工时改变），默认按15%
+                rdHours = parseFloat(maxRdHoursAllowed.toFixed(1));
+                rdInput.value = rdHours;
+            }
+
+            if (rdHours < 0) rdHours = 0;
+
+            const prodHours = totalAvailableHours - rdHours;
+            if (prodDisplay) prodDisplay.textContent = prodHours.toFixed(1);
+            intangibleAllocations[assetId].assetRdHoursInput = rdHours;
+
+            // 更新各项目已分配研发工时显示
+            refreshIntangibleAllocatedHours(assetId);
         }
 
         function updateIntangiblePercentage(assetId, projectId, type) {
@@ -3071,27 +3230,319 @@
                 const oldValue = intangibleAllocations[assetId].projectPercentages[projectId] || 0;
                 intangibleAllocations[assetId].projectPercentages[projectId] = { rd: oldValue, prod: 100 - oldValue };
             }
-            const input = document.getElementById(`intangible-${type}-percent-${assetId}-${projectId}`);
-            const value = Math.max(Math.min(parseFloat(input?.value) || 0, 100), 0);
-            intangibleAllocations[assetId].projectPercentages[projectId][type] = value;
+            const input = document.getElementById(`intangible-rd-percent-${assetId}-${projectId}`);
+            let value = parseFloat(input?.value) || 0;
+            if (value < 0) value = 0;
+            if (value > 100) value = 100;
+            if (input) input.value = value;
+
+            // 研发占比改变时，生产占比 = 100% - 研发占比
+            intangibleAllocations[assetId].projectPercentages[projectId].rd = value;
+            intangibleAllocations[assetId].projectPercentages[projectId].prod = 100 - value;
+
             updateIntangibleTotalPercentage(assetId);
-            initIntangibleAllocationCards();
+            refreshIntangibleAllocatedHours(assetId);
+        }
+
+        function refreshIntangibleAllocatedHours(assetId) {
+            const projects = getIntangibleProjectsForAttendancePerson();
+            const asset = mockIntangibleAssetData.find(a => a.id === assetId);
+            const rdHoursCapacity = intangibleAllocations[assetId]?.assetRdHoursInput || 0;
+
+            projects.forEach(project => {
+                const isBound = asset && asset.projects.includes(project.id);
+                const percent = intangibleAllocations[assetId]?.projectPercentages?.[project.id]?.rd || 0;
+                const allocated = isBound ? rdHoursCapacity * (percent / 100) : 0;
+                // 更新已分配研发工时显示（输入框下方的蓝色文字）
+                const input = document.getElementById(`intangible-rd-percent-${assetId}-${project.id}`);
+                if (input) {
+                    const display = input.closest('td')?.querySelector('.text-blue-600');
+                    if (display) display.textContent = `${allocated.toFixed(1)}h`;
+                }
+            });
         }
 
         function updateIntangibleTotalPercentage(assetId) {
-            const percentages = Object.values(intangibleAllocations[assetId]?.projectPercentages || {});
-            const totalRd = percentages.reduce((sum, value) => sum + (parseFloat(value.rd) || 0), 0);
-            const totalProd = percentages.reduce((sum, value) => sum + (parseFloat(value.prod) || 0), 0);
+            const projects = getIntangibleProjectsForAttendancePerson();
+            const asset = mockIntangibleAssetData.find(a => a.id === assetId);
+            let totalRd = 0;
+            projects.forEach(project => {
+                if (asset && asset.projects.includes(project.id)) {
+                    totalRd += intangibleAllocations[assetId]?.projectPercentages?.[project.id]?.rd || 0;
+                }
+            });
             const rdEl = document.getElementById(`intangible-total-rd-percent-${assetId}`);
-            const prodEl = document.getElementById(`intangible-total-prod-percent-${assetId}`);
             if (rdEl) {
                 rdEl.textContent = `${totalRd.toFixed(0)}%`;
                 rdEl.className = totalRd > 100 ? 'font-medium text-red-600' : 'font-medium text-blue-600';
             }
-            if (prodEl) {
-                prodEl.textContent = `${totalProd.toFixed(0)}%`;
-                prodEl.className = totalProd > 100 ? 'font-medium text-red-600' : 'font-medium text-blue-600';
+        }
+
+        // ==================== 无形资产日历勾选功能 ====================
+
+        function openIntangibleCalendar(assetId) {
+            if (!currentYear || !currentMonth) {
+                alert('请先选择月份并开始分配！');
+                return;
             }
+            const asset = mockIntangibleAssetData.find(a => a.id === assetId);
+            if (!asset) return;
+
+            // 获取资产的运行模式
+            const allocation = intangibleAllocations[assetId] || {};
+            const runMode = allocation.runMode || 'double_rest';
+
+            // 根据运行模式生成默认运行数据
+            const defaultData = generateRunDataByMode(runMode);
+            // 当前生效数据（含手动覆盖）
+            let currentRunData;
+            if (intangibleAllocations[assetId].runDataOverride) {
+                currentRunData = intangibleAllocations[assetId].runDataOverride;
+            } else {
+                currentRunData = JSON.parse(JSON.stringify(defaultData));
+            }
+
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+            const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+            const firstDayOfWeek = new Date(currentYear, currentMonth - 1, 1).getDay();
+            const selectedDays = Object.values(currentRunData).filter(v => Number(v) > 0).length;
+
+            let calendarCellsHtml = '';
+            weekDays.forEach((day, index) => {
+                const isWeekend = index === 0 || index === 6;
+                calendarCellsHtml += `<div class="text-center text-[10px] font-medium py-1 ${isWeekend ? 'text-red-400' : 'text-gray-500'}">${day}</div>`;
+            });
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                calendarCellsHtml += '<div></div>';
+            }
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayOfWeek = new Date(currentYear, currentMonth - 1, day).getDay();
+                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                const isRunning = Number(currentRunData[date] || 0) > 0;
+                const modeSaysRun = Number(defaultData[date] || 0) > 0;
+                let cellClass = 'border rounded text-center py-1.5 cursor-pointer transition-colors text-[11px] ';
+                let badge = '';
+                if (isRunning) {
+                    cellClass += 'bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200';
+                } else {
+                    cellClass += 'bg-gray-50 text-gray-400 border-gray-200 hover:bg-gray-100';
+                }
+                if (modeSaysRun && !isRunning) {
+                    badge = '<span class="absolute top-0 right-0 w-1.5 h-1.5 bg-orange-400 rounded-full"></span>';
+                    cellClass += ' relative';
+                } else if (!modeSaysRun && isRunning) {
+                    badge = '<span class="absolute top-0 right-0 w-1.5 h-1.5 bg-green-400 rounded-full"></span>';
+                    cellClass += ' relative';
+                }
+
+                calendarCellsHtml += `
+                    <div class="${cellClass}" onclick="toggleIntangibleDay('${assetId}', '${date}')" title="${date} 周${weekDays[dayOfWeek]}">
+                        ${badge}
+                        <span class="${isWeekend ? 'text-red-400' : ''}">${day}</span>
+                    </div>
+                `;
+            }
+
+            const existing = document.getElementById('intangibleCalendarModal');
+            if (existing) existing.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'intangibleCalendarModal';
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40';
+            modal.onclick = function(e) { if (e.target === modal) closeIntangibleCalendar(); };
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl p-4 w-[420px] max-w-[90vw]">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-800">
+                                <i class="fa fa-calendar mr-1 text-indigo-500"></i>
+                                ${asset.name} - 运行日勾选
+                            </h3>
+                            <p class="text-[10px] text-gray-400 mt-0.5">${currentYear}年${monthNames[currentMonth - 1]} · 模式：${intangibleRunModeOptions[runMode].label}</p>
+                        </div>
+                        <button onclick="closeIntangibleCalendar()" class="text-gray-400 hover:text-gray-600 text-lg">×</button>
+                    </div>
+                    <div class="mb-2 p-2 bg-indigo-50 rounded text-[10px] text-indigo-700">
+                        <i class="fa fa-info-circle mr-1"></i>
+                        默认按"${intangibleRunModeOptions[runMode].label}"模式生成，点击日期可手动切换运行状态。<span class="inline-block w-2 h-2 bg-blue-100 border border-blue-300 rounded mx-1 align-middle"></span>运行
+                        <span class="inline-block w-2 h-2 bg-gray-50 border border-gray-200 rounded mx-1 align-middle"></span>未运行
+                        <span class="inline-block w-2 h-2 bg-orange-400 rounded-full mx-1 align-middle"></span>手动取消
+                        <span class="inline-block w-2 h-2 bg-green-400 rounded-full mx-1 align-middle"></span>手动添加
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 mb-3">
+                        ${calendarCellsHtml}
+                    </div>
+                    <div class="flex items-center justify-between border-t pt-3">
+                        <div class="text-xs text-gray-600">
+                            已选运行天数：<span id="intangibleCalendarSelectedDays" class="font-semibold text-indigo-600">${selectedDays}</span> 天
+                            <span class="text-gray-400 ml-1">× 24h = ${selectedDays * 24}h</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="resetIntangibleCalendar()" class="px-3 py-1 text-xs text-gray-600 bg-gray-100 rounded hover:bg-gray-200">
+                                <i class="fa fa-refresh mr-1"></i>重置为模式默认
+                            </button>
+                            <button onclick="applyIntangibleCalendar('${assetId}')" class="px-3 py-1 text-xs text-white bg-indigo-600 rounded hover:bg-indigo-700">
+                                <i class="fa fa-check mr-1"></i>应用
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function toggleIntangibleDay(assetId, date) {
+            // 确保资产分配存在
+            if (!intangibleAllocations[assetId]) {
+                intangibleAllocations[assetId] = { projectPercentages: {}, assetRdHoursInput: 0, assetHoursInput: 0 };
+            }
+            if (!intangibleAllocations[assetId].runDataOverride) {
+                const allocation = intangibleAllocations[assetId];
+                const runMode = allocation.runMode || 'double_rest';
+                intangibleAllocations[assetId].runDataOverride = generateRunDataByMode(runMode);
+            }
+            const override = intangibleAllocations[assetId].runDataOverride;
+            override[date] = Number(override[date] || 0) > 0 ? 0 : 24;
+            openIntangibleCalendar(assetId);
+        }
+
+        function resetIntangibleCalendar() {
+            // 重新渲染弹窗需要assetId，从已存在的弹窗取
+            const modal = document.getElementById('intangibleCalendarModal');
+            if (modal) {
+                const applyBtn = modal.querySelector('button[onclick^="applyIntangibleCalendar"]');
+                if (applyBtn) {
+                    const match = applyBtn.getAttribute('onclick').match(/'([^']+)'/);
+                    if (match) {
+                        const assetId = match[1];
+                        if (intangibleAllocations[assetId]) {
+                            intangibleAllocations[assetId].runDataOverride = null;
+                        }
+                        openIntangibleCalendar(assetId);
+                    }
+                }
+            }
+        }
+
+        function applyIntangibleCalendar(assetId) {
+            const allocation = intangibleAllocations[assetId] || {};
+            const currentRunData = allocation.runDataOverride || generateRunDataByMode(allocation.runMode || 'double_rest');
+            const newRunDays = Object.values(currentRunData).filter(v => Number(v) > 0).length;
+            const newDefaultHours = newRunDays * 24;
+
+            if (!intangibleAllocations[assetId]) {
+                intangibleAllocations[assetId] = { projectPercentages: {}, assetRdHoursInput: 0, assetHoursInput: 0 };
+            }
+            intangibleAllocations[assetId].assetHoursInput = newDefaultHours;
+            intangibleAllocations[assetId].assetRdHoursInput = parseFloat((newDefaultHours * 0.15).toFixed(1));
+
+            closeIntangibleCalendar();
+            initIntangibleAllocationCards();
+        }
+
+        function closeIntangibleCalendar() {
+            const modal = document.getElementById('intangibleCalendarModal');
+            if (modal) modal.remove();
+        }
+
+        function updateIntangibleRunMode(assetId) {
+            const select = document.getElementById(`intangible-run-mode-${assetId}`);
+            if (!select) return;
+
+            if (!intangibleAllocations[assetId]) {
+                intangibleAllocations[assetId] = {
+                    projectPercentages: {},
+                    assetRdHoursInput: 0,
+                    assetHoursInput: 0
+                };
+            }
+
+            intangibleAllocations[assetId].runMode = select.value;
+            // 切换运行模式时清空手动覆盖
+            intangibleAllocations[assetId].runDataOverride = null;
+
+            // 根据新的运行模式重新计算运行天数和总工时
+            const asset = mockIntangibleAssetData.find(a => a.id === assetId);
+            if (asset && currentYear && currentMonth) {
+                const newRunDays = calculateIntangibleRunDays(select.value);
+                const newDefaultHours = newRunDays * 24;
+                intangibleAllocations[assetId].assetHoursInput = newDefaultHours;
+                intangibleAllocations[assetId].assetRdHoursInput = parseFloat((newDefaultHours * 0.15).toFixed(1));
+            }
+
+            // 更新显示
+            initIntangibleAllocationCards();
+        }
+
+        function calculateIntangibleRunDays(runMode) {
+            if (!currentYear || !currentMonth) return 0;
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            let runDays = 0;
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentYear, currentMonth - 1, day);
+                const dayOfWeek = date.getDay();
+                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                if (runMode === 'double_rest') {
+                    if (!isWeekend) runDays++;
+                } else if (runMode === 'single_rest') {
+                    if (dayOfWeek !== 0) runDays++;
+                } else {
+                    runDays++;
+                }
+            }
+            return runDays;
+        }
+
+        function generateRunDataByMode(runMode) {
+            const data = {};
+            if (!currentYear || !currentMonth) return data;
+            const mode = intangibleRunModeOptions[runMode] || intangibleRunModeOptions.double_rest;
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayOfWeek = new Date(currentYear, currentMonth - 1, day).getDay();
+                const isSunday = dayOfWeek === 0;
+                const isSaturday = dayOfWeek === 6;
+                const canRun = mode.includeWeekends || (mode.includeSaturday && !isSunday) || (!isSaturday && !isSunday);
+                data[date] = canRun ? 24 : 0;
+            }
+            return data;
+        }
+
+        // 为单个无形资产重新随机生成项目占比（保留总工时和研发工时不变）
+        function randomizeSingleIntangible(assetId) {
+            const asset = mockIntangibleAssetData.find(a => a.id === assetId);
+            if (!asset) return;
+
+            const projects = getIntangibleProjectsForAttendancePerson();
+            const boundProjects = projects.filter(p => asset.projects.includes(p.id));
+            if (boundProjects.length === 0) return;
+
+            if (!intangibleAllocations[assetId]) {
+                intangibleAllocations[assetId] = { projectPercentages: {}, assetRdHoursInput: 0, assetHoursInput: 0 };
+            }
+
+            // 清空旧占比，强制重新随机生成
+            intangibleAllocations[assetId].projectPercentages = {};
+
+            // 随机生成研发占比
+            const rdPercentages = generateRandomPercentages(boundProjects.length);
+            boundProjects.forEach((project, index) => {
+                const rdVal = rdPercentages[index];
+                intangibleAllocations[assetId].projectPercentages[project.id] = { rd: rdVal, prod: 100 - rdVal };
+            });
+
+            // 重新渲染表格（保留总工时和研发工时）
+            initIntangibleAllocationCards();
+        }
+
+        // 为单个无形资产随机后，立即重新计算每日分配结果并刷新显示
+        function randomizeSingleIntangibleAndRecalc(assetId) {
+            randomizeSingleIntangible(assetId);
+            // 重新计算无形资产分配结果并渲染
+            applyIntangibleAllocation();
         }
 
         function randomizeIntangiblePercentages() {
@@ -3100,16 +3551,19 @@
                 const boundProjects = projects.filter(project => asset.projects.includes(project.id));
                 if (boundProjects.length === 0) return;
                 ensureIntangibleAllocation(asset.id);
+                // 清空旧占比，强制重新随机生成
+                intangibleAllocations[asset.id].projectPercentages = {};
                 const rdPercentages = generateRandomPercentages(boundProjects.length);
-                const prodPercentages = generateRandomPercentages(boundProjects.length);
                 boundProjects.forEach((project, index) => {
+                    const rdVal = rdPercentages[index];
                     intangibleAllocations[asset.id].projectPercentages[project.id] = {
-                        rd: rdPercentages[index],
-                        prod: prodPercentages[index]
+                        rd: rdVal,
+                        prod: 100 - rdVal // 生产占比 = 100% - 研发占比
                     };
                 });
             });
             initIntangibleAllocationCards();
+            alert('无形资产占比已随机生成！');
         }
 
         function toggleIntangibleRandomRuleHelp() {
@@ -3160,7 +3614,8 @@
         function distributeIntangibleHoursByAttendance(totalHours, project, attendanceData) {
             const dates = Object.keys(attendanceData).filter(date => {
                 const hasAttendance = (attendanceData[date] || 0) > 0;
-                return hasAttendance && date >= project.startDate && date <= project.endDate;
+                const hasPersonHours = checkProjectHasPersonHoursOnDate(project.id, date);
+                return hasAttendance && hasPersonHours && date >= project.startDate && date <= project.endDate;
             });
             if (dates.length === 0 || totalHours <= 0) return {};
 
@@ -3221,9 +3676,12 @@
 
                 let tableHtml = `
                     <div class="mb-4">
-                        <div class="text-sm font-medium text-gray-800 mb-2 flex items-center">
-                            <i class="fa fa-copyright text-indigo-500 mr-1.5"></i>
+                        <div class="text-sm font-medium text-gray-800 mb-2 flex items-center gap-1.5">
+                            <i class="fa fa-copyright text-indigo-500"></i>
                             ${group.assetName}
+                            <button onclick="randomizeSingleIntangibleAndRecalc('${group.assetId}')" class="flex-shrink-0 px-1.5 py-0.5 bg-purple-50 text-purple-600 rounded text-[10px] hover:bg-purple-100 transition-colors" title="为该资产重新随机生成项目占比并重算工时">
+                                <i class="fa fa-random mr-0.5"></i>生成随机工时
+                            </button>
                         </div>
                         <div class="text-xs text-gray-500 mb-2">
                             研发总工时: ${totalRdHours.toFixed(1)}h | 生产总工时: ${totalProdHours.toFixed(1)}h
@@ -3276,8 +3734,22 @@
                                 const prodValue = item.dailyProdHours?.[date] || 0;
                                 projectDailyTotals[project.id].rd += rdValue;
                                 projectDailyTotals[project.id].prod += prodValue;
+                                const hasPersonHours = checkProjectHasPersonHoursOnDate(project.id, date);
+                                const isInProjectPeriod = date >= project.startDate && date <= project.endDate;
+                                const isBlocked = !hasPersonHours && isInProjectPeriod && attendanceHours > 0;
+
+                                if (isBlocked) {
+                                    return `
+                                        <td class="text-center bg-orange-50" colspan="2">
+                                            <span class="text-[10px] text-orange-500" title="该项目当天无人员填报工时"><i class="fa fa-ban"></i> 无人填报</span>
+                                        </td>
+                                    `;
+                                }
+
+                                const inputClass = !isInProjectPeriod || attendanceHours === 0 ? 'opacity-40' : '';
+                                const disabledAttr = !isInProjectPeriod || attendanceHours === 0 ? 'disabled' : '';
                                 return `
-                                    <td class="text-center">
+                                    <td class="text-center ${inputClass}">
                                         <input type="number"
                                             data-asset="${group.assetId}"
                                             data-date="${date}"
@@ -3287,10 +3759,11 @@
                                             value="${rdValue}"
                                             min="0"
                                             step="0.1"
+                                            ${disabledAttr}
                                             onchange="updateDailyIntangibleAllocation(this)"
                                             oninput="updateDailyIntangibleAllocation(this)">
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center ${inputClass}">
                                         <input type="number"
                                             data-asset="${group.assetId}"
                                             data-date="${date}"
@@ -3300,6 +3773,7 @@
                                             value="${prodValue}"
                                             min="0"
                                             step="0.1"
+                                            ${disabledAttr}
                                             onchange="updateDailyIntangibleAllocation(this)"
                                             oninput="updateDailyIntangibleAllocation(this)">
                                     </td>
@@ -3488,8 +3962,7 @@
                 const currentRunMode = getDeviceRunMode(device.id);
                 const availability = calculateDeviceAvailability(device, currentYear, currentMonth, currentRunMode);
                 const allocation = deviceAllocations[device.id] || {};
-                const usageTypeText = device.usageType === 'dedicated_rd' ? '研发专用' : (device.usageType === 'production' ? '生产专用' : '研发+生产共用');
-                
+
                 const defaultTotalHours = (availability.runDays || 0) * 24;
                 const totalHoursValue = allocation.totalHoursInput || defaultTotalHours;
                 if (!allocation.totalHoursInput) {
@@ -3497,14 +3970,17 @@
                 }
 
                 let deviceConfigHtml = `
-                    <div class="mb-1">
-                        <select id="device-run-mode-${device.id}" class="w-full border rounded px-1 py-0.5 text-[10px] bg-white" onchange="updateDeviceRunMode('${device.id}')">
+                    <div class="mb-1 flex items-center gap-1">
+                        <select id="device-run-mode-${device.id}" class="flex-1 border rounded px-1 py-0.5 text-[10px] bg-white" onchange="updateDeviceRunMode('${device.id}')">
                             ${Object.entries(deviceRunModeOptions).map(([value, option]) => `
                                 <option value="${value}" ${currentRunMode === value ? 'selected' : ''}>${getDeviceRunModeLabel(value)}</option>
                             `).join('')}
                         </select>
+                        <button onclick="openDeviceCalendar('${device.id}')" class="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-blue-50 text-blue-600 rounded text-[10px] hover:bg-blue-100 transition-colors" title="日历勾选运行天数">
+                            <i class="fa fa-calendar"></i>
+                        </button>
                     </div>
-                    <div class="text-[10px] text-gray-400 font-normal mb-1">运行 ${availability.runDays || 0} 天 × 24h = ${defaultTotalHours}h</div>
+                    <div class="text-[10px] text-gray-400 font-normal mb-1">运行 <span id="device-run-days-${device.id}">${availability.runDays || 0}</span> 天 × 24h = <span id="device-default-hours-${device.id}">${defaultTotalHours}</span>h</div>
                     <div class="mb-1">
                         <label class="text-[10px] text-gray-600">总工时:</label>
                         <input type="number" id="device-total-input-${device.id}"
@@ -3532,10 +4008,16 @@
                         <div class="text-[10px] text-gray-400 font-normal mt-1">生产: <span id="device-prod-display-${device.id}">${(totalHoursValue - allocation.deviceRdHoursInput).toFixed(1)}</span>h</div>
                     `;
                 } else {
-                    deviceConfigHtml += `<div class="text-[10px] text-gray-400 font-normal">${usageTypeText}</div>`;
+                    // 研发专用/生产专用：类型已由徽标展示，此处只显示对应工时（只读）
+                    if (device.usageType === 'dedicated_rd') {
+                        deviceConfigHtml += `<div class="text-[10px] text-blue-600 font-normal mt-1">研发: ${totalHoursValue.toFixed(1)}h</div>`;
+                    } else if (device.usageType === 'production') {
+                        deviceConfigHtml += `<div class="text-[10px] text-green-600 font-normal mt-1">生产: ${totalHoursValue.toFixed(1)}h</div>`;
+                    }
                 }
-                
-                const usageTypeBadge = device.usageType === 'dedicated_rd' 
+
+                // 移除配置列中的"生成随机工时"按钮，移至设备名称旁
+                const usageTypeBadge = device.usageType === 'dedicated_rd'
                     ? '<span class="text-[9px] bg-blue-100 text-blue-700 px-1 py-0.5 rounded">研发专用</span>'
                     : device.usageType === 'production'
                     ? '<span class="text-[9px] bg-green-100 text-green-700 px-1 py-0.5 rounded">生产专用</span>'
@@ -3677,25 +4159,28 @@
                 console.warn('设备可用时间计算：年月参数无效', { year, month });
                 return {
                     totalAvailable: 0,
+                    runDays: 0,
                     maintenance: device.maintenanceHours,
                     rdAvailable: 0
                 };
             }
-            
+
             const runMode = scheduleType || getDeviceRunMode(device.id);
-            const runData = generateDeviceMonthRunData(year, month, runMode);
+            // 优先使用手动勾选的运行数据
+            let runData;
+            if (deviceAllocations[device.id]?.runDataOverride &&
+                year === currentYear && month === currentMonth) {
+                runData = deviceAllocations[device.id].runDataOverride;
+            } else {
+                runData = generateDeviceMonthRunData(year, month, runMode);
+            }
             const totalHours = Object.values(runData).reduce((sum, hours) => sum + Number(hours || 0), 0);
             const runDays = Object.values(runData).filter(hours => Number(hours || 0) > 0).length;
-            
+
             const baseAvailable = totalHours - device.maintenanceHours;
             const rdRatio = device.rdRatio || 1.0;
             const rdAvailable = parseFloat((baseAvailable * rdRatio).toFixed(1));
-            
-            console.log(`设备${device.name}可用时间计算:`, {
-                year, month, runMode, totalHours,
-                maintenance: device.maintenanceHours, rdRatio, rdAvailable
-            });
-            
+
             return {
                 totalAvailable: totalHours,
                 runDays,
@@ -3775,6 +4260,8 @@
             }
 
             deviceAllocations[deviceId].runMode = select.value;
+            // 切换运行模式时清空手动覆盖，重新按模式生成
+            deviceAllocations[deviceId].runDataOverride = null;
             // 根据新的运行模式自动更新默认总工时和研发工时
             const device = mockDeviceData.find(d => d.id === deviceId);
             if (device) {
@@ -3791,6 +4278,177 @@
                 }
             });
             initDeviceAllocationCards();
+        }
+
+        // ==================== 设备日历勾选功能 ====================
+
+        function openDeviceCalendar(deviceId) {
+            if (!currentYear || !currentMonth) {
+                alert('请先选择月份并开始分配！');
+                return;
+            }
+            const device = mockDeviceData.find(d => d.id === deviceId);
+            if (!device) return;
+
+            const runMode = getDeviceRunMode(deviceId);
+            // 获取当前运行数据（含手动覆盖）
+            let currentRunData;
+            if (deviceAllocations[deviceId]?.runDataOverride) {
+                currentRunData = deviceAllocations[deviceId].runDataOverride;
+            } else {
+                currentRunData = generateDeviceMonthRunData(currentYear, currentMonth, runMode);
+            }
+            // 原始模式生成的数据（用于区分"模式工作日"和"模式休息日"）
+            const modeRunData = generateDeviceMonthRunData(currentYear, currentMonth, runMode);
+
+            const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+            const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+
+            // 计算当月第一天是星期几（0=周日）
+            const firstDayOfWeek = new Date(currentYear, currentMonth - 1, 1).getDay();
+
+            // 统计当前勾选的运行天数
+            const selectedDays = Object.values(currentRunData).filter(v => Number(v) > 0).length;
+
+            let calendarCellsHtml = '';
+            // 表头：周日~周六
+            weekDays.forEach((day, index) => {
+                const isWeekend = index === 0 || index === 6;
+                calendarCellsHtml += `<div class="text-center text-[10px] font-medium py-1 ${isWeekend ? 'text-red-400' : 'text-gray-500'}">${day}</div>`;
+            });
+            // 空白填充
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                calendarCellsHtml += '<div></div>';
+            }
+            // 日期单元格
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayOfWeek = new Date(currentYear, currentMonth - 1, day).getDay();
+                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                const isRunning = Number(currentRunData[date] || 0) > 0;
+                const modeSaysRun = Number(modeRunData[date] || 0) > 0;
+                // 区分：模式工作日但手动取消 = 橙色；模式休息日但手动添加 = 绿色；正常 = 默认
+                let cellClass = 'border rounded text-center py-1.5 cursor-pointer transition-colors text-[11px] ';
+                let badge = '';
+                if (isRunning) {
+                    cellClass += 'bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200';
+                } else {
+                    cellClass += 'bg-gray-50 text-gray-400 border-gray-200 hover:bg-gray-100';
+                }
+                if (modeSaysRun && !isRunning) {
+                    // 模式说应运行，但用户手动取消了
+                    badge = '<span class="absolute top-0 right-0 w-1.5 h-1.5 bg-orange-400 rounded-full"></span>';
+                    cellClass += ' relative';
+                } else if (!modeSaysRun && isRunning) {
+                    // 模式说不应运行，但用户手动添加了
+                    badge = '<span class="absolute top-0 right-0 w-1.5 h-1.5 bg-green-400 rounded-full"></span>';
+                    cellClass += ' relative';
+                }
+
+                calendarCellsHtml += `
+                    <div class="${cellClass}" onclick="toggleDeviceDay('${deviceId}', '${date}')" title="${date} 周${weekDays[dayOfWeek]}">
+                        ${badge}
+                        <span class="${isWeekend ? 'text-red-400' : ''}">${day}</span>
+                    </div>
+                `;
+            }
+
+            // 移除已存在的弹窗
+            const existing = document.getElementById('deviceCalendarModal');
+            if (existing) existing.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'deviceCalendarModal';
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40';
+            modal.onclick = function(e) { if (e.target === modal) closeDeviceCalendar(); };
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl p-4 w-[420px] max-w-[90vw]">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-800">
+                                <i class="fa fa-calendar mr-1 text-blue-500"></i>
+                                ${device.name} - 运行日勾选
+                            </h3>
+                            <p class="text-[10px] text-gray-400 mt-0.5">${currentYear}年${monthNames[currentMonth - 1]} · 模式：${getDeviceRunModeLabel(runMode)}</p>
+                        </div>
+                        <button onclick="closeDeviceCalendar()" class="text-gray-400 hover:text-gray-600 text-lg">×</button>
+                    </div>
+                    <div class="mb-2 p-2 bg-blue-50 rounded text-[10px] text-blue-700">
+                        <i class="fa fa-info-circle mr-1"></i>
+                        点击日期切换运行状态。<span class="inline-block w-2 h-2 bg-blue-100 border border-blue-300 rounded mx-1 align-middle"></span>运行
+                        <span class="inline-block w-2 h-2 bg-gray-50 border border-gray-200 rounded mx-1 align-middle"></span>未运行
+                        <span class="inline-block w-2 h-2 bg-orange-400 rounded-full mx-1 align-middle"></span>手动取消
+                        <span class="inline-block w-2 h-2 bg-green-400 rounded-full mx-1 align-middle"></span>手动添加
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 mb-3">
+                        ${calendarCellsHtml}
+                    </div>
+                    <div class="flex items-center justify-between border-t pt-3">
+                        <div class="text-xs text-gray-600">
+                            已选运行天数：<span id="calendarSelectedDays" class="font-semibold text-blue-600">${selectedDays}</span> 天
+                            <span class="text-gray-400 ml-1">× 24h = ${selectedDays * 24}h</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="resetDeviceCalendar('${deviceId}')" class="px-3 py-1 text-xs text-gray-600 bg-gray-100 rounded hover:bg-gray-200">
+                                <i class="fa fa-refresh mr-1"></i>重置为模式默认
+                            </button>
+                            <button onclick="applyDeviceCalendar('${deviceId}')" class="px-3 py-1 text-xs text-white bg-blue-600 rounded hover:bg-blue-700">
+                                <i class="fa fa-check mr-1"></i>应用
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function toggleDeviceDay(deviceId, date) {
+            if (!deviceAllocations[deviceId]) return;
+            // 确保 runDataOverride 存在（基于当前数据深拷贝）
+            if (!deviceAllocations[deviceId].runDataOverride) {
+                const runMode = getDeviceRunMode(deviceId);
+                const modeData = generateDeviceMonthRunData(currentYear, currentMonth, runMode);
+                deviceAllocations[deviceId].runDataOverride = JSON.parse(JSON.stringify(modeData));
+            }
+            const override = deviceAllocations[deviceId].runDataOverride;
+            // 切换该日期的运行状态
+            override[date] = Number(override[date] || 0) > 0 ? 0 : 1;
+            // 重新渲染弹窗以更新视觉状态和天数统计
+            openDeviceCalendar(deviceId);
+        }
+
+        function resetDeviceCalendar(deviceId) {
+            if (!deviceAllocations[deviceId]) return;
+            deviceAllocations[deviceId].runDataOverride = null;
+            openDeviceCalendar(deviceId);
+        }
+
+        function applyDeviceCalendar(deviceId) {
+            const device = mockDeviceData.find(d => d.id === deviceId);
+            if (!device) return;
+
+            // 计算新的运行天数和总工时
+            const availability = calculateDeviceAvailability(device, currentYear, currentMonth, getDeviceRunMode(deviceId));
+            const newRunDays = availability.runDays || 0;
+            const newDefaultHours = newRunDays * 24;
+
+            // 更新总工时和研发工时
+            if (!deviceAllocations[deviceId]) {
+                deviceAllocations[deviceId] = { projectPercentages: {}, deviceRdHoursInput: 0, totalHoursInput: 0 };
+            }
+            deviceAllocations[deviceId].totalHoursInput = newDefaultHours;
+            if (device.usageType === 'shared_rd_prod') {
+                deviceAllocations[deviceId].deviceRdHoursInput = parseFloat((newDefaultHours * 0.15).toFixed(1));
+            }
+
+            closeDeviceCalendar();
+            initDeviceAllocationCards();
+        }
+
+        function closeDeviceCalendar() {
+            const modal = document.getElementById('deviceCalendarModal');
+            if (modal) modal.remove();
         }
 
         function updateDeviceRdProdHours(deviceId, isManualInput) {
@@ -3930,6 +4588,41 @@
                     }
                 }
             });
+        }
+
+        // 为单台设备重新随机生成项目占比（保留总工时和研发工时不变）
+        function randomizeSingleDevice(deviceId) {
+            const device = mockDeviceData.find(d => d.id === deviceId);
+            if (!device) return;
+
+            const projects = getDeviceProjectsForAttendancePerson();
+            const boundProjects = projects.filter(p => p.devices && p.devices.includes(device.id));
+            if (boundProjects.length === 0) return;
+
+            if (!deviceAllocations[deviceId]) {
+                deviceAllocations[deviceId] = { projectPercentages: {}, deviceRdHoursInput: 0, totalHoursInput: 0 };
+            }
+
+            // 清空旧占比，强制重新随机生成
+            deviceAllocations[deviceId].projectPercentages = {};
+
+            // 随机生成研发占比
+            const rdPercentages = generateRandomPercentages(boundProjects.length);
+            boundProjects.forEach((project, index) => {
+                const rdVal = rdPercentages[index];
+                const prodVal = 100 - rdVal;
+                deviceAllocations[deviceId].projectPercentages[project.id] = { rd: rdVal, prod: prodVal };
+            });
+
+            // 重新渲染表格（保留总工时和研发工时）
+            initDeviceAllocationCards();
+        }
+
+        // 为单台设备随机后，立即重新计算每日分配结果并刷新显示
+        function randomizeSingleDeviceAndRecalc(deviceId) {
+            randomizeSingleDevice(deviceId);
+            // 重新计算设备分配结果并渲染
+            applyDeviceAllocation();
         }
 
         function randomizeDevicePercentages() {
@@ -4363,9 +5056,12 @@
                 tableDiv.className = 'mb-4';
                 
                 let tableHtml = `
-                    <div class="text-sm font-medium text-gray-800 mb-2 flex items-center">
-                        <div class="w-3 h-3 rounded mr-1.5" style="background-color: ${device.color}"></div>
+                    <div class="text-sm font-medium text-gray-800 mb-2 flex items-center gap-1.5">
+                        <div class="w-3 h-3 rounded" style="background-color: ${device.color}"></div>
                         ${device.name}
+                        <button onclick="randomizeSingleDeviceAndRecalc('${deviceId}')" class="flex-shrink-0 px-1.5 py-0.5 bg-purple-50 text-purple-600 rounded text-[10px] hover:bg-purple-100 transition-colors" title="为该设备重新随机生成项目占比并重算工时">
+                            <i class="fa fa-random mr-0.5"></i>生成随机工时
+                        </button>
                     </div>
                     <div class="text-xs text-gray-500 mb-2">
                         研发总工时: ${result.totalRdHours.toFixed(1)}h | 生产总工时: ${result.totalProdHours.toFixed(1)}h
@@ -4375,6 +5071,10 @@
                     </div>
                     <div class="text-xs text-gray-500 mb-2">
                         按所选月份加载当月有效项目，并按设备运行模式计算本月运行天数，再将月度研发/生产总工时拆分到项目；不再选择设备考勤人员。
+                    </div>
+                    <div class="text-xs text-orange-600 mb-2">
+                        <i class="fa fa-exclamation-circle mr-1"></i>
+                        <strong>备注：</strong>每日各项目研发+生产工时总和不超过24小时，超限时系统自动按比例缩减。
                     </div>
                     <div class="allocation-table-wrapper">
                         <table class="allocation-table">
